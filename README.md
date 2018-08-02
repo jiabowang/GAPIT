@@ -27,46 +27,75 @@ Contents:
 -----
 
 
-#Start
-##Library Loading
+Start
+======
 
-##Data Preparing
+   GAPIT is a package that is run in the R software environment, which can be freely downloaded from [http://www.r-project.org](http://www.r-project.org) or [http://www.rstudio.com](http://www.rstudio.com).
 
-##Parameter Setting
+Function Loading
+-------
+  Now GAPIT can load library by only one funciton. 
+      
+    source("www.zzlab.net/GAPIT/GAPIT.library.R")
+  
+  After loading library, we need to source GAPIT function.
+  
+    source("www.zzlab.net/GAPIT/gapit_functions.txt")
+  
 
-#Anlysis
-##GWAS
-###GLM
-
-###MLM
-
-###CMLM
-
-###MLMM
-
-###SUPER
-
-###Farm-CPU
+Data Preparing
+-------
 
 
 
-##GS
+Parameter Setting
+-------
 
-###gBLUP
+Anlysis
+======
+GWAS
+-----
 
-###cBLUP
-
-###sBLUP
-
-
-#Result
-
-
-#Example
+* GLM
 
 
-#Citation
+* MLM
 
+
+* CMLM
+
+
+* MLMM
+
+
+* SUPER
+
+
+* Farm-CPU
+
+
+
+GS
+-----
+
+* gBLUP
+
+
+* cBLUP
+
+
+* sBLUP
+
+
+
+Result
+=====
+
+Example
+=====
+
+Citation
+=====
 
 
 
