@@ -225,11 +225,11 @@ Result
 
 <div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/PCA_eigenvalue.png">
 
-<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Manhattan.png">
+<div align=center><img width="400" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Manhattan.png">
 
 <div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/QQ.png">
 
-<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Optimum.png">
+<div align=center><img width="400" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Optimum.png">
 
 <div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/ROC.png">
 
@@ -239,7 +239,8 @@ Result
 <div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Multiple_QQ.png">
 
 
-
+<div align=left>
+   
 Example
 =====
 
