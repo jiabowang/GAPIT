@@ -206,6 +206,8 @@ Result
 
 ![phenotype_view](https://github.com/jiabowang/GAPIT3/blob/master/material/GAPIT.MLM.V1.phenotype_view.pdf)
 
+
+
 ![Marker.Density](https://github.com/jiabowang/GAPIT3/blob/master/material/GAPIT.Marker.Density.pdf)
 
 ![Marker.LD](https://github.com/jiabowang/GAPIT3/blob/master/material/GAPIT.Marker.LD.pdf)
