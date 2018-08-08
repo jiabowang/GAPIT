@@ -204,7 +204,7 @@ sBLUP used SUPER method to build psedue QTN kinship matrix. The code is:
 Result
 =====
 
-![phenotype_view](https://github.com/jiabowang/GAPIT3/blob/master/material/Phenotype_view.png)
+![phenotype_view](https://github.com/jiabowang/GAPIT3/blob/master/material/Phenotype_view.png)<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Phenotype_view.png">
 
 
 
