@@ -204,17 +204,37 @@ sBLUP used SUPER method to build psedue QTN kinship matrix. The code is:
 Result
 =====
 
-![phenotype_view](https://github.com/jiabowang/GAPIT3/blob/master/material/GAPIT.MLM.V1.phenotype_view.pdf)
+![phenotype_view](https://github.com/jiabowang/GAPIT3/blob/master/material/Phenotype_view.png)
 
 
 
-![Marker.Density](https://github.com/jiabowang/GAPIT3/blob/master/material/GAPIT.Marker.Density.pdf)
+![Marker.Density](https://github.com/jiabowang/GAPIT3/blob/master/material/Marker_Density.png)
 
-![Marker.LD](https://github.com/jiabowang/GAPIT3/blob/master/material/GAPIT.Marker.LD.pdf)
+![Marker.LD](https://github.com/jiabowang/GAPIT3/blob/master/material/Marker_LD.png)
 
-![Heterozygos](https://github.com/jiabowang/GAPIT3/blob/master/material/GAPIT.Heterozygosity.pdf)
+![Heterozygos](https://github.com/jiabowang/GAPIT3/blob/master/material/Heterozygosity.png)
 
+![MAF](https://github.com/jiabowang/GAPIT3/blob/master/material/MAF.png)
 
+![kinship.heatmap](https://github.com/jiabowang/GAPIT3/blob/master/material/kinship_heatmap.png)
+
+![2D_PCA](https://github.com/jiabowang/GAPIT3/blob/master/material/2D_PCA.png)
+
+![3D_PCA](https://github.com/jiabowang/GAPIT3/blob/master/material/3D_PCA.png)
+
+![PCA_eigenvalue](https://github.com/jiabowang/GAPIT3/blob/master/material/PCA_eigenvalue.png)
+
+![Manhattan](https://github.com/jiabowang/GAPIT3/blob/master/material/Manhattan.png)
+
+![QQ](https://github.com/jiabowang/GAPIT3/blob/master/material/QQ.png)
+
+![Optimum](https://github.com/jiabowang/GAPIT3/blob/master/material/Optimum.png)
+
+![ROC](https://github.com/jiabowang/GAPIT3/blob/master/material/ROC.png)
+
+![Multiple_Manhattan](https://github.com/jiabowang/GAPIT3/blob/master/material/Multiple_Manhattan.png)
+
+![Multiple_QQ](https://github.com/jiabowang/GAPIT3/blob/master/material/Multiple_QQ.png)
 
 
 
