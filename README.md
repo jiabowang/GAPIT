@@ -204,38 +204,39 @@ sBLUP used SUPER method to build psedue QTN kinship matrix. The code is:
 Result
 =====
 
-![phenotype_view](https://github.com/jiabowang/GAPIT3/blob/master/material/Phenotype_view.png)<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Phenotype_view.png">
+<div align=center><img width="400" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Phenotype_view.png">
 
 
 
-![Marker.Density](https://github.com/jiabowang/GAPIT3/blob/master/material/Marker_Density.png)
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Marker_Density.png">
 
-![Marker.LD](https://github.com/jiabowang/GAPIT3/blob/master/material/Marker_LD.png)
-
-![Heterozygos](https://github.com/jiabowang/GAPIT3/blob/master/material/Heterozygosity.png)
-
-![MAF](https://github.com/jiabowang/GAPIT3/blob/master/material/MAF.png)
-
-![kinship.heatmap](https://github.com/jiabowang/GAPIT3/blob/master/material/kinship_heatmap.png)
-
-![2D_PCA](https://github.com/jiabowang/GAPIT3/blob/master/material/2D_PCA.png)
-
-![3D_PCA](https://github.com/jiabowang/GAPIT3/blob/master/material/3D_PCA.png)
-
-![PCA_eigenvalue](https://github.com/jiabowang/GAPIT3/blob/master/material/PCA_eigenvalue.png)
-
-![Manhattan](https://github.com/jiabowang/GAPIT3/blob/master/material/Manhattan.png)
-
-![QQ](https://github.com/jiabowang/GAPIT3/blob/master/material/QQ.png)
-
-![Optimum](https://github.com/jiabowang/GAPIT3/blob/master/material/Optimum.png)
-
-![ROC](https://github.com/jiabowang/GAPIT3/blob/master/material/ROC.png)
-
-![Multiple_Manhattan](https://github.com/jiabowang/GAPIT3/blob/master/material/Mutiple_Manhattan.png)
+<div align=center><img width="400" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Marker_LD.png">
 
 
-![Multiple_QQ](https://github.com/jiabowang/GAPIT3/blob/master/material/Multiple_QQ.png)
+<div align=center><img width="400" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Heterozygosity.png">
+
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/MAF.png">
+
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/kinship_heatmap.png">
+
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/2D_PCA.png">
+
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/3D_PCA.png">
+
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/PCA_eigenvalue.png">
+
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Manhattan.png">
+
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/QQ.png">
+
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Optimum.png">
+
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/ROC.png">
+
+<div align=center><img width="300" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Mutiple_Manhattan.png">
+
+
+<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Multiple_QQ.png">
 
 
 
