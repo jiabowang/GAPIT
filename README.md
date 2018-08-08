@@ -232,7 +232,8 @@ Result
 
 ![ROC](https://github.com/jiabowang/GAPIT3/blob/master/material/ROC.png)
 
-![Multiple_Manhattan](https://github.com/jiabowang/GAPIT3/blob/master/material/Multiple_Manhattan.png)
+![Multiple_Manhattan](https://github.com/jiabowang/GAPIT3/blob/master/material/Mutiple_Manhattan.png)
+
 
 ![Multiple_QQ](https://github.com/jiabowang/GAPIT3/blob/master/material/Multiple_QQ.png)
 
