@@ -76,7 +76,7 @@ The GAPIT use Least Squares to solve the modle. The code of GAPIT running GLM is
       Y=myY[,c(1,2)],
       GD=myGD,
       GM=myGM,
-      model="GLM"
+      model="GLM",
       PCA.total=5,
       file.output=T
       )
@@ -90,7 +90,7 @@ EMMA method is used in GAPIT, the code of MLM is:
       Y=myY[,c(1,2)],
       GD=myGD,
       GM=myGM,
-      model="MLM"
+      model="MLM",
       PCA.total=5,
       file.output=T
       )
@@ -104,7 +104,7 @@ Compress Mixed Linear Model is published by Zhang in 2010. The code of CMLM is:
       Y=myY[,c(1,2)],
       GD=myGD,
       GM=myGM,
-      model="CMLM"
+      model="CMLM",
       PCA.total=5,
       file.output=T
       )
@@ -117,7 +117,7 @@ Multiple Loci Mixied linear Model is published by Segura in 2012. The code of ML
       Y=myY[,c(1,2)],
       GD=myGD,
       GM=myGM,
-      model="MLMM"
+      model="MLMM",
       PCA.total=5,
       file.output=T
       )
@@ -130,7 +130,7 @@ Settlement of MLM Under Progressively Exclusive Relation- ship is published by Q
       Y=myY[,c(1,2)],
       GD=myGD,
       GM=myGM,
-      model="SUPER"
+      model="SUPER",
       PCA.total=5,
       file.output=T
       )
@@ -144,7 +144,7 @@ Fixed and random model Circulating Probability Unification (FarmCPU) is publishe
       Y=myY[,c(1,2)],
       GD=myGD,
       GM=myGM,
-      model="FarmCPU"
+      model="FarmCPU",
       PCA.total=5,
       file.output=T
       )
@@ -156,12 +156,49 @@ GS
 
 * gBLUP
 
+gBLUP used marker kinship to replace the pedgree relationship matrix. The code is:
+
+      myGAPIT_gBLUP <- GAPIT(
+      Y=myY[,c(1,2)],
+      GD=myGD,
+      GM=myGM,
+      group.from=nrow(myGD),
+      group.to=nrow(myGD),
+      PCA.total=5,
+      file.output=T
+      )
+
+
 
 * cBLUP
 
+cBLUP used group kinship to replace the individual matrix. The code is:
+
+      myGAPIT_cBLUP <- GAPIT(
+      Y=myY[,c(1,2)],
+      GD=myGD,
+      GM=myGM,
+      group.from=10,
+      group.to=nrow(myGD),
+      group.by=10,
+      PCA.total=5,
+      file.output=T
+      )
 
 * sBLUP
 
+sBLUP used SUPER method to build psedue QTN kinship matrix. The code is:
+
+      myGAPIT_sBLUP <- GAPIT(
+      Y=myY[,c(1,2)],
+      GD=myGD,
+      GM=myGM,
+      sangwich.top="GLM",sangwich.bottom="SUPER",
+      LD=0.1,
+      SUPER_GS=T,
+      PCA.total=5,
+      file.output=T
+      )
 
 
 Result
