@@ -208,7 +208,7 @@ Result
 
 
 
-<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Marker_Density.png">
+<div align=center><img width="400" height="380" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Marker_Density.png">
 
 <div align=center><img width="400" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Marker_LD.png">
 
@@ -223,17 +223,17 @@ Result
 
 <div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/3D_PCA.png">
 
-<div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/PCA_eigenvalue.png">
+<div align=center><img width="400" height="380" src="https://github.com/jiabowang/GAPIT3/blob/master/material/PCA_eigenvalue.png">
 
-<div align=center><img width="400" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Manhattan.png">
+<div align=center><img width="450" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Manhattan.png">
 
 <div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/QQ.png">
 
-<div align=center><img width="400" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Optimum.png">
+<div align=center><img width="400" height="290" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Optimum.png">
 
 <div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/ROC.png">
 
-<div align=center><img width="300" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Mutiple_Manhattan.png">
+<div align=center><img width="350" height="450" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Mutiple_Manhattan.png">
 
 
 <div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Multiple_QQ.png">
