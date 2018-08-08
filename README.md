@@ -225,7 +225,7 @@ Result
 
 <div align=center><img width="400" height="380" src="https://github.com/jiabowang/GAPIT3/blob/master/material/PCA_eigenvalue.png">
 
-<div align=center><img width="450" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Manhattan.png">
+<div align=center><img width="500" height="350" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Manhattan.png">
 
 <div align=center><img width="400" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/QQ.png">
 
