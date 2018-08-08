@@ -51,7 +51,7 @@ Data Preparing
 
 The user has the option of performing GWAS on multiple phenotypes in GAPIT. This is achieved by including all phenotypes in the text file of phenotypic data. Taxa names should be in the first column of the phenotypic data file and the remaining columns should contain the observed phenotype from each individual. Missing data should be indicated by either “NaN” or “NA”. 
 
-![Phenotype file](https://github.com/jiabowang/GAPIT3/blob/master/material/phenotype.png)
+<img width="200" height="300" src="https://github.com/jiabowang/GAPIT3/blob/master/material/phenotype.png">
 
 ### Genotype Data
 
