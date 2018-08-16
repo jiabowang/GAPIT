@@ -49,7 +49,7 @@ if(!'multtest'%in% installed.packages()[,"Package"]){
 
 
 GAPIT.Version="2018.08.18, GAPIT 3.0"
-print(paste("All packages are loaded already !","GAPIT.Version is ",GAPIT.Version,sep=""))
+print(paste("All packages are loaded already !  ","GAPIT.Version is ",GAPIT.Version,sep=""))
 return(GAPIT.Version)
 }
 #=============================================================================================
@@ -183,7 +183,7 @@ function(Y=NULL,CV=NULL,Z=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,
 #Performing first screening with GLM
 if(method=="GLM"){
 #print("---------------screening by GLM----------------------------------")
-
+  #print(GTindex)
   myGAPIT <- GAPIT(
   Y=Y,			
   CV=CV,
@@ -191,8 +191,7 @@ if(method=="GLM"){
   KI=KI,
   GD=GD,
   GM=GM,
-  group.from=0,			
-  group.to=0,
+  model=("GLM"),
   QC=FALSE,
   GTindex=GTindex,
   file.output=file.output				
@@ -468,7 +467,7 @@ if(method=="FarmCPU")
 library(bigmemory)  #for FARM-CPU
 library(biganalytics) #for FARM-CPU
 if(!exists('FarmCPU', mode='function'))source("http://www.zzlab.net/FarmCPU/FarmCPU_functions.txt")#web source code
-
+colnames(GM)[1]="SNP"
 myFarmCPU=FarmCPU(
 Y=Y,#Phenotype
 GD=GD,#Genotype
@@ -485,6 +484,8 @@ storage=cbind(.5*ss/ns,1-.5*ss/ns)
 maf=as.data.frame(cbind(gene_taxa,apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)))
 colnames(maf)=c("SNP","maf")
 nobs=ns
+#print(dim(myFarmCPU$GWAS))
+#print(length(maf))
 myFarmCPU$GWAS=merge(myFarmCPU$GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")
 GWAS=cbind(myFarmCPU$GWAS,nobs)
 GWAS=GWAS[order(GWAS$P.value),]
@@ -2262,7 +2263,7 @@ function(G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NU
                 kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden",                                                    
                 bin.from=10000,bin.to=10000,bin.by=10000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
                 SNP.P3D=TRUE,SNP.effect="Add",SNP.impute="Middle",PCA.total=0, SNP.fraction = 1, seed = 123, BINS = 20,SNP.test=TRUE, 
-                    SNP.MAF=0,FDR.Rate = 1, SNP.FDR=1,SNP.permutation=FALSE,SNP.CV=NULL,SNP.robust="GLM", NJtree.group=4,NJtree.type=c("fan","unrooted"),plot.bin=10^6,PCA.col=NULL,PCA.3d=FALSE,
+                    SNP.MAF=0,FDR.Rate = 1, SNP.FDR=1,SNP.permutation=FALSE,SNP.CV=NULL,SNP.robust="GLM", NJtree.group=NULL,NJtree.type=c("fan","unrooted"),plot.bin=10^6,PCA.col=NULL,PCA.3d=FALSE,
 
                 file.from=1, file.to=1, file.total=NULL, file.fragment = 99999,file.path=NULL,Inter.Plot=FALSE,Inter.type=c("m","q"),
                 file.G=NULL, file.Ext.G=NULL,file.GD=NULL, file.GM=NULL, file.Ext.GD=NULL,file.Ext.GM=NULL, 
@@ -2306,6 +2307,9 @@ G=myGenotype$G
 chor_taxa=myGenotype$chor_taxa
 
 #if G exist turn to GD and GM
+
+if(output.numerical) write.table(GD,  "GAPIT.Genotype.Numerical.txt", quote = FALSE, sep = "\t", row.names = TRUE,col.names = NA)
+if(output.hapmap) write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt", quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
 
 
 rownames(GD)=GT
@@ -4944,10 +4948,10 @@ Pred=SS$Pred
   GI=GWAS
   #print(head(GWAS))
   #GI=matrix(as.numeric(as.matrix(GI) ) ,nrow(GI),ncol(GI))
-  ##GI=GI[order(GI[,2]),]
-  #GI=GI[order(GI[,1]),]
+  GI=GI[order(GI[,2]),]
+  GI=GI[order(GI[,1]),]
   #GI=GI[order(as.numeric(row.names(GI))),]
-  GI=GI[match(as.character(IC$GM[,1]),as.character(GI[,1])),]
+  #GI=GI[match(as.character(IC$GM[,1]),as.character(GI[,1])),]
   #print(GI[,1:4])
   #print()
   #print(dim(IC$GD))
@@ -5018,7 +5022,7 @@ Pred=SS$Pred
 
 
   }
-  if(is.na(maf[1]))  maf=matrix(.5,nrow(GWAS),1)
+  if(is.na(maf[1]))  maf=matrix(.5,nrow(GI),1)
 if(!is.null(IC$GD)&DP$SNP.test)
 { 
   
@@ -5027,7 +5031,7 @@ if(!is.null(IC$GD)&DP$SNP.test)
   #print(dim(GWAS))
   #print(table(index))
   #print(length(rsquare_base))
-	PWI.Filtered=cbind(GWAS[,-5],rsquare_base,rsquare)
+	PWI.Filtered=cbind(GI[,-5],rsquare_base,rsquare)
 	colnames(PWI.Filtered)=c("SNP","Chromosome","Position ","P.value", "maf", "nobs", "Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP")
   
   if(!is.null(PWI.Filtered))
@@ -5037,7 +5041,7 @@ if(!is.null(IC$GD)&DP$SNP.test)
   print("Calculating FDR..." )
   PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
     print("QQ plot..." )
-   if(DP$file.output) GAPIT.QQ(P.values = GWAS$P.value, name.of.trait = DP$name.of.trait,DPP=DP$DPP)
+   if(DP$file.output) GAPIT.QQ(P.values = GI$P.value, name.of.trait = DP$name.of.trait,DPP=DP$DPP)
    print("Manhattan plot (Genomewise)..." )
    if(DP$file.output) GAPIT.Manhattan(GI.MP = GI[,c(2:4)], name.of.trait = DP$name.of.trait, DPP=DP$DPP, plot.type = "Genomewise",cutOff=DP$cutOff,seqQTN=DP$QTN.position,plot.style=DP$plot.style,plot.bin=DP$plot.bin)
    #print("@@@@@@@@@@@@@@@@@@@@@@@@")
@@ -5758,7 +5762,9 @@ CVI <- CV
 #print(dim(Z))
 #print(dim(GK))
 
-
+#print("@@@@@@")
+#print(dim(GT))
+#print(GTindex)
 if(QC)
 {
   qc <- GAPIT.QC(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
@@ -5771,6 +5777,7 @@ if(QC)
   if(noCV)CVI=qc$CV #this part will make GS without CV not present all prediction
   my_taxa=as.character(KI[,1])
 }
+#print(GTindex)
 
 #print(dim(KI))
 #Output phenotype
@@ -5841,7 +5848,7 @@ print("-------------------Sandwich top bun-----------------------------------")
   #myGD=cbind(as.data.frame(GT),as.data.frame(GD)) 
   file.output.temp=file.output
   file.output=FALSE
-  
+  #print(sangwich.top)
   GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=file.output)$GWAS
   file.output=file.output.temp
   
@@ -6036,6 +6043,8 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Prio PreP3D")
 #print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
 #print("!!!!!!!!!!!!")
 #print(length(ys))
+#print(GTindex)
+#print(dim(GD))
 #print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
 #print(dim(GI))
 
@@ -6366,7 +6375,8 @@ print("--------------  Sandwich bottom with raw burger------------------------")
  }
  
  print("--------------EMMAxP3D with the optimum setting-----------------------") 
- 
+ print(dim(ys))
+ print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
   p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[GTindex,colInclude]))   ,K = as.matrix(bk$KW) ,Z=Z1,X0=as.matrix(X0),CVI=CVI, CV.Inheritance=CV.Inheritance,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
           SNP.permutation=SNP.permutation, GP=GP,
     			 file.path=file.path,file.from=file.from,file.to=file.to,file.total=file.total, file.fragment = file.fragment, byFile=byFile, file.G=file.G,file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
@@ -6547,7 +6557,7 @@ print("Genomic Breeding Values (GBV) ..." )
 gs=NULL
 if(!byPass) 
 {
-  
+
 if(length(bk$KW)>ncol(X0)) {
     gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(p3d$BLUP,p3d$PEV))
 }
@@ -7343,8 +7353,14 @@ position.only=T
 for(i in 1:length(environ_name))
 {
   environ_result=read.csv(paste("GAPIT.",environ_name[i],".GWAS.Results.csv",sep=""),head=T)
+  environ_filter=environ_result[!is.na(environ_result[,4]),]
+  y_filter=environ_filter[environ_filter[,4]<(0.01/(nrow(environ_filter))),]
+  write.table(y_filter,paste("Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
+
   result=environ_result[,1:4]
-  result=result[match(as.character(GM[,1]),as.character(result[,1])),]
+  #result=result[match(as.character(GM[,1]),as.character(result[,1])),]
+  result=result[order(result[,2]),]
+  result=result[order(result[,1]),]
   #print(head(result))
   rownames(result)=1:nrow(result)
   #print(i)
@@ -7400,6 +7416,7 @@ for(i in 1:length(environ_name))
        plot.line=TRUE
        #print(new_xz)
 }
+
 pdf(paste("GAPIT.Manhattan.Mutiple.Plot.pdf" ,sep = ""), width = 20,height=6*Nenviron)
 par(mfrow=c(Nenviron,1))
 for(k in 1:Nenviron)
@@ -9460,7 +9477,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=1
                 SNP.MAF=SNP.MAF,FDR.Rate = FDR.Rate, SNP.FDR=SNP.FDR,SNP.permutation=SNP.permutation,SNP.CV=NULL,SNP.robust="GLM",file.from=file.from, file.to=file.to, file.total=file.total, file.fragment = 99999,file.path=NULL, 
                 file.G=file.G, file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,ngrid = 100, llim = -10, ulim = 10, esp = 1e-10,Inter.Plot=Inter.Plot,Inter.type=Inter.type,
                 LD.chromosome=NULL,LD.location=NULL,LD.range=NULL,PCA.col=PCA.col,PCA.3d=PCA.3d,NJtree.group=NJtree.group,NJtree.type=NJtree.type,
-                sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,QC=QC,GTindex=NULL,LD=LD,plot.bin=10^5,file.output=file.output,cutOff=cutOff, Model.selection = Model.selection,output.numerical = output.numerical,
+                sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,QC=QC,GTindex=GTindex,LD=LD,plot.bin=10^5,file.output=file.output,cutOff=cutOff, Model.selection = Model.selection,output.numerical = output.numerical,
                 output.hapmap = output.hapmap, Create.indicator = FALSE,QTN=QTN, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = FALSE,
                 method.GLM="fast.lm",method.sub="reward",method.sub.final="reward",method.bin="static",bin.size=c(1000000),bin.selection=bin.selection,model=model,
                 h2=h2,NQTN=NQTN,QTNDist="normal",effectunit=1,category=category,r=r,cveff=NULL,a2=0,adim=2,
@@ -9472,14 +9489,13 @@ P_list_M=rownames(as.matrix(Para))
 Para=c(GAPIT_list[!G_list_M%in%P_list_M],Para)
 if(SUPER_GS==TRUE)Para$SNP.test=FALSE
 IC=NULL
-GAPIT.Version=GAPIT.0000()
+#GAPIT.Version=GAPIT.0000()
 print("--------------------Processing traits----------------------------------")
 if(!is.null(Y)){
 print("Phenotype provided!")
 if(ncol(Y)<2)  stop ("Phenotype should have taxa name and one trait at least. Please correct phenotype file!")
 
-
-DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI,Z=Z,CV=CV,CV.Inheritance=Para$CV.Inheritance,GP=GP,GK=GK,
+if(m==1)DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI,Z=Z,CV=CV,CV.Inheritance=Para$CV.Inheritance,GP=GP,GK=GK,
                 group.from=Para$group.from ,group.to= Para$group.to,group.by=Para$group.by,DPP= Para$DPP, 
                 kinship.cluster=Para$kinship.cluster, kinship.group=Para$kinship.group,kinship.algorithm=Para$ kinship.algorithm, NJtree.group=Para$NJtree.group,NJtree.type=Para$NJtree.type,plot.bin=Para$plot.bin,PCA.col=Para$PCA.col,PCA.3d=Para$PCA.3d,                                                   
                 sangwich.top=Para$sangwich.top,sangwich.bottom=Para$sangwich.bottom,LD=Para$LD,bin.from= Para$bin.from,bin.to= Para$bin.to,bin.by= Para$bin.by,inclosure.from= Para$inclosure.from,inclosure.to= Para$inclosure.to,inclosure.by= Para$inclosure.by,
@@ -9569,6 +9585,9 @@ GT=myGenotype$GT
 #G=myGenotype$G
 chor_taxa=myGenotype$chor_taxa
 
+
+if(Para$output.numerical) write.table(GD,  "GAPIT.Genotype.Numerical.txt", quote = FALSE, sep = "\t", row.names = TRUE,col.names = NA)
+if(Para$output.hapmap) write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt", quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
 
 rownames(GD)=GT
 colnames(GD)=GI[,1]
