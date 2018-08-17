@@ -26,6 +26,21 @@ Source:
 Contents:
 -----
 
+   
+   * [Start](#start)
+      * [Function Loading](#function-loading)
+      * [Data Preparing](#data-preparing)
+         * [Phenotype Data](#phenotype-data)
+         * [Genotype Data](#genotype-data)
+            * [Hapmap Format](#hapmap-format)
+            * [Numeric Format](#numeric-format)
+   * [Anlysis](#anlysis)
+      * [GWAS](#gwas)
+      * [GS](#gs)
+   * [Result](#result)
+   * [Example](#example)
+   * [Citation](#citation)
+
 
 Start
 ======
