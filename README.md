@@ -248,6 +248,8 @@ Result
 
 <div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/ROC.png">
 
+<div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Circle_Manhattan.png">
+
 <div align=center><img width="350" height="450" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Mutiple_Manhattan.png">
 
 
