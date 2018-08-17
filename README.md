@@ -1,4 +1,4 @@
-GAPIT3
+GAPIT3[![](https://img.shields.io/badge/Issues-0%2B-brightgreen.svg)](https://github.com/jiabowang/GAPIT3/issues)
 ===========
 Genome Association Predict Integrate Tools
 
