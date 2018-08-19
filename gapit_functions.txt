@@ -2281,7 +2281,11 @@ function(G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NU
 print("GAPIT.DP in process...")
 #Judge phenotype  genotype and GAPIT logical
 #print(file.from)
-#print(file.to)
+print(kinship.algorithm)
+
+
+if(!kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
+{
 myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,kinship.algorithm=kinship.algorithm,PCA.total=PCA.total,SNP.fraction=SNP.fraction,SNP.test=FALSE,
                 file.path=file.path,file.from=file.from, file.to=file.to, file.total=file.total, file.fragment = file.fragment, file.G=file.G, 
                 file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
@@ -2289,7 +2293,16 @@ myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,kinship.algorithm=kinship.algor
                 LD.chromosome=LD.chromosome,LD.location=LD.location,LD.range=LD.range,
                 GP=GP,GK=GK,bin.size=NULL,inclosure.size=NULL, 
                 sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,GTindex=NULL,file.output=file.output, Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero,Geno.View.output=Geno.View.output,PCA.col=PCA.col,PCA.3d=PCA.3d)
+}else{
+myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,PCA.total=PCA.total,SNP.fraction=SNP.fraction,SNP.test=FALSE,
+                file.path=file.path,file.from=file.from, file.to=file.to, file.total=file.total, file.fragment = file.fragment, file.G=file.G, 
+                file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
+                SNP.MAF=SNP.MAF,FDR.Rate = FDR.Rate,SNP.FDR=SNP.FDR,SNP.effect=SNP.effect,SNP.impute=SNP.impute,NJtree.group=NJtree.group,NJtree.type=NJtree.type,
+                LD.chromosome=LD.chromosome,LD.location=LD.location,LD.range=LD.range,
+                GP=GP,GK=GK,bin.size=NULL,inclosure.size=NULL, 
+                sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,GTindex=NULL,file.output=file.output, Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero,Geno.View.output=Geno.View.output,PCA.col=PCA.col,PCA.3d=PCA.3d)
 
+}
 
 KI=myGenotype$KI
 PC=myGenotype$PC
@@ -4088,6 +4101,7 @@ if(!is.null(GD))
 {
   maf=apply(as.matrix(GD),2,function(one) abs(1-sum(one)/(2*nrow(GD))))
 #print(length(maf))
+maf[maf>0.5]=1-maf[maf>0.5]
 #print(head(maf))
 
 maf_index=maf>SNP.MAF
@@ -6375,8 +6389,8 @@ print("--------------  Sandwich bottom with raw burger------------------------")
  }
  
  print("--------------EMMAxP3D with the optimum setting-----------------------") 
- print(dim(ys))
- print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
+ #print(dim(ys))
+ #print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
   p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[GTindex,colInclude]))   ,K = as.matrix(bk$KW) ,Z=Z1,X0=as.matrix(X0),CVI=CVI, CV.Inheritance=CV.Inheritance,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
           SNP.permutation=SNP.permutation, GP=GP,
     			 file.path=file.path,file.from=file.from,file.to=file.to,file.total=file.total, file.fragment = file.fragment, byFile=byFile, file.G=file.G,file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
@@ -6625,6 +6639,7 @@ print("p3d objects transfered")
   Bread_X=GD[,Bread_index]
   #print(dim(Bread_X))
   maf=apply(Bread_X,2,function(one) abs(1-sum(one)/(2*nrow(Bread_X))))
+  maf[maf>0.5]=1-maf[maf>0.5]
   rsquare_base=rep(NA,length(ps))
   rsquare=rep(NA,length(ps))
   df=rep(NA,length(nobs))
@@ -9470,7 +9485,7 @@ if(model=="Blink")Para$kinship.algorithm="Blink"
 if(is.null(Para$memo)|m>1)Para$memo=model
 print(Para$memo)
 
-#print("!!!!!!!!!")
+#print(Para$kinship.algorithm)
 
 GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=100000,kinship.cluster=kinship.cluster, kinship.group=kinship.group,kinship.algorithm=kinship.algorithm,                                                    
                 bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction = SNP.fraction, seed = seed, BINS = 20,SNP.test=SNP.test,
@@ -9486,7 +9501,10 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=1
 
 G_list_M=rownames(as.matrix(GAPIT_list))
 P_list_M=rownames(as.matrix(Para))
+
 Para=c(GAPIT_list[!G_list_M%in%P_list_M],Para)
+#print(Para$kinship.algorithm)
+
 if(SUPER_GS==TRUE)Para$SNP.test=FALSE
 IC=NULL
 #GAPIT.Version=GAPIT.0000()
@@ -9495,7 +9513,8 @@ if(!is.null(Y)){
 print("Phenotype provided!")
 if(ncol(Y)<2)  stop ("Phenotype should have taxa name and one trait at least. Please correct phenotype file!")
 
-if(m==1)DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI,Z=Z,CV=CV,CV.Inheritance=Para$CV.Inheritance,GP=GP,GK=GK,
+if(m==1)
+{               DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI,Z=Z,CV=CV,CV.Inheritance=Para$CV.Inheritance,GP=GP,GK=GK,
                 group.from=Para$group.from ,group.to= Para$group.to,group.by=Para$group.by,DPP= Para$DPP, 
                 kinship.cluster=Para$kinship.cluster, kinship.group=Para$kinship.group,kinship.algorithm=Para$ kinship.algorithm, NJtree.group=Para$NJtree.group,NJtree.type=Para$NJtree.type,plot.bin=Para$plot.bin,PCA.col=Para$PCA.col,PCA.3d=Para$PCA.3d,                                                   
                 sangwich.top=Para$sangwich.top,sangwich.bottom=Para$sangwich.bottom,LD=Para$LD,bin.from= Para$bin.from,bin.to= Para$bin.to,bin.by= Para$bin.by,inclosure.from= Para$inclosure.from,inclosure.to= Para$inclosure.to,inclosure.by= Para$inclosure.by,
@@ -9510,12 +9529,13 @@ if(m==1)DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI,Z=Z,CV=CV,CV.Inheritance=Para$CV.Inher
                 Create.indicator = Para$Create.indicator,QTN= Para$QTN, QTN.round= Para$QTN.round,QTN.limit= Para$QTN.limit, QTN.update= Para$QTN.update, QTN.method= Para$QTN.method, Major.allele.zero = Para$Major.allele.zero,
                 method.GLM=Para$ method.GLM,method.sub= Para$method.sub,method.sub.final= Para$method.sub.final,
                 method.bin= Para$method.bin,bin.size= Para$bin.size,bin.selection= Para$bin.selection,
-            memo= Para$memo,Prior= Para$Prior,ncpus=Para$ncpus,maxLoop= Para$maxLoop,threshold.output= Para$threshold.output,
-            WS= Para$WS,alpha= Para$alpha,maxOut= Para$maxOut,QTN.position= Para$QTN.position, converge=Para$converge,iteration.output= Para$iteration.output,acceleration=Para$acceleration,
-            iteration.method= Para$iteration.method,PCA.View.output=Para$PCA.View.output, 
-            output.hapmap = Para$output.hapmap, file.output= Para$file.output,Geno.View.output=Para$Geno.View.output,plot.style=Para$plot.style,SUPER_GD= Para$SUPER_GD,SUPER_GS= Para$SUPER_GS,CG=Para$CG,model=model)
-#print(DP$name.of.trait)
-
+                memo= Para$memo,Prior= Para$Prior,ncpus=Para$ncpus,maxLoop= Para$maxLoop,threshold.output= Para$threshold.output,
+                WS= Para$WS,alpha= Para$alpha,maxOut= Para$maxOut,QTN.position= Para$QTN.position, converge=Para$converge,iteration.output= Para$iteration.output,acceleration=Para$acceleration,
+                iteration.method= Para$iteration.method,PCA.View.output=Para$PCA.View.output, 
+                output.hapmap = Para$output.hapmap, file.output= Para$file.output,Geno.View.output=Para$Geno.View.output,plot.style=Para$plot.style,SUPER_GD= Para$SUPER_GD,SUPER_GS= Para$SUPER_GS,CG=Para$CG,model=model)
+}else{
+  DP$kinship.algorithm=Para$ kinship.algorithm
+}
 
 
 for (trait in 2: ncol(Y))  {
@@ -9844,7 +9864,6 @@ if(DP$kinship.algorithm!="None" & DP$kinship.algorithm!="SUPER" & is.null(Z))
  Z=cbind(taxa,Z)
  }
 
-#print(DP$kinship.algorithm)
 if(max(ic_PCA[,2])==min(ic_PCA[,2]))ic_PCA=NULL
 if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
  {
@@ -12556,6 +12575,8 @@ if(!require(gplots)) install.packages("gplots")
 if(!require(LDheatmap)) install.packages("LDheatmap")
 if(!require(genetics)) install.packages("genetics")
 if(!require(ape)) install.packages("ape")
+if(!require(compiler)) install.packages("compiler")
+
 if(!require(EMMREML)) install.packages("EMMREML")
 if(!require(scatterplot3d)) install.packages("scatterplot3d")
 
