@@ -139,7 +139,7 @@ Multiple Loci Mixied linear Model is published by Segura in 2012. The code of ML
 
 * SUPER
 
-Settlement of MLM Under Progressively Exclusive Relation- ship is published by Qishan in 2014. The code of MLMM is:
+Settlement of MLM Under Progressively Exclusive Relation- ship is published by Qishan in 2014. The code of SUPER is:
 
       myGAPIT_SUPER <- GAPIT(
       Y=myY[,c(1,2)],
@@ -153,7 +153,7 @@ Settlement of MLM Under Progressively Exclusive Relation- ship is published by Q
 
 * Farm-CPU
 
-Fixed and random model Circulating Probability Unification (FarmCPU) is published by Xiaolei in 2016. The code of MLMM is:
+Fixed and random model Circulating Probability Unification (FarmCPU) is published by Xiaolei in 2016. The code of Farm-CPU is:
 
       myGAPIT_FarmCPU <- GAPIT(
       Y=myY[,c(1,2)],
