@@ -377,7 +377,7 @@ if(method=="GLM"){
   group.to=0,
   QC=FALSE,
   GTindex=GTindex,
-  file.output=file.output				
+  file.output=F				
   )
   GWAS=myGAPIT$GWAS 
   GPS=myGAPIT$GPS 
@@ -402,7 +402,7 @@ if(method=="MLM"){
   group.to=nrow(Y),
   QC=FALSE,
   GTindex=GTindex,
-  file.output=file.output				
+  file.output=F				
   )
   GWAS=myGAPIT$GWAS 
   GPS=myGAPIT$GPS 
@@ -426,7 +426,7 @@ if(method=="CMLM"){
   group.to=nrow(Y),
   QC=FALSE,
   GTindex=GTindex,
-  file.output=file.output				
+  file.output=F				
   )
   GWAS=myGAPIT$GWAS 
   GPS=myGAPIT$GPS 
@@ -444,9 +444,9 @@ if(method=="FaST" | method=="SUPER"| method=="DC")
   if(!is.null(vg) & !is.null(vg) & is.null(delta)) delta=ve/vg
   if(is.null(vg) & is.null(ve))
   {
-
+    #print("!!!!!!!!!!!!!!!!")
     myFaSTREML=GAPIT.get.LL(pheno=matrix(Y[,-1],nrow(Y),1),geno=NULL,snp.pool=as.matrix(GK[,-1]),X0=as.matrix(cbind(matrix(1,nrow(CV),1),CV[,-1])))
-    
+    #print(myFaSTREML)
 #print("Transfer data...")    
     REMLs=-2*myFaSTREML$LL  
     delta=myFaSTREML$delta
@@ -1926,7 +1926,7 @@ LL.best0=as.numeric(Compression.best[4]  )
 LL.best=paste("-2LL: ",floor(LL.best0*100)/100,sep="")
 label.comp=paste(c("Cluster method: ","Group method: ","Group number: "), Compression.best[c(1:3)], sep="")
 theOptimum=c(label.comp,LL.best) 
-
+#print(variance)
 pdf(paste("GAPIT.", name.of.trait,".Optimum.pdf", sep = ""), width = 14)
 par(mfrow = c(1,1), mar = c(1,1,5,5), lab = c(5,5,7))
 pie(variance,  col=colors, labels=labels,angle=45,border=NA)
@@ -4100,9 +4100,10 @@ for(i in 1:(length(chor_taxa)))
 if(!is.null(GD))
 {
   maf=apply(as.matrix(GD),2,function(one) abs(1-sum(one)/(2*nrow(GD))))
-#print(length(maf))
+#print(max(maf))
 maf[maf>0.5]=1-maf[maf>0.5]
-#print(head(maf))
+#print(max(maf))
+#print(min(maf))
 
 maf_index=maf>SNP.MAF
 print(paste("GAPIT will filter marker with MAF setting !!"))
@@ -4992,8 +4993,8 @@ Pred=SS$Pred
       stderr=SS$TV$stderr
       effect.est=SS$mc
    #print("@@@@@@@@")
-   #print(dim(SS$Compression))
-   if(DP$file.output&!is.null(SS$Compression)) GAPIT.Compression.Visualization(Compression = SS$Compression, name.of.trait = DP$name.of.trait)
+   #print(SS$Compression)
+   if(DP$file.output&!is.null(SS$Compression)&!is.na(SS$Compression[1,6])) GAPIT.Compression.Visualization(Compression = SS$Compression, name.of.trait = DP$name.of.trait)
 
    if(Create.indicator){
     #Add a counter column for GI
@@ -9396,7 +9397,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
 
 `GAPIT` <-
 function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,K=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NULL,GK=NULL,
-                group.from=1000000 ,group.to=1000000,group.by=10,DPP=100000, 
+                group.from=1000000 ,group.to=1000000,group.by=20,DPP=100000, 
                 kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden",                                                    
                 bin.from=10000,bin.to=10000,bin.by=10000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
                 SNP.P3D=TRUE,SNP.effect="Add",SNP.impute="Middle",PCA.total=0, SNP.fraction = 1, seed = NULL, BINS = 20,SNP.test=TRUE,
@@ -9453,12 +9454,12 @@ Para$group.by=10
 }
 if(model=="CMLM")
 {
-  if(!is.null(group.from)&is.null(Para$group.from))Para$group.from=group.from
-  if(!is.null(group.to)&is.null(Para$group.to))Para$group.to=group.to
-  if(!is.null(group.by)&is.null(Para$group.by))Para$group.by=group.by
-  if(is.null(Para$group.from))Para$group.from=20
-  if(is.null(Para$group.to))Para$group.to=1000000
-  if(is.null(Para$group.by))Para$group.by=20
+  if(is.null(Para$group.from))Para$group.from=group.from
+  if(is.null(Para$group.to))Para$group.to=group.to
+  if(is.null(Para$group.by))Para$group.by=group.by
+  if(Para$group.from==Para$group.to)Para$group.from=20
+  #if(is.null(Para$group.to))Para$group.to=1000000
+  #if(is.null(Para$group.by))Para$group.by=20
 }
 if(model=="SUPER")
 {
@@ -9605,12 +9606,17 @@ GT=myGenotype$GT
 #G=myGenotype$G
 chor_taxa=myGenotype$chor_taxa
 
-
-if(Para$output.numerical) write.table(GD,  "GAPIT.Genotype.Numerical.txt", quote = FALSE, sep = "\t", row.names = TRUE,col.names = NA)
-if(Para$output.hapmap) write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt", quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
-
 rownames(GD)=GT
 colnames(GD)=GI[,1]
+taxa=GT
+#print(GD[1:5,1:5])
+if(Para$output.numerical) 
+{write.table(cbind(taxa,GD),  "GAPIT.Genotype.Numerical.txt", quote = FALSE, sep = "\t", row.names = F,col.names = T)
+write.table(GI,  "GAPIT.Genotype.map.txt", quote = FALSE, sep = "\t", row.names = F,col.names = T)
+
+}
+if(Para$output.hapmap) write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt", quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+
 #GD=cbind(as.data.frame(GT),GD)
 
 if(!is.null(seed))set.seed(seed)
