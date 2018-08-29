@@ -126,7 +126,7 @@ Compress Mixed Linear Model is published by Zhang in 2010. The code of CMLM is:
 
 * MLMM
 
-Multiple Loci Mixied linear Model is published by Segura in 2012. The code of MLMM is:
+Multiple Loci Mixied linear Model is published by Segura in 2012. The code of MLMM in GAPIT is:
 
       myGAPIT_MLMM <- GAPIT(
       Y=myY[,c(1,2)],
@@ -153,7 +153,7 @@ Settlement of MLM Under Progressively Exclusive Relation- ship is published by Q
 
 * Farm-CPU
 
-Fixed and random model Circulating Probability Unification (FarmCPU) is published by Xiaolei in 2016. The code of Farm-CPU is:
+Fixed and random model Circulating Probability Unification (FarmCPU) is published by Xiaolei in 2016. The code of Farm-CPU in GAPIT is:
 
       myGAPIT_FarmCPU <- GAPIT(
       Y=myY[,c(1,2)],
