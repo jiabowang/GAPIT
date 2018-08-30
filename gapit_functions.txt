@@ -4104,10 +4104,13 @@ if(!is.null(GD))
 maf[maf>0.5]=1-maf[maf>0.5]
 #print(max(maf))
 #print(min(maf))
-
-maf_index=maf>SNP.MAF
+maf_index=maf>=SNP.MAF
 print(paste("GAPIT will filter marker with MAF setting !!"))
+print(paste("The markers will be filtered by SNP.MAF: ",SNP.MAF,sep=""))
 print(table(maf_index))
+
+#print(head(maf[!maf_index]))
+
 GD=GD[,maf_index]
 GM=as.data.frame(GI[maf_index,])
 GI=GM
@@ -9592,7 +9595,7 @@ if(Para$SNP.test==TRUE)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
 
   #return (out)
 }else{# is.null(Y)
-  
+  #print(Para$SNP.MAF)
 out <- list()
 myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,kinship.algorithm=Para$kinship.algorithm,PCA.total=Para$PCA.total,SNP.fraction=Para$SNP.fraction,SNP.test=Para$SNP.test,
                 file.path=Para$file.path,file.from=Para$file.from, file.to=Para$file.to, file.total=Para$file.total, file.fragment = Para$file.fragment, file.G=Para$file.G, 
@@ -13415,7 +13418,7 @@ function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NUL
 print("--------------------- Welcome to GAPIT ----------------------------")
   
 echo=TRUE
-GAPIT.Version=GAPIT.0000()
+#GAPIT.Version=GAPIT.0000()
 
 Timmer=GAPIT.Timmer(Infor="GAPIT")
 Memory=GAPIT.Memory(Infor="GAPIT")
