@@ -7592,38 +7592,32 @@ for(i in 1:length(environ_name))
     colnames(result0)[i+3]=environ_name[i]
     }
   rownames(result)=1:nrow(result)
-  #if(i==3) print(result)
-  #cutoff=Para$cutOff
-#print(dim(result))
   result[is.na(result[,4]),4]=1
   sig_pos=append(sig_pos,as.numeric(rownames(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),])))
-#print(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),])
-#print(sig_pos) 
+
 }
 
-
-#print(table(sig_pos))
 #if(length(sig_pos)!=0)sig_pos=sig_pos[!duplicated(sig_pos)]
  if(length(sig_pos[!is.na(sig_pos)])!=0)
  {     x_matrix=as.matrix(table(sig_pos))
        x_matrix=cbind(as.data.frame(rownames(x_matrix)),x_matrix)
-       # print(x_matrix)
+       #print(x_matrix)
        lastbase=0
-       map_store=GM
-        for (i in unique(map_store[,2]))
+       map_store=as.matrix(cbind(as.numeric(GM[,2]),as.numeric(as.vector(GM[,3]))))
+       #print(head(map_store))
+       #print(as.numeric(map_store[,3]))
+        for (j in unique(map_store[,1]))
         {
-            index=(map_store[,2]==i)
-            map_store[index,3]=as.numeric(as.character(map_store[index,3]))+lastbase
-            #print(i)
-            #print(head(map_store[index,]))
-            lastbase=max(as.numeric(as.character(map_store[index,3])))
+            index=map_store[,1]==j
+            #print(table(index))
+            map_store[index,2]=as.numeric(map_store[index,2])+lastbase
+            lastbase=max(as.numeric(map_store[index,2]))
             #print(lastbase)
         }
+       
        colnames(x_matrix)=c("pos","times")
        #colnames(xz)=c("pos","col")
-       #print(as.numeric(as.character(x_matrix[,1])))
-       new_xz=cbind(x_matrix,map_store[as.numeric(as.character(x_matrix[,1])),c(2,3)])
-       #print(map_store[as.numeric(x_matrix[,1]),c(2,3)])
+       new_xz=cbind(x_matrix,map_store[as.numeric(as.character(x_matrix[,1])),])
        #new_xz[,4]=0
        colnames(new_xz)=c("pos","times","chro","xlab")
        new_xz=new_xz[!duplicated(new_xz),]
@@ -7636,6 +7630,7 @@ for(i in 1:length(environ_name))
        plot.line=TRUE
        #print(new_xz)
 }
+#print(as.numeric(new_xz[,4]))
 # print(new_xz)
 # print(as.numeric(new_xz[,1]))
 pdf(paste("GAPIT.Manhattan.Mutiple.Plot.pdf" ,sep = ""), width = 20,height=6*Nenviron)
@@ -9907,7 +9902,8 @@ out$PCA=myGenotype$PC
 }#end of model loop
 #print(tail(IC$GM))
 if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store)*(ncol(Y)-1)>1&length(model_store)*(ncol(Y)-1)<9)
-{ #print("!!!!!")
+{ 
+  #print(DP$QTN.position)
 GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y=Y,GM=IC$GM,seqQTN=DP$QTN.position)
 #print(str(GMM$multip_mapP))
 GAPIT.Circle.Manhatton.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz)
@@ -13861,5 +13857,4 @@ colnames(h2)=c("Heritability")
 
 }# end ofdetecting null Y
 }  #end of GAPIT function
-#=============================================================================================
 
