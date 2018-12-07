@@ -245,10 +245,14 @@ Result
 
 <div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Circle_Manhattan.png">
 
-<div align=center><img width="350" height="450" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Mutiple_Manhattan.png">
+<div align=center><img width="350" height="450" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S01.Rectangle.Manhattan.Plot.6 methods.png">
 
 
-<div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Multiple_QQ.png">
+<div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S02.Circular.Manhattan.Plot.6 methods.png">
+
+<div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S03.QQ.Multiple.Plot.6 methods.png">
+
+<div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S07.Kin.NJtree.fan.png">
 
 
 <div align=left>
