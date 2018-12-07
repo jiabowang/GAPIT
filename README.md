@@ -243,18 +243,20 @@ Result
 
 <div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/ROC.png">
 
-<div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Circle_Manhattan.png">
-
-<div align=center><img width="350" height="450" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S01.Rectangle.Manhattan.Plot.6 methods.png">
-
+<div align=center><img width="450" height="650" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S01.Rectangle.Manhattan.Plot.6 methods.png">
 
 <div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S02.Circular.Manhattan.Plot.6 methods.png">
 
 <div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S03.QQ.Multiple.Plot.6 methods.png">
 
 <div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S07.Kin.NJtree.fan.png">
-
-
+   
+   Interactive Plots
+   [Interactive.Manhattan](http://www.zzlab.net/GAPIT/Interactive.Manhattan.html)
+   [Interactive.QQ]()
+   [Interactive.3D.PCAs]()
+   []
+   
 <div align=left>
    
 Example
