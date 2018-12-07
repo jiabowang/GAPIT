@@ -7542,7 +7542,7 @@ return (Memory)
 }#end of GAPIT.Memory function
 #=============================================================================================
 
-`GAPIT.Mutipl.Manhattan` <-
+`GAPIT.Multiple.Manhattan` <-
 function(model_store,DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,Y=NULL,GM=NULL,interQTN=NULL,plot.style="Oceanic",plot.line=FALSE){
     #Object: Make a Manhattan Plot
     #Options for plot.type = "Separate_Graph_for_Each_Chromosome" and "Same_Graph_for_Each_Chromosome"
@@ -9652,7 +9652,7 @@ function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NUL
   memo=NULL,Prior=NULL,ncpus=1,maxLoop=3,threshold.output=.01,Inter.Plot=FALSE,Inter.type=c("m","q"),
   WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),maxOut=100,QTN.position=NULL,CG=NULL,
   converge=1,iteration.output=FALSE,acceleration=0,iteration.method="accum",PCA.View.output=TRUE,Geno.View.output=TRUE,plot.style="Oceanic",SUPER_GD=NULL,SUPER_GS=FALSE,
-		    h2=NULL,NQTN=NULL,QTNDist="normal",effectunit=1,category=1,r=0.25,cveff=NULL,a2=0,adim=2,Mutiple_analysis=FALSE,
+		    h2=NULL,NQTN=NULL,QTNDist="normal",effectunit=1,category=1,r=0.25,cveff=NULL,a2=0,adim=2,Multiple_analysis=FALSE,
   model="MLM",Para=NULL
 		){
 #Object: To perform GWAS and GPS (Genomic Prediction/Selection)
@@ -9766,7 +9766,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
  method.GLM=method.GLM,method.sub=method.sub,method.sub.final="reward",method.bin="static",bin.size=bin.size,bin.selection=bin.selection,model=model,
  h2=h2,NQTN=NQTN,QTNDist="normal",effectunit=effectunit,category=category,r=r,cveff=NULL,a2=0,adim=2,Multi_iter=Multi_iter,
  memo="",Prior=NULL,ncpus=1,maxLoop=maxLoop,threshold.output=threshold.output,WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=alpha,maxOut=100,QTN.position=QTN.position,CG=CG,
- converge=converge,iteration.output=iteration.output,acceleration=0,iteration.method="accum",PCA.View.output=PCA.View.output,Geno.View.output=Geno.View.output,plot.style="Oceanic",SUPER_GD=NULL,SUPER_GS=SUPER_GS,Mutiple_analysis=Mutiple_analysis)
+ converge=converge,iteration.output=iteration.output,acceleration=0,iteration.method="accum",PCA.View.output=PCA.View.output,Geno.View.output=Geno.View.output,plot.style="Oceanic",SUPER_GD=NULL,SUPER_GS=SUPER_GS,Multiple_analysis=Multiple_analysis)
 
 G_list_M=rownames(as.matrix(GAPIT_list))
 P_list_M=rownames(as.matrix(Para))
@@ -9906,9 +9906,9 @@ out$PCA=myGenotype$PC
 }# is.null(Y)
 }#end of model loop
 #print(tail(IC$GM))
-if(!is.null(Y)&SNP.test)if(Mutiple_analysis&Para$file.output&length(model_store)*(ncol(Y)-1)>1&length(model_store)*(ncol(Y)-1)<9)
+if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store)*(ncol(Y)-1)>1&length(model_store)*(ncol(Y)-1)<9)
 { #print("!!!!!")
-GMM=GAPIT.Mutipl.Manhattan(model_store=model_store,Y=Y,GM=IC$GM,seqQTN=DP$QTN.position)
+GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y=Y,GM=IC$GM,seqQTN=DP$QTN.position)
 #print(str(GMM$multip_mapP))
 GAPIT.Circle.Manhatton.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz)
 }# end of mutiple manhantton plot
