@@ -251,14 +251,53 @@ Result
 
 <div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S07.Kin.NJtree.fan.png">
 
+<div align=left>
+ 
 Interactive Plots:
 
+<div align=center>
+ 
 [Interactive.Manhattan](http://www.zzlab.net/GAPIT/material/Figure%20S15.Manhattan%20FarmCPU.V1.html)  [Interactive.QQ](http://www.zzlab.net/GAPIT/material/Figure%20S21.QQ%20FarmCPU.V1.html)  [Interactive.3D.PCAs](http://www.zzlab.net/GAPIT/material/Figure%20S09.PCA.html)  [Interactive.GS](http://www.zzlab.net/GAPIT/material/Figure%20S23.GS.html)
-   
+
 <div align=left>
    
 Example
 =====
+
+
+      rm(list=ls())
+      # loading packages for GAPIT and GAPIT functions
+      source("http://www.zzlab.net/GAPIT/GAPIT.library.R")
+      source("http://www.zzlab.net/GAPIT/gapit_functions.txt")
+      # loading data set
+      myY=read.table(file="http://zzlab.net/GAPIT/data/mdp_traits.txt", head = TRUE)
+      myGD=read.table("http://zzlab.net/GAPIT/data/mdp_numeric.txt",head=T)
+      myGM=read.table("http://zzlab.net/GAPIT/data/mdp_SNP_information.txt",head=T)
+      #myG=read.table(file="http://zzlab.net/GAPIT/data/mdp_genotype_test.hmp.txt", head = FALSE)
+      # performing simulation phenotype
+      set.seed(198521)
+      Para=list(h2=0.7,NQTN=20)
+      mysimulation<-GAPIT(Para=Para,GD=myGD,GM=myGM)
+      myY=mysimulation$Y
+
+
+      myGAPIT <- GAPIT(
+      Y=myY[,c(1,2)],
+      GD=myGD,
+      GM=myGM,
+      model=c("GLM","MLM","SUPER","MLMM","FarmCPU","Blink"),# this is multiple models
+      #model=c("FarmCPU"),
+      PCA.total=3,                                          # set total PCAs
+      NJtree.group=4,                                       # set the number of clusting group in Njtree plot
+      QTN.position=mysimulation$QTN.position,
+      Inter.Plot=TRUE,                                      # perform interactive plot
+      Multiple_analysis=TRUE,                               # perform multiple analysis
+      PCA.3d=TRUE,                                          # plot 3d interactive PCA
+      file.output=T
+      )
+
+
+
 
 Citation
 =====
