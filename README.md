@@ -177,8 +177,7 @@ gBLUP used marker kinship to replace the pedgree relationship matrix. The code i
       Y=myY[,c(1,2)],
       GD=myGD,
       GM=myGM,
-      group.from=nrow(myGD),
-      group.to=nrow(myGD),
+      model="gBLUP",
       PCA.total=5,
       file.output=T
       )
@@ -193,9 +192,7 @@ cBLUP used group kinship to replace the individual matrix. The code is:
       Y=myY[,c(1,2)],
       GD=myGD,
       GM=myGM,
-      group.from=10,
-      group.to=nrow(myGD),
-      group.by=10,
+      model="cBLUP",
       PCA.total=5,
       file.output=T
       )
@@ -208,9 +205,7 @@ sBLUP used SUPER method to build psedue QTN kinship matrix. The code is:
       Y=myY[,c(1,2)],
       GD=myGD,
       GM=myGM,
-      sangwich.top="GLM",sangwich.bottom="SUPER",
-      LD=0.1,
-      SUPER_GS=T,
+      model="sBLUP",
       PCA.total=5,
       file.output=T
       )
