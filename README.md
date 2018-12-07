@@ -250,12 +250,10 @@ Result
 <div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S03.QQ.Multiple.Plot.6 methods.png">
 
 <div align=center><img width="450" height="400" src="https://github.com/jiabowang/GAPIT3/blob/master/material/Figure S07.Kin.NJtree.fan.png">
-   
-   Interactive Plots
-   [Interactive.Manhattan](http://www.zzlab.net/GAPIT/Interactive.Manhattan.html)
-   [Interactive.QQ]()
-   [Interactive.3D.PCAs]()
-   []
+
+Interactive Plots:
+
+[Interactive.Manhattan](http://www.zzlab.net/GAPIT/material/Figure%20S15.Manhattan%20FarmCPU.V1.html)  [Interactive.QQ](http://www.zzlab.net/GAPIT/material/Figure%20S21.QQ%20FarmCPU.V1.html)  [Interactive.3D.PCAs](http://www.zzlab.net/GAPIT/material/Figure%20S09.PCA.html)  [Interactive.GS](http://www.zzlab.net/GAPIT/material/Figure%20S23.GS.html)
    
 <div align=left>
    
