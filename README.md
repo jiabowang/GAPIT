@@ -312,7 +312,7 @@ Example
       Y=myY[,c(1,2)],
       GD=myGD,
       GM=myGM,
-      model=c("GLM","MLM","SUPER","MLMM","FarmCPU","Blink"),# this is multiple models
+      model=c("GLM","MLM","SUPER","MLMM","FarmCPU","Blink"),# choose model
       #model=c("FarmCPU"),
       PCA.total=3,                                          # set total PCAs
       NJtree.group=4,                                       # set the number of clusting group in Njtree plot
