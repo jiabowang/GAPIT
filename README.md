@@ -10,15 +10,16 @@ Citation
 
 If you use GAPIT and publish your analysis, please report the program version and cite the appropriate article:
 
-  The citation for GAPIT1 is:
-   Lipka A. E., Tian F., Wang Q., Peiffer J., Li M., et al., 2012 GAPIT: genome association and prediction integrated tool. Bioinformatics 28: 2397–2399.
-
-  The citation for GAPIT2 is:
-   Tang Y., Liu X., Wang J., Li M., Wang Q., et al., 2016 GAPIT Version 2: An Enhanced Integrated Tool for Genomic Association and Prediction. Plant J. 9.
-
+  
   The citation for GAPIT3 is:
    Wang J.,Zhang Z., 2018 GAPIT Version 3:An Interactive Analytical Tool for Genomic Association and Prediction. preprint.
 
+  The citation for GAPIT2 is:
+   Tang Y., Liu X., Wang J., Li M., Wang Q., et al., 2016 GAPIT Version 2: An Enhanced Integrated Tool for Genomic Association and Prediction. Plant J. 9.
+  
+  The citation for GAPIT1 is:
+   Lipka A. E., Tian F., Wang Q., Peiffer J., Li M., et al., 2012 GAPIT: genome association and prediction integrated tool. Bioinformatics 28: 2397–2399.
+  
   The citation for SUPER method is:
    Wang Q., Tian F., Pan Y., Buckler E. S., Zhang Z., 2014 A SUPER Powerful Method for Genome Wide Association Study (Y Li, Ed.). PLoS One 9: e107684.
 
