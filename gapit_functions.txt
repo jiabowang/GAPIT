@@ -4401,7 +4401,7 @@ if(KI!=1) {
 
   if(nrow(KI)<1000){
     print("Plotting Kinship")
-    
+    #print(dim(KI))
     theKin=as.matrix(KI[,-1])
     line.names <- KI[,1]
     colnames(theKin)=KI[,1]
@@ -4417,7 +4417,7 @@ if(KI!=1) {
        type_col=rainbow(NJtree.group)
        #type_col=rainbow(NJtree.group)
        Optimum=c(nrow(theKin),kinship.cluster,NJtree.group)
-       rm(distance.matrix,hc)
+       #rm(distance.matrix,hc)
     }
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="set kinship")
 Memory=GAPIT.Memory(Memory=Memory,Infor="set kinship")
@@ -4458,7 +4458,7 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="prepare NJ TREE")
  
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="plot NJ TREE")
 Memory=GAPIT.Memory(Memory=Memory,Infor="plot NJ TREE")
-    rm(hc,clusMember)
+    #rm(hc,clusMember)
 }#end 
 ## NJ Tree end
   } #end of if(nrow(KI)<1000)
