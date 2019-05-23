@@ -3557,11 +3557,12 @@ gc()
       }
 
 
-
+      #print(Create.indicator)
       #calculate t statistics and P-values
       if(i > 0 | file>file.from |frag>1)
       {
        if(!Create.indicator){
+        
         if(!is.null(K)) stats[i, j] <- beta[q1]/sqrt(iXX[q1, q1] *vgs) 
         if(is.null(K)) stats[i, j] <- beta[q1]/sqrt(iXX[q1, q1] *ves)
         effect.est[i, ] <- beta[q1]
@@ -3598,7 +3599,8 @@ gc()
                   #Calculate df, t value and standard error _xiaolei changed
                   df[i,] <- dfs[i,]
                   tvalue[i,] <- stats[i, j]
-                  stderr[i,] <- beta[ncol(CVI)+1]/stats[i, j]
+                  #stderr[i,] <- beta[ncol(CVI)+1]/stats[i, j]
+                  stderr[i,] <- sqrt(vgs)
       }
 #-------------------------------------------------------------------------------------------------------------------->
 
@@ -3643,7 +3645,6 @@ if(!fullGD)
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GWAS done for this Trait")
 Memory=GAPIT.Memory(Memory=Memory,Infor="GWAS done for this Trait")
-
 #print("GAPIT.EMMAxP3D accomplished successfully!")
 
     return(list(ps = ps, REMLs = -2*REMLs, stats = stats, effect.est = effect.est, rsquare_base = rsquare_base, rsquare = rsquare, dfs = dfs, df = df, tvalue = tvalue, stderr = stderr,maf=maf,nobs = nobs,Timmer=Timmer,Memory=Memory,
@@ -5216,7 +5217,7 @@ Pred=SS$Pred
   if(DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))byPass=FALSE
   if(byPass) 
 {
-  #print(head(SS$TV))
+ # print(head(SS$GWAS))
       ps=SS$TV$ps
       nobs=SS$TV$nobs
       maf=as.numeric(GWAS[,5])
@@ -5228,7 +5229,7 @@ Pred=SS$Pred
       stderr=SS$TV$stderr
       effect.est=SS$mc
       effect=SS$mc
-      GI=cbind(GI,effect)
+      #GI=cbind(GI,effect)
      
    if(DP$file.output&!is.null(SS$Compression)&!is.na(SS$Compression[1,6])) GAPIT.Compression.Visualization(Compression = SS$Compression, name.of.trait = DP$name.of.trait)
   
@@ -5251,10 +5252,8 @@ if(!is.null(IC$GD)&DP$SNP.test)
   
   print("Filtering SNPs with MAF..." )
 	#index=maf>=DP$SNP.MAF	
-  #print(dim(GWAS))
-  #print(table(index))
-  #print(length(rsquare_base))
-	PWI.Filtered=cbind(GI[,-5],rsquare_base,rsquare)
+	#PWI.Filtered=cbind(GI[,-5],rsquare_base,rsquare)
+  PWI.Filtered=cbind(GWAS[,1:6],rsquare_base,rsquare)
 	colnames(PWI.Filtered)=c("SNP","Chromosome","Position ","P.value", "maf", "nobs", "Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP")
   
   if(!is.null(PWI.Filtered))
@@ -5266,18 +5265,18 @@ if(!is.null(IC$GD)&DP$SNP.test)
     print("QQ plot..." )
    if(DP$file.output) GAPIT.QQ(P.values = GI$P.value, name.of.trait = DP$name.of.trait,DPP=DP$DPP)
    print("Manhattan plot (Genomewise)..." )
-   if(DP$file.output) GAPIT.Manhattan(GI.MP = GI[,c(2:4)], name.of.trait = DP$name.of.trait, DPP=DP$DPP, plot.type = "Genomewise",cutOff=DP$cutOff,seqQTN=DP$QTN.position,plot.style=DP$plot.style,plot.bin=DP$plot.bin,chor_taxa=DP$chor_taxa)
+   if(DP$file.output) GAPIT.Manhattan(GI.MP = GWAS[,2:4], name.of.trait = DP$name.of.trait, DPP=DP$DPP, plot.type = "Genomewise",cutOff=DP$cutOff,seqQTN=DP$QTN.position,plot.style=DP$plot.style,plot.bin=DP$plot.bin,chor_taxa=DP$chor_taxa)
    #print("@@@@@@@@@@@@@@@@@@@@@@@@")
    print("Manhattan plot (Chromosomewise)..." )
 
- if(DP$file.output) GAPIT.Manhattan(GI.MP = GI[,c(2:4)],GD=IC$GD[,-1], CG=DP$CG,name.of.trait = DP$name.of.trait, DPP=DP$DPP, plot.type = "Chromosomewise",cutOff=DP$cutOff,plot.bin=DP$plot.bin)
+ if(DP$file.output) GAPIT.Manhattan(GI.MP = GWAS[,2:4],GD=IC$GD[,-1], CG=DP$CG,name.of.trait = DP$name.of.trait, DPP=DP$DPP, plot.type = "Chromosomewise",cutOff=DP$cutOff,plot.bin=DP$plot.bin)
 
   #Association Table
   print("Association table..." )
   
   print("Joining tvalue and stderr" )
   
-        DTS=cbind(GI[,1:3],df,tvalue,stderr,effect.est)
+        DTS=cbind(GWAS[,1:3],df,tvalue,stderr,effect.est)
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")	
 
   print("Creating ROC table and plot" )
@@ -5289,7 +5288,7 @@ if(DP$file.output) myMAF1=GAPIT.MAF(MAF=maf,P=ps,E=NULL,trait=DP$name.of.trait)
 
 print("GAPIT.Interactive.Manhattan")
 print(DP$Inter.type)
-
+GI=GI[order(GI[,4]),]
 if(DP$file.output&DP$Inter.Plot) GAPIT.Interactive.Manhattan(GWAS=GI,X_fre=maf,plot.type=DP$Inter.type,name.of.trait = DP$name.of.trait)
 
 if(DP$file.output){
@@ -6745,6 +6744,7 @@ frag=frag+1   #Progress to next fragment
 }#end of loop on file
 
 #update p3d with components from files
+
   p3d$ps=allP
   p3d$maf=allMAF
   p3d$nobs=allnobs
@@ -6817,8 +6817,9 @@ h2.opt= varp[1]
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Compression.Visualization")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Compression.Visualization")
-#print("$$$$$")
-#print(head(p3d$ps))
+# print("$$$$$")
+# print(str(p3d))
+
 ps=p3d$ps
 nobs=p3d$nobs
 maf=p3d$maf
@@ -6947,11 +6948,11 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Extract GWAS start")
 
 
   #print("Filtering SNPs with MAF..." )
-	#index=maf>=SNP.MAF	     
-	PWI.Filtered=cbind(GI,ps,maf,nobs,rsquare_base,rsquare)#[index,]
+	#index=maf>=SNP.MAF	   
+  
+	PWI.Filtered=cbind(GI,ps,maf,nobs,rsquare_base,rsquare,effect.est)#[index,]
 	#print(dim(PWI.Filtered))
-
-	colnames(PWI.Filtered)=c("SNP","Chromosome","Position ","P.value", "maf", "nobs", "Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP")
+	colnames(PWI.Filtered)=c("SNP","Chromosome","Position ","P.value", "maf", "nobs", "Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP","effect")
 
 if(!byPass){  
    if(Create.indicator){
@@ -6978,7 +6979,7 @@ if(!byPass){
     
    }
    if(!Create.indicator){ 
-    GWAS.2 <- cbind(GI, effect.est)
+    GWAS.2 <- PWI.Filtered[,c(1:3,9)]
     colnames(GWAS.2) <- c("SNP","Chromosome","Position ", "Allelic Effect Estimate")
    } 
 }
@@ -7016,12 +7017,12 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="QQ plot")
    #print("Manhattan plot (Genomewise)..." )
 #  if(file.output) GAPIT.Manhattan(GI.MP = PWIP$PWIP[,2:4], name.of.trait = name.of.trait, DPP=DPP, plot.type = "Genomewise",cutOff=cutOff)
 #  if(file.output) GAPIT.Manhattan(GI.MP = PWIP$PWIP[,2:4], name.of.trait = name.of.trait, DPP=DPP, plot.type = "Genomewise",cutOff=cutOff,seqQTN=QTN.position)  #QTN does not work with sorted P
- if(file.output) GAPIT.Manhattan(GI.MP = cbind(GI[,-1],ps), name.of.trait = name.of.trait, DPP=DPP, plot.type = "Genomewise",cutOff=cutOff,seqQTN=QTN.position,plot.style=plot.style,plot.bin=plot.bin,chor_taxa=chor_taxa)
+ if(file.output) GAPIT.Manhattan(GI.MP = PWI.Filtered[,2:4], name.of.trait = name.of.trait, DPP=DPP, plot.type = "Genomewise",cutOff=cutOff,seqQTN=QTN.position,plot.style=plot.style,plot.bin=plot.bin,chor_taxa=chor_taxa)
 
  #print("Manhattan plot (Chromosomewise)..." )
  
   #if(file.output) GAPIT.Manhattan(GI.MP = PWIP$PWIP[,2:4], name.of.trait = name.of.trait, DPP=DPP, plot.type = "Chromosomewise",cutOff=cutOff)
- if(file.output&SNP.fraction==1) GAPIT.Manhattan(GI.MP = cbind(GI[,-1],ps),GD=GD,CG=CG, name.of.trait = name.of.trait, DPP=DPP, plot.type = "Chromosomewise",cutOff=cutOff,plot.bin=plot.bin,chor_taxa=chor_taxa)
+ if(file.output&SNP.fraction==1) GAPIT.Manhattan(GI.MP = PWI.Filtered[,2:4],GD=GD,CG=CG, name.of.trait = name.of.trait, DPP=DPP, plot.type = "Chromosomewise",cutOff=cutOff,plot.bin=plot.bin,chor_taxa=chor_taxa)
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Manhattan plot")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Manhattan plot")
@@ -7031,6 +7032,7 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Manhattan plot")
   #print("Association table..." )
   #print(dim(PWIP$PWIP))
   #GAPIT.Table(final.table = PWIP$PWIP, name.of.trait = name.of.trait,SNP.FDR=SNP.FDR)
+  #print(head(PWIP$PWIP))
   GWAS=PWIP$PWIP[PWIP$PWIP[,9]<=SNP.FDR,]
   #print("Joining tvalue and stderr" )
   
@@ -7103,7 +7105,7 @@ TV$effect.est=effect.est
 if(byPass | Model.selection) Pred <- NA
 print("before ending GAPIT.Main")
 #print(dim(Compression))
-return (list(Timmer=Timmer,Compression=Compression,kinship.optimum=theK.back, kinship=KI,PC=PC,GWAS=GWAS, GPS=GPS,Pred=Pred,REMLs=Compression[count,4],Timmer=Timmer,Memory=Memory,SUPER_GD=SUPER_GD,P=ps,effect.snp=DTS[,7],effect.cv=p3d$effect.cv,h2= h2.opt,TV=TV))
+return (list(Timmer=Timmer,Compression=Compression,kinship.optimum=theK.back, kinship=KI,PC=PC,GWAS=PWI.Filtered, GPS=GPS,Pred=Pred,REMLs=Compression[count,4],Timmer=Timmer,Memory=Memory,SUPER_GD=SUPER_GD,P=ps,effect.snp=DTS[,7],effect.cv=p3d$effect.cv,h2= h2.opt,TV=TV))
 } #end if non-SUPER.GS situation, this is a long if statement, structure needs improvement
 }#The function GAPIT.Main ends here
 #=============================================================================================
