@@ -5262,7 +5262,8 @@ if(!is.null(IC$GD)&DP$SNP.test)
   #Create PWIP, which is a table of SNP Names, Chromosome, bp Position, Raw P-values, FDR Adjusted P-values
   print("Calculating FDR..." )
   PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
-    print("QQ plot..." )
+  #print(str(PWIP))  
+  print("QQ plot..." )
    if(DP$file.output) GAPIT.QQ(P.values = GI$P.value, name.of.trait = DP$name.of.trait,DPP=DP$DPP)
    print("Manhattan plot (Genomewise)..." )
    if(DP$file.output) GAPIT.Manhattan(GI.MP = GWAS[,2:4], name.of.trait = DP$name.of.trait, DPP=DP$DPP, plot.type = "Genomewise",cutOff=DP$cutOff,seqQTN=DP$QTN.position,plot.style=DP$plot.style,plot.bin=DP$plot.bin,chor_taxa=DP$chor_taxa)
@@ -5288,11 +5289,19 @@ if(DP$file.output) myMAF1=GAPIT.MAF(MAF=maf,P=ps,E=NULL,trait=DP$name.of.trait)
 
 print("GAPIT.Interactive.Manhattan")
 print(DP$Inter.type)
-GI=GI[order(GI[,4]),]
+#GI=GI[order(GI[,4]),]
+if(ncol(GI)==9)
+{new_GI=merge(PWIP$PWIP,GI[,c(1,9)],by.x="SNP",by.y="SNP")
+}else{
+  new_GI=GI
+}
+new_GI=new_GI[order(new_GI[,4]),]
+
+#print(str(new_GI))
 if(DP$file.output&DP$Inter.Plot) GAPIT.Interactive.Manhattan(GWAS=GI,X_fre=maf,plot.type=DP$Inter.type,name.of.trait = DP$name.of.trait)
 
 if(DP$file.output){
-   write.table(GI, paste("GAPIT.", DP$name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   write.table(new_GI, paste("GAPIT.", DP$name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
    write.table(DTS, paste("GAPIT.", DP$name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
    #print(head(GWAS.2))
    #if(byPass) write.table(GWAS.2[,1:4], paste("GAPIT.", DP$name.of.trait, ".Allelic_Effect_Estimates.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
@@ -8599,7 +8608,7 @@ y=as.data.frame(ge+res)
 myY<-cbind(taxa,y)
 myY<-as.data.frame(myY)
 
-max.groups=nrow(y)
+max.groups=nrow(myY)
 print(paste("*****************","GWAS by GAPIT...GLM model",i," totle:",rel,sep=""))
 #--------------------------
 myGAPIT_GLM=GAPIT(
@@ -8608,9 +8617,7 @@ GD=myGD,
 GM=myGM,
 PCA.total=3,
 file.output=FALSE,
-group.from=0,
-group.to=0,
-group.by=0,
+model="GLM",
 memo="GLM",
 QTN.position=QTN.position,
 threshold.output=0.001,
@@ -8626,9 +8633,7 @@ GM=myGM,
 KI=myKI,
 CV=myCV,
 file.output=FALSE,
-group.from=max.groups,
-group.to=max.groups,
-group.by=10,
+model="MLM",
 memo="MLM",
 QTN.position=QTN.position,
 threshold.output=0.001,
@@ -8644,9 +8649,7 @@ GM=myGM,
 KI=myKI,
 CV=myCV,
 #PCA.total=3,
-sangwich.top="MLM", #options are GLM,MLM,CMLM, FaST and SUPER
-sangwich.bottom="SUPER", #options are GLM,MLM,CMLM, FaST and SUPER
-LD=0.1,
+model="SUPER",
 QTN.position=QTN.position,
 threshold.output=0.001,
 iteration.output=TRUE,
@@ -8662,9 +8665,7 @@ GM=myGM,
 KI=myKI,
 CV=myCV,
 file.output=FALSE,
-group.from=0,
-group.to=max.groups,
-group.by=10,
+model="CMLM",
 memo="CMLM",
 QTN.position=QTN.position,
 threshold.output=0.001,
@@ -8685,9 +8686,7 @@ PCA.total=3,
 kinship.cluster=c("average", "complete", "ward"),
 kinship.group=c("Mean", "Max"),
 file.output=FALSE,
-group.from=0,
-group.to=max.groups,
-group.by=10,
+model="ECMLM",
 memo="ECMLM",
 QTN.position=QTN.position,
 threshold.output=0.001,
