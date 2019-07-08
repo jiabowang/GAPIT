@@ -7233,12 +7233,13 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         for(i in 1:numCHR)
         {
             #Extract SBP on this chromosome
-            subset=GI.MP[GI.MP[,1]==chm.to.analyze[i],]
+            subset=GI.MP[GI.MP[,1]==chm.to.analyze[i],, drop = FALSE]
+            if(nrow(subset) == 0) next
             # print(head(subset))
             subset[,1]=1:(nrow(subset))
             #sub.bin.mp=bin.mp[GI.MP[,1]==chm.to.analyze[i],]
             #subset=cbind(subset,sub.bin.mp)
-            sig.mp=subset[subset[,3]>bonferroniCutOff,]
+            sig.mp=subset[subset[,3]>bonferroniCutOff,, drop = FALSE]
             sig.index=subset[,3]>bonferroniCutOff ### index of significont SNP
             
             
@@ -7308,11 +7309,11 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             order=order(y,decreasing = TRUE)
             y=y[order]
             x=x[order]
-            r2_color=r2_color[order,]
+            r2_color=r2_color[order,, drop = FALSE]
             index=GAPIT.Pruning(y,DPP=round(DPP/numCHR))
             x=x[index]
             y=y[index]
-      r2_color=r2_color[index,]
+            r2_color=r2_color[index,, drop = FALSE]
             r2_color[which(r2_color[,2]<=0.2),2]=do_color[n_col]
             r2_color[which(r2_color[,2]<=0.4&r2_color[,2]>0.2),2]=do_color[n_col*0.8]
             r2_color[which(r2_color[,2]<=0.6&r2_color[,2]>0.4),2]=do_color[n_col*0.6]
