@@ -776,12 +776,23 @@ CV=CV[taxa_CV%in%taxa_Y,]
 
 #print(dim(Y))
 #print(dim(GD))
-#print(dim(CV))
-
-
+if(is.null(KI))
+{
 KI= GAPIT.kinship.VanRaden(snps=as.matrix(GD[,-1]))
 colnames(KI)=as.character(GD[,1])
- 
+}else{
+print("The Kinship is provided by user !!")
+KI=KI[,-1] 
+#colnames(KI)=as.character(GD[,1])
+taxa_KI=as.character(colnames(KI))
+KI=KI[taxa_KI%in%as.character(GD[,1]),taxa_KI%in%as.character(GD[,1])]
+}
+if(ncol(KI)!=nrow(GD)) print("Please make sure dim of K equal number of GD !!")
+
+# print(dim(KI))
+# print(dim(GD))
+# print(KI[1:5,1:5])
+
 if(is.null(CV))
 {
 mymlmm=mlmm(
@@ -5290,15 +5301,16 @@ if(DP$file.output) myMAF1=GAPIT.MAF(MAF=maf,P=ps,E=NULL,trait=DP$name.of.trait)
 print("GAPIT.Interactive.Manhattan")
 print(DP$Inter.type)
 #GI=GI[order(GI[,4]),]
-if(ncol(GI)==9)
-{new_GI=merge(PWIP$PWIP,GI[,c(1,9)],by.x="SNP",by.y="SNP")
+#print(head(GI))
+if(ncol(GI)>1)
+{new_GI=merge(PWIP$PWIP,GI[,c("SNP","effect")],by.x="SNP",by.y="SNP")
 }else{
   new_GI=GI
 }
 new_GI=new_GI[order(new_GI[,4]),]
 
-#print(str(new_GI))
-if(DP$file.output&DP$Inter.Plot) GAPIT.Interactive.Manhattan(GWAS=GI,X_fre=maf,plot.type=DP$Inter.type,name.of.trait = DP$name.of.trait)
+#print(head(new_GI))
+if(DP$file.output&DP$Inter.Plot) GAPIT.Interactive.Manhattan(GWAS=new_GI,X_fre=maf,plot.type=DP$Inter.type,name.of.trait = DP$name.of.trait)
 
 if(DP$file.output){
    write.table(new_GI, paste("GAPIT.", DP$name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
@@ -5463,6 +5475,7 @@ function(GWAS=NULL,MAF.threshold=seq(0,0.5,.1),cutOff=0.01,DPP=50000,X_fre=NULL,
     #print(head(GWAS))
     GWAS=GWAS[order(GWAS[,3]),]
     GWAS=GWAS[order(GWAS[,2]),]
+    #print(GWAS[GWAS[,4]==min(GWAS[,4]),2])
 
     taxa=as.character(GWAS[,1])
     numMarker=nrow(GWAS)
@@ -5474,11 +5487,13 @@ function(GWAS=NULL,MAF.threshold=seq(0,0.5,.1),cutOff=0.01,DPP=50000,X_fre=NULL,
     logPs[is.na(logPs)]=0
     
     y.lim <- ceiling(max(GWAS[,4]))
-    chrom_total=as.numeric(GWAS[,2])
-    #print(head(GWAS))
+    chrom_total=as.numeric(as.character((GWAS[,2])))
+    #print(GWAS[GWAS[,4]==min(GWAS[,4]),])
+    #print("!!!!")
+    #print(chrom_total[logPs==max(logPs)])
     POS=as.numeric(as.vector(GWAS[,3]))
     #print(head(POS))
-    chm.to.analyze <- unique(GWAS[,2])
+    chm.to.analyze <- as.numeric(as.character(unique(GWAS[,2])))
     chm.to.analyze=chm.to.analyze[order(as.numeric(as.character(chm.to.analyze)))]
     #chm.to.analyze = factor(sort(chm.to.analyze))
 
@@ -5511,9 +5526,11 @@ function(GWAS=NULL,MAF.threshold=seq(0,0.5,.1),cutOff=0.01,DPP=50000,X_fre=NULL,
         x=x0[index]
         y=y0[index]
         z=z0[index]
+        taxa=taxa[index]
         posi=posi0[index]
         maf=maf0[index]
         effect=effect0[index]
+    
         plot.color=rep(c(  '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(numCHR/5))
     
 
@@ -5524,6 +5541,7 @@ if(c("m")%in%plot.type)
   P_value=y
   z[z<10]=paste("0",z[z<10],sep="")
   zz=paste("Chr_",z,sep="")
+  #print(zz)
   if(!require(plotly)) install.packages("plotly")
   #print("!!!!!")
   #print(head(Position))
@@ -6950,6 +6968,7 @@ if(byPass)
 if(byPass)Compression[1,4]=0 #create a fake value to aloow output of SUPER 
 
 #Export GWAS results
+PWI.Filtered=NULL
 if(hasGenotype &SNP.test &!is.na(Compression[1,4]))     #require not NA REML 
 {
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Extract GWAS start")
@@ -9674,7 +9693,7 @@ if(model%in%c("gBLUP","cBLUP","sBLUP"))
     SNP.test=FALSE
     SUPER_GS=TRUE
   }
-if(!is.null(KI)&is.null(GD)&is.null(G))SNP.test=FALSE
+if(!is.null(KI)&is.null(GD)&is.null(G)&file.from==file.to)SNP.test=FALSE
 model_store=model
 
 for(m in 1:length(model_store))
@@ -9833,11 +9852,13 @@ DP$group.to=Judge$group.to
 DP$name.of.trait=traitname
 DP$Y=Y[,c(1,trait)]
 DP$model=model
+print(Para$SNP.test)
 if(Para$SNP.test==TRUE)IC=GAPIT.IC(DP=DP)
 SS=GAPIT.SS(DP=DP,IC=IC)
 if(Para$SNP.test==TRUE)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
 
 }#for loop trait
+#print(SNP.test)
 print("GAPIT accomplished successfully for multiple traits. Result are saved")
 print("It is OK to see this: 'There were 50 or more warnings (use warnings() to see the first 50)'")
 out <- list()
