@@ -36,7 +36,7 @@ if(model%in%c("gBLUP","cBLUP","sBLUP"))
     SNP.test=FALSE
     SUPER_GS=TRUE
   }
-if(!is.null(KI)&is.null(GD)&is.null(G)&file.from==file.to)SNP.test=FALSE
+if(!is.null(KI)&is.null(GD)&is.null(G)&is.null(file.G)is.null(file.GD))SNP.test=FALSE
 model_store=model
 
 for(m in 1:length(model_store))
