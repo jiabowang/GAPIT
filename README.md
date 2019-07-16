@@ -85,6 +85,12 @@ Function Loading
   
     source("http://www.zzlab.net/GAPIT/gapit_functions.txt")
   
+  Or you can load GAPIT from github with devtools.
+  
+    install.packages("devtools")
+    devtools::install_github("jiabowang/GAPIT3",force=TRUE)
+    library(GAPIT3)
+  
 
 Data Preparing
 -------
