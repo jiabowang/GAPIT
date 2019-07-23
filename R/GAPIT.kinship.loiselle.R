@@ -24,19 +24,19 @@ function(snps, method="additive", use="all") {
   #if(method == "additive").  Worry about this only if you have heterozygotes, which you do not.
   if( method == "dominant" ) {
     flags <- matrix(as.double(rowMeans(snps,na.rm=TRUE) > 0.5),nrow(snps),ncol(snps))
-    snps[!is.na(snps) && (snps == 0.5)] <- flags[!is.na(snps) && (snps == 0.5)]
+    snps[!is.na(snps) & (snps == 0.5)] <- flags[!is.na(snps) & (snps == 0.5)]
   }
   else if( method == "recessive" ) {
     flags <- matrix(as.double(rowMeans(snps,na.rm=TRUE) < 0.5),nrow(snps),ncol(snps))
-    snps[!is.na(snps) && (snps == 0.5)] <- flags[!is.na(snps) && (snps == 0.5)]
+    snps[!is.na(snps) & (snps == 0.5)] <- flags[!is.na(snps) & (snps == 0.5)]
   }
   else if( ( method == "additive" ) && ( nh > 0 ) ) {
     dsnps <- snps
     rsnps <- snps
     flags <- matrix(as.double(rowMeans(snps,na.rm=TRUE) > 0.5),nrow(snps),ncol(snps))
-    dsnps[!is.na(snps) && (snps==0.5)] <- flags[is.na(snps) && (snps==0.5)]
+    dsnps[!is.na(snps) & (snps==0.5)] <- flags[is.na(snps) & (snps==0.5)]
     flags <- matrix(as.double(rowMeans(snps,na.rm=TRUE) < 0.5),nrow(snps),ncol(snps))
-    rsnps[!is.na(snps) && (snps==0.5)] <- flags[is.na(snps) && (snps==0.5)]
+    rsnps[!is.na(snps) & (snps==0.5)] <- flags[is.na(snps) & (snps==0.5)]
     snps <- rbind(dsnps,rsnps)
   }
 
