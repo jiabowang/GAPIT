@@ -83,6 +83,7 @@ for(i in 1:length(environ_name))
 
        new_xz=as.matrix(new_xz)
        new_xz=new_xz[new_xz[,2]!="0",]
+       new_xz=matrix(new_xz,length(as.vector(new_xz))/4,4)
        plot.line=TRUE
        #print(new_xz)
 }
