@@ -76,6 +76,7 @@ for(i in 1:length(environ_name))
        new_xz=cbind(x_matrix,map_store[as.numeric(as.character(x_matrix[,1])),])
        #new_xz[,4]=0
        colnames(new_xz)=c("pos","times","chro","xlab")
+       
        new_xz=new_xz[!duplicated(new_xz),]
        new_xz[new_xz[,2]>=3,2]=3
        new_xz[,2]=4-new_xz[,2]
@@ -84,13 +85,14 @@ for(i in 1:length(environ_name))
        new_xz=as.matrix(new_xz)
        new_xz=new_xz[new_xz[,2]!="0",]
        new_xz=matrix(new_xz,length(as.vector(new_xz))/4,4)
+       #print(new_xz)
        plot.line=TRUE
        #print(new_xz)
 }
 #print(as.numeric(new_xz[,4]))
-# print(new_xz)
+#print(head(result0))
 # print(as.numeric(new_xz[,1]))
-pdf(paste("GAPIT.Manhattan.Mutiple.Plot.pdf" ,sep = ""), width = 20,height=6*Nenviron)
+pdf(paste("GAPIT.Manhattan.Mutiple.Plot",colnames(result0)[-c(1:3)],".pdf" ,sep = ""), width = 20,height=6*Nenviron)
 par(mfrow=c(Nenviron,1))
 for(k in 1:Nenviron)
 { if(k==Nenviron){#par(mfrow=c(Nenviron,1))
