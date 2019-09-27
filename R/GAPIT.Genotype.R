@@ -313,18 +313,28 @@ GI=GM
 #print(unique(GM[,2]))
 #print("@@@@@@@@@@")
 #Set the number of chromosome
-if(1%in%as.character(unique(GM[,2]))) 
-{ chor_taxa=as.character(sort(unique(GM[,2])))
-}else{
-  chor_taxa=as.character(unique(GM[,2]))
+# if(1%in%as.character(unique(GM[,2]))) 
+# { chor_taxa=mixedsort(as.character((unique(GM[,2]))))
 
-#print(chor_taxa)
-for(i in 1:(length(chor_taxa)))
-{
-    index=GM[,2]==chor_taxa[i]
-    GI[index,2]=i    
-}
-}
+# }else{
+#   chor_taxa=as.character(unique(GM[,2]))
+
+# #print(chor_taxa)
+# for(i in 1:(length(chor_taxa)))
+# {
+#     index=GM[,2]==chor_taxa[i]
+#     GI[index,2]=i    
+# }
+# }
+chor_taxa=as.character(unique(GM[,2]))
+chor_taxa[order(gsub("([A-Z]+)([0-9]+)", "\\1", chor_taxa), 
+
+             as.numeric(gsub("([A-Z]+)([0-9]+)", "\\2", chor_taxa)))]
+# for(i in 1:(length(chor_taxa)))
+# {
+#     index=GM[,2]==chor_taxa[i]
+#     GI[index,2]=i    
+# }
 #print(head(GI))
 #print("@@@@@@@@@@@")
 #print(GD[1:5,1:5])
