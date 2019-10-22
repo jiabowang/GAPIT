@@ -4365,8 +4365,9 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Before Fragment")
   print("All files loaded")
 } #end of if(!byData&byFile)
 
-GM=as.matrix(GI)
-GI=GM
+#GM=as.matrix(GI)
+#GI=GM
+GM=GI
 #print(unique(GM[,2]))
 #print("@@@@@@@@@@")
 #Set the number of chromosome
@@ -4383,15 +4384,22 @@ GI=GM
 #     GI[index,2]=i    
 # }
 # }
+# modified by Jiabo in 20190927. sorted number of chrom by numeric and charicter
 chor_taxa=as.character(unique(GM[,2]))
 chor_taxa[order(gsub("([A-Z]+)([0-9]+)", "\\1", chor_taxa), 
 
              as.numeric(gsub("([A-Z]+)([0-9]+)", "\\2", chor_taxa)))]
-# for(i in 1:(length(chor_taxa)))
-# {
-#     index=GM[,2]==chor_taxa[i]
-#     GI[index,2]=i    
-# }
+chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
+if(!setequal(integer(0),chr_letter))
+{     
+  GI=as.matrix(GI)
+      for(i in 1:(length(chor_taxa)))
+        {
+         index=GM[,2]==chor_taxa[i]
+         GI[index,2]=i    
+        }
+}
+#print(head(GI))
 #print(head(GI))
 #print("@@@@@@@@@@@")
 #print(GD[1:5,1:5])
@@ -4778,7 +4786,6 @@ if(is.null(chr)){chr=1}
   hist(het.snp,col="gray", main="",ylab=ylab.snp, xlab="Heterozygosity of markers")
   dev.off()
   rm(X, H, het.ind, het.snp) #Feree memory
-  
 myFig21<-myGI
 myFig21<-myFig21[!is.na(as.numeric(as.matrix(myFig21[,3]))),]
 
@@ -4860,8 +4867,7 @@ dev.off()
 
 #####Out Moving Average of density##########
 #print(unique(myGI[,2]))
-
-myGD<-myGD[,myGI[,2]==chr]
+myGD0<-myGD[,as.numeric(myGI[,2])==chr]
 gc()
 
 
@@ -4870,14 +4876,14 @@ myGM0<-myGI[myGI[,2]==chr,]
 
 ##remove invalid SNPs
 #X<-myGD0[,-1]
-X<-myGD
+X<-myGD0
 colMax=apply(X,2,max)
 colMin=apply(X,2,min)
 #mono=as.numeric(colMax)-as.numeric(colMin)
 mono=colMax-colMin
+
 index=mono<10E-5
 X=X[,!index]
-
 
 myFig3<-myGM0[!index,]
 
@@ -4900,9 +4906,9 @@ myGD3<-X[,kk3]
 #print(w1_end)
 #print(dim(myFig3))
 
-
 if(nrow(myFig23)<w1_end)w1_end=nrow(myFig23)
-
+#print(w1_start)
+#print(w1_end)
 results3_100<-myFig23[w1_start:w1_end,]
 myGD3_100<-myGD3[,w1_start:w1_end]
 

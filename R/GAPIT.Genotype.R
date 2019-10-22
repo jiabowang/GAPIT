@@ -308,8 +308,9 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Before Fragment")
   print("All files loaded")
 } #end of if(!byData&byFile)
 
-GM=as.matrix(GI)
-GI=GM
+#GM=as.matrix(GI)
+#GI=GM
+GM=GI
 #print(unique(GM[,2]))
 #print("@@@@@@@@@@")
 #Set the number of chromosome
@@ -326,15 +327,22 @@ GI=GM
 #     GI[index,2]=i    
 # }
 # }
+# modified by Jiabo in 20190927. sorted number of chrom by numeric and charicter
 chor_taxa=as.character(unique(GM[,2]))
 chor_taxa[order(gsub("([A-Z]+)([0-9]+)", "\\1", chor_taxa), 
 
              as.numeric(gsub("([A-Z]+)([0-9]+)", "\\2", chor_taxa)))]
-# for(i in 1:(length(chor_taxa)))
-# {
-#     index=GM[,2]==chor_taxa[i]
-#     GI[index,2]=i    
-# }
+chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
+if(!setequal(integer(0),chr_letter))
+{     
+  GI=as.matrix(GI)
+      for(i in 1:(length(chor_taxa)))
+        {
+         index=GM[,2]==chor_taxa[i]
+         GI[index,2]=i    
+        }
+}
+#print(head(GI))
 #print(head(GI))
 #print("@@@@@@@@@@@")
 #print(GD[1:5,1:5])
