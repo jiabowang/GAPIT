@@ -135,6 +135,8 @@ Densitplot <- function(
 GAPIT.Circle.Manhatton.Plot <- function(
 	Pmap,
 	col=c("#377EB8", "#4DAF4A", "#984EA3", "#FF7F00"),
+	#col=c("darkgreen", "darkblue", "darkyellow", "darkred"),
+	
 	bin.size=1e6,
 	bin.max=NULL,
 	pch=19,
@@ -164,7 +166,7 @@ GAPIT.Circle.Manhatton.Plot <- function(
 	signal.line=NULL,
 	cir.chr=TRUE,
 	cir.chr.h=1.3,
-	chr.den.col=c("darkgray", "dimgray", "black"),
+	chr.den.col=c("darkgreen", "yellow", "red"),
 	#chr.den.col=c(126,177,153),
 	cir.legend=TRUE,
 	cir.legend.cex=0.8,
@@ -968,7 +970,8 @@ GAPIT.Circle.Manhatton.Plot <- function(
 			if(box)	box()
 			if(file.output) dev.off()
 			if(R > 1){
-				qq_col=rainbow(R)
+				#qq_col=rainbow(R)
+                qq_col=rep(c( '#FF6A6A',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(R/5))
 
 				signal.col <- NULL
 				if(file.output){

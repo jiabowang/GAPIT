@@ -207,6 +207,8 @@ GWAS=cbind(GWAS,nobs)
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
+#print(head(GWAS))
+GWAS=GWAS[,c(1:4,7,8,5,6)]
 
 GPS=myFarmCPU$Pred
 #colnames(GPS)[3]=c("Prediction")
@@ -305,6 +307,80 @@ GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 
 GPS=myBlink$Pred
 #colnames(GPS)[3]=c("Prediction")
+
+if(Multi_iter)
+{
+sig=GWAS[GWAS[,4]<(0.01/(nrow(GWAS))),1:5]
+sig=sig[!is.na(sig[,4]),]
+#windowsize=500000000
+sig_position=as.numeric(as.matrix(sig[,1:3])[,2])*10^10+as.numeric(as.matrix(sig[,1:3])[,3])
+sig=sig[order(sig_position),]
+sig_position=sig_position[order(sig_position)]
+sig_diff=abs(sig_position-c(sig_position[-1],0))
+sig_diff_index=sig_diff<windowsize
+GWAS0=GWAS
+#####################
+n=nrow(sig)
+print("The number of significant markers is")
+print(n)
+
+if(n>0)
+{
+  for(i in 1:n)
+  {
+    aim_marker=sig[i,]
+    #print(aim_marker)
+    aim_order=as.numeric(rownames(aim_marker))
+    aim_chro=as.character(aim_marker[,2])
+    aim_position=as.numeric(as.character(aim_marker[,3]))
+    position=as.numeric(as.matrix(GM)[,3])
+    aim_area=GM[,2]==aim_chro&position<(aim_position+windowsize)&position>(aim_position-windowsize)    
+    aim_matrix=as.matrix(table(aim_area))
+    if(aim_matrix[rownames(aim_matrix)=="TRUE",1]<10) next
+        aim_area[GM[,1]==aim_marker[,1]]=FALSE      
+        secondGD=GD[,c(TRUE,aim_area)]
+        secondGM=GM[aim_area,]
+        myGAPIT_Second =Blink(Y=Y,GD=secondGD,GM=secondGM,CV=blink_CV,maxLoop=10,time.cal=T)
+        #print(head(myBlink$GWAS))
+        GWAS=myBlink$GWAS[,1:4]
+
+        Second_GWAS= myGAPIT_Second$GWAS [,1:4]
+        Second_GWAS[is.na(Second_GWAS[,4]),4]=1
+        orignal_GWAS=GWAS[aim_area,]
+        GWAS_index=match(Second_GWAS[,1],GWAS[,1])
+        #test_GWAS=GWAS
+        GWAS[GWAS_index,4]=Second_GWAS[,4]
+  }
+}
+
+
+
+}
+xs=t(GD[,-1])
+gene_taxa=colnames(GD)[-1]
+ss=apply(xs,1,sum)
+ns=nrow(GD)
+storage=cbind(.5*ss/ns,1-.5*ss/ns)
+maf=as.data.frame(cbind(gene_taxa,apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)))
+colnames(maf)=c("SNP","maf")
+nobs=ns
+#GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")
+effect=NA
+GWAS=cbind(GWAS[,-5],effect)
+GWAS=cbind(GWAS,maf)#, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
+GWAS=cbind(GWAS,nobs)
+#GWAS=GWAS[order(GWAS$P.value),]
+#colnames(GWAS)=c("SNP","Chromosome","Position","mp","mc","maf","nobs")
+#print(head(GWAS))
+GWAS[,2]=as.numeric(as.character(GWAS[,2]))
+GWAS[,3]=as.numeric(as.character(GWAS[,3]))
+#rint(head(GWAS))
+
+GPS=myBlink$Pred
+#colnames(GPS)[3]=c("Prediction")
+#print(head(GWAS))
+GWAS=GWAS[,c(1:4,7,8,5,6)]
+
 
 h2=NULL
 vg=NULL
