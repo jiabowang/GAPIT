@@ -656,6 +656,8 @@ GWAS=cbind(GWAS,nobs)
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
+#print(head(GWAS))
+GWAS=GWAS[,c(1:4,7,8,5,6)]
 
 GPS=myFarmCPU$Pred
 #colnames(GPS)[3]=c("Prediction")
@@ -754,6 +756,80 @@ GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 
 GPS=myBlink$Pred
 #colnames(GPS)[3]=c("Prediction")
+
+if(Multi_iter)
+{
+sig=GWAS[GWAS[,4]<(0.01/(nrow(GWAS))),1:5]
+sig=sig[!is.na(sig[,4]),]
+#windowsize=500000000
+sig_position=as.numeric(as.matrix(sig[,1:3])[,2])*10^10+as.numeric(as.matrix(sig[,1:3])[,3])
+sig=sig[order(sig_position),]
+sig_position=sig_position[order(sig_position)]
+sig_diff=abs(sig_position-c(sig_position[-1],0))
+sig_diff_index=sig_diff<windowsize
+GWAS0=GWAS
+#####################
+n=nrow(sig)
+print("The number of significant markers is")
+print(n)
+
+if(n>0)
+{
+  for(i in 1:n)
+  {
+    aim_marker=sig[i,]
+    #print(aim_marker)
+    aim_order=as.numeric(rownames(aim_marker))
+    aim_chro=as.character(aim_marker[,2])
+    aim_position=as.numeric(as.character(aim_marker[,3]))
+    position=as.numeric(as.matrix(GM)[,3])
+    aim_area=GM[,2]==aim_chro&position<(aim_position+windowsize)&position>(aim_position-windowsize)    
+    aim_matrix=as.matrix(table(aim_area))
+    if(aim_matrix[rownames(aim_matrix)=="TRUE",1]<10) next
+        aim_area[GM[,1]==aim_marker[,1]]=FALSE      
+        secondGD=GD[,c(TRUE,aim_area)]
+        secondGM=GM[aim_area,]
+        myGAPIT_Second =Blink(Y=Y,GD=secondGD,GM=secondGM,CV=blink_CV,maxLoop=10,time.cal=T)
+        #print(head(myBlink$GWAS))
+        GWAS=myBlink$GWAS[,1:4]
+
+        Second_GWAS= myGAPIT_Second$GWAS [,1:4]
+        Second_GWAS[is.na(Second_GWAS[,4]),4]=1
+        orignal_GWAS=GWAS[aim_area,]
+        GWAS_index=match(Second_GWAS[,1],GWAS[,1])
+        #test_GWAS=GWAS
+        GWAS[GWAS_index,4]=Second_GWAS[,4]
+  }
+}
+
+
+
+}
+xs=t(GD[,-1])
+gene_taxa=colnames(GD)[-1]
+ss=apply(xs,1,sum)
+ns=nrow(GD)
+storage=cbind(.5*ss/ns,1-.5*ss/ns)
+maf=as.data.frame(cbind(gene_taxa,apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)))
+colnames(maf)=c("SNP","maf")
+nobs=ns
+#GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")
+effect=NA
+GWAS=cbind(GWAS[,-5],effect)
+GWAS=cbind(GWAS,maf)#, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
+GWAS=cbind(GWAS,nobs)
+#GWAS=GWAS[order(GWAS$P.value),]
+#colnames(GWAS)=c("SNP","Chromosome","Position","mp","mc","maf","nobs")
+#print(head(GWAS))
+GWAS[,2]=as.numeric(as.character(GWAS[,2]))
+GWAS[,3]=as.numeric(as.character(GWAS[,3]))
+#rint(head(GWAS))
+
+GPS=myBlink$Pred
+#colnames(GPS)[3]=c("Prediction")
+#print(head(GWAS))
+GWAS=GWAS[,c(1:4,7,8,5,6)]
+
 
 h2=NULL
 vg=NULL
@@ -1018,6 +1094,8 @@ Densitplot <- function(
 GAPIT.Circle.Manhatton.Plot <- function(
   Pmap,
   col=c("#377EB8", "#4DAF4A", "#984EA3", "#FF7F00"),
+  #col=c("darkgreen", "darkblue", "darkyellow", "darkred"),
+  
   bin.size=1e6,
   bin.max=NULL,
   pch=19,
@@ -1047,7 +1125,7 @@ GAPIT.Circle.Manhatton.Plot <- function(
   signal.line=NULL,
   cir.chr=TRUE,
   cir.chr.h=1.3,
-  chr.den.col=c("darkgray", "dimgray", "black"),
+  chr.den.col=c("darkgreen", "yellow", "red"),
   #chr.den.col=c(126,177,153),
   cir.legend=TRUE,
   cir.legend.cex=0.8,
@@ -1851,7 +1929,8 @@ GAPIT.Circle.Manhatton.Plot <- function(
       if(box) box()
       if(file.output) dev.off()
       if(R > 1){
-        qq_col=rainbow(R)
+        #qq_col=rainbow(R)
+                qq_col=rep(c( '#FF6A6A',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(R/5))
 
         signal.col <- NULL
         if(file.output){
@@ -3573,7 +3652,8 @@ gc()
       if(i > 0 | file>file.from |frag>1)
       {
        if(!Create.indicator){
-        
+        #if(i<5)print(beta[q1])
+        #if(i<5)print(iXX[q1, q1])
         if(!is.null(K)) stats[i, j] <- beta[q1]/sqrt(iXX[q1, q1] *vgs) 
         if(is.null(K)) stats[i, j] <- beta[q1]/sqrt(iXX[q1, q1] *ves)
         effect.est[i, ] <- beta[q1]
@@ -3609,10 +3689,13 @@ gc()
 
                   #Calculate df, t value and standard error _xiaolei changed
                   df[i,] <- dfs[i,]
+
                   tvalue[i,] <- stats[i, j]
                   #stderr[i,] <- beta[ncol(CVI)+1]/stats[i, j]
                   stderr[i,] <- sqrt(vgs)
       }
+      #print("!!!!!!!!!!!!!!!")
+      #print(Create.indicator)
 #-------------------------------------------------------------------------------------------------------------------->
 
     } # End of if(normalCase)
@@ -3622,7 +3705,9 @@ gc()
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Screening SNPs")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Screening SNPs")
-
+# print(head(tvalue))
+# print(head(stderr))
+# print(head(effect.est))
 #output p value for the genotype file
 if(!fullGD)
 { 
@@ -4359,24 +4444,42 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Before Fragment")
   print("All files loaded")
 } #end of if(!byData&byFile)
 
-GM=as.matrix(GI)
-GI=GM
+#GM=as.matrix(GI)
+#GI=GM
+GM=GI
 #print(unique(GM[,2]))
 #print("@@@@@@@@@@")
 #Set the number of chromosome
-if(is.numeric(unique(GM[,2]))) 
-{ chor_taxa=as.character(sort(unique(GM[,2])))
-}else{
-  chor_taxa=as.character(unique(GM[,2]))
+# if(1%in%as.character(unique(GM[,2]))) 
+# { chor_taxa=mixedsort(as.character((unique(GM[,2]))))
+
+# }else{
+#   chor_taxa=as.character(unique(GM[,2]))
+
+# #print(chor_taxa)
+# for(i in 1:(length(chor_taxa)))
+# {
+#     index=GM[,2]==chor_taxa[i]
+#     GI[index,2]=i    
+# }
+# }
+# modified by Jiabo in 20190927. sorted number of chrom by numeric and charicter
+chor_taxa=as.character(unique(GM[,2]))
+chor_taxa[order(gsub("([A-Z]+)([0-9]+)", "\\1", chor_taxa), 
+
+             as.numeric(gsub("([A-Z]+)([0-9]+)", "\\2", chor_taxa)))]
+chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
+if(!setequal(integer(0),chr_letter))
+{     
+  GI=as.matrix(GI)
+      for(i in 1:(length(chor_taxa)))
+        {
+         index=GM[,2]==chor_taxa[i]
+         GI[index,2]=i    
+        }
 }
-#print(chor_taxa)
-for(i in 1:(length(chor_taxa)))
-{
-    index=GM[,2]==chor_taxa[i]
-    GI[index,2]=i
-    
-}
-#print(unique(GI[,2]))
+#print(head(GI))
+#print(head(GI))
 #print("@@@@@@@@@@@")
 #print(GD[1:5,1:5])
 #print(dim(GI))
@@ -4762,7 +4865,6 @@ if(is.null(chr)){chr=1}
   hist(het.snp,col="gray", main="",ylab=ylab.snp, xlab="Heterozygosity of markers")
   dev.off()
   rm(X, H, het.ind, het.snp) #Feree memory
-  
 myFig21<-myGI
 myFig21<-myFig21[!is.na(as.numeric(as.matrix(myFig21[,3]))),]
 
@@ -4844,8 +4946,7 @@ dev.off()
 
 #####Out Moving Average of density##########
 #print(unique(myGI[,2]))
-
-myGD<-myGD[,myGI[,2]==chr]
+myGD0<-myGD[,as.numeric(myGI[,2])==chr]
 gc()
 
 
@@ -4854,14 +4955,14 @@ myGM0<-myGI[myGI[,2]==chr,]
 
 ##remove invalid SNPs
 #X<-myGD0[,-1]
-X<-myGD
+X<-myGD0
 colMax=apply(X,2,max)
 colMin=apply(X,2,min)
 #mono=as.numeric(colMax)-as.numeric(colMin)
 mono=colMax-colMin
+
 index=mono<10E-5
 X=X[,!index]
-
 
 myFig3<-myGM0[!index,]
 
@@ -4884,9 +4985,9 @@ myGD3<-X[,kk3]
 #print(w1_end)
 #print(dim(myFig3))
 
-
 if(nrow(myFig23)<w1_end)w1_end=nrow(myFig23)
-
+#print(w1_start)
+#print(w1_end)
 results3_100<-myFig23[w1_start:w1_end,]
 myGD3_100<-myGD3[,w1_start:w1_end]
 
@@ -6856,7 +6957,6 @@ rsquare=p3d$rsquare
       tvalue=p3d$tvalue
       stderr=p3d$stderr
 effect.est=p3d$effect.est
-
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Extract p3d results")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Extract p3d results")
 print("p3d objects transfered")  
@@ -7280,7 +7380,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             bin.set=NULL
             r2_color=matrix(0,nrow(subset),2)
             #r2_color
-            print(paste("select ",num.row," candidate gene in ",i," chromosome ",sep="") )
+            print(paste("select ",num.row," candidate significont markers in ",i," chromosome ",sep="") )
             #print(sig.mp)
             if(length(unique(sig.index))==2)
             {
@@ -7657,6 +7757,7 @@ for(i in 1:length(environ_name))
        new_xz=cbind(x_matrix,map_store[as.numeric(as.character(x_matrix[,1])),])
        #new_xz[,4]=0
        colnames(new_xz)=c("pos","times","chro","xlab")
+       
        new_xz=new_xz[!duplicated(new_xz),]
        new_xz[new_xz[,2]>=3,2]=3
        new_xz[,2]=4-new_xz[,2]
@@ -7664,13 +7765,15 @@ for(i in 1:length(environ_name))
 
        new_xz=as.matrix(new_xz)
        new_xz=new_xz[new_xz[,2]!="0",]
+       new_xz=matrix(new_xz,length(as.vector(new_xz))/4,4)
+       #print(new_xz)
        plot.line=TRUE
        #print(new_xz)
 }
 #print(as.numeric(new_xz[,4]))
-# print(new_xz)
+#print(head(result0))
 # print(as.numeric(new_xz[,1]))
-pdf(paste("GAPIT.Manhattan.Mutiple.Plot.pdf" ,sep = ""), width = 20,height=6*Nenviron)
+pdf(paste("GAPIT.Manhattan.Mutiple.Plot",colnames(result0)[-c(1:3)],".pdf" ,sep = ""), width = 20,height=6*Nenviron)
 par(mfrow=c(Nenviron,1))
 for(k in 1:Nenviron)
 { if(k==Nenviron){#par(mfrow=c(Nenviron,1))
@@ -9668,7 +9771,7 @@ function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NUL
  ngrid = 100, llim = -10, ulim = 10, esp = 1e-10,LD.chromosome=NULL,LD.location=NULL,LD.range=NULL,PCA.col=NULL,PCA.3d=FALSE,NJtree.group=NULL,NJtree.type=c("fan","unrooted"),
  sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.1,plot.bin=10^5,
  file.output=TRUE,cutOff=0.01, Model.selection = FALSE,output.numerical = FALSE,
- output.hapmap = FALSE, Create.indicator = FALSE,Multi_iter=FALSE,
+ output.hapmap = FALSE, Create.indicator = FALSE,Multi_iter=TRUE,
   QTN=NULL, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = FALSE,
   method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",bin.size=c(1000000),bin.selection=c(10,20,50,100,200,500,1000),
   memo=NULL,Prior=NULL,ncpus=1,maxLoop=3,threshold.output=.01,Inter.Plot=FALSE,Inter.type=c("m","q"),
@@ -9694,7 +9797,7 @@ if(model%in%c("gBLUP","cBLUP","sBLUP"))
     SNP.test=FALSE
     SUPER_GS=TRUE
   }
-if(!is.null(KI)&is.null(GD)&is.null(G)&file.from==file.to)SNP.test=FALSE
+if(!is.null(KI)&is.null(GD)&is.null(G)&is.null(file.G)&is.null(file.GD))SNP.test=FALSE
 model_store=model
 
 for(m in 1:length(model_store))
@@ -9893,8 +9996,8 @@ out <- list()
 # Para$PCA.total=0
 # }
 
-print(Para$kinship.algorithm)
-print(Para$PCA.total)
+#print(Para$kinship.algorithm)
+#print(Para$PCA.total)
 myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,kinship.algorithm=Para$kinship.algorithm,PCA.total=Para$PCA.total,SNP.fraction=Para$SNP.fraction,SNP.test=Para$SNP.test,
  file.path=Para$file.path,file.from=Para$file.from, file.to=Para$file.to, file.total=Para$file.total, file.fragment = Para$file.fragment, file.G=Para$file.G, 
  file.Ext.G=Para$file.Ext.G,file.GD=Para$file.GD, file.GM=Para$file.GM, file.Ext.GD=Para$file.Ext.GD,file.Ext.GM=Para$file.Ext.GM,
