@@ -41,7 +41,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
                 cutOff=DP$cutOff,p.threshold=DP$p.threshold,QTN.threshold=DP$QTN.threshold,
                 maf.threshold=DP$maf.threshold,method.GLM=DP$method.GLM,method.sub=DP$method.sub,
                 method.sub.final=DP$method.sub.final,method.bin=DP$method.bin,
-				        DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter )
+				        DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter,windowsize=DP$windowsize )
  GWAS=myBus$GWAS
  Pred=myBus$GPS
  va=myBus$vg
@@ -55,6 +55,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
 #print(str(GWAS))
  TV=NULL
  Compression=NULL
+ GVs=myBus$GVs
  }
 #print(ic_GD[1:10,1:10])
 
@@ -85,7 +86,7 @@ if(DP$SNP.test&!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
                         QTN.position=DP$QTN.position,plot.style=DP$plot.style,SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
  GWAS=gapitMain$GWAS
-#print(head(GWAS))
+ GR=GAPIT.RandomModel(Y=ic_Y,X=DP$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff)
  Pred=gapitMain$Pred
 #print(head(Pred))
  va=NA#gapitMain$vg
@@ -96,6 +97,8 @@ if(DP$SNP.test&!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
  mp=gapitMain$P
  TV=gapitMain$TV
  Compression=gapitMain$Compression
+ GVs=GR$GVs
+
  }
 myPower=NULL
 #print(head(GWAS))
@@ -107,7 +110,7 @@ if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut
   return (list(GWAS=GWAS,Pred=Pred,FDR=myPower$FDR,Power=myPower$Power,
   Power.Alpha=myPower$Power.Alpha,alpha=myPower$alpha,h2=h2,va=va,ve=ve,
   mc=mc,bc=bc,mp=mp,TV=TV,Compression=Compression,
-  Timmer=Timmer,Memory=Memory))
+  Timmer=Timmer,Memory=Memory,GVs=GVs))
 }else{
 #
 #print("!!!!!!!!!")

@@ -95,7 +95,7 @@ Pred=SS$Pred
  # print(head(SS$GWAS))
       ps=SS$TV$ps
       nobs=SS$TV$nobs
-      maf=as.numeric(GWAS[,5])
+      maf=GWAS$maf
   #maf=SS$TV$maf
       rsquare_base=SS$TV$rsquare_base
       rsquare=SS$TV$rsquare
@@ -109,7 +109,7 @@ Pred=SS$Pred
    if(DP$file.output&!is.null(SS$Compression)&!is.na(SS$Compression[1,6])) GAPIT.Compression.Visualization(Compression = SS$Compression, name.of.trait = DP$name.of.trait)
   
 }else{
-  maf=as.numeric(GWAS[,6])
+  maf=GI$maf
   ps=GI$P.value
   nobs=GI$nobs
   rsquare_base=rep(NA,length(ps))
@@ -151,7 +151,11 @@ if(!is.null(IC$GD)&DP$SNP.test)
   print("Association table..." )
   
   print("Joining tvalue and stderr" )
-  
+  # print(head(GWAS))
+  # print(length(df))
+  # print(length(tvalue))
+  # print(length(stderr))
+  # print(length(effect.est))
         DTS=cbind(GWAS[,1:3],df,tvalue,stderr,effect.est)
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")	
 

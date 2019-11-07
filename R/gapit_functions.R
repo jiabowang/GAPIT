@@ -451,7 +451,7 @@ myFaSTREML=GAPIT.get.LL(pheno=matrix(Y[,-1],nrow(Y),1),geno=NULL,snp.pool=theGK,
 function(Y=NULL,CV=NULL,Z=NULL,GT=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,
          WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
          method=NULL,delta=NULL,vg=NULL,ve=NULL,LD=0.01,GTindex=NULL,
-         cutOff=0.01,Multi_iter=FASLE,windowsize=5e6,
+         cutOff=0.01,Multi_iter=FASLE,windowsize=5e10,
          p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,
          method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",
          DPP=1000000,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
@@ -463,6 +463,7 @@ function(Y=NULL,CV=NULL,Z=NULL,GT=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,
 #Writen by Jiabo Wang
 #Last update: Novenber 3, 2016
 ##############################################################################################
+GR=NULL
 if(method=="GLM"){
 #print("---------------screening by GLM----------------------------------")
 
@@ -587,10 +588,28 @@ myFarmCPU=FarmCPU(
         file.output=T
         )
 GWAS=myFarmCPU$GWAS
+ xs=t(GD[,-1])
+# gene_taxa=colnames(GD)[-1]
+ ss=apply(xs,1,sum)
+ ns=nrow(GD)
+# storage=cbind(.5*ss/ns,1-.5*ss/ns)
+# #maf=as.data.frame(cbind(gene_taxa,apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)))
+# colnames(maf)=c("SNP","maf")
+ nobs=ns
+# #GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")
+# GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
+ GWAS=cbind(GWAS,nobs)
 
+maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
+GWAS$maf=maf
+#print(head(GWAS))
+GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff)
+
+#print("!!!!!!!!!!!!!")
+#print(Multi_iter)
 if(Multi_iter)
 {
-sig=GWAS[GWAS[,4]<(0.01/(nrow(GWAS))),1:5]
+sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 sig=sig[!is.na(sig[,4]),]
 #windowsize=500000000
 sig_position=as.numeric(as.matrix(sig[,1:3])[,2])*10^10+as.numeric(as.matrix(sig[,1:3])[,3])
@@ -604,8 +623,8 @@ n=nrow(sig)
 print("The number of significant markers is")
 print(n)
 
-if(n>0)
-{
+ if(n>0)
+ {
   for(i in 1:n)
   {
     aim_marker=sig[i,]
@@ -616,6 +635,9 @@ if(n>0)
     position=as.numeric(as.matrix(GM)[,3])
     aim_area=GM[,2]==aim_chro&position<(aim_position+windowsize)&position>(aim_position-windowsize)    
     aim_matrix=as.matrix(table(aim_area))
+    #print(aim_area)
+    #print(setequal(aim_area,logical(0)))
+    if(setequal(aim_area,logical(0))) next
     if(aim_matrix[rownames(aim_matrix)=="TRUE",1]<10) next
         aim_area[GM[,1]==aim_marker[,1]]=FALSE      
         secondGD=GD[,c(TRUE,aim_area)]
@@ -633,31 +655,23 @@ if(n>0)
         GWAS_index=match(Second_GWAS[,1],GWAS[,1])
         #test_GWAS=GWAS
         GWAS[GWAS_index,4]=Second_GWAS[,4]
-  }
+   }
+ }
 }
 
-
-
-}
-xs=t(GD[,-1])
-gene_taxa=colnames(GD)[-1]
-ss=apply(xs,1,sum)
-ns=nrow(GD)
-storage=cbind(.5*ss/ns,1-.5*ss/ns)
-maf=as.data.frame(cbind(gene_taxa,apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)))
-colnames(maf)=c("SNP","maf")
-nobs=ns
-#GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")
-GWAS=cbind(GWAS[,-5],maf)#, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
-GWAS=cbind(GWAS,nobs)
 #GWAS=GWAS[order(GWAS$P.value),]
 #colnames(GWAS)=c("SNP","Chromosome","Position","mp","mc","maf","nobs")
 #print(head(GWAS))
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
+nobs=ns
+# #GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")
+# GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
+#GWAS=cbind(GWAS,nobs)
+
 #print(head(GWAS))
-GWAS=GWAS[,c(1:4,7,8,5,6)]
+GWAS=GWAS[,c(1:5,7,6)]
 
 GPS=myFarmCPU$Pred
 #colnames(GPS)[3]=c("Prediction")
@@ -738,28 +752,41 @@ if(method=="Blink")
   myBlink=Blink(Y=blink_Y,GD=blink_GD,GM=blink_GM,CV=blink_CV,maxLoop=10,time.cal=T)
   #print(head(myBlink$GWAS))
   GWAS=myBlink$GWAS[,1:4]
-
-  gene_taxa=as.character(blink_GM[,1])
-  ss=apply(blink_GD,1,sum)
+  #print(str(myBlink))
   ns=nrow(GD)
   nobs=ns
-  storage=cbind(.5*ss/ns,1-.5*ss/ns)
-  maf=as.data.frame(cbind(gene_taxa,apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)))
-  colnames(maf)=c("SNP","maf")
   effect=rep(NA,length(nobs))
+  xs=t(GD[,-1])
+  ss=apply(xs,1,sum)
+  #storage=cbind(.5*ss/ns,1-.5*ss/ns)
+  maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
+
+  GWAS=cbind(GWAS,maf)#, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
   GWAS=cbind(GWAS,effect)
-  GWAS=cbind(GWAS,maf)
   GWAS=cbind(GWAS,nobs)
+  GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff)
 
-GWAS[,2]=as.numeric(as.character(GWAS[,2]))
-GWAS[,3]=as.numeric(as.character(GWAS[,3]))
+#   gene_taxa=as.character(blink_GM[,1])
+#   ss=apply(blink_GD,1,sum)
+#   ns=nrow(GD)
+#   nobs=ns
+#   storage=cbind(.5*ss/ns,1-.5*ss/ns)
+#   maf=as.data.frame(cbind(gene_taxa,apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)))
+#   colnames(maf)=c("SNP","maf")
+#   effect=rep(NA,length(nobs))
+#   GWAS=cbind(GWAS,effect)
+#   GWAS=cbind(GWAS,maf)
+#   GWAS=cbind(GWAS,nobs)
 
-GPS=myBlink$Pred
+# GWAS[,2]=as.numeric(as.character(GWAS[,2]))
+# GWAS[,3]=as.numeric(as.character(GWAS[,3]))
+
+# GPS=myBlink$Pred
 #colnames(GPS)[3]=c("Prediction")
 
 if(Multi_iter)
 {
-sig=GWAS[GWAS[,4]<(0.01/(nrow(GWAS))),1:5]
+sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 sig=sig[!is.na(sig[,4]),]
 #windowsize=500000000
 sig_position=as.numeric(as.matrix(sig[,1:3])[,2])*10^10+as.numeric(as.matrix(sig[,1:3])[,3])
@@ -785,14 +812,15 @@ if(n>0)
     position=as.numeric(as.matrix(GM)[,3])
     aim_area=GM[,2]==aim_chro&position<(aim_position+windowsize)&position>(aim_position-windowsize)    
     aim_matrix=as.matrix(table(aim_area))
+    if(setequal(aim_area,logical(0))) next
+
     if(aim_matrix[rownames(aim_matrix)=="TRUE",1]<10) next
         aim_area[GM[,1]==aim_marker[,1]]=FALSE      
         secondGD=GD[,c(TRUE,aim_area)]
         secondGM=GM[aim_area,]
         myGAPIT_Second =Blink(Y=Y,GD=secondGD,GM=secondGM,CV=blink_CV,maxLoop=10,time.cal=T)
         #print(head(myBlink$GWAS))
-        GWAS=myBlink$GWAS[,1:4]
-
+        #GWAS=myBlink$GWAS[,1:4]
         Second_GWAS= myGAPIT_Second$GWAS [,1:4]
         Second_GWAS[is.na(Second_GWAS[,4]),4]=1
         orignal_GWAS=GWAS[aim_area,]
@@ -805,19 +833,7 @@ if(n>0)
 
 
 }
-xs=t(GD[,-1])
-gene_taxa=colnames(GD)[-1]
-ss=apply(xs,1,sum)
-ns=nrow(GD)
-storage=cbind(.5*ss/ns,1-.5*ss/ns)
-maf=as.data.frame(cbind(gene_taxa,apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)))
-colnames(maf)=c("SNP","maf")
-nobs=ns
-#GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")
-effect=NA
-GWAS=cbind(GWAS[,-5],effect)
-GWAS=cbind(GWAS,maf)#, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
-GWAS=cbind(GWAS,nobs)
+
 #GWAS=GWAS[order(GWAS$P.value),]
 #colnames(GWAS)=c("SNP","Chromosome","Position","mp","mc","maf","nobs")
 #print(head(GWAS))
@@ -828,7 +844,7 @@ GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 GPS=myBlink$Pred
 #colnames(GPS)[3]=c("Prediction")
 #print(head(GWAS))
-GWAS=GWAS[,c(1:4,7,8,5,6)]
+GWAS=GWAS[,c(1:5,7,6)]
 
 
 h2=NULL
@@ -930,7 +946,7 @@ colnames(GWAS)=c("SNP","Chromosome","Position","P.value","effect","maf","nobs")
 
 }
 #print("GAPIT.Bus succeed!")  
-return (list(GWAS=GWAS, GPS=GPS,REMLs=REMLs,vg=vg,ve=ve,delta=delta))
+return (list(GWAS=GWAS, GPS=GPS,REMLs=REMLs,vg=vg,ve=ve,delta=delta,GVs=GR$GVs))
 } #end of GAPIT.Bus
 #=============================================================================================
 
@@ -2636,7 +2652,7 @@ function(G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NU
                     SNP.MAF=0,FDR.Rate = 1, SNP.FDR=1,SNP.permutation=FALSE,SNP.CV=NULL,SNP.robust="GLM", NJtree.group=NULL,NJtree.type=c("fan","unrooted"),plot.bin=10^6,PCA.col=NULL,PCA.3d=FALSE,
                 file.from=1, file.to=1, file.total=NULL, file.fragment = 99999,file.path=NULL,Inter.Plot=FALSE,Inter.type=c("m","q"),
                 file.G=NULL, file.Ext.G=NULL,file.GD=NULL, file.GM=NULL, file.Ext.GD=NULL,file.Ext.GM=NULL, 
-                ngrid = 100, llim = -10, ulim = 10, esp = 1e-10, Multi_iter=FALSE,
+                ngrid = 100, llim = -10, ulim = 10, esp = 1e-10, Multi_iter=FALSE,windowsize=5e9,
                 LD.chromosome=NULL,LD.location=NULL,LD.range=NULL, p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,
                 sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.1,
                 file.output=TRUE,cutOff=0.01, Model.selection = FALSE,output.numerical = FALSE,
@@ -2710,7 +2726,7 @@ GD=cbind(as.data.frame(GT),GD)
             WS= WS,alpha= alpha,maxOut= maxOut,QTN.position= QTN.position, converge=1,iteration.output= iteration.output,acceleration=0,
             iteration.method= iteration.method,PCA.View.output= PCA.View.output, 
                 p.threshold=p.threshold,QTN.threshold=QTN.threshold,
-                maf.threshold=maf.threshold,chor_taxa=chor_taxa,
+                maf.threshold=maf.threshold,chor_taxa=chor_taxa,windowsize=windowsize,
             Geno.View.output= Geno.View.output,plot.style= plot.style,SUPER_GD= SUPER_GD,SUPER_GS= SUPER_GS,CG=CG,plot.bin=plot.bin))
 }  #end of GAPIT DP function
 #=============================================================================================
@@ -5332,7 +5348,7 @@ Pred=SS$Pred
  # print(head(SS$GWAS))
       ps=SS$TV$ps
       nobs=SS$TV$nobs
-      maf=as.numeric(GWAS[,5])
+      maf=GWAS$maf
   #maf=SS$TV$maf
       rsquare_base=SS$TV$rsquare_base
       rsquare=SS$TV$rsquare
@@ -5346,7 +5362,7 @@ Pred=SS$Pred
    if(DP$file.output&!is.null(SS$Compression)&!is.na(SS$Compression[1,6])) GAPIT.Compression.Visualization(Compression = SS$Compression, name.of.trait = DP$name.of.trait)
   
 }else{
-  maf=as.numeric(GWAS[,6])
+  maf=GI$maf
   ps=GI$P.value
   nobs=GI$nobs
   rsquare_base=rep(NA,length(ps))
@@ -5388,7 +5404,11 @@ if(!is.null(IC$GD)&DP$SNP.test)
   print("Association table..." )
   
   print("Joining tvalue and stderr" )
-  
+  # print(head(GWAS))
+  # print(length(df))
+  # print(length(tvalue))
+  # print(length(stderr))
+  # print(length(effect.est))
         DTS=cbind(GWAS[,1:3],df,tvalue,stderr,effect.est)
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")  
 
@@ -9771,7 +9791,7 @@ function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NUL
  ngrid = 100, llim = -10, ulim = 10, esp = 1e-10,LD.chromosome=NULL,LD.location=NULL,LD.range=NULL,PCA.col=NULL,PCA.3d=FALSE,NJtree.group=NULL,NJtree.type=c("fan","unrooted"),
  sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.1,plot.bin=10^5,
  file.output=TRUE,cutOff=0.01, Model.selection = FALSE,output.numerical = FALSE,
- output.hapmap = FALSE, Create.indicator = FALSE,Multi_iter=TRUE,
+ output.hapmap = FALSE, Create.indicator = FALSE,Multi_iter=TRUE,windowsize=5e9,
   QTN=NULL, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = FALSE,
   method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",bin.size=c(1000000),bin.selection=c(10,20,50,100,200,500,1000),
   memo=NULL,Prior=NULL,ncpus=1,maxLoop=3,threshold.output=.01,Inter.Plot=FALSE,Inter.type=c("m","q"),
@@ -9889,7 +9909,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
  sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,QC=QC,GTindex=GTindex,LD=LD,plot.bin=plot.bin,file.output=file.output,cutOff=cutOff, Model.selection = Model.selection,output.numerical = output.numerical,
  output.hapmap = output.hapmap, Create.indicator = Create.indicator,QTN=QTN, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = Major.allele.zero,
  method.GLM=method.GLM,method.sub=method.sub,method.sub.final="reward",method.bin="static",bin.size=bin.size,bin.selection=bin.selection,model=model,
- h2=h2,NQTN=NQTN,QTNDist="normal",effectunit=effectunit,category=category,r=r,cveff=NULL,a2=0,adim=2,Multi_iter=Multi_iter,
+ h2=h2,NQTN=NQTN,QTNDist="normal",effectunit=effectunit,category=category,r=r,cveff=NULL,a2=0,adim=2,Multi_iter=Multi_iter,windowsize=5e9,
  memo="",Prior=NULL,ncpus=1,maxLoop=maxLoop,threshold.output=threshold.output,WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=alpha,maxOut=100,QTN.position=QTN.position,CG=CG,
  converge=converge,iteration.output=iteration.output,acceleration=0,iteration.method="accum",PCA.View.output=PCA.View.output,Geno.View.output=Geno.View.output,plot.style="Oceanic",SUPER_GD=NULL,SUPER_GS=SUPER_GS,Multiple_analysis=Multiple_analysis)
 
@@ -9918,7 +9938,7 @@ if(m==1)
  SNP.CV= Para$SNP.CV,SNP.robust= Para$SNP.robust,   Inter.Plot=Para$Inter.Plot,  Inter.type=Para$Inter.type,   
  file.from= Para$file.from, file.to=Para$file.to, file.total= Para$file.total, file.fragment = Para$file.fragment,file.path= Para$file.path, 
  file.G= Para$file.G, file.Ext.G= Para$file.Ext.G,file.GD= Para$file.GD, file.GM= Para$file.GM, file.Ext.GD= Para$file.Ext.GD,file.Ext.GM= Para$file.Ext.GM, 
- ngrid = Para$ngrid, llim = Para$llim, ulim = Para$ulim, esp = Para$esp,Multi_iter=Para$Multi_iter,
+ ngrid = Para$ngrid, llim = Para$llim, ulim = Para$ulim, esp = Para$esp,Multi_iter=Para$Multi_iter,windowsize=Para$windowsize,
  LD.chromosome= Para$LD.chromosome,LD.location= Para$LD.location,LD.range= Para$LD.range,
  QC= Para$QC,GTindex= Para$GTindex,cutOff=Para$cutOff, Model.selection = Para$Model.selection,output.numerical = Para$output.numerical,
  Create.indicator = Para$Create.indicator,QTN= Para$QTN, QTN.round= Para$QTN.round,QTN.limit= Para$QTN.limit, QTN.update= Para$QTN.update, QTN.method= Para$QTN.method, Major.allele.zero = Para$Major.allele.zero,
@@ -10162,6 +10182,144 @@ print("ROC completed!")
 }   #GAPIT.ROC ends here
 #=============================================================================================
 
+`GAPIT.RandomModel` <-
+function(GWAS,Y,CV=NULL,X,cutOff=0.01){
+    #Object: To calculate the genetics variance ratio of Candidate Genes
+    #Output: The genetics variance raito between CG and total
+    #Authors: Jiabo Wang and Zhiwu Zhang
+    # Last update: Nov 6, 2019
+    ##############################################################################################
+    if(!require(lme4))  install.packages("lme4")
+    library("lme4")
+    #GWAS=myGAPIT_GLM$GWAS
+    #CV=myGAPIT_GLM$PCA
+    #cut.set=0.01
+    print("GAPIT.RandomModel beginning...")
+    name.of.trait=colnames(Y)[2]
+    cutoff=cutOff/nrow(GWAS)
+    P.value=as.numeric(GWAS[,4])
+    P.value[is.na(P.value)]=1
+    index=P.value<cutoff
+    geneGD=X[,index]
+    geneGWAS=GWAS[index,]
+    if(ncol(geneGD)==0)
+    {
+      print("There is no significant marker for VE !!")
+      return(list(GVs=NULL))
+
+    }
+    colnames(geneGD)=paste("gene_",1:ncol(geneGD),sep="")
+    colnames(Y)=c("taxa","trait")
+    if(is.null(CV))
+    {
+      CV=Y
+      CV[,2]=1
+    }
+      tree2=cbind(Y,CV[,-1],geneGD)
+    n_cv=ncol(CV[,-1])
+    n_gd=ncol(geneGD)
+
+#ff <- paste("trait~1+PC1+PC2+PC3+(1|gene_1)+(1|gene_2)+(1|gene_3)+(1|gene_4)+(1|gene_5)+(1|gene_6)"
+#dflme <- lmer(ff, data=tree2)
+
+    command0=paste("trait~1",sep="")
+    command1=command0
+    for(i in 1:n_cv)
+{ 
+  command1=paste(command1,"+PC",i,sep="")
+}
+    command2=command1
+    for(j in 1:n_gd)
+{
+  command2=paste(command2,"+(1|gene_",j,")",sep="")
+}
+#command3=paste(command2,"+(1|gene_",j,")",sep="")
+    dflme <- lmer(command2, data=tree2,control=lmerControl(check.nobs.vs.nlev = "ignore",
+     check.nobs.vs.rankZ = "ignore",
+     check.nobs.vs.nRE="ignore"))
+
+    carcor_matrix=as.data.frame(summary(dflme)$varcor)
+    var_gene=as.numeric(carcor_matrix[1:(nrow(carcor_matrix)-1),4])
+    var_res=carcor_matrix[nrow(carcor_matrix),4]
+
+print(paste("Candidate Genes could explain genetics variance :",sep=""))
+print(var_gene/sum(var_gene+var_res))
+    v_rat=var_gene/sum(var_gene+var_res)
+gene_list=cbind(geneGWAS,v_rat)
+colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
+
+write.csv(gene_list,paste("GAPIT.", name.of.trait,".Phenotype_Variance_Explained_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+if(!is.na(sum(gene_list[1,c(4:6,8)])))
+{
+        pdf(paste("GAPIT.", name.of.trait,".Effect_VP.pdf" ,sep = ""), width = 7,height=5.75)
+        par(mar=c(4,5,4,4),cex=0.8)
+
+        gene_list=gene_list[order(gene_list$effect),]
+        plot(gene_list$effect,gene_list$Variance_Explained,
+          xlab="Estimated Effect",
+          ylab="Variance Explained of Phenotype"
+          )
+        dev.off()
+
+        pdf(paste("GAPIT.", name.of.trait,".MAF_VP.pdf" ,sep = ""), width = 7,height=5.75)
+        par(mar=c(4,5,4,4),cex=0.8)
+        gene_list=gene_list[order(gene_list$maf),]
+        plot(gene_list$maf,gene_list$Variance_Explained,xlab="MAF",ylab="Variance Explained of Phenotype")
+        dev.off()
+
+    if(n_gd>10)
+        {
+        pdf(paste("GAPIT.", name.of.trait,".MAF_Effect_VP.pdf" ,sep = ""), width = 9,height=5.75)
+        
+        n=10
+        layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
+        do_color=colorRampPalette(c("green", "red"))(n)
+
+            par(mar=c(4,5,2,8),cex=0.8)
+            y=gene_list$maf
+            x=gene_list$effect
+            x.lim=max(x)+max(x)/10
+            y.lim=max(y)+max(y)/10
+            z=gene_list$Variance_Explained
+            quantile_cut=quantile(z)
+            r2_color=rep("black",n_gd)
+        for(i in 1:(n/2))
+        {
+          r2_color[z<=quantile_cut[i+1]&z>=quantile_cut[i]]=do_color[2*i]
+        }
+            plot(y~x,type="p", ylim=c(0,y.lim), xlim = c(min(x), max(x)),col = r2_color, xlab = "",ylab = "", cex.lab=1.2,pch=21,bg=r2_color)
+            mtext("Estimated Effect",side=1,line=2.5)
+            mtext("MAF",side=2,line=2.5)
+
+
+            par(mar=c(2,13,5,4),cex=0.5)
+            
+            barplot(matrix(rep(0.4,times=n),n,1),beside=T,col=do_color,border=do_color,axes=FALSE,horiz =T)
+        #legend(x=10,y=2,legend=expression(R^"2"),,lty=0,cex=1.3,bty="n",bg=par("bg"))
+            step=length(seq(0,round(max(z),3),by=0.01))
+            small_bar=round(seq(0,round(max(z),3),by=(max(z)-min(z))/10),2)
+            #main()
+            mtext("Variance Explained",side=2,line=0.4,col="black",cex=0.5)
+
+            axis(4,c(1,6,11),c(min(small_bar),median(small_bar),max(small_bar)),las=2,cex.axis = 0.9,tick=F,line=0)
+        
+        dev.off()
+        }
+}
+
+
+
+
+
+
+return(list(GVs=var_gene/sum(var_gene+var_res)))
+
+}#end of GAPIT.RandomModel function
+#=============================================================================================
+          
+
+
+
 `GAPIT.RemoveDuplicate` <-
 function(Y){
 #Object: NA
@@ -10282,7 +10440,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
                 cutOff=DP$cutOff,p.threshold=DP$p.threshold,QTN.threshold=DP$QTN.threshold,
                 maf.threshold=DP$maf.threshold,method.GLM=DP$method.GLM,method.sub=DP$method.sub,
                 method.sub.final=DP$method.sub.final,method.bin=DP$method.bin,
-                DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter )
+                DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter,windowsize=DP$windowsize )
  GWAS=myBus$GWAS
  Pred=myBus$GPS
  va=myBus$vg
@@ -10296,6 +10454,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
 #print(str(GWAS))
  TV=NULL
  Compression=NULL
+ GVs=myBus$GVs
  }
 #print(ic_GD[1:10,1:10])
 
@@ -10326,7 +10485,7 @@ if(DP$SNP.test&!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
                         QTN.position=DP$QTN.position,plot.style=DP$plot.style,SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
  GWAS=gapitMain$GWAS
-#print(head(GWAS))
+ GR=GAPIT.RandomModel(Y=ic_Y,X=DP$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff)
  Pred=gapitMain$Pred
 #print(head(Pred))
  va=NA#gapitMain$vg
@@ -10337,6 +10496,8 @@ if(DP$SNP.test&!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
  mp=gapitMain$P
  TV=gapitMain$TV
  Compression=gapitMain$Compression
+ GVs=GR$GVs
+
  }
 myPower=NULL
 #print(head(GWAS))
@@ -10348,7 +10509,7 @@ if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut
   return (list(GWAS=GWAS,Pred=Pred,FDR=myPower$FDR,Power=myPower$Power,
   Power.Alpha=myPower$Power.Alpha,alpha=myPower$alpha,h2=h2,va=va,ve=ve,
   mc=mc,bc=bc,mp=mp,TV=TV,Compression=Compression,
-  Timmer=Timmer,Memory=Memory))
+  Timmer=Timmer,Memory=Memory,GVs=GVs))
 }else{
 #
 #print("!!!!!!!!!")
