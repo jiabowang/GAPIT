@@ -9,7 +9,8 @@ if(!require(EMMREML)) install.packages("EMMREML")
 if(!require(scatterplot3d)) install.packages("scatterplot3d")
 
 if(!'multtest'%in% installed.packages()[,"Package"]){
-	source("http://www.bioconductor.org/biocLite.R")
-	biocLite("multtest")
-	biocLite("snpStats")
+	if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    BiocManager::install("multtest")
+    BiocManager::install("snpStats")
 }

@@ -25,8 +25,11 @@ function(){
 #Authors of paper on Plant Genome (2016, Vol 9, No. 2): You Tang, Xiaolei Liu, Jiabo Wang, Meng Li, Qishan Wang, Feng Tian, Zhongbin Su, Yuchun Pan, Di Liu, Alexander E. Lipka, Edward S. Buckler, and Zhiwu Zhang
 if(!require(multtest)) 
 {
-	source("http://www.bioconductor.org/biocLite.R")
-    biocLite("multtest")
+	if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    BiocManager::install("multtest")
+	#source("http://www.bioconductor.org/biocLite.R")
+    #biocLite("multtest")
 }
 if(!require(gplots)) install.packages("gplots")
 if(!require(LDheatmap)) install.packages("LDheatmap")
@@ -40,9 +43,12 @@ if(!require(scatterplot3d)) install.packages("scatterplot3d")
 # missing_pkg = required_pkg[!(required_pkg %in% installed.packages()[,"Package"])]
 # if(length(missing_pkg)) install.packages(missing_pkg, repos="http://cran.rstudio.com/")
 if(!'multtest'%in% installed.packages()[,"Package"]){
-	source("http://www.bioconductor.org/biocLite.R")
-	biocLite("multtest")
-	biocLite("snpStats")
+	if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    BiocManager::install("snpStats")
+	#source("http://www.bioconductor.org/biocLite.R")
+	#biocLite("multtest")
+	#biocLite("snpStats")
 }
 
 
@@ -603,7 +609,6 @@ GWAS=myFarmCPU$GWAS
 maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
 GWAS$maf=maf
 #print(head(GWAS))
-GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff)
 
 #print("!!!!!!!!!!!!!")
 #print(Multi_iter)
@@ -672,6 +677,7 @@ nobs=ns
 
 #print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
+GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff)
 
 GPS=myFarmCPU$Pred
 #colnames(GPS)[3]=c("Prediction")
@@ -764,7 +770,6 @@ if(method=="Blink")
   GWAS=cbind(GWAS,maf)#, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
   GWAS=cbind(GWAS,effect)
   GWAS=cbind(GWAS,nobs)
-  GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff)
 
 #   gene_taxa=as.character(blink_GM[,1])
 #   ss=apply(blink_GD,1,sum)
@@ -845,6 +850,7 @@ GPS=myBlink$Pred
 #colnames(GPS)[3]=c("Prediction")
 #print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
+GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff)
 
 
 h2=NULL
@@ -10249,6 +10255,7 @@ gene_list=cbind(geneGWAS,v_rat)
 colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
 
 write.csv(gene_list,paste("GAPIT.", name.of.trait,".Phenotype_Variance_Explained_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+#gene_list=read.csv("GAPIT.Weight.GrowthIntercept.Phenotype_Variance_Explained_by_Association_Markers.csv",head=T)
 if(!is.na(sum(gene_list[1,c(4:6,8)])))
 {
         pdf(paste("GAPIT.", name.of.trait,".Effect_VP.pdf" ,sep = ""), width = 7,height=5.75)
@@ -10267,7 +10274,7 @@ if(!is.na(sum(gene_list[1,c(4:6,8)])))
         plot(gene_list$maf,gene_list$Variance_Explained,xlab="MAF",ylab="Variance Explained of Phenotype")
         dev.off()
 
-    if(n_gd>10)
+    if(n_gd>=10)
         {
         pdf(paste("GAPIT.", name.of.trait,".MAF_Effect_VP.pdf" ,sep = ""), width = 9,height=5.75)
         
@@ -13158,9 +13165,10 @@ if(!require(EMMREML)) install.packages("EMMREML")
 if(!require(scatterplot3d)) install.packages("scatterplot3d")
 
 if(!'multtest'%in% installed.packages()[,"Package"]){
-	source("http://www.bioconductor.org/biocLite.R")
-	biocLite("multtest")
-	biocLite("snpStats")
+	if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    BiocManager::install("multtest")
+    BiocManager::install("snpStats")
 }
 ############################################################################################################################################## 
  ###MLMM - Multi-Locus Mixed Model 
