@@ -1,5 +1,5 @@
 `GAPIT.RandomModel` <-
-function(GWAS,Y,CV=NULL,X,cutOff=0.01){
+function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL){
     #Object: To calculate the genetics variance ratio of Candidate Genes
     #Output: The genetics variance raito between CG and total
     #Authors: Jiabo Wang and Zhiwu Zhang
@@ -11,6 +11,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01){
     #CV=myGAPIT_GLM$PCA
     #cut.set=0.01
     print("GAPIT.RandomModel beginning...")
+    if(is.null(GT))GT=as.character(Y[,1])
     name.of.trait=colnames(Y)[2]
     cutoff=cutOff/nrow(GWAS)
     P.value=as.numeric(GWAS[,4])
@@ -18,7 +19,10 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01){
     index=P.value<cutoff
     geneGD=X[,index]
     geneGWAS=GWAS[index,]
-    if(ncol(geneGD)==0)
+    # print(dim(Y))
+    # print(dim(CV))
+    # print(dim(geneGD))
+    if(length(unique(index))==1)
     {
     	print("There is no significant marker for VE !!")
     	return(list(GVs=NULL))
@@ -28,16 +32,48 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01){
     colnames(Y)=c("taxa","trait")
     if(is.null(CV))
     {
-    	CV=Y
-    	CV[,2]=1
-    }
+    	#CV=cbind(GT,1)
+    	taxa_Y=as.character(Y[,1])
+        geneGD=geneGD[GT%in%taxa_Y,]
+     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
+        Y=Y[taxa_Y%in%GT,]
+        tree2=cbind(Y,geneGD)
+    	# CV[,2]=1
+    }else{
+    	if(ncol(CV)==1)
+    	{
+    	taxa_Y=as.character(Y[,1])
+        geneGD=geneGD[GT%in%taxa_Y,]
+     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
+        Y=Y[taxa_Y%in%GT,]
+        tree2=cbind(Y,geneGD)
+    	}else{
     	tree2=cbind(Y,CV[,-1],geneGD)
-    n_cv=ncol(CV[,-1])
+        }
+    }
+    
+    	# print(dim(Y))
+     #    print(dim(CV))
+     #    print(dim(geneGD))
+    n_cv=ncol(CV)-1
+        # print(n_cv)
     n_gd=ncol(geneGD)
-
+if(!is.null(CV))
+{
 #ff <- paste("trait~1+PC1+PC2+PC3+(1|gene_1)+(1|gene_2)+(1|gene_3)+(1|gene_4)+(1|gene_5)+(1|gene_6)"
 #dflme <- lmer(ff, data=tree2)
+    if(ncol(CV)==1)
+    {
+    command0=paste("trait~1",sep="")
+    command1=command0
+    
+    command2=command1
+    for(j in 1:n_gd)
+{
+	command2=paste(command2,"+(1|gene_",j,")",sep="")
+}
 
+    }else{
     command0=paste("trait~1",sep="")
     command1=command0
     for(i in 1:n_cv)
@@ -49,6 +85,19 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01){
 {
 	command2=paste(command2,"+(1|gene_",j,")",sep="")
 }
+    }
+}else{
+
+    command0=paste("trait~1",sep="")
+    command1=command0
+    
+    command2=command1
+    for(j in 1:n_gd)
+{
+	command2=paste(command2,"+(1|gene_",j,")",sep="")
+}
+
+}
 #command3=paste(command2,"+(1|gene_",j,")",sep="")
     dflme <- lmer(command2, data=tree2,control=lmerControl(check.nobs.vs.nlev = "ignore",
      check.nobs.vs.rankZ = "ignore",
@@ -58,14 +107,15 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01){
     var_gene=as.numeric(carcor_matrix[1:(nrow(carcor_matrix)-1),4])
     var_res=carcor_matrix[nrow(carcor_matrix),4]
 
-print(paste("Candidate Genes could explain genetics variance :",sep=""))
-print(var_gene/sum(var_gene+var_res))
+    print(paste("Candidate Genes could explain genetics variance :",sep=""))
+    print(var_gene/sum(var_gene+var_res))
     v_rat=var_gene/sum(var_gene+var_res)
-gene_list=cbind(geneGWAS,v_rat)
-colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
+    gene_list=cbind(geneGWAS,v_rat)
+    colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
 
-write.csv(gene_list,paste("GAPIT.", name.of.trait,".Phenotype_Variance_Explained_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-if(!is.na(sum(gene_list[1,c(4:6,8)])))
+    write.csv(gene_list,paste("GAPIT.", name.of.trait,".Phenotype_Variance_Explained_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+#gene_list=read.csv("GAPIT.Weight.GrowthIntercept.Phenotype_Variance_Explained_by_Association_Markers.csv",head=T)
+if(!is.na(sum(gene_list[1,c(4:8)])))
 {
         pdf(paste("GAPIT.", name.of.trait,".Effect_VP.pdf" ,sep = ""), width = 7,height=5.75)
         par(mar=c(4,5,4,4),cex=0.8)
@@ -83,7 +133,7 @@ if(!is.na(sum(gene_list[1,c(4:6,8)])))
         plot(gene_list$maf,gene_list$Variance_Explained,xlab="MAF",ylab="Variance Explained of Phenotype")
         dev.off()
 
-    if(n_gd>10)
+    if(n_gd>=10)
         {
         pdf(paste("GAPIT.", name.of.trait,".MAF_Effect_VP.pdf" ,sep = ""), width = 9,height=5.75)
         

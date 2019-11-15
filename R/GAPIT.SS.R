@@ -86,7 +86,7 @@ if(DP$SNP.test&!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
                         QTN.position=DP$QTN.position,plot.style=DP$plot.style,SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
  GWAS=gapitMain$GWAS
- GR=GAPIT.RandomModel(Y=ic_Y,X=DP$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff)
+ GR=GAPIT.RandomModel(Y=ic_Y,X=DP$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,GT=IC$GT)
  Pred=gapitMain$Pred
 #print(head(Pred))
  va=NA#gapitMain$vg

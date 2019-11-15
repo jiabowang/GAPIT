@@ -935,7 +935,8 @@ gc()
       if(i > 0 | file>file.from |frag>1)
       {
        if(!Create.indicator){
-        
+        #if(i<5)print(beta[q1])
+        #if(i<5)print(iXX[q1, q1])
         if(!is.null(K)) stats[i, j] <- beta[q1]/sqrt(iXX[q1, q1] *vgs) 
         if(is.null(K)) stats[i, j] <- beta[q1]/sqrt(iXX[q1, q1] *ves)
         effect.est[i, ] <- beta[q1]
@@ -971,10 +972,14 @@ gc()
 
                   #Calculate df, t value and standard error _xiaolei changed
                   df[i,] <- dfs[i,]
+
                   tvalue[i,] <- stats[i, j]
-                  #stderr[i,] <- beta[ncol(CVI)+1]/stats[i, j]
-                  stderr[i,] <- sqrt(vgs)
+                  stderr[i,] <- beta[ncol(CVI)+1]/stats[i, j]
+                  #stderr[i,] <- sqrt(vgs)
+                  # modified by Jiabo at 20191115
       }
+      #print("!!!!!!!!!!!!!!!")
+      #print(Create.indicator)
 #-------------------------------------------------------------------------------------------------------------------->
 
     } # End of if(normalCase)
@@ -984,7 +989,9 @@ gc()
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Screening SNPs")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Screening SNPs")
-
+# print(head(tvalue))
+# print(head(stderr))
+# print(head(effect.est))
 #output p value for the genotype file
 if(!fullGD)
 { 

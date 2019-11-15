@@ -11,11 +11,13 @@ Y=DP$Y
 PC=DP$PC
 GD=DP$GD
 
-if(DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
+if(DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","GLM"))
 {
 #Y=Y[!is.na(Y[,2]),]
 taxa_Y=as.character(Y[,1])
 taxa_GD=as.character(GD[,1])
+    
+
 #print(dim(PC))
 if(!all(taxa_GD%in%taxa_Y))
      {
@@ -54,7 +56,7 @@ K=KI
 my_allGD=GD
 
   print("GAPIT.IC accomplished successfully for multiple traits. Results are saved")
- if(DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM")){ 
+ if(DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","GLM")){ 
   return (list(Y=Y,GT=GT,PCA=PCA,K=K,GD=com_GD,GM=DP$GM,my_allCV=my_allCV,my_allGD=my_allGD))
 }else{
   return (list(Y=Y,GT=GT,PCA=PCA,K=K,GD=DP$GD,GM=DP$GM,my_allCV=my_allCV,my_allGD=my_allGD))

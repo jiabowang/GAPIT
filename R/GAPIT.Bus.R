@@ -154,7 +154,6 @@ GWAS=myFarmCPU$GWAS
 maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
 GWAS$maf=maf
 #print(head(GWAS))
-GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff)
 
 #print("!!!!!!!!!!!!!")
 #print(Multi_iter)
@@ -223,6 +222,7 @@ nobs=ns
 
 #print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
+GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,GT=GT)
 
 GPS=myFarmCPU$Pred
 #colnames(GPS)[3]=c("Prediction")
@@ -315,7 +315,6 @@ if(method=="Blink")
   GWAS=cbind(GWAS,maf)#, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
   GWAS=cbind(GWAS,effect)
   GWAS=cbind(GWAS,nobs)
-  GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff)
 
 #   gene_taxa=as.character(blink_GM[,1])
 #   ss=apply(blink_GD,1,sum)
@@ -396,6 +395,7 @@ GPS=myBlink$Pred
 #colnames(GPS)[3]=c("Prediction")
 #print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
+GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,GT=GT)
 
 
 h2=NULL

@@ -25,8 +25,11 @@ function(){
 #Authors of paper on Plant Genome (2016, Vol 9, No. 2): You Tang, Xiaolei Liu, Jiabo Wang, Meng Li, Qishan Wang, Feng Tian, Zhongbin Su, Yuchun Pan, Di Liu, Alexander E. Lipka, Edward S. Buckler, and Zhiwu Zhang
 if(!require(multtest)) 
 {
-  source("http://www.bioconductor.org/biocLite.R")
-    biocLite("multtest")
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    BiocManager::install("multtest")
+  #source("http://www.bioconductor.org/biocLite.R")
+    #biocLite("multtest")
 }
 if(!require(gplots)) install.packages("gplots")
 if(!require(LDheatmap)) install.packages("LDheatmap")
@@ -40,9 +43,12 @@ if(!require(scatterplot3d)) install.packages("scatterplot3d")
 # missing_pkg = required_pkg[!(required_pkg %in% installed.packages()[,"Package"])]
 # if(length(missing_pkg)) install.packages(missing_pkg, repos="http://cran.rstudio.com/")
 if(!'multtest'%in% installed.packages()[,"Package"]){
-  source("http://www.bioconductor.org/biocLite.R")
-  biocLite("multtest")
-  biocLite("snpStats")
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    BiocManager::install("snpStats")
+  #source("http://www.bioconductor.org/biocLite.R")
+  #biocLite("multtest")
+  #biocLite("snpStats")
 }
 
 
@@ -603,7 +609,6 @@ GWAS=myFarmCPU$GWAS
 maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
 GWAS$maf=maf
 #print(head(GWAS))
-GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff)
 
 #print("!!!!!!!!!!!!!")
 #print(Multi_iter)
@@ -672,6 +677,7 @@ nobs=ns
 
 #print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
+GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,GT=GT)
 
 GPS=myFarmCPU$Pred
 #colnames(GPS)[3]=c("Prediction")
@@ -764,7 +770,6 @@ if(method=="Blink")
   GWAS=cbind(GWAS,maf)#, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
   GWAS=cbind(GWAS,effect)
   GWAS=cbind(GWAS,nobs)
-  GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff)
 
 #   gene_taxa=as.character(blink_GM[,1])
 #   ss=apply(blink_GD,1,sum)
@@ -845,6 +850,7 @@ GPS=myBlink$Pred
 #colnames(GPS)[3]=c("Prediction")
 #print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
+GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,GT=GT)
 
 
 h2=NULL
@@ -3707,8 +3713,9 @@ gc()
                   df[i,] <- dfs[i,]
 
                   tvalue[i,] <- stats[i, j]
-                  #stderr[i,] <- beta[ncol(CVI)+1]/stats[i, j]
-                  stderr[i,] <- sqrt(vgs)
+                  stderr[i,] <- beta[ncol(CVI)+1]/stats[i, j]
+                  #stderr[i,] <- sqrt(vgs)
+                  # modified by Jiabo at 20191115
       }
       #print("!!!!!!!!!!!!!!!")
       #print(Create.indicator)
@@ -5200,11 +5207,13 @@ Y=DP$Y
 PC=DP$PC
 GD=DP$GD
 
-if(DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
+if(DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","GLM"))
 {
 #Y=Y[!is.na(Y[,2]),]
 taxa_Y=as.character(Y[,1])
 taxa_GD=as.character(GD[,1])
+    
+
 #print(dim(PC))
 if(!all(taxa_GD%in%taxa_Y))
      {
@@ -5243,7 +5252,7 @@ K=KI
 my_allGD=GD
 
   print("GAPIT.IC accomplished successfully for multiple traits. Results are saved")
- if(DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM")){ 
+ if(DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","GLM")){ 
   return (list(Y=Y,GT=GT,PCA=PCA,K=K,GD=com_GD,GM=DP$GM,my_allCV=my_allCV,my_allGD=my_allGD))
 }else{
   return (list(Y=Y,GT=GT,PCA=PCA,K=K,GD=DP$GD,GM=DP$GM,my_allCV=my_allCV,my_allGD=my_allGD))
@@ -10183,7 +10192,7 @@ print("ROC completed!")
 #=============================================================================================
 
 `GAPIT.RandomModel` <-
-function(GWAS,Y,CV=NULL,X,cutOff=0.01){
+function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL){
     #Object: To calculate the genetics variance ratio of Candidate Genes
     #Output: The genetics variance raito between CG and total
     #Authors: Jiabo Wang and Zhiwu Zhang
@@ -10195,6 +10204,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01){
     #CV=myGAPIT_GLM$PCA
     #cut.set=0.01
     print("GAPIT.RandomModel beginning...")
+    if(is.null(GT))GT=as.character(Y[,1])
     name.of.trait=colnames(Y)[2]
     cutoff=cutOff/nrow(GWAS)
     P.value=as.numeric(GWAS[,4])
@@ -10202,7 +10212,10 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01){
     index=P.value<cutoff
     geneGD=X[,index]
     geneGWAS=GWAS[index,]
-    if(ncol(geneGD)==0)
+    # print(dim(Y))
+    # print(dim(CV))
+    # print(dim(geneGD))
+    if(length(unique(index))==1)
     {
       print("There is no significant marker for VE !!")
       return(list(GVs=NULL))
@@ -10212,16 +10225,48 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01){
     colnames(Y)=c("taxa","trait")
     if(is.null(CV))
     {
-      CV=Y
-      CV[,2]=1
-    }
+      #CV=cbind(GT,1)
+      taxa_Y=as.character(Y[,1])
+        geneGD=geneGD[GT%in%taxa_Y,]
+     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
+        Y=Y[taxa_Y%in%GT,]
+        tree2=cbind(Y,geneGD)
+      # CV[,2]=1
+    }else{
+      if(ncol(CV)==1)
+      {
+      taxa_Y=as.character(Y[,1])
+        geneGD=geneGD[GT%in%taxa_Y,]
+     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
+        Y=Y[taxa_Y%in%GT,]
+        tree2=cbind(Y,geneGD)
+      }else{
       tree2=cbind(Y,CV[,-1],geneGD)
-    n_cv=ncol(CV[,-1])
+        }
+    }
+    
+      # print(dim(Y))
+     #    print(dim(CV))
+     #    print(dim(geneGD))
+    n_cv=ncol(CV)-1
+        # print(n_cv)
     n_gd=ncol(geneGD)
-
+if(!is.null(CV))
+{
 #ff <- paste("trait~1+PC1+PC2+PC3+(1|gene_1)+(1|gene_2)+(1|gene_3)+(1|gene_4)+(1|gene_5)+(1|gene_6)"
 #dflme <- lmer(ff, data=tree2)
+    if(ncol(CV)==1)
+    {
+    command0=paste("trait~1",sep="")
+    command1=command0
+    
+    command2=command1
+    for(j in 1:n_gd)
+{
+  command2=paste(command2,"+(1|gene_",j,")",sep="")
+}
 
+    }else{
     command0=paste("trait~1",sep="")
     command1=command0
     for(i in 1:n_cv)
@@ -10233,6 +10278,19 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01){
 {
   command2=paste(command2,"+(1|gene_",j,")",sep="")
 }
+    }
+}else{
+
+    command0=paste("trait~1",sep="")
+    command1=command0
+    
+    command2=command1
+    for(j in 1:n_gd)
+{
+  command2=paste(command2,"+(1|gene_",j,")",sep="")
+}
+
+}
 #command3=paste(command2,"+(1|gene_",j,")",sep="")
     dflme <- lmer(command2, data=tree2,control=lmerControl(check.nobs.vs.nlev = "ignore",
      check.nobs.vs.rankZ = "ignore",
@@ -10242,14 +10300,15 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01){
     var_gene=as.numeric(carcor_matrix[1:(nrow(carcor_matrix)-1),4])
     var_res=carcor_matrix[nrow(carcor_matrix),4]
 
-print(paste("Candidate Genes could explain genetics variance :",sep=""))
-print(var_gene/sum(var_gene+var_res))
+    print(paste("Candidate Genes could explain genetics variance :",sep=""))
+    print(var_gene/sum(var_gene+var_res))
     v_rat=var_gene/sum(var_gene+var_res)
-gene_list=cbind(geneGWAS,v_rat)
-colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
+    gene_list=cbind(geneGWAS,v_rat)
+    colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
 
-write.csv(gene_list,paste("GAPIT.", name.of.trait,".Phenotype_Variance_Explained_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-if(!is.na(sum(gene_list[1,c(4:6,8)])))
+    write.csv(gene_list,paste("GAPIT.", name.of.trait,".Phenotype_Variance_Explained_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+#gene_list=read.csv("GAPIT.Weight.GrowthIntercept.Phenotype_Variance_Explained_by_Association_Markers.csv",head=T)
+if(!is.na(sum(gene_list[1,c(4:8)])))
 {
         pdf(paste("GAPIT.", name.of.trait,".Effect_VP.pdf" ,sep = ""), width = 7,height=5.75)
         par(mar=c(4,5,4,4),cex=0.8)
@@ -10267,7 +10326,7 @@ if(!is.na(sum(gene_list[1,c(4:6,8)])))
         plot(gene_list$maf,gene_list$Variance_Explained,xlab="MAF",ylab="Variance Explained of Phenotype")
         dev.off()
 
-    if(n_gd>10)
+    if(n_gd>=10)
         {
         pdf(paste("GAPIT.", name.of.trait,".MAF_Effect_VP.pdf" ,sep = ""), width = 9,height=5.75)
         
@@ -10485,7 +10544,7 @@ if(DP$SNP.test&!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
                         QTN.position=DP$QTN.position,plot.style=DP$plot.style,SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
  GWAS=gapitMain$GWAS
- GR=GAPIT.RandomModel(Y=ic_Y,X=DP$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff)
+ GR=GAPIT.RandomModel(Y=ic_Y,X=DP$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,GT=IC$GT)
  Pred=gapitMain$Pred
 #print(head(Pred))
  va=NA#gapitMain$vg
@@ -13158,9 +13217,10 @@ if(!require(EMMREML)) install.packages("EMMREML")
 if(!require(scatterplot3d)) install.packages("scatterplot3d")
 
 if(!'multtest'%in% installed.packages()[,"Package"]){
-  source("http://www.bioconductor.org/biocLite.R")
-  biocLite("multtest")
-  biocLite("snpStats")
+  if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    BiocManager::install("multtest")
+    BiocManager::install("snpStats")
 }
 ############################################################################################################################################## 
  ###MLMM - Multi-Locus Mixed Model 
