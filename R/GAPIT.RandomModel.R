@@ -17,6 +17,8 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL){
     P.value=as.numeric(GWAS[,4])
     P.value[is.na(P.value)]=1
     index=P.value<cutoff
+    #index[c(1:2)]=TRUE
+    
     geneGD=X[,index]
     geneGWAS=GWAS[index,]
     # print(dim(Y))
@@ -28,7 +30,14 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL){
     	return(list(GVs=NULL))
 
     }
-    colnames(geneGD)=paste("gene_",1:ncol(geneGD),sep="")
+    index_T=as.matrix(table(index))
+    in_True=index_T[rownames(index_T)=="TRUE"]
+    if(in_True!=1)
+    {
+    
+    	colnames(geneGD)=paste("gene_",1:in_True,sep="")
+
+    }
     colnames(Y)=c("taxa","trait")
     if(is.null(CV))
     {
@@ -48,16 +57,18 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL){
         Y=Y[taxa_Y%in%GT,]
         tree2=cbind(Y,geneGD)
     	}else{
+    	colnames(CV)=c("Taxa",paste("CV",1:(ncol(CV)-1),sep=""))
     	tree2=cbind(Y,CV[,-1],geneGD)
         }
     }
-    
-    	# print(dim(Y))
+    if(in_True==1)colnames(tree2)[ncol(tree2)]=paste("gene_",1,sep="")
+
+    	# print(head(tree2))
      #    print(dim(CV))
      #    print(dim(geneGD))
     n_cv=ncol(CV)-1
         # print(n_cv)
-    n_gd=ncol(geneGD)
+    n_gd=in_True
 if(!is.null(CV))
 {
 #ff <- paste("trait~1+PC1+PC2+PC3+(1|gene_1)+(1|gene_2)+(1|gene_3)+(1|gene_4)+(1|gene_5)+(1|gene_6)"
@@ -78,7 +89,7 @@ if(!is.null(CV))
     command1=command0
     for(i in 1:n_cv)
 {	
-	command1=paste(command1,"+PC",i,sep="")
+	command1=paste(command1,"+CV",i,sep="")
 }
     command2=command1
     for(j in 1:n_gd)

@@ -9,7 +9,7 @@ print("GAPIT.SS in process...")
 #Define the funcitno here
 Timmer=GAPIT.Timmer(Infor="GAPIT.SS")
 Memory=GAPIT.Memory(Infor="GAPIT.SS")
-if(!is.null(IC))
+if(DP$SNP.test)
 {
 ic_GD=IC$GD
 ic_GM=IC$GM
@@ -29,8 +29,12 @@ if(DP$kinship.algorithm!="None" & DP$kinship.algorithm!="SUPER" & is.null(Z))
  taxa=c('Taxa',as.character(taxa_Y))
  Z=cbind(taxa,Z)
  }
-
+# print(head(ic_PCA))
+# print(dim(DP$CV))
+# print(head(DP$PC))
 if(max(ic_PCA[,2])==min(ic_PCA[,2]))ic_PCA=NULL
+#print(head(ic_PCA))
+#print("@@@@@")
 if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
  {
  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.FarmCPU")
@@ -61,7 +65,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
 
 
 
-if(DP$SNP.test&!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
+if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
  {
  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.Main")
  Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.Main")
@@ -113,8 +117,11 @@ if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut
   Timmer=Timmer,Memory=Memory,GVs=GVs))
 }else{
 #
-#print("!!!!!!!!!")
-#print(dim(DP$GI))
+# print("!!!!!!!!!")
+# print(dim(DP$Y))
+# print(dim(DP$GD))
+# print(dim(DP$CV))
+# print(dim(DP$PC))
 gapitMain <- GAPIT.Main(Y=DP$Y,GD=DP$GD[,-1],GM=DP$GM,KI=DP$KI,Z=DP$Z,CV=DP$CV,CV.Inheritance=DP$CV.Inheritance,GP=DP$GP,GK=DP$GK,SNP.P3D=DP$SNP.P3D,kinship.algorithm=DP$kinship.algorithm,
             bin.from=DP$bin.from,bin.to=DP$bin.to,bin.by=DP$bin.by,inclosure.from=DP$inclosure.from,inclosure.to=DP$inclosure.to,inclosure.by=DP$inclosure.by,
                 group.from=DP$group.from,group.to=DP$group.to,group.by=DP$group.by,kinship.cluster=DP$kinship.cluster,kinship.group=DP$kinship.group,name.of.trait=DP$name.of.trait,

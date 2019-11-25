@@ -15,6 +15,7 @@ function(Y=NULL,CV=NULL,Z=NULL,GT=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,
 #Last update: Novenber 3, 2016
 ##############################################################################################
 GR=NULL
+#print(head(CV))
 if(method=="GLM"){
 #print("---------------screening by GLM----------------------------------")
 
@@ -127,7 +128,10 @@ if(!is.null(CV))
   }else{
         farmcpuCV=NULL
 }
-
+#print(head(farmcpuCV))
+# print(dim(GD))
+# print(dim(farmcpuCV))
+# print(dim(Y))
 myFarmCPU=FarmCPU(
         Y=Y,#Phenotype
         GD=GD,#Genotype

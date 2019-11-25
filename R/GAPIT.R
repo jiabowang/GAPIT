@@ -196,7 +196,7 @@ DP$name.of.trait=traitname
 DP$Y=Y[,c(1,trait)]
 DP$model=model
 print(Para$SNP.test)
-if(Para$SNP.test==TRUE)IC=GAPIT.IC(DP=DP)
+IC=GAPIT.IC(DP=DP)
 SS=GAPIT.SS(DP=DP,IC=IC)
 if(Para$SNP.test==TRUE)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
 

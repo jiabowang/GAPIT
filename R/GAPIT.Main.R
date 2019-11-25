@@ -174,16 +174,8 @@ colnames(CV)=c("taxa","overall")
 print("QC is in process...")
 
 CVI <- CV
-#print(dim(Y))
-#print(dim(KI))
-#print(dim(GT))
-#print(dim(CV))
-#print(dim(Z))
-#print(dim(GK))
 
-#print("@@@@@@")
-#print(GT)
-#print(GTindex)
+# print(dim(Z))
 if(QC)
 {
   qc <- GAPIT.QC(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
@@ -1027,7 +1019,6 @@ rsquare=p3d$rsquare
       tvalue=p3d$tvalue
       stderr=p3d$stderr
 effect.est=p3d$effect.est
-
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Extract p3d results")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Extract p3d results")
 print("p3d objects transfered")  
