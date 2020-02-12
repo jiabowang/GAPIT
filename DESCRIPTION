@@ -2,11 +2,15 @@ Package: GAPIT3
 Type: Package
 Title: GAPIT（Genomic Association and Prediction Integrated Tool）
 Version: 3.1.0
-Authors: Dr.Jiabo Wang and Dr.Zhiwu Zhang
-Maintainer: The package maintainer <wangjiaboyifeng@163.com>
+Authors@R: c(
+          person("Jiabo", "Wang", email = "wangjiaboyifeng@163.com", role = c("aut", "cre"))
+          )
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: GPL (>= 2)
-Depends: multtest, gplots,MASS, compiler
+Depends: R (>= 3.5.0)
+Imports: multtest, gplots,MASS, compiler
+License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.0.2
