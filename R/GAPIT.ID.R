@@ -57,6 +57,8 @@ GWAS=RS
 
   #Association Table
   print("Association table..." )
+  #print(head(cbind(GI[,-1],ps)))
+  #print(head)
   #GAPIT.Table(final.table = PWIP$PWIP, name.of.trait = name.of.trait,SNP.FDR=SNP.FDR)
  # GWAS=PWIP$PWIP[PWIP$PWIP[,9]<=DP$SNP.FDR,]
  # print(head(GWAS))
@@ -151,8 +153,19 @@ if(!is.null(IC$GD)&DP$SNP.test)
   print("Association table..." )
   
   print("Joining tvalue and stderr" )
-  # print(head(GWAS))
-  # print(length(df))
+  #print(head(GWAS))
+  
+   if(!is.null(DP$chor_taxa))
+   {
+     chro=as.numeric(as.matrix(GWAS[,2]))
+     for(i in 1:length(chro))
+     {
+      chro[chro==i]=DP$chor_taxa[i]
+     }
+     GWAS[,2]=chro
+   }
+   #print(head(GWAS))
+   #print(head(DP$GM))
   # print(length(tvalue))
   # print(length(stderr))
   # print(length(effect.est))
@@ -180,6 +193,15 @@ new_GI=new_GI[order(new_GI[,4]),]
 #print(head(new_GI))
 if(DP$file.output&DP$Inter.Plot) GAPIT.Interactive.Manhattan(GWAS=new_GI,X_fre=maf,plot.type=DP$Inter.type,name.of.trait = DP$name.of.trait)
 
+   if(!is.null(DP$chor_taxa))
+   {
+     chro=as.numeric(as.matrix(new_GI[,2]))
+     for(i in 1:length(chro))
+     {
+      chro[chro==i]=DP$chor_taxa[i]
+     }
+     new_GI[,2]=chro
+   }
 if(DP$file.output){
    write.table(new_GI, paste("GAPIT.", DP$name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
    write.table(DTS, paste("GAPIT.", DP$name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)

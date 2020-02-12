@@ -2,7 +2,7 @@
 function(Y=NULL,CV=NULL,Z=NULL,GT=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,
          WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
          method=NULL,delta=NULL,vg=NULL,ve=NULL,LD=0.01,GTindex=NULL,
-         cutOff=0.01,Multi_iter=FASLE,windowsize=5e10,
+         cutOff=0.01,Multi_iter=FASLE,num_regwas=10,Random.model=FALSE,
          p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,
          method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",
          DPP=1000000,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
@@ -119,7 +119,8 @@ if(method=="FarmCPU")
   if(!require(biganalytics)) install.packages("biganalytics")
 library(bigmemory)  #for FARM-CPU
 library(biganalytics) #for FARM-CPU
-if(!exists('FarmCPU', mode='function'))source("http://www.zzlab.net/FarmCPU/FarmCPU_functions.txt")#web source code
+#if(!exists('FarmCPU', mode='function'))source("http://www.zzlab.net/FarmCPU/FarmCPU_functions.txt")#web source code
+
 colnames(GM)[1]="SNP"
 
 #print(GTindex)
@@ -131,7 +132,7 @@ if(!is.null(CV))
 #print(head(farmcpuCV))
 # print(dim(GD))
 # print(dim(farmcpuCV))
-# print(dim(Y))
+#print(Y)
 myFarmCPU=FarmCPU(
         Y=Y,#Phenotype
         GD=GD,#Genotype
@@ -140,68 +141,118 @@ myFarmCPU=FarmCPU(
         cutOff=cutOff,p.threshold=p.threshold,QTN.threshold=QTN.threshold,
         maf.threshold=maf.threshold,method.GLM=method.GLM,method.sub=method.sub,
         method.sub.final=method.sub.final,method.bin=method.bin,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
-        file.output=T
+        file.output=FALSE
         )
+seq_farm=myFarmCPU$seqQTN
+taxa=names(Y)[2]
+#print(taxa)
 GWAS=myFarmCPU$GWAS
- xs=t(GD[,-1])
-# gene_taxa=colnames(GD)[-1]
- ss=apply(xs,1,sum)
+#print(head(GWAS))
+ X=GD[,-1]
+ ss=apply(X,2,sum)
  ns=nrow(GD)
-# storage=cbind(.5*ss/ns,1-.5*ss/ns)
-# #maf=as.data.frame(cbind(gene_taxa,apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)))
-# colnames(maf)=c("SNP","maf")
  nobs=ns
-# #GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")
-# GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
  GWAS=cbind(GWAS,nobs)
 
 maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
 GWAS$maf=maf
 #print(head(GWAS))
+GWAS[is.na(GWAS[,4]),4]=1
 
-#print("!!!!!!!!!!!!!")
-#print(Multi_iter)
-if(Multi_iter)
+sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
+sig_pass=TRUE
+if(nrow(sig)==0)sig_pass=FALSE
+
+if(Multi_iter&sig_pass)
 {
+
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 sig=sig[!is.na(sig[,4]),]
-#windowsize=500000000
 sig_position=as.numeric(as.matrix(sig[,1:3])[,2])*10^10+as.numeric(as.matrix(sig[,1:3])[,3])
 sig=sig[order(sig_position),]
-sig_position=sig_position[order(sig_position)]
-sig_diff=abs(sig_position-c(sig_position[-1],0))
-sig_diff_index=sig_diff<windowsize
-GWAS0=GWAS
-#####################
+sig_order=as.numeric(rownames(sig))
+#if(setequal(sig_order,numeric(0))) break
+
 n=nrow(sig)
+if(length(sig_order)!=1){
+  diff_order=abs(sig_order[-length(sig_order)]-sig_order[-1])
+
+  diff_index=diff_order<num_regwas
+
+  count=0
+  diff_index2=count
+  for(i in 1:length(diff_index))
+  {
+    if(!diff_index[i]) count=count+1
+    diff_index2=append(diff_index2,count)
+  }
+}else{
+  diff_order=0
+  diff_index2=0
+}
+
+sig_bins=rle(diff_index2)$lengths
+num_bins=length(sig_bins)
+
+# sig_diff_index=sig_diff<windowsize
+#GWAS0=GWAS
+#####################
 print("The number of significant markers is")
 print(n)
-
- if(n>0)
+if(n!=num_bins)
+{
+  print("The  number of significant bins is")
+  print(num_bins)
+}
+# print(windowsize)
+ if(num_bins>0)
  {
-  for(i in 1:n)
-  {
-    aim_marker=sig[i,]
+  for(i in 1:num_bins)
+  { 
+    n_sig=sig_bins[i]
+    if(i==1)
+    {  j=1:n_sig
+      }else{
+       j=(sum(sig_bins[1:(i-1)])+1):sum(sig_bins[1:i])
+      }
+    aim_marker=sig[j,]
     #print(aim_marker)
     aim_order=as.numeric(rownames(aim_marker))
-    aim_chro=as.character(aim_marker[,2])
-    aim_position=as.numeric(as.character(aim_marker[,3]))
-    position=as.numeric(as.matrix(GM)[,3])
-    aim_area=GM[,2]==aim_chro&position<(aim_position+windowsize)&position>(aim_position-windowsize)    
-    aim_matrix=as.matrix(table(aim_area))
-    #print(aim_area)
-    #print(setequal(aim_area,logical(0)))
-    if(setequal(aim_area,logical(0))) next
-    if(aim_matrix[rownames(aim_matrix)=="TRUE",1]<10) next
-        aim_area[GM[,1]==aim_marker[,1]]=FALSE      
+    aim_area=rep(FALSE,(nrow(GWAS)))
+    # print(head(sig))
+    # print(aim_order)
+
+    #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
+    if(min(aim_order)<num_regwas)
+    {
+      aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
+
+    }else{
+      aim_area[c((min(aim_order)-num_regwas):(max(aim_order)+num_regwas))]=TRUE
+    }
+    # Next code can control with or without core marker in seconde model
+    aim_area[aim_order]=FALSE  # without
+    if(!is.null(farmcpuCV))
+    {
+      secondCV=cbind(farmcpuCV,X[seq_farm[!seq_farm%in%aim_order]])
+    }else{
+      secondCV=cbind(GD[,1],X[seq_farm[!seq_farm%in%aim_order]])
+
+    }
+    aim_area=aim_area[1:(nrow(GWAS))]
+    #if(setequal(aim_area,logical(0))) next
+        # this is used to set with sig marker in second model
+        # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
+        
         secondGD=GD[,c(TRUE,aim_area)]
         secondGM=GM[aim_area,]
+        print("Now that is multiple iteration for new farmcpu !!!")
         myGAPIT_Second <- FarmCPU(
                         Y=Y,
                         GD=secondGD,
                         GM=secondGM,
-                        CV=farmcpuCV,
-                        file.output=T
+                        CV=secondCV,
+                        file.output=F
                         )
         Second_GWAS= myGAPIT_Second$GWAS [,1:4]
         Second_GWAS[is.na(Second_GWAS[,4]),4]=1
@@ -213,20 +264,15 @@ print(n)
  }
 }
 
-#GWAS=GWAS[order(GWAS$P.value),]
-#colnames(GWAS)=c("SNP","Chromosome","Position","mp","mc","maf","nobs")
-#print(head(GWAS))
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
 nobs=ns
-# #GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")
-# GWAS=merge(GWAS[,-5],maf, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
-#GWAS=cbind(GWAS,nobs)
 
 #print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
-GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,GT=GT)
+#print(head(GWAS))
+if(Random.model)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,GT=GT)
 
 GPS=myFarmCPU$Pred
 #colnames(GPS)[3]=c("Prediction")
@@ -238,6 +284,10 @@ delta=NULL
 REMLs=NULL
 #print(dim(GWAS))
 #print(head(GWAS))
+system(paste("rm -f FarmCPU.",taxa,".GWAS.Results.csv",sep=""))
+system(paste("rm -f FarmCPU.",taxa,".Manhattan.Plot.Genomewise.pdf",sep=""))
+system(paste("rm -f FarmCPU.",taxa,".QQ-Plot.pdf",sep=""))
+
 print("FarmCPU has been done succeedly!!")
 }
 if(method=="BlinkC")
@@ -306,6 +356,7 @@ if(method=="Blink")
 
   myBlink=Blink(Y=blink_Y,GD=blink_GD,GM=blink_GM,CV=blink_CV,maxLoop=10,time.cal=T)
   #print(head(myBlink$GWAS))
+  taxa=names(blink_Y)[2]
   GWAS=myBlink$GWAS[,1:4]
   #print(str(myBlink))
   ns=nrow(GD)
@@ -320,56 +371,77 @@ if(method=="Blink")
   GWAS=cbind(GWAS,effect)
   GWAS=cbind(GWAS,nobs)
 
-#   gene_taxa=as.character(blink_GM[,1])
-#   ss=apply(blink_GD,1,sum)
-#   ns=nrow(GD)
-#   nobs=ns
-#   storage=cbind(.5*ss/ns,1-.5*ss/ns)
-#   maf=as.data.frame(cbind(gene_taxa,apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)))
-#   colnames(maf)=c("SNP","maf")
-#   effect=rep(NA,length(nobs))
-#   GWAS=cbind(GWAS,effect)
-#   GWAS=cbind(GWAS,maf)
-#   GWAS=cbind(GWAS,nobs)
+sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
+sig_pass=TRUE
+if(nrow(sig)==0)sig_pass=FALSE
 
-# GWAS[,2]=as.numeric(as.character(GWAS[,2]))
-# GWAS[,3]=as.numeric(as.character(GWAS[,3]))
+#  
 
-# GPS=myBlink$Pred
-#colnames(GPS)[3]=c("Prediction")
-
-if(Multi_iter)
+if(Multi_iter&sig_pass)
 {
+
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 sig=sig[!is.na(sig[,4]),]
-#windowsize=500000000
 sig_position=as.numeric(as.matrix(sig[,1:3])[,2])*10^10+as.numeric(as.matrix(sig[,1:3])[,3])
 sig=sig[order(sig_position),]
-sig_position=sig_position[order(sig_position)]
-sig_diff=abs(sig_position-c(sig_position[-1],0))
-sig_diff_index=sig_diff<windowsize
-GWAS0=GWAS
-#####################
+sig_order=as.numeric(rownames(sig))
+#if(setequal(sig_order,numeric(0))) break
+
 n=nrow(sig)
+if(length(sig_order)!=1){
+  diff_order=abs(sig_order[-length(sig_order)]-sig_order[-1])
+
+  diff_index=diff_order<num_regwas
+
+  count=0
+  diff_index2=count
+  for(i in 1:length(diff_index))
+  {
+    if(!diff_index[i]) count=count+1
+    diff_index2=append(diff_index2,count)
+  }
+  }else{
+  diff_order=0
+  diff_index2=0
+  }
+
+sig_bins=rle(diff_index2)$lengths
+num_bins=length(sig_bins)
+
+# sig_diff_index=sig_diff<windowsize
+#GWAS0=GWAS
+#####################
 print("The number of significant markers is")
 print(n)
-
-if(n>0)
+if(n!=num_bins)
 {
-  for(i in 1:n)
-  {
-    aim_marker=sig[i,]
+  print("The  number of significant bins is")
+  print(num_bins)
+
+}
+# print(windowsize)
+ if(num_bins>0)
+ {
+  for(i in 1:num_bins)
+  { 
+    n_sig=sig_bins[i]
+    if(i==1)
+    {  j=1:n_sig
+      }else{
+       j=(sum(sig_bins[1:(i-1)])+1):sum(sig_bins[1:i])
+      }
+    aim_marker=sig[j,]
     #print(aim_marker)
     aim_order=as.numeric(rownames(aim_marker))
-    aim_chro=as.character(aim_marker[,2])
-    aim_position=as.numeric(as.character(aim_marker[,3]))
-    position=as.numeric(as.matrix(GM)[,3])
-    aim_area=GM[,2]==aim_chro&position<(aim_position+windowsize)&position>(aim_position-windowsize)    
-    aim_matrix=as.matrix(table(aim_area))
+    aim_area=rep(FALSE,(nrow(GWAS)))
+    #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
+    aim_area[c((min(aim_order)-num_regwas):(max(aim_order)+num_regwas))]=TRUE
+    aim_area[aim_order]=FALSE
+    aim_area=aim_area[1:(nrow(GWAS))]
     if(setequal(aim_area,logical(0))) next
 
-    if(aim_matrix[rownames(aim_matrix)=="TRUE",1]<10) next
-        aim_area[GM[,1]==aim_marker[,1]]=FALSE      
+    # if(aim_matrix[rownames(aim_matrix)=="TRUE",1]<10) next
+        # aim_area[GM[,1]==aim_marker[,1]]=FALSE      
         secondGD=GD[,c(TRUE,aim_area)]
         secondGM=GM[aim_area,]
         myGAPIT_Second =Blink(Y=Y,GD=secondGD,GM=secondGM,CV=blink_CV,maxLoop=10,time.cal=T)
@@ -384,22 +456,16 @@ if(n>0)
   }
 }
 
-
-
 }
 
-#GWAS=GWAS[order(GWAS$P.value),]
-#colnames(GWAS)=c("SNP","Chromosome","Position","mp","mc","maf","nobs")
-#print(head(GWAS))
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
 
 GPS=myBlink$Pred
-#colnames(GPS)[3]=c("Prediction")
 #print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
-GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,GT=GT)
+if(Random.model)GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,GT=GT)
 
 
 h2=NULL
@@ -407,7 +473,10 @@ vg=NULL
 ve=NULL
 delta=NULL
 REMLs=NULL
-  #print(dim(GWAS))
+
+system(paste("rm -f FarmCPU.",taxa,".GWAS.Results.csv",sep=""))
+system(paste("rm -f FarmCPU.",taxa,".Manhattan.Plot.Genomewise.pdf",sep=""))
+system(paste("rm -f FarmCPU.",taxa,".QQ-Plot.pdf",sep=""))
   #print(head(GWAS))
   print("Bink R is done !!!!!")
 }

@@ -100,3 +100,5 @@ function(WS=c(1e0,1e3,1e4,1e5), GM=NULL,seqQTN=NULL,GWAS=NULL,maxOut=100,MaxBP=1
     
 }#end of `GAPIT.FDR.TypeI`
 #=============================================================================================
+
+

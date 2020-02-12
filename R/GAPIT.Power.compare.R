@@ -1,29 +1,28 @@
-`GAPIT.Power.compare` <-function(myG=NUll,myGD=NULL,myGM=NULL,myKI=NULL,myY=NULL,myCV=NULL,rel=NULL,h2=NULL,NQTN=NULL){
+`GAPIT.Power.compare` <-function(myG=NUll,myGD=NULL,myGM=NULL,myKI=NULL,myY=NULL,myCV=NULL,rep=NULL,h2=NULL,NQTN=NULL){
 # Object: compare to Power against FDR for GLM,MLM,CMLM,ECMLM,SUPER
-# rel:repetition times
-# Authors: You Tang 
-# Last update: December 31, 2014 
+# rep:repetition times
+# Authors: You Tang & Jiabo Wang
+# Last update: Feb 1, 2020 
 ############################################################################################## 
 if(is.null(myG)||is.null(myGD)||is.null(myGM)||is.null(myKI)){stop("Read data Invalid. Please select read valid flies !")}
 
-if(is.null(rel))
-	rel=100
+if(is.null(rep))
+	rep=100
 if(is.null(h2))
 	h2=0.85
 if(is.null(NQTN))
 	NQTN=5
 
 X<-myGD[,-1]
-taxa<-myGD[,1]
-taxa<-as.character(taxa)
+taxa<-as.character(myGD[,1])
 
 ##simulation phyenotype
 ##-------------------------##
 n=nrow(X)
 m=ncol(X)
 
-rep.power.GLM<-data.frame(matrix(0,100,6))
-rep.FDR.GLM<-data.frame(matrix(0,100,6))
+rep.power.GLM<-data.frame(matrix(0,rep,6))
+rep.FDR.GLM<-data.frame(matrix(0,rep,6))
 rep.Power.Alpha.GLM<-data.frame(matrix(0,12,6))
 
 rep.power.MLM<-data.frame(matrix(0,100,6))
@@ -57,7 +56,7 @@ kcv1<-matrix(1,nrow(myCV),1)
 kcv<-cbind(data.frame(kcv1),myCV)
 write.table(kcv,"pca.txt",row.names = FALSE,col.names = FALSE,sep="\t",quote=FALSE)
 
-for(i in 1:rel)
+for(i in 1:rep)
 {
 addm<-matrix(rnorm(NQTN,0,1),NQTN,1)
 QTN.position<-sample(1:m,NQTN,replace=FALSE)
@@ -75,7 +74,7 @@ myY<-cbind(taxa,y)
 myY<-as.data.frame(myY)
 
 max.groups=nrow(myY)
-print(paste("*****************","GWAS by GAPIT...GLM model",i," totle:",rel,sep=""))
+print(paste("*****************","GWAS by GAPIT...GLM model",i," totle:",rep,sep=""))
 #--------------------------
 myGAPIT_GLM=GAPIT(
 Y=myY,
@@ -90,7 +89,7 @@ threshold.output=0.001,
 iteration.output=TRUE,
 ) 
 
-print(paste("*****************","GWAS by GAPIT...MLM model",i," totle:",rel,sep=""))
+print(paste("*****************","GWAS by GAPIT...MLM model",i," totle:",rep,sep=""))
 #--------------------------------#
 myGAPIT_MLM=GAPIT(
 Y=myY,
@@ -106,7 +105,7 @@ threshold.output=0.001,
 iteration.output=TRUE,
 ) 
 
-print(paste("*****************","GWAS by GAPIT...SUPER model",i," totle:",rel,sep=""))
+print(paste("*****************","GWAS by GAPIT...SUPER model",i," totle:",rep,sep=""))
 ##--------------------------------#
 myGAPIT_SUPER <- GAPIT(
 Y=myY,
@@ -122,7 +121,7 @@ iteration.output=TRUE,
 file.output=FALSE,
 )
 
-print(paste("$$$$$$$$$$$$$$$","GWAS by GAPIT...CMLM model",i," totle:",rel,sep=""))
+print(paste("$$$$$$$$$$$$$$$","GWAS by GAPIT...CMLM model",i," totle:",rep,sep=""))
 #--------------------------------#
 myGAPIT_CMLM=GAPIT(
 Y=myY,
@@ -138,7 +137,7 @@ threshold.output=0.001,
 iteration.output=TRUE,
 ) 
 
-print(paste("-------------------","GWAS by GAPIT...ECMLM model",i," totle:",rel,sep=""))
+print(paste("-------------------","GWAS by GAPIT...ECMLM model",i," totle:",rep,sep=""))
 #--------------------------------#
 myGAPIT_ECMLM=GAPIT(
 Y=myY,
@@ -182,25 +181,25 @@ rep.Power.Alpha.ECMLM<-rep.Power.Alpha.ECMLM+power_ecmlm$Power.Alpha
 gc()
 }
 #mean
-rep.power.GLM<-rep.power.GLM/rel
-rep.FDR.GLM<-rep.FDR.GLM/rel
-rep.Power.Alpha.GLM<-rep.Power.Alpha.GLM/rel
+rep.power.GLM<-rep.power.GLM/rep
+rep.FDR.GLM<-rep.FDR.GLM/rep
+rep.Power.Alpha.GLM<-rep.Power.Alpha.GLM/rep
 
-rep.power.MLM<-rep.power.MLM/rel
-rep.FDR.MLM<-rep.FDR.MLM/rel
-rep.Power.Alpha.MLM<-rep.Power.Alpha.MLM/rel
+rep.power.MLM<-rep.power.MLM/rep
+rep.FDR.MLM<-rep.FDR.MLM/rep
+rep.Power.Alpha.MLM<-rep.Power.Alpha.MLM/rep
 
-rep.power.SUPER<-rep.power.SUPER/rel
-rep.FDR.SUPER<-rep.FDR.SUPER/rel
-rep.Power.Alpha.SUPER<-rep.Power.Alpha.SUPER/rel
+rep.power.SUPER<-rep.power.SUPER/rep
+rep.FDR.SUPER<-rep.FDR.SUPER/rep
+rep.Power.Alpha.SUPER<-rep.Power.Alpha.SUPER/rep
 
-rep.power.CMLM<-rep.power.CMLM/rel
-rep.FDR.CMLM<-rep.FDR.CMLM/rel
-rep.Power.Alpha.CMLM<-rep.Power.Alpha.CMLM/rel
+rep.power.CMLM<-rep.power.CMLM/rep
+rep.FDR.CMLM<-rep.FDR.CMLM/rep
+rep.Power.Alpha.CMLM<-rep.Power.Alpha.CMLM/rep
 
-rep.power.ECMLM<-rep.power.ECMLM/rel
-rep.FDR.ECMLM<-rep.FDR.ECMLM/rel
-rep.Power.Alpha.ECMLM<-rep.Power.Alpha.ECMLM/rel
+rep.power.ECMLM<-rep.power.ECMLM/rep
+rep.FDR.ECMLM<-rep.FDR.ECMLM/rep
+rep.Power.Alpha.ECMLM<-rep.Power.Alpha.ECMLM/rep
 
 #ouput files power FDR for GLM,MLM,SUPER
 
@@ -227,22 +226,22 @@ colnames(rep.FDR.ECMLM)=  paste("FDR(",myWS,")",sep="")
 colnames(rep.power.ECMLM)=paste("Power(",myWS,")",sep="")
 colnames(rep.Power.Alpha.ECMLM)=paste("Power(",myWS,")",sep="")
 
-write.csv(cbind(rep.FDR.GLM,rep.power.GLM),paste(h2,"_",NQTN,".Power.by.FDR.GLM",rel,".csv",sep=""))
+write.csv(cbind(rep.FDR.GLM,rep.power.GLM),paste(h2,"_",NQTN,".Power.by.FDR.GLM",rep,".csv",sep=""))
 write.csv(cbind(myalpha,rep.Power.Alpha.GLM),paste(h2,"_",NQTN,".Power.by.TypeI.GLM",".csv",sep=""))
 
-write.csv(cbind(rep.FDR.MLM,rep.power.MLM),paste(h2,"_",NQTN,".Power.by.FDR.MLM",rel,".csv",sep=""))
+write.csv(cbind(rep.FDR.MLM,rep.power.MLM),paste(h2,"_",NQTN,".Power.by.FDR.MLM",rep,".csv",sep=""))
 write.csv(cbind(myalpha,rep.Power.Alpha.MLM),paste(h2,"_",NQTN,".Power.by.TypeI.MLM",".csv",sep=""))
 
-write.csv(cbind(rep.FDR.SUPER,rep.power.SUPER),paste(h2,"_",NQTN,".Power.by.FDR.SUPER",rel,".csv",sep=""))
+write.csv(cbind(rep.FDR.SUPER,rep.power.SUPER),paste(h2,"_",NQTN,".Power.by.FDR.SUPER",rep,".csv",sep=""))
 write.csv(cbind(myalpha,rep.Power.Alpha.SUPER),paste(h2,"_",NQTN,".Power.by.TypeI.SUPER",".csv",sep=""))
 
-write.csv(cbind(rep.FDR.CMLM,rep.power.CMLM),paste(h2,"_",NQTN,".Power.by.FDR.CMLM",rel,".csv",sep=""))
+write.csv(cbind(rep.FDR.CMLM,rep.power.CMLM),paste(h2,"_",NQTN,".Power.by.FDR.CMLM",rep,".csv",sep=""))
 write.csv(cbind(myalpha,rep.Power.Alpha.CMLM),paste(h2,"_",NQTN,".Power.by.TypeI.CMLM",".csv",sep=""))
 
-write.csv(cbind(rep.FDR.ECMLM,rep.power.ECMLM),paste(h2,"_",NQTN,".Power.by.FDR.ECMLM",rel,".csv",sep=""))
+write.csv(cbind(rep.FDR.ECMLM,rep.power.ECMLM),paste(h2,"_",NQTN,".Power.by.FDR.ECMLM",rep,".csv",sep=""))
 write.csv(cbind(myalpha,rep.Power.Alpha.ECMLM),paste(h2,"_",NQTN,".Power.by.TypeI.ECMLM",".csv",sep=""))
 
-write.csv(cbind(rep.FDR.GLM[,6],rep.power.GLM[,6],rep.FDR.MLM[,6],rep.power.MLM[,6],rep.FDR.CMLM[,6],rep.power.CMLM[,6],rep.FDR.ECMLM[,6],rep.power.ECMLM[,6],rep.FDR.SUPER[,6],rep.power.SUPER[,6]),paste(h2,"_",NQTN,".Power.by.FDR.GLM.MLM.SUPER",rel,".csv",sep=""))
+write.csv(cbind(rep.FDR.GLM[,6],rep.power.GLM[,6],rep.FDR.MLM[,6],rep.power.MLM[,6],rep.FDR.CMLM[,6],rep.power.CMLM[,6],rep.FDR.ECMLM[,6],rep.power.ECMLM[,6],rep.FDR.SUPER[,6],rep.power.SUPER[,6]),paste(h2,"_",NQTN,".Power.by.FDR.GLM.MLM.SUPER",rep,".csv",sep=""))
 	name.of.trait=noquote(names(myY)[2])
 
 
@@ -264,7 +263,7 @@ dev.off()
 ###add type I error and power###
 
 kkt<-cbind(rep.Power.Alpha.SUPER[,1],rep.Power.Alpha.ECMLM[,1],rep.Power.Alpha.CMLM[,1],rep.Power.Alpha.MLM[,1],rep.Power.Alpha.GLM[,1])
-write.csv(cbind(myalpha,rep.Power.Alpha.SUPER[,1],rep.Power.Alpha.ECMLM[,1],rep.Power.Alpha.CMLM[,1],rep.Power.Alpha.MLM[,1],rep.Power.Alpha.GLM[,1]),paste(h2,"_",NQTN,".Type I error.Power.by.FDR.GLM.MLM.SUPER",rel,".csv",sep=""))
+write.csv(cbind(myalpha,rep.Power.Alpha.SUPER[,1],rep.Power.Alpha.ECMLM[,1],rep.Power.Alpha.CMLM[,1],rep.Power.Alpha.MLM[,1],rep.Power.Alpha.GLM[,1]),paste(h2,"_",NQTN,".Type I error.Power.by.FDR.GLM.MLM.SUPER",rep,".csv",sep=""))
 
 myalpha1<-myalpha/10
 

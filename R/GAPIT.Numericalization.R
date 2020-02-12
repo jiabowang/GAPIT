@@ -32,31 +32,29 @@ len=length(lev)
 #Jiabo creat this code to convert AT TT to 1 and 2. 2018.5.29
 if(bit==2)
 {
-inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC")
-inter=intersect(lev,inter_store)
-if(length(inter)>1)
-{
-  x[x==inter[2]]=inter[1]
-  n=length(x)
-  lev=levels(as.factor(x))
-  lev=setdiff(lev,"N")
-  #print(lev)
-  len=length(lev)
-}
-if(len==2&bit==2)
-{ #inter=intersect(lev,inter_store)
-  if(!is.na(inter[1]))
-  { 
-    lev=union(lev,"UU")
-    len=len+1
-
-  }
-}
-if(len==3&bit==2)
-{
-  inter=intersect(lev,inter_store)
-}
-
+   inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC")
+   inter=intersect(lev,inter_store)
+   if(length(inter)>1)
+   {
+     x[x==inter[2]]=inter[1]
+     n=length(x)
+     lev=levels(as.factor(x))
+     lev=setdiff(lev,"N")
+     #print(lev)
+     len=length(lev)
+   }
+   # if(len==2)
+   # { #inter=intersect(lev,inter_store)
+   #   if(!setequal(character(0),inter))
+   #   { 
+   #     lev=union(lev,"UU")
+   #     len=len+1
+   #   }
+   # }
+   if(len==3&bit==2)
+   {
+     inter=intersect(lev,inter_store)
+   }
 }
 #print(lev)
 #print(len)
@@ -122,13 +120,25 @@ lev=lev1
 #print(position)
 #print(inter)
 #Jiabo code is end here
-
+if(bit==1){
+  lev0=c("R","Y","S","W","K","M") 
+  inter=intersect(lev,lev0)
+}
 
 #1status other than 2 or 3
 if(len<=1 | len> 3)x=0
 
 #2 status
-if(len==2)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,2))
+if(len==2)
+{
+  
+  if(!setequal(character(0),inter))
+  {
+    x=ifelse(x=="N",NA,ifelse(x==inter,1,0)) 
+    }else{
+    x=ifelse(x=="N",NA,ifelse(x==lev[1],0,2))     # the most is set 0, the least is set 2
+  }
+}
 
 #3 status
 if(bit==1){

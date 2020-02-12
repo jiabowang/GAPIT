@@ -1,5 +1,5 @@
 `GAPIT.RandomModel` <-
-function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL){
+function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=30){
     #Object: To calculate the genetics variance ratio of Candidate Genes
     #Output: The genetics variance raito between CG and total
     #Authors: Jiabo Wang and Zhiwu Zhang
@@ -10,6 +10,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL){
     #GWAS=myGAPIT_GLM$GWAS
     #CV=myGAPIT_GLM$PCA
     #cut.set=0.01
+    #return(list(GVs=NULL))
     print("GAPIT.RandomModel beginning...")
     if(is.null(GT))GT=as.character(Y[,1])
     name.of.trait=colnames(Y)[2]
@@ -41,7 +42,11 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL){
     colnames(Y)=c("taxa","trait")
     if(is.null(CV))
     {
-    	#CV=cbind(GT,1)
+        if(in_True>n_ran)
+        {
+    	print("The candidate markers are more than threshold value !")
+    	return(list(GVs=NULL))
+    	}     	
     	taxa_Y=as.character(Y[,1])
         geneGD=geneGD[GT%in%taxa_Y,]
      # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
@@ -51,13 +56,29 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL){
     }else{
     	if(ncol(CV)==1)
     	{
+    		if(in_True+1>n_ran)
+            {
+    	    print("The candidate markers are more than threshold value !")
+    	    return(list(GVs=NULL))
+    	    }  
     	taxa_Y=as.character(Y[,1])
         geneGD=geneGD[GT%in%taxa_Y,]
      # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
         Y=Y[taxa_Y%in%GT,]
         tree2=cbind(Y,geneGD)
     	}else{
+    		if(in_True+ncol(CV)-1>n_ran)
+            {
+    	    print("The candidate markers are more than threshold value !")
+    	    return(list(GVs=NULL))
+    	    }
     	colnames(CV)=c("Taxa",paste("CV",1:(ncol(CV)-1),sep=""))
+    	taxa_Y=as.character(Y[,1])
+    	taxa_CV=as.character(CV[,1])
+        geneGD=geneGD[GT%in%taxa_Y,]
+     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
+        Y=Y[taxa_Y%in%GT,]
+        CV=CV[taxa_CV%in%GT,]
     	tree2=cbind(Y,CV[,-1],geneGD)
         }
     }
@@ -69,6 +90,15 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL){
     n_cv=ncol(CV)-1
         # print(n_cv)
     n_gd=in_True
+    n_id=nrow(Y)
+    # print(n_gd)
+    # print(n_cv)
+    # print(n_id)
+    # if((n_gd+n_cv)>n_ran)
+    # {
+    # 	print("The candidate markers are more than threshold value !")
+    # 	return(list(GVs=NULL))
+    # 	} 
 if(!is.null(CV))
 {
 #ff <- paste("trait~1+PC1+PC2+PC3+(1|gene_1)+(1|gene_2)+(1|gene_3)+(1|gene_4)+(1|gene_5)+(1|gene_6)"

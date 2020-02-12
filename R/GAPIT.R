@@ -10,8 +10,8 @@ function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NUL
  ngrid = 100, llim = -10, ulim = 10, esp = 1e-10,LD.chromosome=NULL,LD.location=NULL,LD.range=NULL,PCA.col=NULL,PCA.3d=FALSE,NJtree.group=NULL,NJtree.type=c("fan","unrooted"),
  sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.1,plot.bin=10^5,
  file.output=TRUE,cutOff=0.01, Model.selection = FALSE,output.numerical = FALSE,
- output.hapmap = FALSE, Create.indicator = FALSE,Multi_iter=TRUE,windowsize=5e9,
-  QTN=NULL, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = FALSE,
+ output.hapmap = FALSE, Create.indicator = FALSE,Multi_iter=FALSE,num_regwas=10,
+  QTN=NULL, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = FALSE,Random.model=FALSE,
   method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",bin.size=c(1000000),bin.selection=c(10,20,50,100,200,500,1000),
   memo=NULL,Prior=NULL,ncpus=1,maxLoop=3,threshold.output=.01,Inter.Plot=FALSE,Inter.type=c("m","q"),
   WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),maxOut=100,QTN.position=NULL,CG=NULL,
@@ -91,7 +91,7 @@ if(model=="CMLM")
 if(is.null(Para$group.from))Para$group.from=group.from
 if(is.null(Para$group.to))Para$group.to=group.to
 if(is.null(Para$group.by))Para$group.by=group.by
-if(Para$group.from==Para$group.to)Para$group.from=10
+#if(Para$group.from==Para$group.to)Para$group.from=10
 if(is.null(Para$group.by))Para$group.by=30
 
 }
@@ -127,8 +127,8 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
  LD.chromosome=LD.chromosome,LD.location=LD.location,LD.range=LD.range,PCA.col=PCA.col,PCA.3d=PCA.3d,NJtree.group=NJtree.group,NJtree.type=NJtree.type,
  sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,QC=QC,GTindex=GTindex,LD=LD,plot.bin=plot.bin,file.output=file.output,cutOff=cutOff, Model.selection = Model.selection,output.numerical = output.numerical,
  output.hapmap = output.hapmap, Create.indicator = Create.indicator,QTN=QTN, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = Major.allele.zero,
- method.GLM=method.GLM,method.sub=method.sub,method.sub.final="reward",method.bin="static",bin.size=bin.size,bin.selection=bin.selection,model=model,
- h2=h2,NQTN=NQTN,QTNDist="normal",effectunit=effectunit,category=category,r=r,cveff=NULL,a2=0,adim=2,Multi_iter=Multi_iter,windowsize=5e9,
+ method.GLM=method.GLM,method.sub=method.sub,method.sub.final="reward",method.bin="static",bin.size=bin.size,bin.selection=bin.selection,model=model,Random.model=Random.model,
+ h2=h2,NQTN=NQTN,QTNDist="normal",effectunit=effectunit,category=category,r=r,cveff=NULL,a2=0,adim=2,Multi_iter=Multi_iter,num_regwas=num_regwas,
  memo="",Prior=NULL,ncpus=1,maxLoop=maxLoop,threshold.output=threshold.output,WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=alpha,maxOut=100,QTN.position=QTN.position,CG=CG,
  converge=converge,iteration.output=iteration.output,acceleration=0,iteration.method="accum",PCA.View.output=PCA.View.output,Geno.View.output=Geno.View.output,plot.style="Oceanic",SUPER_GD=NULL,SUPER_GS=SUPER_GS,Multiple_analysis=Multiple_analysis)
 
@@ -157,9 +157,9 @@ if(m==1)
  SNP.CV= Para$SNP.CV,SNP.robust= Para$SNP.robust,   Inter.Plot=Para$Inter.Plot,  Inter.type=Para$Inter.type,   
  file.from= Para$file.from, file.to=Para$file.to, file.total= Para$file.total, file.fragment = Para$file.fragment,file.path= Para$file.path, 
  file.G= Para$file.G, file.Ext.G= Para$file.Ext.G,file.GD= Para$file.GD, file.GM= Para$file.GM, file.Ext.GD= Para$file.Ext.GD,file.Ext.GM= Para$file.Ext.GM, 
- ngrid = Para$ngrid, llim = Para$llim, ulim = Para$ulim, esp = Para$esp,Multi_iter=Para$Multi_iter,windowsize=Para$windowsize,
+ ngrid = Para$ngrid, llim = Para$llim, ulim = Para$ulim, esp = Para$esp,Multi_iter=Para$Multi_iter,num_regwas=Para$num_regwas,
  LD.chromosome= Para$LD.chromosome,LD.location= Para$LD.location,LD.range= Para$LD.range,
- QC= Para$QC,GTindex= Para$GTindex,cutOff=Para$cutOff, Model.selection = Para$Model.selection,output.numerical = Para$output.numerical,
+ QC= Para$QC,GTindex= Para$GTindex,cutOff=Para$cutOff, Model.selection = Para$Model.selection,output.numerical = Para$output.numerical,Random.model=Para$Random.model,
  Create.indicator = Para$Create.indicator,QTN= Para$QTN, QTN.round= Para$QTN.round,QTN.limit= Para$QTN.limit, QTN.update= Para$QTN.update, QTN.method= Para$QTN.method, Major.allele.zero = Para$Major.allele.zero,
  method.GLM=Para$ method.GLM,method.sub= Para$method.sub,method.sub.final= Para$method.sub.final,
  method.bin= Para$method.bin,bin.size= Para$bin.size,bin.selection= Para$bin.selection,
@@ -229,14 +229,7 @@ if(kinship.algorithm=="FarmCPU")names(out$Pred)=c("Taxa",traitname,"Prediction")
 }else{# is.null(Y)
   #print(Para$SNP.MAF)
 out <- list()
-# if(is.null(Para$NQTN)&is.null(Para$h2))
-# { 
-# Para$kinship.algorithm="SUPER"
-# Para$PCA.total=0
-# }
 
-#print(Para$kinship.algorithm)
-#print(Para$PCA.total)
 myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,kinship.algorithm=Para$kinship.algorithm,PCA.total=Para$PCA.total,SNP.fraction=Para$SNP.fraction,SNP.test=Para$SNP.test,
  file.path=Para$file.path,file.from=Para$file.from, file.to=Para$file.to, file.total=Para$file.total, file.fragment = Para$file.fragment, file.G=Para$file.G, 
  file.Ext.G=Para$file.Ext.G,file.GD=Para$file.GD, file.GM=Para$file.GM, file.Ext.GD=Para$file.Ext.GD,file.Ext.GM=Para$file.Ext.GM,
@@ -251,39 +244,47 @@ chor_taxa=myGenotype$chor_taxa
 rownames(GD)=GT
 colnames(GD)=GI[,1]
 taxa=GT
+
+   if(!is.null(chor_taxa))
+   {
+     chro=as.numeric(as.matrix(GI[,2]))
+     for(i in 1:length(chro))
+     {
+      chro[chro==i]=chor_taxa[i]
+     }
+     GI[,2]=chro
+   }
 #print(GD[1:5,1:5])
 if(Para$output.numerical) 
 {
-write.table(cbind(taxa,GD),  "GAPIT.Genotype.Numerical.txt", quote = FALSE, sep = "\t", row.names = F,col.names = T)
-write.table(GI,  "GAPIT.Genotype.map.txt", quote = FALSE, sep = "\t", row.names = F,col.names = T)
+  write.table(cbind(taxa,GD),  "GAPIT.Genotype.Numerical.txt", quote = FALSE, sep = "\t", row.names = F,col.names = T)
+  write.table(GI,  "GAPIT.Genotype.map.txt", quote = FALSE, sep = "\t", row.names = F,col.names = T)
 }
 if(Para$output.hapmap) write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt", quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
 #GD=cbind(as.data.frame(GT),GD)
-if(!is.null(seed))set.seed(seed)
+  if(!is.null(seed))set.seed(seed)
 #print(Para$NQTN)
-if(!is.null(Para$NQTN)&!is.null(Para$h2))
-{
-myG_simulation<-GAPIT.Phenotype.Simulation(GD=cbind(as.data.frame(myGenotype$GT),myGenotype$GD),GM=myGenotype$GI,h2=Para$h2,NQTN=Para$NQTN,QTNDist=Para$QTNDist,effectunit=Para$effectunit,category=Para$category,r=Para$r,cveff=Para$cveff,a2=Para$a2,adim=Para$adim)
-out=c(out,myG_simulation)
-}
-out$GD=data.frame(cbind(as.data.frame(GT),as.data.frame(GD)))
-out$GM=GI
-out$G=myGenotype$G
-out$kinship=myGenotype$KI
-out$PCA=myGenotype$PC
+  if(!is.null(Para$NQTN)&!is.null(Para$h2))
+  {
+  myG_simulation<-GAPIT.Phenotype.Simulation(GD=cbind(as.data.frame(myGenotype$GT),myGenotype$GD),GM=myGenotype$GI,h2=Para$h2,NQTN=Para$NQTN,QTNDist=Para$QTNDist,effectunit=Para$effectunit,category=Para$category,r=Para$r,cveff=Para$cveff,a2=Para$a2,adim=Para$adim)
+  out=c(out,myG_simulation)
+  }
+  out$GD=data.frame(cbind(as.data.frame(GT),as.data.frame(GD)))
+  out$GM=GI
+  out$G=myGenotype$G
+  out$kinship=myGenotype$KI
+  out$PCA=myGenotype$PC
+  out$chor_taxa=chor_taxa
 }# is.null(Y)
 }#end of model loop
 #print(tail(IC$GM))
 if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store)*(ncol(Y)-1)>1&length(model_store)*(ncol(Y)-1)<9)
 { 
   #print(DP$QTN.position)
-GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y=Y,GM=IC$GM,seqQTN=DP$QTN.position)
+GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y=Y,GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff)
 #print(str(GMM$multip_mapP))
-GAPIT.Circle.Manhatton.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz)
+GAPIT.Circle.Manhatton.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
 }# end of mutiple manhantton plot
-# if(!is.null(Y)&!SNP.test&Multiple_analysis&Para$file.output&length(model_store)*(ncol(Y)-1)>1)
-# { 
-# GAPIT.Interactive.GS(model_store=model_store,Y=Y)
-# }
+
 return (out)
 }  #end of GAPIT function

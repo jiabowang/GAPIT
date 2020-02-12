@@ -1,5 +1,5 @@
 `GAPIT.Manhattan` <-
-function(GI.MP = NULL,GD=NULL,name.of.trait = "Trait",plot.type = "Genomewise",
+function(GI.MP = NULL,GD=NULL,name.of.trait = "Trait",plot.type = "Genomewise",width0=13,height0=5.75,
 DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=10^9,chor_taxa=NULL){
     #Object: Make a Manhattan Plot
     #Options for plot.type = "Separate_Graph_for_Each_Chromosome" and "Same_Graph_for_Each_Chromosome"
@@ -139,7 +139,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             bin.set=NULL
             r2_color=matrix(0,nrow(subset),2)
             #r2_color
-            print(paste("select ",num.row," candidate gene in ",i," chromosome ",sep="") )
+            print(paste("select ",num.row," candidate significont markers in ",i," chromosome ",sep="") )
             #print(sig.mp)
             if(length(unique(sig.index))==2)
             {
@@ -332,9 +332,9 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         #print("Manhattan XY created")
        ####xiaolei update on 2016/01/09 
         if(plot.style =="FarmCPU"){
-	    pdf(paste("FarmCPU.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = 13,height=5.75)
+	    pdf(paste("FarmCPU.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = width0,height=height0)
         }else{
-	    pdf(paste("GAPIT.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = 13,height=5.75)
+	    pdf(paste("GAPIT.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = width0,height=height0)
         }
             par(mar = c(3,6,5,1))
         	plot(y~x,xlab="",ylab=expression(-log[10](italic(p))) ,
