@@ -10,7 +10,6 @@ Description: More about what it does (maybe more than one line)
 License: GPL (>= 2)
 Depends: R (>= 3.5.0)
 Imports: multtest, gplots,MASS, compiler
-License: Artistic-2.0
+License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
