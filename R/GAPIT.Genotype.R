@@ -31,6 +31,7 @@ function(G=NULL,GD=NULL,GM=NULL,KI=NULL,
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Genotype start")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Genotype start")
 compress_z=NULL
+type_col=NULL
 #Create logical variables
 byData=!is.null(G) | !is.null(GD)
 byFile=!is.null(file.G) | !is.null(file.GD)
@@ -351,7 +352,7 @@ if(!is.null(KI))
   {
   if(KI!=1) 
     {
-    if(nrow(KI)<1000)
+    if(nrow(KI)<2000)
       {
       print("Plotting Kinship")
       #print(dim(KI))
@@ -395,7 +396,7 @@ if(!is.null(KI))
            par(mar = c(5,5,5,5))
            Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="prepare NJ TREE")
            Memory=GAPIT.Memory(Memory=Memory,Infor="prepare NJ TREE")
-           plot(as.phylo(hc), type = NJtree.type[tr], tip.color =type_col[clusMember],  use.edge.length = TRUE, col = "gray80",cex=0.6)
+           plot(as.phylo(hc), type = NJtree.type[tr], tip.color =type_col[clusMember],  use.edge.length = TRUE, col = "gray80",cex=0.8)
            legend("topright",legend=paste(c("Tatal individuals is: ","Cluster method: ","Group number: "), Optimum[c(1:3)], sep=""),lty=0,cex=1.3,bty="n",bg=par("bg"))
            dev.off()
            }
@@ -430,17 +431,6 @@ if(!is.null(GP) & kinship.algorithm=="SUPER" & !is.null(bin.size) & !is.null(inc
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Before creating kinship")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Before creating kinship")
 
-PC=NULL
-thePCA=NULL
-
-if(PCA.total>0 | kinship.algorithm=="Separation")
-{
-  thePCA=GAPIT.PCA(X = GD, taxa = GT, PC.number = PCA.total,file.output=file.output,PCA.total=PCA.total,PCA.col=PCA.col,PCA.3d=PCA.3d)
-  PC=thePCA$PCs[,1:(1+PCA.total)]
-  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PCA")
-  Memory=GAPIT.Memory(Memory=Memory,Infor="PCA")
-  print("PC created")
-}
 #Create kinship from genotype if not provide
 if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
 {
@@ -456,7 +446,7 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
   }
   print(paste("Number of individuals and SNPs are ",nrow(thisGD)," and ",ncol(thisGD)))
   theKin=NULL
-  if(is.null(PCA.col)&!is.null(NJtree.group))PCA.col=type_col[clusMember]
+  #if(is.null(PCA.col)&!is.null(NJtree.group))PCA.col=rainbow(NJtree.group)[clusMember]
   if(kinship.algorithm=="EMMA")
     {
     half.thisGD = as.matrix(.5*thisGD)
@@ -469,8 +459,13 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
     }
   if(kinship.algorithm=="Loiselle")theKin= GAPIT.kinship.loiselle(snps=t(as.matrix(.5*thisGD)), method="additive", use="all")
   if(kinship.algorithm=="VanRaden")theKin= GAPIT.kinship.VanRaden(snps=as.matrix(thisGD)) 
-  if(kinship.algorithm=="Zhang")theKin= GAPIT.kinship.ZHANG(snps=as.matrix(thisGD)) 
-  if(kinship.algorithm=="Separation")theKin= GAPIT.kinship.separation(PCs=thePCA$PCs,EV=thePCA$EV,nPCs=PCA.total)
+  if(kinship.algorithm=="Zhang")theKin= GAPIT.kinship.Zhang(snps=as.matrix(thisGD)) 
+  if(kinship.algorithm=="Separation")
+  {
+    thePCA=GAPIT.PCA(X = GD, taxa = GT, PC.number = PCA.total,file.output=F,PCA.total=PCA.total,PCA.col=NULL,PCA.3d=F)
+    PC=thePCA$PCs[,1:(1+PCA.total)]
+    theKin= GAPIT.kinship.separation(PCs=thePCA$PCs,EV=thePCA$EV,nPCs=PCA.total)
+  }
   if(!is.null(theKin))
     {
     colnames(theKin)=myGT
@@ -487,7 +482,7 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
       Optimum=c(nrow(theKin),kinship.cluster,NJtree.group)
       }
     print("kinship calculated")
-    if(length(GT)<1000 &file.output)
+    if(length(GT)<2000 &file.output)
       {
     #Create heat map for kinship
       print("Creating heat map for kinship...")
@@ -535,6 +530,20 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="after creating kinship")
 Memory=GAPIT.Memory(Memory=Memory,Infor="after creating kinship")
+
+
+PC=NULL
+thePCA=NULL
+
+if(PCA.total>0)
+{
+  if(is.null(PCA.col)&!is.null(type_col))PCA.col=type_col[clusMember]
+  thePCA=GAPIT.PCA(X = GD, taxa = GT, PC.number = PCA.total,file.output=file.output,PCA.total=PCA.total,PCA.col=PCA.col,PCA.3d=PCA.3d)
+  PC=thePCA$PCs[,1:(1+PCA.total)]
+  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PCA")
+  Memory=GAPIT.Memory(Memory=Memory,Infor="PCA")
+  print("PC created")
+}
 
 #LD plot
 #print("LD section")

@@ -110,7 +110,6 @@
   
  mod_fwd<-list() 
  mod_fwd[[1]]<-emma.REMLE(Y,cof_fwd[[1]],K_norm) 
-  
  herit_fwd<-list() 
  herit_fwd[[1]]<-mod_fwd[[1]]$vg/(mod_fwd[[1]]$vg+mod_fwd[[1]]$ve) 
   
@@ -234,6 +233,10 @@
   
  ##get the number of parameters & Loglikelihood from ML at each step 
  mod_fwd_LL<-list() 
+ # print(emma.MLE(Y,cof_fwd[[1]],K_norm)$ML)
+ # print(head(Y))
+ # print(head(cof_fwd[[1]]))
+ # print(K_norm[1:5,1:5])
  mod_fwd_LL[[1]]<-list(nfixed=ncol(cof_fwd[[1]]),LL=emma.MLE(Y,cof_fwd[[1]],K_norm)$ML) 
  for (i in 2:length(cof_fwd)) {mod_fwd_LL[[i]]<-list(nfixed=ncol(cof_fwd[[i]]),LL=emma.MLE(Y,cof_fwd[[i]],K_norm)$ML)} 
  rm(i) 
@@ -291,13 +294,13 @@
  #Compute parameters for model criteria 
  BIC<-function(x){-2*x$LL+(x$nfixed+1)*log(n)} 
  extBIC<-function(x){BIC(x)+2*lchoose(m,x$nfixed-1)} 
-  
+ # print(ncol(cof_fwd[[1]]))
  fwd_table<-data.frame(step=ncol(cof_fwd[[1]])-1,step_=paste('fwd',ncol(cof_fwd[[1]])-1,sep=''),cof='NA',ncof=ncol(cof_fwd[[1]])-1,h2=herit_fwd[[1]] 
  	,maxpval=max_pval_fwd[1],BIC=BIC(mod_fwd_LL[[1]]),extBIC=extBIC(mod_fwd_LL[[1]])) 
  for (i in 2:(length(mod_fwd))) {fwd_table<-rbind(fwd_table, 
  	data.frame(step=ncol(cof_fwd[[i]])-1,step_=paste('fwd',ncol(cof_fwd[[i]])-1,sep=''),cof=paste('+',colnames(cof_fwd[[i]])[i],sep=''),ncof=ncol(cof_fwd[[i]])-1,h2=herit_fwd[[i]] 
  	,maxpval=max_pval_fwd[i],BIC=BIC(mod_fwd_LL[[i]]),extBIC=extBIC(mod_fwd_LL[[i]])))} 
-  
+ # print(head(fwd_table))
  rm(i) 
   
  bwd_table<-data.frame(step=length(mod_fwd),step_=paste('bwd',0,sep=''),cof=paste('-',dropcof_bwd[[1]],sep=''),ncof=ncol(cof_bwd[[1]])-1,h2=herit_bwd[[1]] 
@@ -335,7 +338,10 @@
  if(! is.null(thresh)){ 
    opt_thresh<-(fwdbwd_table[which(fwdbwd_table$maxpval<=thresh),])[which(fwdbwd_table[which(fwdbwd_table$maxpval<=thresh),]$ncof==max(fwdbwd_table[which(fwdbwd_table$maxpval<=thresh),]$ncof))[1],] 
  } 
- bestmodel_pvals<-function(model) {if(substr(model$step_,start=0,stop=3)=='fwd') { 
+ bestmodel_pvals<-function(model) {
+ 	# print(model)
+  #   print(substr(model$step_,start=0,stop=3))
+ 	if(substr(model$step_,start=0,stop=3)=='fwd') { 
  		pval_step[[as.integer(substring(model$step_,first=4))+1]]} else if (substr(model$step_,start=0,stop=3)=='bwd') { 
  		cof<-cof_bwd[[as.integer(substring(model$step_,first=4))+1]] 
  		mixedmod<-emma.REMLE(Y,cof,K_norm) 

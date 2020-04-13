@@ -1,5 +1,5 @@
 `GAPIT.RandomModel` <-
-function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=30){
+function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=500){
     #Object: To calculate the genetics variance ratio of Candidate Genes
     #Output: The genetics variance raito between CG and total
     #Authors: Jiabo Wang and Zhiwu Zhang
@@ -21,9 +21,10 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=30){
     #index[c(1:2)]=TRUE
     
     geneGD=X[,index]
+
     geneGWAS=GWAS[index,]
-    # print(dim(Y))
-    # print(dim(CV))
+    # print(table(index))
+    # print(head(geneGD))
     # print(dim(geneGD))
     if(length(unique(index))==1)
     {
@@ -32,13 +33,15 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=30){
 
     }
     index_T=as.matrix(table(index))
+    # print(index_T)
     in_True=index_T[rownames(index_T)=="TRUE"]
+    print(in_True==1)
     if(in_True!=1)
     {
-    
     	colnames(geneGD)=paste("gene_",1:in_True,sep="")
-
     }
+
+
     colnames(Y)=c("taxa","trait")
     if(is.null(CV))
     {
@@ -48,7 +51,13 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=30){
     	return(list(GVs=NULL))
     	}     	
     	taxa_Y=as.character(Y[,1])
-        geneGD=geneGD[GT%in%taxa_Y,]
+    	#print("!!")
+        if(in_True==1)
+        {
+        	geneGD=geneGD[GT%in%taxa_Y]
+        }else{
+        	geneGD=geneGD[GT%in%taxa_Y,]
+        }
      # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
         Y=Y[taxa_Y%in%GT,]
         tree2=cbind(Y,geneGD)
@@ -62,8 +71,15 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=30){
     	    return(list(GVs=NULL))
     	    }  
     	taxa_Y=as.character(Y[,1])
-        geneGD=geneGD[GT%in%taxa_Y,]
-     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
+    	# print(dim(geneGD))
+    	# print(head(GT))
+    	# print(head(taxa_Y))
+         if(in_True==1)
+            {
+        	geneGD=geneGD[GT%in%taxa_Y]
+            }else{
+        	geneGD=geneGD[GT%in%taxa_Y,]
+            }     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
         Y=Y[taxa_Y%in%GT,]
         tree2=cbind(Y,geneGD)
     	}else{
@@ -75,7 +91,12 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=30){
     	colnames(CV)=c("Taxa",paste("CV",1:(ncol(CV)-1),sep=""))
     	taxa_Y=as.character(Y[,1])
     	taxa_CV=as.character(CV[,1])
-        geneGD=geneGD[GT%in%taxa_Y,]
+        if(in_True==1)
+            {
+        	geneGD=geneGD[GT%in%taxa_Y]
+            }else{
+        	geneGD=geneGD[GT%in%taxa_Y,]
+            }     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
      # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
         Y=Y[taxa_Y%in%GT,]
         CV=CV[taxa_CV%in%GT,]
@@ -174,7 +195,7 @@ if(!is.na(sum(gene_list[1,c(4:8)])))
         plot(gene_list$maf,gene_list$Variance_Explained,xlab="MAF",ylab="Variance Explained of Phenotype")
         dev.off()
 
-    if(n_gd>=10)
+    if(n_gd>=5)
         {
         pdf(paste("GAPIT.", name.of.trait,".MAF_Effect_VP.pdf" ,sep = ""), width = 9,height=5.75)
         

@@ -66,7 +66,10 @@ if(PCA.3d==TRUE)
     PCA1 <- PCA.X$x[,1]
     PCA2 <- PCA.X$x[,2]
     PCA3 <- PCA.X$x[,3]
-    plot3d(PCA1, PCA2, PCA3, col = "white",radius=0.01)
+    plot3d(min(PCA1), min(PCA2), min(PCA3),xlim=c(min(PCA1),max(PCA1)),
+     ylim=c(min(PCA2),max(PCA2)),zlim=c(min(PCA3),max(PCA3)),
+     xlab="PCA1",ylab="PCA2",zlab="PCA3",
+     col = rgb(255, 255, 255, 100, maxColorValue=255),radius=0.01)
     num_col=length(unique(PCA.col))
     if(num_col==1)
     { 

@@ -9,6 +9,9 @@ print("GAPIT.SS in process...")
 #Define the funcitno here
 Timmer=GAPIT.Timmer(Infor="GAPIT.SS")
 Memory=GAPIT.Memory(Infor="GAPIT.SS")
+ GR=list()
+ GR$GVs=NULL
+
 if(DP$SNP.test)
 {
 ic_GD=IC$GD
@@ -34,18 +37,19 @@ if(DP$kinship.algorithm!="None" & DP$kinship.algorithm!="SUPER" & is.null(Z))
 # print(head(DP$PC))
 if(max(ic_PCA[,2])==min(ic_PCA[,2]))ic_PCA=NULL
 #print(head(ic_PCA))
-#print("@@@@@")
-if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
+# print("@@@@@")
+# print(DP$kinship.algorithm)
+if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
  {
  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.FarmCPU")
  Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.FarmCPU")
  myBus=GAPIT.Bus(Y=ic_Y,CV=ic_PCA,Z=NULL,GK=NULL,KI=ic_KI,GD=ic_GD,GM=ic_GM,GT=IC$GT,
-                method=DP$kinship.algorithm,GTindex=DP$GTindex,LD=DP$LD,
+                method=DP$kinship.algorithm,GTindex=DP$GTindex,LD=DP$LD,opt=DP$opt,
                 bin.size=DP$bin.size,bin.selection=DP$bin.selection,alpha=DP$alpha,WS=DP$WS,
                 cutOff=DP$cutOff,p.threshold=DP$p.threshold,QTN.threshold=DP$QTN.threshold,
                 maf.threshold=DP$maf.threshold,method.GLM=DP$method.GLM,method.sub=DP$method.sub,
-                method.sub.final=DP$method.sub.final,method.bin=DP$method.bin,
-				        DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter,windowsize=DP$windowsize )
+                method.sub.final=DP$method.sub.final,method.bin=DP$method.bin,Random.model=DP$Random.model,
+				        DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter,num_regwas=DP$num_regwas )
  GWAS=myBus$GWAS
  Pred=myBus$GPS
  va=myBus$vg
@@ -65,7 +69,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))
 
 
 
-if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
+if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC"))
  {
  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.Main")
  Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.Main")
@@ -76,12 +80,12 @@ if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
  if(DP$PCA.total==0) ic_PCA=NULL
 
 #print(dim(ic_PCA))
- gapitMain <- GAPIT.Main(Y=ic_Y,GD=DP$GD[,-1],GM=DP$GM,KI=ic_KI,Z=Z,CV=DP$CV,CV.Inheritance=DP$CV.Inheritance,GP=DP$GP,GK=DP$GK,SNP.P3D=DP$SNP.P3D,kinship.algorithm=DP$kinship.algorithm,
+ gapitMain <- GAPIT.Main(Y=ic_Y,GD=DP$GD[,-1],GM=DP$GM,KI=ic_KI,CV=DP$CV,CV.Inheritance=DP$CV.Inheritance,GP=DP$GP,GK=DP$GK,SNP.P3D=DP$SNP.P3D,kinship.algorithm=DP$kinship.algorithm,
 						bin.from=DP$bin.from,bin.to=DP$bin.to,bin.by=DP$bin.by,inclosure.from=DP$inclosure.from,inclosure.to=DP$inclosure.to,inclosure.by=DP$inclosure.by,
 				        group.from=DP$group.from,group.to=DP$group.to,group.by=DP$group.by,kinship.cluster=DP$kinship.cluster,kinship.group=DP$kinship.group,name.of.trait=DP$name.of.trait,
                         file.path=DP$file.path,file.from=DP$file.from, file.to=DP$file.to, file.total=DP$file.total, file.fragment = DP$file.fragment, file.G=DP$file.G,file.Ext.G=DP$file.Ext.G,file.GD=DP$file.GD, file.GM=DP$file.GM, file.Ext.GD=DP$file.Ext.GD,file.Ext.GM=DP$file.Ext.GM, 
                         SNP.MAF= DP$SNP.MAF,FDR.Rate = DP$FDR.Rate,SNP.FDR=DP$SNP.FDR,SNP.effect=DP$SNP.effect,SNP.impute=DP$SNP.impute,PCA.total=DP$PCA.total,GAPIT.Version=GAPIT.Version,
-                        GT=GT, SNP.fraction = DP$SNP.fraction, seed =DP$ seed, BINS = DP$BINS,SNP.test=DP$SNP.test,DPP=DP$DPP, SNP.permutation=DP$SNP.permutation,
+                        GT=DP$GT, SNP.fraction = DP$SNP.fraction, seed =DP$ seed, BINS = DP$BINS,SNP.test=DP$SNP.test,DPP=DP$DPP, SNP.permutation=DP$SNP.permutation,
                         LD.chromosome=DP$LD.chromosome,LD.location=LD.location,LD.range=LD.range,SNP.CV=SNP.CV,SNP.robust=DP$SNP.robust,model=DP$model,
                         genoFormat="EMMA",hasGenotype=TRUE,byFile=FALSE,fullGD=TRUE,PC=DP$PC,GI=ic_GM,Timmer = DP$Timmer, Memory = DP$Memory,
                         sangwich.top=DP$sangwich.top,sangwich.bottom=DP$sangwich.bottom,QC=DP$QC,GTindex=DP$GTindex,LD=DP$LD,file.output=FALSE,cutOff=DP$cutOff, GAPIT3.output=DP$file.output,
@@ -90,7 +94,7 @@ if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))
                         QTN.position=DP$QTN.position,plot.style=DP$plot.style,SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
  GWAS=gapitMain$GWAS
- GR=GAPIT.RandomModel(Y=ic_Y,X=DP$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,GT=IC$GT)
+ if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=DP$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,GT=IC$GT)
  Pred=gapitMain$Pred
 #print(head(Pred))
  va=NA#gapitMain$vg
@@ -116,7 +120,7 @@ if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut
   mc=mc,bc=bc,mp=mp,TV=TV,Compression=Compression,
   Timmer=Timmer,Memory=Memory,GVs=GVs))
 }else{
-#
+# Here is Genomic Prediction function
 # print("!!!!!!!!!")
 # print(dim(DP$Y))
 # print(dim(DP$GD))

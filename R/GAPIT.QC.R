@@ -43,13 +43,13 @@ if(!is.null(KI))
 }
 
 #Sort KI
-if(!is.null(KI))
-{
-  taxa.all=KI[,1]
-  position=order(taxa.all)
-  position.addition=cbind(1,t(1+position))
-  KI=KI[position,position.addition]
-}
+# if(!is.null(KI))
+# {
+#   taxa.all=KI[,1]
+#   position=order(taxa.all)
+#   position.addition=cbind(1,t(1+position))
+#   KI=KI[position,position.addition]
+# }
 
 # Remove duplicates for Z rowwise
 print("Remove duplicates for Z (column wise)...")

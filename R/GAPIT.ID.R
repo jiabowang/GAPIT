@@ -48,12 +48,12 @@ GWAS=RS
     print("QQ plot..." )
   if(file.output) GAPIT.QQ(P.values = ps, name.of.trait = name.of.trait,DPP=DPP)
    print("Manhattan plot (Genomewise)..." )
- if(file.output) GAPIT.Manhattan(GI.MP = cbind(GI[,-1],ps), name.of.trait = name.of.trait, DPP=DPP, plot.type = "Genomewise",cutOff=cutOff,seqQTN=QTN.position,plot.style=plot.style,plot.bin=plot.bin)
+ if(file.output) GAPIT.Manhattan(GI.MP = cbind(GI[,-1],ps), name.of.trait = name.of.trait, DPP=DPP, plot.type = "Genomewise",cutOff=DP$cutOff,seqQTN=QTN.position,plot.style=plot.style,plot.bin=plot.bin)
 
  print("Manhattan plot (Chromosomewise)..." )
 
   #if(file.output) GAPIT.Manhattan(GI.MP = PWIP$PWIP[,2:4], name.of.trait = name.of.trait, DPP=DPP, plot.type = "Chromosomewise",cutOff=cutOff)
- if(file.output) GAPIT.Manhattan(GI.MP = cbind(GI[,-1],ps), name.of.trait = name.of.trait, DPP=DPP, plot.type = "Chromosomewise",cutOff=cutOff,plot.bin=plot.bin)
+ if(file.output) GAPIT.Manhattan(GI.MP = cbind(GI[,-1],ps), name.of.trait = name.of.trait, DPP=DPP, plot.type = "Chromosomewise",cutOff=DP$cutOff,plot.bin=plot.bin)
 
   #Association Table
   print("Association table..." )
@@ -80,6 +80,16 @@ if(file.output&maf_pass) myMAF1=GAPIT.MAF(MAF=maf,P=ps,E=NULL,trait=name.of.trai
   }#end DP
 
 }else{ #inputdata is GAPIT3 result
+  cutOff=DP$cutOff
+  DPP=DP$DPP
+  Create.indicator=DP$Create.indicator
+  FDR.Rate = DP$FDR.Rate
+  QTN.position=DP$QTN.position
+  plot.style=DP$plot.style
+  file.output=DP$file.output
+  SNP.MAF=DP$SNP.MAP
+  CG=DP$CG
+  plot.bin=DP$CG
   name.of.trait=DP$memo
 	
 GWAS=SS$GWAS
@@ -91,7 +101,7 @@ Pred=SS$Pred
   GI=GI[order(GI[,2]),]
   
   byPass=TRUE
-  if(DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink"))byPass=FALSE
+  if(DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC"))byPass=FALSE
   if(byPass) 
 {
  # print(head(SS$GWAS))
@@ -116,9 +126,9 @@ Pred=SS$Pred
   nobs=GI$nobs
   rsquare_base=rep(NA,length(ps))
   rsquare=rep(NA,length(ps))
-  df=rep(NA,length(nobs))
-  tvalue=rep(NA,length(nobs))
-  stderr=rep(NA,length(nobs))
+  df=rep(NA,length(ps))
+  tvalue=rep(NA,length(ps))
+  stderr=rep(NA,length(ps))
   effect.est=GI$effect
   
 

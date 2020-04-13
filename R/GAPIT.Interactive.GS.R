@@ -1,11 +1,61 @@
 `GAPIT.Interactive.GS`<-
-function(model_store=NULL,Y=NULL,myGD=NULL,myGM=NULL,myKI=NULL,myY=NULL,myCV=NULL,rel=NULL,h2=NULL,NQTN=NULL
+function(model_store=NULL,Y=NULL,type=c("Pred"),testY=NULL
   )
 #model_store is the store of all model names
 #Y is the real phenotype
 #
 { 
+# Y=myY
+# Y=training
+# model_store=c("gBLUP","cBLUP","sBLUP")
 
+
+n=length(model_store)
+method_store=NULL
+obser=Y
+colnames(obser)=c("taxa","observed")
+
+if("gBLUP"%in%model_store)method_store=append(method_store,"MLM")
+if("cBLUP"%in%model_store)method_store=append(method_store,"CMLM")
+if("sBLUP"%in%model_store)method_store=append(method_store,"SUPER")
+index=c("gBLUP","cBLUP","sBLUP")%in%model_store
+no_model=c("gBLUP","cBLUP","sBLUP")[!index]
+gs_store=NULL
+for(i in 1:n)
+   {
+    gs_result=read.csv(paste("GAPIT.",method_store[i],".Pred.result.csv",sep=""),head=T)
+    m=nrow(gs_result)
+    gs_store=cbind(gs_store,gs_result[,8])
+   }
+colnames(gs_store)=model_store
+taxa=as.character(gs_result[,1])
+refinf=as.numeric(gs_result[,3])
+refinf[refinf>1]=4
+pred=cbind(as.data.frame(taxa),gs_store,refinf)
+colnames(pred)[1]="taxa"
+if(!is.null(testY))
+  {
+    testY=testY[,c(1,2)]
+    colnames(testY)=c("taxa","observed")
+    obser2=obser[!is.na(obser[,2]),]
+    obser=rbind(obser2,testY)
+  }
+
+
+pred_all=merge(pred,obser,by.x="taxa",by.y="taxa")
+
+taxa=as.character(pred_all[,1])
+
+if(!setequal(no_model,character(0))) 
+  {
+    nn=length(no_model)
+    for(j in 1:nn)
+       {
+        one=rep(NA,nrow(pred_all))
+        pred_all=cbind(pred_all,one)
+        colnames(pred_all)[ncol(pred_all)]=no_model[j]
+       }
+  }
 # e=20
 # #NQTN=100
 # #h2=0.25
@@ -47,43 +97,112 @@ function(model_store=NULL,Y=NULL,myGD=NULL,myGM=NULL,myKI=NULL,myY=NULL,myCV=NUL
 
 
 
-myY=read.table(paste("gcs_",e,".txt",sep=""),head=T)
-Observed=myY$observed
-Predicted=myY$gBLUP
+#myY=read.table(paste("gcs_",e,".txt",sep=""),head=T)
+Observed=pred_all$observed[pred_all$refinf==1]
+Predicted=pred_all$gBLUP[pred_all$refinf==1]
+
 if(!require(plotly)) install.packages("plotly")
   library(plotly)
 
-  p <- plot_ly(
+  # p <- plot_ly(
+  #   type = 'scatter',
+  #   x = ~Observed,
+  #   y = ~Predicted,
+  #   data=pred_all,
+  #   text = ~paste("Taxa: ",taxa,"<br>Observed: ",round(observed,4) , paste("'<br>",colnames(pred_all)[2],":'",sep=""), round(gBLUP,4)),
+  #   #size=2*y/max(y),
+  #   color = I("red"),
+  #   symbol= I(refinf),
+  #   name=colnames(pred_all)[2]
+  #   )%>%add_trace(
+  #   type = 'scatter',
+  #   x = ~observed,
+  #   y = ~cBLUP,
+  #   #data=myY,
+  #   text = ~paste("Taxa: ",taxa,"<br>Observed: ",round(observed,4)  , '<br>cBLUP:', round(cBLUP,4)),
+  #   #size=2*y/max(y),
+  #   color = I("blue"),
+  #   symbol= I(refinf),
+  #   name=c("cBLUP")
+  #   )%>%add_trace(
+  #   type = 'scatter',
+  #   x = ~observed,
+  #   y = ~sBLUP,
+  #   #data=myY,
+  #   text = ~paste("Taxa: ",taxa,"<br>Observed: ",round(observed,4)  , '<br>sBLUP:', round(sBLUP,4)),
+  #   #size=2*y/max(y),
+  #   color = I("green"),
+  #   symbol= I(refinf),
+  #   name=c("sBLUP")
+  #   )
+  #   htmltools::save_html(p, "Interactive.GS.html")
+
+#####
+
+
+
+ p <- plot_ly(
     type = 'scatter',
     x = ~Observed,
     y = ~Predicted,
-    data=myY,
-    text = ~paste("Taxa: ",taxa,"<br>Observed: ",round(observed,4) , '<br>gBLUP:', round(gBLUP,4)),
+    data=pred_all,
+    text = ~paste("Taxa: ",taxa[pred_all$refinf==1],"<br>Observed: ",round(Observed,4) , '<br>gBLUP:', round(Predicted,4)),
     #size=2*y/max(y),
     color = I("red"),
-    name=c("gBLUP")
+    symbol= I(1),
+    name=c("gBLUP with Ref")
     )%>%add_trace(
     type = 'scatter',
-    x = ~observed,
-    y = ~cBLUP,
+    x = ~observed[pred_all$refinf==1],
+    y = ~cBLUP[pred_all$refinf==1],
     #data=myY,
-    text = ~paste("Taxa: ",taxa,"<br>Observed: ",round(observed,4)  , '<br>cBLUP:', round(cBLUP,4)),
+    text = ~paste("Taxa: ",taxa[pred_all$refinf==1],"<br>Observed: ",round(observed[pred_all$refinf==1],4)  , '<br>cBLUP:', round(cBLUP[pred_all$refinf==1],4)),
     #size=2*y/max(y),
     color = I("blue"),
-    name=c("cBLUP")
+    symbol= I(1),
+    name=c("cBLUP with Ref")
     )%>%add_trace(
     type = 'scatter',
-    x = ~observed,
-    y = ~sBLUP,
+    x = ~observed[pred_all$refinf==1],
+    y = ~sBLUP[pred_all$refinf==1],
     #data=myY,
-    text = ~paste("Taxa: ",taxa,"<br>Observed: ",round(observed,4)  , '<br>sBLUP:', round(sBLUP,4)),
+    text = ~paste("Taxa: ",taxa[pred_all$refinf==1],"<br>Observed: ",round(observed[pred_all$refinf==1],4)  , '<br>sBLUP:', round(sBLUP[pred_all$refinf==1],4)),
     #size=2*y/max(y),
     color = I("green"),
-    name=c("sBLUP")
+    symbol= I(1),
+    name=c("sBLUP with Ref")
+    )%>%add_trace(
+    type = 'scatter',
+    x = ~observed[pred_all$refinf>1],
+    y = ~cBLUP[pred_all$refinf>1],
+    #data=myY,
+    text = ~paste("Taxa: ",taxa[pred_all$refinf>1],"<br>Observed: ",round(observed[pred_all$refinf>1],4)  , '<br>cBLUP:', round(cBLUP[pred_all$refinf>1],4)),
+    #size=2*y/max(y),
+    color = I("blue"),
+    symbol= I(4),
+    name=c("cBLUP with Inf")
+    )%>%add_trace(
+    type = 'scatter',
+    x = ~observed[pred_all$refinf>1],
+    y = ~sBLUP[pred_all$refinf>1],
+    #data=myY,
+    text = ~paste("Taxa: ",taxa[pred_all$refinf>1],"<br>Observed: ",round(observed[pred_all$refinf>1],4)  , '<br>sBLUP:', round(sBLUP[pred_all$refinf>1],4)),
+    #size=2*y/max(y),
+    color = I("green"),
+    symbol= I(4),
+    name=c("sBLUP with Inf")
+    )%>%add_trace(
+    type = 'scatter',
+    x = ~observed[pred_all$refinf>1],
+    y = ~gBLUP[pred_all$refinf>1],
+    #data=myY,
+    text = ~paste("Taxa: ",taxa[pred_all$refinf>1],"<br>Observed: ",round(observed[pred_all$refinf>1],4)  , '<br>gBLUP:', round(gBLUP[pred_all$refinf>1],4)),
+    #size=2*y/max(y),
+    color = I("red"),
+    symbol= I(4),
+    name=c("gBLUP with Inf")
     )
-
     htmltools::save_html(p, "Interactive.GS.html")
-
 
 }
 

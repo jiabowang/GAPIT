@@ -232,7 +232,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             
             barplot(matrix(rep(1,times=n_col),n_col,1),beside=T,col=do_color,border=do_color,axes=FALSE,)
         #legend(x=10,y=2,legend=expression(R^"2"),,lty=0,cex=1.3,bty="n",bg=par("bg"))
-            axis(3,seq(11,1,by=-2),seq(0,1,by=0.2))
+            axis(3,seq(11,1,by=-2),seq(0,1,by=0.2),las=1)
 
         }# end plot.type == "Chromosomewise"&!is.null(GD)
         dev.off()

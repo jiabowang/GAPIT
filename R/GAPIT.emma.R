@@ -274,9 +274,9 @@ emma.MLE <- function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
       }
 #    optdelta <- exp(optlogdelta)
   }
-
+#print(optLL)
   maxdelta <- exp(optlogdelta[which.max(optLL)])
-  maxLL <- max(optLL)
+  maxLL <- max(optLL,na.rm=T)
   if ( is.null(Z) ) {
     maxva <- sum(etas*etas/(eig.R$values+maxdelta))/n    
   }

@@ -292,6 +292,7 @@ print("FarmCPU has been done succeedly!!")
 }
 if(method=="BlinkC")
 {
+  print("BlinkC will be started !!")
 blink_GD=t(GD[,-1])
 blink_GM=GM
 blink_Y=Y
@@ -307,7 +308,11 @@ if(!is.null(CV))
 }else{
   system("rm myData.cov")
 }
+print("If there is a error without ./blink , please download the blink excute file form ")
+print("https://github.com/Menggg/BLINK/blob/master/blink_mac")
+print("And put it into workplace and make it executable with chmod 777 blink_versions ")
 system("./blink --gwas --file myData --numeric")
+
 result=read.table("trait1_GWAS_result.txt",head=T)
 result=result[,c(1,2,3,5,4)]
 xs=t(GD[,-1])
@@ -326,9 +331,10 @@ GWAS=cbind(GWAS,maf)
 GWAS=cbind(GWAS,nobs)
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
-#print(dim(GWAS))
+print(dim(GWAS))
+print(head(GWAS))
 #GWAS=GWAS[order(GWAS$P.value),]
-colnames(GWAS)=c("SNP","Chromosome","Position","P.value","effec","maf","nobs")
+colnames(GWAS)=c("SNP","Chromosome","Position","P.value","effect","maf","nobs")
 
 GPS=NULL
 #colnames(GPS)[3]=c("Prediction")
@@ -358,7 +364,7 @@ if(method=="Blink")
   #print(head(myBlink$GWAS))
   taxa=names(blink_Y)[2]
   GWAS=myBlink$GWAS[,1:4]
-  #print(str(myBlink))
+  #print(dim(blink_GD))
   ns=nrow(GD)
   nobs=ns
   effect=rep(NA,length(nobs))
@@ -366,8 +372,17 @@ if(method=="Blink")
   ss=apply(xs,1,sum)
   #storage=cbind(.5*ss/ns,1-.5*ss/ns)
   maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
+  maf=cbind(as.data.frame(GM[,1]),maf)
+  colnames(maf)=c("SNP","maf")
+  # print(head(maf))
+  # print(head(GWAS))
+  GWAS=merge(GWAS,maf, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
+  # print(head(GWAS))
+  GWAS=GWAS[order(GWAS[,3]),]
+  GWAS=GWAS[order(GWAS[,2]),]
+  rownames(GWAS)=1:nrow(GWAS)
+  # print(head(GWAS))
 
-  GWAS=cbind(GWAS,maf)#, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
   GWAS=cbind(GWAS,effect)
   GWAS=cbind(GWAS,nobs)
 
@@ -498,16 +513,31 @@ KI= GAPIT.kinship.VanRaden(snps=as.matrix(GD[,-1]))
 colnames(KI)=as.character(GD[,1])
 }else{
 print("The Kinship is provided by user !!")
+colnames(KI)[-1]=as.character(KI[,1])
+rownames(KI)=as.character(KI[,1])
+
+taxa_KI=as.character(KI[,1])
 KI=KI[,-1] 
-#colnames(KI)=as.character(GD[,1])
-taxa_KI=as.character(colnames(KI))
-KI=KI[taxa_KI%in%as.character(GD[,1]),taxa_KI%in%as.character(GD[,1])]
+ # print(dim(KI))
+if(!is.null(CV)){
+  taxa_com=intersect(taxa_KI,intersect(taxa_GD,intersect(taxa_Y,taxa_CV)))
+  }else{
+  taxa_com=intersect(taxa_KI,intersect(taxa_GD,taxa_Y))    
+  }
+# print(head(taxa_com))
+KI=KI[taxa_KI%in%taxa_com,taxa_KI%in%taxa_com]
+GD=GD[taxa_GD%in%taxa_com,]
+Y=Y[taxa_Y%in%taxa_com,]
+CV=CV[taxa_CV%in%taxa_com,]
 }
+
 if(ncol(KI)!=nrow(GD)) print("Please make sure dim of K equal number of GD !!")
 
 # print(dim(KI))
 # print(dim(GD))
-# print(KI[1:5,1:5])
+# print(dim(Y))
+# print(dim(CV))
+ # print(KI[1:5,1:5])
 
 if(is.null(CV))
 {
@@ -526,6 +556,8 @@ K=as.matrix(KI),
 cofs=as.matrix(CV[,2:ncol(CV)]),
 nbchunks = 2, maxsteps = 10, thresh = 1.2 * 10^-5)
 }
+
+#print(str(mymlmm))
 if(opt=='extBIC'){
 GWAS_result=mymlmm$opt_extBIC$out
 }
@@ -566,9 +598,11 @@ vg=NULL
 ve=NULL
 delta=NULL
 REMLs=NULL
-colnames(GWAS)=c("SNP","Chromosome","Position","P.value","effect","maf","nobs")
+GWAS=GWAS[,c(1:4,6,7,5)]
+colnames(GWAS)=c("SNP","Chromosome","Position","P.value","maf","nobs","effect")
 
 }
+# print(head(GWAS))
 #print("GAPIT.Bus succeed!")  
 return (list(GWAS=GWAS, GPS=GPS,REMLs=REMLs,vg=vg,ve=ve,delta=delta,GVs=GR$GVs))
 } #end of GAPIT.Bus
