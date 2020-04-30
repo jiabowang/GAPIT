@@ -110,7 +110,7 @@ if(!is.null(Y))
         if(model=="MLMM")Para$kinship.algorithm="MLMM"
         if(model=="Blink")Para$kinship.algorithm="Blink"
         if(model=="BlinkC")Para$kinship.algorithm="BlinkC"
-        if(is.null(Para$memo)|m>1)Para$memo=model
+        if(is.null(Para$memo)|m>1)Para$memo=paste(memo,"_",model,sep="")
 # print(Para$memo)
 GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=DPP,kinship.cluster=kinship.cluster, kinship.group=kinship.group,kinship.algorithm=kinship.algorithm, 
          bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction = SNP.fraction, seed = seed, BINS = 20,SNP.test=SNP.test,
@@ -186,7 +186,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              DP$group.from=Judge$group.from
              DP$group.to=Judge$group.to
              DP$name.of.trait=traitname
-             DP$Y=Y[,c(1,trait)]
+             DP$Y=Y[!is.na(Y[,c(1,trait)]),c(1,trait)]
              DP$model=model
 # print(Para$SNP.test)
              IC=GAPIT.IC(DP=DP)
@@ -209,7 +209,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
         out$bc=SS$bc
         out$mp=SS$mp
         out$h2=SS$h2
-        out$PCA=IC$PCA
+        out$PCA=IC$myallCV
         out$GD=DP$GD
         out$GM=DP$GM
         out$KI=IC$K
@@ -298,7 +298,7 @@ if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store
    GAPIT.Circle.Manhatton.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
   }# end of mutiple manhantton plot
 
-if(file.output&!SNP.test&model_store%in%c("gBLUP","cBLUP","sBLUP"))
+if(file.output&!SNP.test&model_store%in%c("gBLUP","cBLUP","sBLUP")&Inter.Plot)
   { 
   print("here will start interactive for GS !!!")
   GAPIT.Interactive.GS(model_store=model_store,Y=Y)

@@ -43,27 +43,12 @@ if(is.null(GD) & is.null(GT)) {
   GI=as.data.frame(matrix(0,1,3) )
   colnames(GI)=c("SNP","Chromosome","Position")
 }
-#merge CV with PC
-#print(dim(CV))
-#if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
-#if(PCA.total>0&is.null(CV))CV=PC
-#for GS merge CV with GD name
- #print("!!!!!!")
- #print(dim(CV))
-# print(head(GT))
-# print(head(GI))
-# if (is.null(CV))
-# {my_allCV=CV
-# }else{
-    
-#     taxa_GD=GT
-    
-#     my_allCV=CV[order(CV[,1]),]
-#     my_allCV=my_allCV[my_allCV[,1]%in%taxa_GD,]
-#     #print(dim(my_allCV))
-# }
+# print(cbind(CV,PC))
+if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
+if(PCA.total>0&is.null(CV))CV=PC
 my_allCV=CV
 #print(dim(my_allCV))
+   # write.table(my_allCV,"X0.txt",quote=F,row.names=F,col.names=F)
 
 if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & is.null(Z)){
 taxa=as.character(Y[,1])
@@ -86,6 +71,13 @@ colnames(CV)=c("taxa","overall")
 #Remove duplicat and integragation of data
 print("QC is in process...")
 CVI <- CV
+
+# print(cbind(as.character(Y[,1]),as.character(CV[,1])))
+# print("@@@@@")
+# print(dim(Y))
+# print(dim(KI))
+# print(length(GT))
+
 if(QC)
 {
 #print(colnames(KI)[53:62])
@@ -97,11 +89,19 @@ if(QC)
   CV=qc$CV
   Z=qc$Z
   GK=qc$GK
+}
+# print(dim(Y))
+# print(dim(KI))
+# print(dim(Z))
 my_taxa=as.character(KI[,1])
 my_allKI=KI
+# print(all.equal(as.character(Y[,1]),as.character(CV[,1])))
+# print(cbind(as.character(Y[,1]),my_taxa)
+   # write.table(CV,"X0.txt",quote=F,row.names=F,col.names=F)
 
-#print(dim(CV))
-}
+
+# print(CVI[,1])
+
 print("The value of QC is")
 print(QC)
 rm(qc)
@@ -228,8 +228,16 @@ print(dim(SUPER_optimum_GD))
 ######################################GOIN TO NEW CBLUP
 Z=NULL
 if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & is.null(Z)){
-taxa=as.character(SUPER_optimum_GD[,1])
-Z=as.data.frame(diag(1,nrow(SUPER_optimum_GD)))
+# taxa=as.character(SUPER_optimum_GD[,1])
+# # Z=as.data.frame(diag(1,nrow(SUPER_optimum_GD)))
+# Z=as.data.frame(diag(1,nrow(Y)))
+
+# Z=rbind(taxa,Z)
+# taxa=c('Taxa',as.character(taxa))
+# Z=cbind(taxa,Z)
+
+taxa=as.character(Y[,1])
+Z=as.data.frame(diag(1,nrow(Y)))
 Z=rbind(taxa,Z)
 taxa=c('Taxa',as.character(taxa))
 Z=cbind(taxa,Z)
@@ -238,9 +246,13 @@ if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & !is.null(Z))
 {
   if(nrow(Z)-1<nrow(Y)) Z=GAPIT.ZmatrixFormation(Z=Z,Y=Y)
 }
-print("QC is in process...")
+print("QC2 is in process...")
 GK=NULL
 CVI <- CV
+# print("@@@")
+# print(dim(Y))
+# print(dim(SUPER_myKI))
+# print(length(GT))
 if(QC)
 {
   qc <- GAPIT.QC(Y=Y,KI=SUPER_myKI, GT=GT,CV=CV,Z=Z,GK=GK)
@@ -251,6 +263,9 @@ if(QC)
   Z=qc$Z
   GK=qc$GK
 }
+# print(dim(Y))
+# print(dim(KI))
+# print(dim(Z))
 rm(qc)
 gc()
 }# super_pass end
@@ -325,6 +340,10 @@ j=1
   if (is.null(Z)) Z=diag(x=1,nrow(K),ncol(K))
   if (group==1)   K=1
   #print(head(X))
+  # print(length(ys))
+  # print(dim(X))
+  # print(dim(K))
+  # print(dim(Z))
    emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=FALSE,varuhat=FALSE, PEVuhat=FALSE, test=FALSE)  
 
    print(paste(order_count, "of",numSetting,"--","Vg=",round(emma_test$Vu,4), "VE=",round(emma_test$Ve,4),"-2LL=",round(-2*emma_test$loglik,2), "  Clustering=",ca,"  Group number=", group ,"  Group kinship=",kt,sep = " "))
@@ -361,13 +380,14 @@ optimum_group=2
 #print(colnames(KI)[53:62])
 cp <- GAPIT.Compress(KI=KI,kinship.cluster=optimum_Clustering,kinship.group=optimum_groupK,GN=optimum_group,Timmer=Timmer,Memory=Memory)
 bk <- GAPIT.Block(Z=hold_Z,GA=cp$GA,KG=cp$KG)
+
 zc <- GAPIT.ZmatrixCompress(Z=hold_Z,GAU =bk$GA)
 zrow=nrow(zc$Z)
 zcol=ncol(zc$Z)-1
+
 K = as.matrix(bk$KW)
-
-
 Z=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol)
+
 if(is.null(dim(ys)) || ncol(ys) == 1)  ys <- matrix(ys, 1, length(ys))
 if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   X <-  X0 #covariate variables such as population structure
@@ -379,25 +399,19 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    # my_allX=as.matrix(my_allCV[,-1])
        my_allX=cbind(1,as.matrix(my_allCV[,-1]))
 	}
+
    emma_REMLE <- emmreml(y=as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
-   #print(head(emma_REMLE$uhat))
+   # print(head(emma_REMLE$uhat))
    #print(emma_REMLE$uhat[53:62])
-   
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(my_taxa,emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")
-gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
- #print(head(gs$BLUP))
- #print(head(emma_BLUE))
- BB= merge(gs$BLUP, emma_BLUE, by.x = "Taxa", by.y = "Taxa")
- #print(head(BB))
-prediction=as.matrix(BB$BLUP)+as.numeric(as.vector(BB$emma_BLUE))
-all_gs=cbind(BB,prediction)
-colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-#print(head(all_gs))
-#print(model)
-
-write.csv(all_gs,paste("GAPIT.",model,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
+   gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
+   BB= merge(gs$BLUP, emma_BLUE, by.x = "Taxa", by.y = "Taxa")
+   prediction=as.matrix(BB$BLUP)+as.numeric(as.vector(BB$emma_BLUE))
+   all_gs=cbind(BB,prediction)
+   colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
+   write.csv(all_gs,paste("GAPIT.",model,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
 
   print("GAPIT SUPER GS completed successfully for multiple traits. Results are saved")
   return (list(GPS=BB,Pred=all_gs,Compression=Compression,kinship=my_allKI,SUPER_kinship=SUPER_myKI,SUPER_GD=SUPER_optimum_GD ,PC=my_allCV,Timmer=Timmer,Memory=Memory,GWAS=NULL ))

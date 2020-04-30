@@ -16,6 +16,7 @@ if(!is.null(Z))Z=GAPIT.RemoveDuplicate(Z)
 #Remove missing phenotype
 print("Removing NaN...")
 Y=Y[which(Y[,2]!="NaN"),]
+Y=Y[!is.na(Y[,2]),]
 
 # Remove duplicates for GT 
 # GT row wise, Z column wise, and KI both direction.
@@ -66,31 +67,34 @@ if(!is.null(Z))
 print("Maching Z with Kinship colwise...")
 if(!is.null(KI))
 {
-  taxa.all=KI[,1]
+  taxa.all=as.character(KI[,1])
   taxa.kinship=unique(taxa.all)
 }
 
 if(!is.null(Z) & !is.null(KI))
 {
   #get common taxe between KI and Z
-  taxa.Z=as.matrix(Z[1,])
+  taxa.Z=as.character(as.matrix(Z[1,-1]))
   #taxa.Z=colnames(Z) #This does not work for names starting with numerical or "-"   \
   if(is.null(KI)){
   taxa.Z_K_common=taxa.Z
   }else{
   taxa.Z_K_common=intersect(taxa.kinship,taxa.Z)
   }
-  Z <-cbind(Z[,1], Z[,match(taxa.Z_K_common, taxa.Z, nomatch = 0)])
+  # print(taxa.kinship)
+  # print(taxa.Z)
+  if(!identical(taxa.kinship,taxa.Z))Z <-cbind(Z[,1], Z[,1+match(taxa.Z_K_common, taxa.Z, nomatch = 0)])
   
   #Remove the rows of Z if all the ellements sum to 0
   #@@@ improve speed: too many Zs
   print("Maching Z without origin...")
   Z1=Z[-1,-1]
-  Z2=data.frame(Z1)
-  Z3=as.matrix(Z2)
-  Z4=as.numeric(Z3) #one dimemtion
-  Z5=matrix(data = Z4, nrow = nrow(Z1), ncol = ncol(Z1))
-  RS=rowSums(Z5)>0
+  # Z2=data.frame(Z1) # by jiabo
+  # Z3=as.matrix(Z2)
+  # Z4=as.numeric(Z3) #one dimemtion
+  # Z5=matrix(data = Z4, nrow = nrow(Z1), ncol = ncol(Z1))
+  Z5=as.matrix(Z1)
+  RS=apply(Z5,1,function(one) sum(as.numeric(one)))>0
   #The above process could be simplified!
   Z <- Z[c(TRUE,RS),]
   
@@ -107,39 +111,53 @@ if(!is.null(CV))taxa=intersect(taxa,CV[,1])
 if(!is.null(GK))taxa=intersect(taxa,GK[,1])
 if(length(taxa)<=1)stop("GAPIT says: There is no individual ID matched to covariate. Please check!")
 
-
-if(!is.null(Z))
-{
-  #Remove taxa in Z that are not in others, columnwise
-  t=c(TRUE, Z[-1,1]%in%taxa)
-  if(length(t)<=2)stop("GAPIT says: There is no individual ID matched among data. Please check!")
-  Z <- Z[t,]
+print(length(taxa))
+# print(taxa)
+# if(!is.null(Z))
+# {
+#   #Remove taxa in Z that are not in others, columnwise
+#   t=c(TRUE, taxa.Z%in%taxa)
+#   if(length(t)<=2)stop("GAPIT says: There is no individual ID matched among data. Please check!")
+#   Z <- Z[t,]
   
-  #Remove the columns of Z if all the ellements sum to 0
-  print("QC final process...")
-  #@@@ improve speed: too many Zs
-  Z1=Z[-1,-1]
-  Z2=data.frame(Z1)
-  Z3=as.matrix(Z2)
-  Z4=as.numeric(Z3) #one dimemtion
-  Z5=matrix(data = Z4, nrow = nrow(Z1), ncol = ncol(Z1))
-  CS=colSums(Z5)>0
-  #The above process could be simplified!
-  Z <- Z[,c(TRUE,CS)]
-}
-
+#   #Remove the columns of Z if all the ellements sum to 0
+#   print("QC final process...")
+#   #@@@ improve speed: too many Zs
+#   Z1=Z[-1,-1]
+#   Z2=data.frame(Z1)
+#   Z3=as.matrix(Z2)
+#   Z4=as.numeric(Z3) #one dimemtion
+#   Z5=matrix(data = Z4, nrow = nrow(Z1), ncol = ncol(Z1))
+#   CS=colSums(Z5)>0
+#   #The above process could be simplified!
+#   Z <- Z[,c(TRUE,CS)]
+# }
+# print(cbind(Y[,1],CV[,1]))
 #Filtering with comman taxa
+# print(head(Y))
 Y <- Y[Y[,1]%in%taxa,]
-if(!is.null(CV)) CV=CV[CV[,1]%in%taxa,]
-if(!is.null(GK)) GK=GK[GK[,1]%in%taxa,]
+Y <- GAPIT.CVMergePC(as.matrix(cbind(taxa,1)),Y)[,-c(2)]
+# print(head(Y))
+if(!is.null(CV)) 
+  {
+  CV=CV[CV[,1]%in%taxa,]
+  CV <- GAPIT.CVMergePC(cbind(taxa,1),CV)[,-c(2)]
+  }
+if(!is.null(GK)) 
+  {
+  GK=GK[GK[,1]%in%taxa,]
+  GK <- GAPIT.CVMergePC(cbind(taxa,1),GK)[,-c(2)]
+  }
 if(!is.null(GT)) taxa.kept=data.frame(taxa.kept[taxa.kept%in%taxa])
+
 #Y <- Y[Y[,1]%in%taxa.kept,]
+# print(cbind(as.character(Y[,1]),as.character(CV[,1])))
 
 #To sort Y, GT, CV and Z
-Y=Y[order(Y[,1]),]
-CV=CV[order(CV[,1]),]
-if(!is.null(GK))GK=GK[order(GK[,1]),]
-if(!is.null(Z))Z=Z[c(1,1+order(Z[-1,1])),]
+# Y=Y[order(Y[,1]),]
+# CV=CV[order(CV[,1]),]
+# if(!is.null(GK))GK=GK[order(GK[,1]),]
+# if(!is.null(Z))Z=Z[c(1,1+order(Z[-1,1])),]
 
 #get position of taxa.kept in GT
 #position=match(taxa.kept[,1], GT[,1],nomatch = 0)

@@ -21,20 +21,40 @@ print("GAPIT.IC in process...")
      print(paste("There is 0 Covarinces.",sep=""))
 
      }
-
+     Y=Y[!is.na(Y[,2]),]
      taxa_Y=as.character(Y[,1])
      taxa_GD=as.character(GD[,1])
+     # print(head(DP$CV))
+     # print(head(PC))
+     # # print(all.equal(taxa_GD,taxa_Y))
+     #      print(all.equal(as.character(GD[,1]),as.character(DP$CV[,1])))
+     #      print(all.equal(as.character(GD[,1]),as.character(PC[,1])))
 
      if(DP$PCA.total>0&!is.null(DP$CV))CV=GAPIT.CVMergePC(DP$CV,PC)
      if(DP$PCA.total>0&is.null(DP$CV))CV=PC
+          # print(all.equal(as.character(GD[,1]),as.character(CV[,1])))
+          # print(all.equal(as.character(DP$CV[,1]),as.character(CV[,1])))
+          # print(all.equal(as.character(PC[,1]),as.character(CV[,1])))
 
      taxa_comGD=as.character(GD[,1])
      taxa_comY=as.character(Y[,1])
      taxa_CV=as.character(CV[,1])
      taxa_comall=intersect(intersect(taxa_comGD,taxa_comY),taxa_CV)
      comCV=CV[taxa_CV%in%taxa_comall,]
+     comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
+     
      comGD=GD[taxa_comGD%in%taxa_comall,]
+     comGD <- comGD[match(taxa_comall,as.character(comGD[,1])),]
+
      comY=Y[taxa_comY%in%taxa_comall,]
+     comY <- comY[match(taxa_comall,as.character(comY[,1])),]
+     # print("@@@@@")
+     # print(dim(comY))
+     # print(all.equal(as.character(Y[,1]),as.character(comCV[,1])))
+     # print(all.equal(as.character(GD[,1]),as.character(comCV[,1])))
+     # print(all.equal(as.character(comY[,1]),as.character(comCV[,1])))
+
+
 
      GT=as.matrix(as.character(taxa_comall))
      print(paste("There are ",length(GT)," common individuals in genotype , phenotype and CV files.",sep=""))

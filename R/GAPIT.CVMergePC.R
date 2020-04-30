@@ -6,8 +6,9 @@ function(X,Y){
 # Last update: May 30, 2011 
 ##############################################################################################
 #Z=X+Y
-
-Z <- merge(X, Y, by.x = colnames(X)[1], by.y = colnames(Y)[1])
+colnames(X)[1]="taxa"
+colnames(Y)[1]="taxa"
+Z <- merge(X, Y, by.x = "taxa", by.y = "taxa",sort=F)
 
 return(Z)
 }#end of GAPIT.CVMergePCfunction
