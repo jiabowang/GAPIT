@@ -331,8 +331,8 @@ GWAS=cbind(GWAS,maf)
 GWAS=cbind(GWAS,nobs)
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
-print(dim(GWAS))
-print(head(GWAS))
+# print(dim(GWAS))
+# print(head(GWAS))
 #GWAS=GWAS[order(GWAS$P.value),]
 colnames(GWAS)=c("SNP","Chromosome","Position","P.value","effect","maf","nobs")
 
@@ -350,7 +350,7 @@ if(method=="Blink")
   if(!require(devtools))  install.packages("devtools")
   if(!require(BLINK)) devtools::install_github("YaoZhou89/BLINK")
   #source("http://zzlab.net/GAPIT/gapit_functions.txt")
-  source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
+  #source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
   blink_GD=t(GD[,-1])
   blink_GM=GM
   blink_Y=Y
@@ -535,10 +535,11 @@ if(ncol(KI)!=nrow(GD)) print("Please make sure dim of K equal number of GD !!")
 
 # print(dim(KI))
 # print(dim(GD))
-# print(dim(Y))
+# print(colnames(GD))
+# print(rownames(GD))
 # print(dim(CV))
  # print(KI[1:5,1:5])
-
+rownames(GD)=1:nrow(GD)
 if(is.null(CV))
 {
 mymlmm=mlmm(

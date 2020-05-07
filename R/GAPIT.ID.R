@@ -193,16 +193,18 @@ print("GAPIT.Interactive.Manhattan")
 print(DP$Inter.type)
 #GI=GI[order(GI[,4]),]
 #print(head(GI))
+if(DP$file.output){
+
 if(ncol(GI)>1)
 {new_GI=merge(PWIP$PWIP,GI[,c("SNP","effect")],by.x="SNP",by.y="SNP")
 }else{
   new_GI=GI
 }
 new_GI=new_GI[order(new_GI[,4]),]
-
+}
 #print(head(new_GI))
 if(DP$file.output&DP$Inter.Plot) GAPIT.Interactive.Manhattan(GWAS=new_GI,X_fre=maf,plot.type=DP$Inter.type,name.of.trait = DP$name.of.trait)
-
+if(DP$file.output){
    if(!is.null(DP$chor_taxa))
    {
      chro=as.numeric(as.matrix(new_GI[,2]))
@@ -212,7 +214,7 @@ if(DP$file.output&DP$Inter.Plot) GAPIT.Interactive.Manhattan(GWAS=new_GI,X_fre=m
      }
      new_GI[,2]=chro
    }
-if(DP$file.output){
+
    write.table(new_GI, paste("GAPIT.", DP$name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
    write.table(DTS, paste("GAPIT.", DP$name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
    #print(head(GWAS.2))

@@ -61,15 +61,11 @@ QTN=NULL
 Timmer=GAPIT.Timmer(Infor="GAPIT.SUPER.GS")
 Memory=GAPIT.Memory(Infor="GAPIT.SUPER.GS")
 #print(model)
-SUPER_GS_GAPIT=GAPIT.SUPER.GS(Y=Y,G=G,GD=GD,GM=GM,KI=KI,Z=Z,CV=CV,GK=GK,kinship.algorithm=kinship.algorithm,
+SUPER_GS_GAPIT=GAPIT.SUPER.GS(Y=Y,GD=GD,GM=GM,KI=KI,Z=Z,CV=CV,GK=GK,kinship.algorithm=kinship.algorithm,
                       bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,
-				        group.from=group.from,group.to=group.to,group.by=group.by,kinship.cluster=kinship.cluster,kinship.group=kinship.group,name.of.trait=traitname,
-                        file.path=file.path,file.from=file.from, file.to=file.to, file.total=file.total, file.fragment = file.fragment, file.G=file.G,file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM, 
-                        SNP.MAF= SNP.MAF,FDR.Rate = FDR.Rate,SNP.FDR=SNP.FDR,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total,GAPIT.Version=GAPIT.Version,
-                        GT=GT, SNP.fraction = SNP.fraction, seed = seed, BINS = BINS,SNP.test=SNP.test,DPP=DPP, SNP.permutation=SNP.permutation,
-                        LD.chromosome=LD.chromosome,LD.location=LD.location,LD.range=LD.range,SNP.CV=SNP.CV,SNP.robust=SNP.robust,model=model,
-                        genoFormat=genoFormat,hasGenotype=hasGenotype,byFile=byFile,fullGD=fullGD,PC=PC,GI=GI,Timmer = Timmer, Memory = Memory,
-                        sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,QC=QC,GTindex=GTindex,LD=LD,file.output=file.output,cutOff=cutOff
+                      group.from=group.from,group.to=group.to,group.by=group.by,kinship.cluster=kinship.cluster,kinship.group=kinship.group,PCA.total=PCA.total,
+                      GT=GT,PC=PC,GI=GI,Timmer = Timmer, Memory = Memory,model=model,
+                      sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,QC=QC,GTindex=GTindex,LD=LD,file.output=file.output,cutOff=cutOff
                         )
 	print("SUPER_GS_GAPIT FUNCTION DONE")	
 	return (list(Compression=SUPER_GS_GAPIT$Compression,kinship.optimum=SUPER_GS_GAPIT$SUPER_kinship,kinship=SUPER_GS_GAPIT$kinship, PC=SUPER_GS_GAPIT$PC,GWAS=GWAS, GPS=SUPER_GS_GAPIT$GPS,Pred=SUPER_GS_GAPIT$Pred,Timmer=Timmer,Memory=Memory,SUPER_GD=SUPER_GS_GAPIT$SUPER_GD,GWAS=NULL,QTN=NULL))
@@ -451,13 +447,11 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Prio PreP3D")
 
 #write.table(zc$Z, "Z.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
-#print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
-#print("!!!!!!!!!!!!")
-#print(length(ys))
-#print(GTindex)
-#print(dim(GD))
-#print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
-#print(dim(GI))
+# print(head(ys))
+# print(as.matrix(as.data.frame(GD[GTindex,colInclude]))[1:5,1:5])
+# print(as.matrix(bk$KW)[1:5,1:5])
+# print(dim(ys))
+# print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
 
 p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[GTindex,colInclude])),K = as.matrix(bk$KW) ,Z=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol),X0=X0,CVI=CVI,CV.Inheritance=CV.Inheritance,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
         SNP.permutation=SNP.permutation, GP=GP,SNP.fraction=SNP.fraction,

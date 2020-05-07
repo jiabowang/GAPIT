@@ -181,7 +181,8 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              print(paste("Processing trait: ",traitname,sep=""))
              if(!is.null(Para$memo)) traitname=paste(Para$memo,".",traitname,sep="")
              if(!is.null(Y) & Para$file.output)ViewPhenotype<-GAPIT.Phenotype.View(myY=Y[,c(1,trait)],traitname=traitname,memo=Para$memo)
-             if(model=="MLMM")DP$KI=KI0 
+             # print(dim(KI0))
+             if(!is.null(KI0))DP$KI=KI0 
              Judge=GAPIT.Judge(Y=Y[,c(1,trait)],G=DP$G,GD=DP$GD,KI=DP$KI,GM=DP$GM,group.to=DP$group.to,group.from=DP$group.from,sangwich.top=DP$sangwich.top,sangwich.bottom=DP$sangwich.bottom,kinship.algorithm=DP$kinship.algorithm,PCA.total=DP$PCA.total,model=DP$model,SNP.test=DP$SNP.test)
              DP$group.from=Judge$group.from
              DP$group.to=Judge$group.to
@@ -191,7 +192,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
 # print(Para$SNP.test)
              IC=GAPIT.IC(DP=DP)
              SS=GAPIT.SS(DP=DP,IC=IC)
-             if(Para$SNP.test==TRUE)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
+             if(Para$SNP.test&Para$file.output)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
           }#for loop trait
 #print(SNP.test)
         print("GAPIT accomplished successfully for multiple traits. Result are saved")

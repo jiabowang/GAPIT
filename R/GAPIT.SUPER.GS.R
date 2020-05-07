@@ -1,14 +1,11 @@
 `GAPIT.SUPER.GS`<-
-function(Y=Y[,c(1,trait)],G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,GK=GK,kinship.algorithm=kinship.algorithm,
-                      bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,
-				        group.from=group.from,group.to=group.to,group.by=group.by,kinship.cluster=kinship.cluster,kinship.group=kinship.group,name.of.trait=traitname,
-                        file.path=file.path,file.from=file.from, file.to=file.to, file.total=file.total, file.fragment = file.fragment, file.G=file.G,file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM, 
-                        SNP.MAF= SNP.MAF,FDR.Rate = FDR.Rate,SNP.FDR=SNP.FDR,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total,GAPIT.Version=GAPIT.Version,
-                        GT=GT, SNP.fraction = SNP.fraction, seed = seed, BINS = BINS,SNP.test=SNP.test,DPP=DPP, SNP.permutation=SNP.permutation,
-                        LD.chromosome=LD.chromosome,LD.location=LD.location,LD.range=LD.range,SNP.CV=SNP.CV,SNP.robust=SNP.robust,model=model,
-                        genoFormat=genoFormat,hasGenotype=hasGenotype,byFile=byFile,fullGD=fullGD,PC=PC,GI=GI,Timmer = Timmer, Memory = Memory,
-                        sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,QC=QC,GTindex=GTindex,LD=LD,file.output=file.output,cutOff=cutOff
+function(Y,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,GK=NULL,kinship.algorithm=NULL,
+                      bin.from=10000,bin.to=10000,bin.by=1000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
+				              group.from=1000000 ,group.to=1000000,group.by=10,kinship.cluster="average", kinship.group='Mean',PCA.total=0,
+                        GT=NULL,PC=NULL,GI=NULL,Timmer = NULL, Memory = NULL,model="",
+                        sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.05,file.output=TRUE,cutOff=0.01
                         ){
+ 
 #Object: To perform GPS with SUPER and Compress method
 #Designed by Zhiwu Zhang
 #Writen by Jiabo Wang
@@ -22,9 +19,11 @@ Memory=GAPIT.Memory(Infor="GAPIT.SUPER.GS")
 
 shortcut=FALSE
 LL.save=1e10
+# print(head(Y))
 #In case of null Y and null GP, return genotype only  
 thisY=Y[,2]
 thisY=thisY[!is.na(thisY)]
+name.of.trait=colnames(Y)[2]
 if(length(thisY) <3){
  shortcut=TRUE
  }else{
@@ -344,7 +343,7 @@ j=1
   # print(dim(X))
   # print(dim(K))
   # print(dim(Z))
-   emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=FALSE,varuhat=FALSE, PEVuhat=FALSE, test=FALSE)  
+   emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
 
    print(paste(order_count, "of",numSetting,"--","Vg=",round(emma_test$Vu,4), "VE=",round(emma_test$Ve,4),"-2LL=",round(-2*emma_test$loglik,2), "  Clustering=",ca,"  Group number=", group ,"  Group kinship=",kt,sep = " "))
   emma_test_reml=-2*emma_test$loglik
@@ -378,6 +377,8 @@ Compression[order_count,6]=emma_test$Ve
 optimum_group=2
 }
 #print(colnames(KI)[53:62])
+if(nrow(Compression)>1)
+{
 cp <- GAPIT.Compress(KI=KI,kinship.cluster=optimum_Clustering,kinship.group=optimum_groupK,GN=optimum_group,Timmer=Timmer,Memory=Memory)
 bk <- GAPIT.Block(Z=hold_Z,GA=cp$GA,KG=cp$KG)
 
@@ -394,14 +395,19 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   if (is.null(Z)) Z=diag(x=1,nrow(K),ncol(K))
   
   # print(my_allCV)
+  
+   emma_REMLE <- emmreml(y=as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
+  }else{
+   emma_REMLE=emma_test
+   print("gBLUP with only one time emma")
+  } 
   if (is.null(my_allCV)){my_allX=matrix(1,length(my_taxa),1)
   }else{
    # my_allX=as.matrix(my_allCV[,-1])
        my_allX=cbind(1,as.matrix(my_allCV[,-1]))
-	}
+  }
 
-   emma_REMLE <- emmreml(y=as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
-   # print(head(emma_REMLE$uhat))
+  # print(head(emma_REMLE$uhat))
    #print(emma_REMLE$uhat[53:62])
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(my_taxa,emma_BLUE))
