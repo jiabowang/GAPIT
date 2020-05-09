@@ -143,8 +143,8 @@ if(!is.null(IC$GD)&DP$SNP.test)
   PWI.Filtered=cbind(GWAS[,1:6],rsquare_base,rsquare)
 	colnames(PWI.Filtered)=c("SNP","Chromosome","Position ","P.value", "maf", "nobs", "Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP")
   
-  if(!is.null(PWI.Filtered))
-  {
+  # if(!is.null(PWI.Filtered))
+  # {
   #Run the BH multiple correction procedure of the results
   #Create PWIP, which is a table of SNP Names, Chromosome, bp Position, Raw P-values, FDR Adjusted P-values
   print("Calculating FDR..." )
@@ -163,9 +163,10 @@ if(!is.null(IC$GD)&DP$SNP.test)
   print("Association table..." )
   
   print("Joining tvalue and stderr" )
-  #print(head(GWAS))
-  
-   if(!is.null(DP$chor_taxa))
+  # print(head(DP$chor_taxa))
+  # print(head(as.numeric(as.matrix(GWAS[,2]))))
+  # print(all.equal(as.character(DP$chor_taxa),as.character(unique(as.numeric(as.matrix(GWAS[,2]))))))
+   if(all.equal(as.character(DP$chor_taxa),as.character(unique(sort(as.numeric(as.matrix(GWAS[,2]))))))!=TRUE)
    {
      chro=as.numeric(as.matrix(GWAS[,2]))
      for(i in 1:length(chro))
@@ -183,7 +184,10 @@ if(!is.null(IC$GD)&DP$SNP.test)
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")	
 
   print("Creating ROC table and plot" )
-if(DP$file.output) myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=var(as.matrix(DP$Y[,2])),trait=DP$name.of.trait)
+  # print(head(tvalue))
+  # print(head(stderr))
+  # print(head(var(as.matrix(IC$Y[,2]))))
+if(DP$file.output) myROC=GAPIT.ROC(t=as.numeric(tvalue),se=as.numeric(stderr),Vp=var(as.matrix(IC$Y[,2])),trait=DP$name.of.trait)
   print("ROC table and plot created" )
 
   print("MAF plot..." )
@@ -195,18 +199,27 @@ print(DP$Inter.type)
 #print(head(GI))
 if(DP$file.output){
 
-if(ncol(GI)>1)
-{new_GI=merge(PWIP$PWIP,GI[,c("SNP","effect")],by.x="SNP",by.y="SNP")
-}else{
-  new_GI=GI
-}
-new_GI=new_GI[order(new_GI[,4]),]
-}
-#print(head(new_GI))
-if(DP$file.output&DP$Inter.Plot) GAPIT.Interactive.Manhattan(GWAS=new_GI,X_fre=maf,plot.type=DP$Inter.type,name.of.trait = DP$name.of.trait)
-if(DP$file.output){
-   if(!is.null(DP$chor_taxa))
+   if(ncol(GI)>1)
+     {
+      new_GI=merge(PWIP$PWIP,GI[,c("SNP","effect")],by.x="SNP",by.y="SNP")
+     }else{
+      new_GI=GI
+     }
+   new_GI=new_GI[order(new_GI[,4]),]
+# }
+# print("@@@@@@")
+if(DP$Inter.Plot) 
+  {
+  print(DP$Inter.type)
+  GAPIT.Interactive.Manhattan(GWAS=new_GI,X_fre=maf,plot.type=DP$Inter.type,name.of.trait = DP$name.of.trait)
+   } 
+# if(DP$file.output){
+   
+   # print(as.character(DP$chor_taxa))
+   # print(as.character(unique(as.numeric(as.matrix(new_GI[,2])))))
+   if(all.equal(as.character(DP$chor_taxa),as.character(sort(unique(as.numeric(as.matrix(new_GI[,2]))))))!=TRUE)
    {
+     # print("@@@")
      chro=as.numeric(as.matrix(new_GI[,2]))
      for(i in 1:length(chro))
      {
@@ -220,7 +233,7 @@ if(DP$file.output){
    #print(head(GWAS.2))
    #if(byPass) write.table(GWAS.2[,1:4], paste("GAPIT.", DP$name.of.trait, ".Allelic_Effect_Estimates.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
      }#end file.output
-  }#PWI.Filtered
+  # }#PWI.Filtered
 }#end IC$GD)
   print("GAPIT.ID accomplished successfully for multiple traits. Results are saved")
   return ()

@@ -26,6 +26,8 @@ function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NUL
 ##############################################################################################
 print("--------------------- Welcome to GAPIT ----------------------------")
 echo=TRUE
+all.memo=NULL
+
 GAPIT.Version=GAPIT.0000()
 #if(!is.null(model))if(!match(model,c("MLM","CMLM","SUPER","GLM","FarmCPU","Blink","BlinkC","MLMM","gBLUP","cBLUP","sBLUP"))) stop(paste("PLease choose one model from ","MLM","CMLM","SUPER","GLM","FarmCPU","Blink","gBLUP","cBLUP","sBLUP",sep=""))
 #Allow either KI or K, but not both
@@ -110,7 +112,15 @@ if(!is.null(Y))
         if(model=="MLMM")Para$kinship.algorithm="MLMM"
         if(model=="Blink")Para$kinship.algorithm="Blink"
         if(model=="BlinkC")Para$kinship.algorithm="BlinkC"
-        if(is.null(Para$memo)|m>1)Para$memo=paste(memo,"_",model,sep="")
+        if(is.null(memo))
+            {
+                Para$memo=model
+            }else{
+                # print(memo)
+                # print(model)
+                Para$memo=paste(memo,".",model,sep="")
+            }
+        all.memo=c(all.memo,Para$memo)
 # print(Para$memo)
 GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=DPP,kinship.cluster=kinship.cluster, kinship.group=kinship.group,kinship.algorithm=kinship.algorithm, 
          bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction = SNP.fraction, seed = seed, BINS = 20,SNP.test=SNP.test,
@@ -242,7 +252,13 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
           }
         G_list_M=rownames(as.matrix(GAPIT_list))
         P_list_M=rownames(as.matrix(Para))
-
+        if(is.null(memo))
+            {
+                Para$memo=model
+            }else{
+                Para$memo=paste(memo,".",mode,sep="")
+            }
+        all.memo=c(all.memo,Para$memo)
         Para=c(GAPIT_list[!G_list_M%in%P_list_M],Para)
         myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,kinship.algorithm=kinship.algorithm,PCA.total=PCA.total,SNP.fraction=SNP.fraction,SNP.test=SNP.test,
  file.path=file.path,file.from=file.from, file.to=file.to, file.total=file.total, file.fragment = file.fragment, file.G=file.G, 
@@ -291,6 +307,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
   }# is.null(Y)
 
 #print(tail(IC$GM))
+model_store=all.memo
 if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store)*(ncol(Y)-1)>1&length(model_store)*(ncol(Y)-1)<9)
   { 
   #print(DP$QTN.position)

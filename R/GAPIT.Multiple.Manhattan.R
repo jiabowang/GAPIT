@@ -25,6 +25,7 @@ simulation=FALSE
     }
 for(i in 1:length(environ_name))
 {
+  print(paste("Reading GWAS result with ",environ_name[i],sep=""))
   environ_result=read.csv(paste("GAPIT.",environ_name[i],".GWAS.Results.csv",sep=""),head=T)
   environ_filter=environ_result[!is.na(environ_result[,4]),]
   y_filter=environ_filter[environ_filter[,4]<(cutOff/(nrow(environ_filter))),]

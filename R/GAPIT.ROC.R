@@ -11,7 +11,12 @@ function(t=NULL,se=NULL,Vp=1,trait="",plot.style="rainbow"){
 #print("GAPIT.ROC start")
 #print("Length of t se and Vp")
 #print(length(t))
-#print(length(se))
+# aa=read.csv("GAPIT.MLM.MLM.V1.Df.tValue.StdErr.csv",head=T)
+# #print(length(se))
+# t=aa$t.Value
+# se=aa$std.Error
+# Vp=var(mySim$Y[,2])
+# trait="V1"
 #print((Vp))
 if(length(t)==length(t[is.na(t)]) ){
 #print("NA t, No ROC plot")

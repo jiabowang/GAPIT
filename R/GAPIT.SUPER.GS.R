@@ -344,7 +344,6 @@ j=1
   # print(dim(K))
   # print(dim(Z))
    emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
-
    print(paste(order_count, "of",numSetting,"--","Vg=",round(emma_test$Vu,4), "VE=",round(emma_test$Ve,4),"-2LL=",round(-2*emma_test$loglik,2), "  Clustering=",ca,"  Group number=", group ,"  Group kinship=",kt,sep = " "))
   emma_test_reml=-2*emma_test$loglik
   storage_reml=append(storage_reml,-2*emma_test$loglik)
@@ -412,12 +411,26 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(my_taxa,emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")
+   print(dim(emma_BLUE))
+   print(length(ys))
+   if(nrow(emma_BLUE)==length(ys))
+   {
+    Group=1:length(my_taxa)
+    ID=Group
+    RefInf=rep(1,length(my_taxa))
+    BB=as.data.frame(cbind(my_taxa,Group,RefInf,ID,emma_REMLE$uhat,emma_REMLE$PEVuhat,emma_BLUE[,2]))
+    colnames(BB)=c("Taxa","Group","RefInf","ID","BLUP","PEV","emma_BLUE")
+   # print(head(BB))
+
+   }else{
    gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
-   BB= merge(gs$BLUP, emma_BLUE, by.x = "Taxa", by.y = "Taxa")
-   prediction=as.matrix(BB$BLUP)+as.numeric(as.vector(BB$emma_BLUE))
+   BB= merge(gs$BLUP, emma_BLUE, by.x = "Taxa", by.y = "Taxa",sort=F)
+   # print(head(BB))
+   }
+   prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
    all_gs=cbind(BB,prediction)
    colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-   write.csv(all_gs,paste("GAPIT.",model,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
+  if(file.output) write.csv(all_gs,paste("GAPIT.",model,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
 
   print("GAPIT SUPER GS completed successfully for multiple traits. Results are saved")
   return (list(GPS=BB,Pred=all_gs,Compression=Compression,kinship=my_allKI,SUPER_kinship=SUPER_myKI,SUPER_GD=SUPER_optimum_GD ,PC=my_allCV,Timmer=Timmer,Memory=Memory,GWAS=NULL ))

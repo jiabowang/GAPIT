@@ -308,9 +308,11 @@ if(!is.null(CV))
 }else{
   system("rm myData.cov")
 }
-print("If there is a error without ./blink , please download the blink excute file form ")
+print("If there is a error without ./blink , please download the blink excute file from ")
 print("https://github.com/Menggg/BLINK/blob/master/blink_mac")
-print("And put it into workplace and make it executable with chmod 777 blink_versions ")
+print("Name it as blink. ")
+print("And put it into workplace and make it executable with 'chmod 777 blink_versions' ")
+
 system("./blink --gwas --file myData --numeric")
 
 result=read.table("trait1_GWAS_result.txt",head=T)
