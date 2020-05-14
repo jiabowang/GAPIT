@@ -320,9 +320,25 @@ for (group in GROUP)
 order_count=order_count+1
 if(order_count==1)print("-------Mixed model with Kinship-----------------------------")
 if(group<ncol(X0)+1) group=2 # the emma function (emma.delta.REML.dLL.w.Z) does not allow K has dim less then CV. turn to GLM (group=1)
+# print(Sys.time())
+if(nrow(KI)==group)
+{
+  # print(head(cbind(as.data.frame(KI[,1]),1:nrow(KI))))
+  GA=cbind(as.data.frame(KI[,1]),1:nrow(KI))
+  colnames(GA)=c("X1","X2")
+  KG=as.matrix(KI[,-1])
+  bk <- GAPIT.Block(Z=hold_Z,GA=GA,KG=KG)
+
+  }else{
 cp <- GAPIT.Compress(KI=KI,kinship.cluster=ca,kinship.group=kt,GN=group,Timmer=Timmer,Memory=Memory)
+# print(cp$GA)
+
 bk <- GAPIT.Block(Z=hold_Z,GA=cp$GA,KG=cp$KG)
+}
+# print(Sys.time())
+
 zc <- GAPIT.ZmatrixCompress(Z=hold_Z,GAU =bk$GA)
+# print(Sys.time())
 zrow=nrow(zc$Z)
 zcol=ncol(zc$Z)-1
 K = as.matrix(bk$KW)
@@ -344,6 +360,7 @@ j=1
   # print(dim(K))
   # print(dim(Z))
    emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
+
    print(paste(order_count, "of",numSetting,"--","Vg=",round(emma_test$Vu,4), "VE=",round(emma_test$Ve,4),"-2LL=",round(-2*emma_test$loglik,2), "  Clustering=",ca,"  Group number=", group ,"  Group kinship=",kt,sep = " "))
   emma_test_reml=-2*emma_test$loglik
   storage_reml=append(storage_reml,-2*emma_test$loglik)
@@ -411,8 +428,8 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(my_taxa,emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")
-   print(dim(emma_BLUE))
-   print(length(ys))
+   # print(dim(emma_BLUE))
+   # print(length(ys))
    if(nrow(emma_BLUE)==length(ys))
    {
     Group=1:length(my_taxa)
