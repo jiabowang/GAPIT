@@ -76,9 +76,10 @@ for(j in 2:num)
 	blupGAPIT <- GAPIT(
 	Y=myY,
 	KI=myKI,
-	#group.from=max.groups,
-	group.from=1,
-	group.to=max.groups,
+	# #group.from=max.groups,
+	# group.from=1,
+	# group.to=max.groups,
+	model="gBLUP",
 	#group.by=10,
 	#PCA.total=3,
 	SNP.test=FALSE,

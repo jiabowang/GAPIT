@@ -97,11 +97,12 @@ for(i in 1:num){
 	myGAPIT <- GAPIT(
 	Y=myY,
 	KI=myKI,
-	#group.from=max.groups,
-	group.from=max.groups,
-	group.to=max.groups,
+	# #group.from=max.groups,
+	# group.from=max.groups,
+	# group.to=max.groups,
+	model="gBLUP",
 	#group.by=10,
-	PCA.total=3,
+	# PCA.total=3,
 	SNP.test=FALSE,
 	file.output=FALSE
 	)
