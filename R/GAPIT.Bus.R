@@ -563,13 +563,22 @@ nbchunks = 2, maxsteps = 10, thresh = 1.2 * 10^-5)
 #print(str(mymlmm))
 if(opt=='extBIC'){
 GWAS_result=mymlmm$opt_extBIC$out
+effect=mymlmm$opt_extBIC$coef[-1,]
 }
 if(opt=='mbonf'){
 GWAS_result=mymlmm$opt_mbonf$out
+effect=mymlmm$opt_mbonf$coef[-1,]
 }
 if(opt=='thresh'){
 GWAS_result=mymlmm$opt_thresh$out
+effect=mymlmm$opt_thresh$coef[-1,]
+
 }
+   taxa=names(Y)[2]
+   cof_marker=rownames(effect)
+   effect=cbind(cof_marker,effect)
+   write.table(effect, paste("GAPIT.", taxa, ".MLMM.effect.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+
 colnames(GWAS_result)=c("SNP","P.value")
 xs=t(GD[,-1])
 #print(dim(xs))

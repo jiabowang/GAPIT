@@ -141,7 +141,7 @@
  fwd_lm[[1]]<-summary(lm(Y_t~0+cof_fwd_t)) 
  Res_H0<-fwd_lm[[1]]$residuals 
  Q_<-qr.Q(qr(cof_fwd_t)) 
-  
+
  RSS<-list() 
  for (j in 1:(nbchunks-1)) { 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[1]])])[,((j-1)*round(m/nbchunks)+1):(j*round(m/nbchunks))]) 
@@ -150,13 +150,21 @@
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[1]])])[,((j)*round(m/nbchunks)+1):(m-(ncol(cof_fwd[[1]])-1))]) 
  RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
  rm(X_t,j) 
-  
+
  RSSf[[2]]<-unlist(RSS) 
  RSS_H0[[2]]<-sum(Res_H0^2) 
+ # beta=Res_H0-sqrt(RSSf[[2]])
+ # print(length(beta))
+ # print(head(beta))
+ # print("!!!!")
+ # print(length(RSSf[[2]]))
  df2[[2]]<-n-df1-ncol(cof_fwd[[1]]) 
  Ftest[[2]]<-(rep(RSS_H0[[2]],length(RSSf[[2]]))/RSSf[[2]]-1)*df2[[2]]/df1 
+ # print(length(RSSf[[2]]))
+ # print(head(rep(RSS_H0[[2]],length(RSSf[[2]]))/RSSf[[2]]-1))
+ # print(head(Ftest[[2]]))
  pval[[2]]<-pf(Ftest[[2]],df1,df2[[2]],lower.tail=FALSE) 
-  
+ # print(length(pval[[2]]))
  cof_fwd[[2]]<-cbind(cof_fwd[[1]],X[,colnames(X) %in% names(which(RSSf[[2]]==min(RSSf[[2]]))[1])]) 
  colnames(cof_fwd[[2]])<-c(colnames(cof_fwd[[1]]),names(which(RSSf[[2]]==min(RSSf[[2]]))[1])) 
  mod_fwd[[2]]<-emma.REMLE(Y,cof_fwd[[2]],K_norm) 
@@ -287,7 +295,7 @@
  mod_bwd_LL[[1]]<-list(nfixed=ncol(cof_bwd[[1]]),LL=emma.MLE(Y,cof_bwd[[1]],K_norm)$ML) 
  for (i in 2:length(cof_bwd)) {mod_bwd_LL[[i]]<-list(nfixed=ncol(cof_bwd[[i]]),LL=emma.MLE(Y,cof_bwd[[i]],K_norm)$ML)} 
  rm(i) 
-  
+ 
  cat('creating output','\n') 
   
  ##Forward Table: Fwd + Bwd Tables 
@@ -312,7 +320,7 @@
  rm(i,BIC,extBIC,max_pval_fwd,max_pval_bwd,dropcof_bwd) 
   
  fwdbwd_table<-rbind(fwd_table,bwd_table) 
-  
+
  #RSS for plot 
  mod_fwd_RSS<-vector() 
  mod_fwd_RSS[1]<-sum((Y-cof_fwd[[1]]%*%fwd_lm[[1]]$coef[,1])^2) 
@@ -340,8 +348,8 @@
  } 
  bestmodel_pvals<-function(model) {
  	# print(model)
-  #   print(substr(model$step_,start=0,stop=3))
- 	if(substr(model$step_,start=0,stop=3)=='fwd') { 
+    # print(substr(model$step_,start=0,stop=3))
+ 	if(substr(model$step_,start=0,stop=3)=='fwd') {
  		pval_step[[as.integer(substring(model$step_,first=4))+1]]} else if (substr(model$step_,start=0,stop=3)=='bwd') { 
  		cof<-cof_bwd[[as.integer(substring(model$step_,first=4))+1]] 
  		mixedmod<-emma.REMLE(Y,cof,K_norm) 
@@ -364,15 +372,22 @@
  		df2<-n-df1-ncol(cof) 
  		Ftest<-(rep(RSS_H0,length(RSSf))/RSSf-1)*df2/df1 
  		pval<-pf(Ftest,df1,df2,lower.tail=FALSE) 
+ 		
  		list('out'=rbind(data.frame(SNP=colnames(cof)[-1],'pval'=GLS_lm$coef[2:(ncol(cof)),4]), 
  		                 data.frame('SNP'=colnames(X)[-which(colnames(X) %in% colnames(cof))],'pval'=pval)), 
  		     'cof'=colnames(cof)[-1], 
- 		     'coef'=GLS_lm$coef)} else {cat('error \n')}} 
- opt_extBIC_out<-bestmodel_pvals(opt_extBIC) 
+ 		     'coef'=GLS_lm$coef
+ 		     # 'coef'=RSSf
+ 		     )} else {cat('error \n')}} 
+
+ opt_extBIC_out<-bestmodel_pvals(opt_extBIC)
+ # print(str(opt_extBIC_out))
+ # print(head(opt_extBIC_out$coef) )
  opt_mbonf_out<-bestmodel_pvals(opt_mbonf) 
  if(! is.null(thresh)){ 
    opt_thresh_out<-bestmodel_pvals(opt_thresh) 
- } 
+ }
+ 
  output <- list(step_table=fwdbwd_table,pval_step=pval_step,RSSout=plot_RSS,bonf_thresh=-log10(0.05/m),opt_extBIC=opt_extBIC_out,opt_mbonf=opt_mbonf_out) 
  if(! is.null(thresh)){ 
    output$thresh <- -log10(thresh) 
