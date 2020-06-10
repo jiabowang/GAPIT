@@ -197,7 +197,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              DP$group.from=Judge$group.from
              DP$group.to=Judge$group.to
              DP$name.of.trait=traitname
-             DP$Y=Y[!is.na(Y[,c(1,trait)]),c(1,trait)]
+             DP$Y=Y[!is.na(Y[,trait]),c(1,trait)]
              DP$model=model
 # print(Para$SNP.test)
              IC=GAPIT.IC(DP=DP)

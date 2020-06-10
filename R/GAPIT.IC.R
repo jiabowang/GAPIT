@@ -35,8 +35,7 @@ print("GAPIT.IC in process...")
      if(ncol(GD)==0&!is.null(DP$KI))
      {
      taxa_KI=as.character(DP$KI[,1])
-     # print("@@@@@@")
-     # print(head(taxa_KI))
+     
      taxa_CV=as.character(CV[,1])
      taxa_comall=intersect(intersect(taxa_KI,taxa_Y),taxa_CV)
      # print(length(taxa_comall))
