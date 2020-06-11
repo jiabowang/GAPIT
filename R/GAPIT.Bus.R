@@ -15,6 +15,8 @@ function(Y=NULL,CV=NULL,Z=NULL,GT=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,
 #Last update: Novenber 3, 2016
 ##############################################################################################
 GR=NULL
+seqQTN=NULL
+
 #print(head(CV))
 if(method=="GLM"){
 #print("---------------screening by GLM----------------------------------")
@@ -143,6 +145,7 @@ myFarmCPU=FarmCPU(
         method.sub.final=method.sub.final,method.bin=method.bin,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
         file.output=FALSE
         )
+seqQTN=myFarmCPU$seqQTN
 seq_farm=myFarmCPU$seqQTN
 taxa=names(Y)[2]
 #print(taxa)
@@ -269,7 +272,7 @@ GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
 nobs=ns
 
-#print(head(GWAS))
+# print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
 #print(head(GWAS))
 if(Random.model)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,GT=GT)
@@ -350,7 +353,9 @@ REMLs=NULL
 if(method=="Blink")
 {
   if(!require(devtools))  install.packages("devtools")
-  if(!require(BLINK)) devtools::install_github("YaoZhou89/BLINK")
+  # if(!require(BLINK)) devtools::install_github("YaoZhou89/BLINK")
+  if(!require(BLINK)) devtools::install_github("jiabowang/BLINK")
+
   #source("http://zzlab.net/GAPIT/gapit_functions.txt")
   #source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
   blink_GD=t(GD[,-1])
@@ -361,38 +366,27 @@ if(method=="Blink")
 
   #print(head(blink_CV))
   library(BLINK)
-
+  source("http://zzlab.net/GAPIT/BLINK.R")
   myBlink=Blink(Y=blink_Y,GD=blink_GD,GM=blink_GM,CV=blink_CV,maxLoop=10,time.cal=T)
   #print(head(myBlink$GWAS))
+  seqQTN=myBlink$seqQTN
   taxa=names(blink_Y)[2]
   GWAS=myBlink$GWAS[,1:4]
   #print(dim(blink_GD))
-  ns=nrow(GD)
-  nobs=ns
-  effect=rep(NA,length(nobs))
-  xs=t(GD[,-1])
-  ss=apply(xs,1,sum)
-  #storage=cbind(.5*ss/ns,1-.5*ss/ns)
-  maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
-  maf=cbind(as.data.frame(GM[,1]),maf)
-  colnames(maf)=c("SNP","maf")
-  # print(head(maf))
-  # print(head(GWAS))
-  GWAS=merge(GWAS,maf, by.x = "SNP", by.y = "SNP")  #Jiabo modified at 2019.3.25
-  # print(head(GWAS))
-  GWAS=GWAS[order(GWAS[,3]),]
-  GWAS=GWAS[order(GWAS[,2]),]
-  rownames(GWAS)=1:nrow(GWAS)
-  # print(head(GWAS))
+   X=GD[,-1]
+ ss=apply(X,2,sum)
+ ns=nrow(GD)
+ nobs=ns
+ GWAS=cbind(GWAS,nobs)
 
-  GWAS=cbind(GWAS,effect)
-  GWAS=cbind(GWAS,nobs)
+maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
+GWAS$maf=maf
+#print(head(GWAS))
+GWAS[is.na(GWAS[,4]),4]=1
 
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 sig_pass=TRUE
 if(nrow(sig)==0)sig_pass=FALSE
-
-#  
 
 if(Multi_iter&sig_pass)
 {
@@ -417,10 +411,10 @@ if(length(sig_order)!=1){
     if(!diff_index[i]) count=count+1
     diff_index2=append(diff_index2,count)
   }
-  }else{
+}else{
   diff_order=0
   diff_index2=0
-  }
+}
 
 sig_bins=rle(diff_index2)$lengths
 num_bins=length(sig_bins)
@@ -434,7 +428,6 @@ if(n!=num_bins)
 {
   print("The  number of significant bins is")
   print(num_bins)
-
 }
 # print(windowsize)
  if(num_bins>0)
@@ -451,37 +444,60 @@ if(n!=num_bins)
     #print(aim_marker)
     aim_order=as.numeric(rownames(aim_marker))
     aim_area=rep(FALSE,(nrow(GWAS)))
-    #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
-    aim_area[c((min(aim_order)-num_regwas):(max(aim_order)+num_regwas))]=TRUE
-    aim_area[aim_order]=FALSE
-    aim_area=aim_area[1:(nrow(GWAS))]
-    if(setequal(aim_area,logical(0))) next
+    # print(head(sig))
+    # print(aim_order)
 
-    # if(aim_matrix[rownames(aim_matrix)=="TRUE",1]<10) next
-        # aim_area[GM[,1]==aim_marker[,1]]=FALSE      
+    #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
+    if(min(aim_order)<num_regwas)
+    {
+      aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
+
+    }else{
+      aim_area[c((min(aim_order)-num_regwas):(max(aim_order)+num_regwas))]=TRUE
+    }
+    # Next code can control with or without core marker in seconde model
+    aim_area[aim_order]=FALSE  # without
+    if(!is.null(farmcpuCV))
+    {
+      secondCV=cbind(farmcpuCV,X[seqQTN[!seqQTN%in%aim_order]])
+    }else{
+      secondCV=cbind(GD[,1],X[seqQTN[!seqQTN%in%aim_order]])
+
+    }
+    aim_area=aim_area[1:(nrow(GWAS))]
+    #if(setequal(aim_area,logical(0))) next
+        # this is used to set with sig marker in second model
+        # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
+        
         secondGD=GD[,c(TRUE,aim_area)]
         secondGM=GM[aim_area,]
-        myGAPIT_Second =Blink(Y=Y,GD=secondGD,GM=secondGM,CV=blink_CV,maxLoop=10,time.cal=T)
-        #print(head(myBlink$GWAS))
-        #GWAS=myBlink$GWAS[,1:4]
+        print("Now that is multiple iteration for new farmcpu !!!")
+        myGAPIT_Second <- Blink(
+                        Y=Y,
+                        GD=secondGD,
+                        GM=secondGM,
+                        CV=secondCV,
+                        maxLoop=10,time.cal=T
+                        )
         Second_GWAS= myGAPIT_Second$GWAS [,1:4]
         Second_GWAS[is.na(Second_GWAS[,4]),4]=1
         orignal_GWAS=GWAS[aim_area,]
         GWAS_index=match(Second_GWAS[,1],GWAS[,1])
         #test_GWAS=GWAS
         GWAS[GWAS_index,4]=Second_GWAS[,4]
-  }
-}
-
+   }
+ }
 }
 
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
 
+effect=rep(NA,nrow(GWAS))
+GWAS=cbind(GWAS,effect)
 GPS=myBlink$Pred
-#print(head(GWAS))
-GWAS=GWAS[,c(1:5,7,6)]
+# print(head(GWAS))
+GWAS=GWAS[,c(1:4,6,5,7)]
 if(Random.model)GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,GT=GT)
 
 
@@ -616,7 +632,7 @@ colnames(GWAS)=c("SNP","Chromosome","Position","P.value","maf","nobs","effect")
 }
 # print(head(GWAS))
 #print("GAPIT.Bus succeed!")  
-return (list(GWAS=GWAS, GPS=GPS,REMLs=REMLs,vg=vg,ve=ve,delta=delta,GVs=GR$GVs))
+return (list(GWAS=GWAS, GPS=GPS,REMLs=REMLs,vg=vg,ve=ve,delta=delta,GVs=GR$GVs,seqQTN=seqQTN))
 } #end of GAPIT.Bus
 #=============================================================================================
 
