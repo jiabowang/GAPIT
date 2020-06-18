@@ -450,7 +450,10 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Prio PreP3D")
 # print(head(ys))
 # print(as.matrix(as.data.frame(GD[GTindex,colInclude]))[1:5,1:5])
 # print(as.matrix(bk$KW)[1:5,1:5])
-# print(dim(ys))
+# print(ys)
+# # print(as.matrix(as.data.frame(GD[GTindex,colInclude])))
+# print(dim(as.matrix(bk$KW)))
+# print(as.matrix(bk$KW)[,1])
 # print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
 
 p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[GTindex,colInclude])),K = as.matrix(bk$KW) ,Z=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol),X0=X0,CVI=CVI,CV.Inheritance=CV.Inheritance,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,

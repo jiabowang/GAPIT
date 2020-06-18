@@ -81,7 +81,7 @@ if(QC)
 {
 #print(colnames(KI)[53:62])
 
-  qc <- GAPIT.QC(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
+  qc <- GAPIT.QC2(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
   GTindex=qc$GTindex
   Y=qc$Y
   KI=qc$KI
@@ -254,7 +254,7 @@ CVI <- CV
 # print(length(GT))
 if(QC)
 {
-  qc <- GAPIT.QC(Y=Y,KI=SUPER_myKI, GT=GT,CV=CV,Z=Z,GK=GK)
+  qc <- GAPIT.QC2(Y=Y,KI=SUPER_myKI, GT=GT,CV=CV,Z=Z,GK=GK)
   GTindex=qc$GTindex
   Y=qc$Y
   KI=qc$KI

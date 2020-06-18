@@ -51,33 +51,38 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
                 method.sub.final=DP$method.sub.final,method.bin=DP$method.bin,Random.model=DP$Random.model,
 				        DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter,num_regwas=DP$num_regwas )
  GWAS=myBus$GWAS
+ Pred=myBus$Pred
 
  # BUS Prediction with gBLUP
- X=DP$GD[,-1]
-
-if(!is.null(ic_PCA)) 
+buspred=FALSE
+if(buspred)
 {
-  busCV=cbind(DP$myallCV,X[,myBus$seqQTN])
-}else{
-  busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
+   X=DP$GD[,-1]
+print(dim(X))
+print(dim(DP$myallCV))
+print(dim(ic_PCA))
+   if(!is.null(ic_PCA)) 
+   {
+     busCV=cbind(ic_PCA,X[,myBus$seqQTN])
+   }else{
+     busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
+   }
 
+   KI= GAPIT.kinship.VanRaden(snps=as.matrix(DP$GD[,-1]))
+   colnames(KI)=as.character(DP$GD[,1])
+   busKI=cbind(as.data.frame(DP$GD[,1]),KI)
+   colnames(busKI)[1]=c("Taxa")
+   colnames(busCV)[1]=c("Taxa")
+
+   busGAPIT=GAPIT(
+     Y=ic_Y,
+     K=busKI,
+     CV=busCV,
+     # PCA.total=3,
+     model="gBLUP",
+     file.output=F)
+    Pred=busGAPIT$Pred
 }
-
-KI= GAPIT.kinship.VanRaden(snps=as.matrix(DP$GD[,-1]))
-colnames(KI)=as.character(DP$GD[,1])
-busKI=cbind(as.data.frame(DP$GD[,1]),KI)
-colnames(busKI)[1]=c("Taxa")
-colnames(busCV)[1]=c("Taxa")
-
-busGAPIT=GAPIT(
-  Y=ic_Y,
-  K=busKI,
-  CV=busCV,
-  # PCA.total=3,
-  model="gBLUP",
-  file.output=F)
-
- Pred=busGAPIT$Pred
  va=myBus$vg
  ve=myBus$ve
  h2=va/(va+ve)
