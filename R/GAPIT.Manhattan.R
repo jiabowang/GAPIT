@@ -67,15 +67,13 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     
     #Remove chr 0 and 99
     GI.MP <- GI.MP[GI.MP[,1]!=0,]
-    #GI.MP <- GI.MP[GI.MP[,1]!=99,]
-    #print(dim(GI.MP))
-    #print("Dimension of GI.MP after QC")
-    #print(dim(GI.MP))
-    #print(head(GI.MP))
     numMarker=nrow(GI.MP)
     #print(numMarker)
     bonferroniCutOff=-log10(cutOff/numMarker)
-    
+    sp=sort(GI.MP[,3])
+    spd=abs(cutOff-sp)
+    index_fdr=grep(min(spd),spd)[1]
+    FDRcutoff=-log10(cutOff*index_fdr/numMarker)
     #Replace P the -log10 of the P-values
     if(!is.null(GD))
     {  if(ncol(GD)!=nrow(GI.MP))
@@ -223,6 +221,8 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
 			cex.lab=1.6,pch=21,bg=r2_color[,2])
             
             abline(h=bonferroniCutOff,col="forestgreen")
+            abline(h=FDRcutoff,col="forestgreen",lty=2)
+
             ##print("manhattan plot (chr) finished")
             #layout.show(nf)	
             #provcol <-c("darkblue","cyan","green3","brown1","brown1")
@@ -355,6 +355,8 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         
         #Add a horizontal line for bonferroniCutOff
         abline(h=bonferroniCutOff,col="forestgreen")
+        #Add FDR line
+        abline(h=FDRcutoff,col="forestgreen",lty=2)
         #print(bonferroniCutOff)
         #Set axises
         # jiabo creat chor_taxa
