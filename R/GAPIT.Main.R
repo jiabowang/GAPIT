@@ -724,25 +724,34 @@ if(optOnly){
 
 if(numSetting>1){
 #Find the best ca,kt and group
-print(paste(as.numeric(Compression[1,4]))) ###added by Jiabo Wang 2015.7.20
-print(paste(min(as.numeric(Compression[,4]),rm.na=TRUE)))
+#print(paste(as.numeric(Compression[1,4]))) ###added by Jiabo Wang 2015.7.20
+#print(paste(min(as.numeric(Compression[,4]),rm.na=TRUE)))
 adjust_value=as.numeric(Compression[1,4])-min(as.numeric(Compression[,4]),rm.na=TRUE)
 nocompress_value=as.numeric(Compression[1,4])
 REML_storage=as.numeric(Compression[,4])
 
 adjust_mean=mean(as.numeric(Compression[,4]),rm.na=TRUE)
 threshold=adjust_mean*0.1       
-
-if(adjust_value<3|nocompress_value<0)     ###added by Jiabo Wang 2015.7.20
+if(which.min(as.numeric(Compression[,4]))!=which.max(as.numeric(Compression[,5])))     ###added by Jiabo Wang 2015.7.20
 {
+Compression0=Compression
+while(which.min(as.numeric(Compression[,4]))!=which.max(as.numeric(Compression[,5])))
+{
+Compression=Compression[-which.min(as.numeric(Compression[,4])),]
+}
 
+kt=Compression[which.min(as.numeric(Compression[,4])),1]
+ca=Compression[which.min(as.numeric(Compression[,4])),2]
+group=Compression[which.min(as.numeric(Compression[,4])),3]
+va=Compression[which.min(as.numeric(Compression[,4])),5]
+ve=Compression[which.min(as.numeric(Compression[,4])),6]
 
-kt=Compression[1,1]
-ca=Compression[1,2]
-group=Compression[1,3]
-print(paste("Optimum: ",Compression[1,2],Compression[1,1],Compression[1,3],Compression[1,5], Compression[1,6],Compression[1,4] ,sep = " "))
+Compression=Compression0
+
+print(paste("Optimum: ",ca,kt,group,va, va,ve ,sep = " "))
 }else{
 Compression=Compression[order(as.numeric(Compression[,4]),decreasing = FALSE),]  #sort on REML
+
 kt=Compression[1,1]
 ca=Compression[1,2]
 group=Compression[1,3]
