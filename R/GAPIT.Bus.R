@@ -353,7 +353,9 @@ REMLs=NULL
 if(method=="Blink")
 {
   if(!require(devtools))  install.packages("devtools")
-  # if(!require(BLINK)) devtools::install_github("YaoZhou89/BLINK")
+  if(!require(devtools))  system("git config --global http.proxy http://proxyuser:proxypwd@proxy.server.com:8080")
+  if(!require(devtools))  install.packages("devtools")
+  #if(!require(BLINK)) devtools::install_github("YaoZhou89/BLINK", host = "api.github.com")
   if(!require(BLINK)) devtools::install_github("jiabowang/BLINK")
 
   #source("http://zzlab.net/GAPIT/gapit_functions.txt")
