@@ -166,12 +166,16 @@ if(!is.null(IC$GD)&DP$SNP.test)
   # print(head(DP$chor_taxa))
   # print(head(as.numeric(as.matrix(GWAS[,2]))))
   # print(all.equal(as.character(DP$chor_taxa),as.character(unique(as.numeric(as.matrix(GWAS[,2]))))))
+  # print(head(GWAS))
    if(all.equal(as.character(DP$chor_taxa),as.character(unique(sort(as.numeric(as.matrix(GWAS[,2]))))))!=TRUE)
-   {
+   { 
      chro=as.numeric(as.matrix(GWAS[,2]))
-     for(i in 1:length(chro))
+     chor_char=unique(DP$chor_taxa)
+     # print(chro)
+     # print(chor_char)
+     for(i in 1:length(unique(chro)))
      {
-      chro[chro==i]=DP$chor_taxa[i]
+      chro[chro==i]=chor_char[i]
      }
      GWAS[,2]=chro
    }
@@ -221,9 +225,11 @@ if(DP$Inter.Plot)
    {
      # print("@@@")
      chro=as.numeric(as.matrix(new_GI[,2]))
-     for(i in 1:length(chro))
+     chor_char=unique(DP$chor_taxa)
+
+     for(i in 1:length(unique(chro)))
      {
-      chro[chro==i]=DP$chor_taxa[i]
+      chro[chro==i]=chor_char[i]
      }
      new_GI[,2]=chro
    }
