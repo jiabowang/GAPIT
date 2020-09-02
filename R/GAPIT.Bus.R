@@ -499,6 +499,7 @@ effect=rep(NA,nrow(GWAS))
 GWAS=cbind(GWAS,effect)
 GPS=myBlink$Pred
 # print(head(GWAS))
+colnames(GWAS)[1:3]=c("SNP","Chromosome","Position")
 GWAS=GWAS[,c(1:4,6,5,7)]
 if(Random.model)GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,GT=GT)
 
