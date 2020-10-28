@@ -54,16 +54,17 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
  Pred=myBus$Pred
 
  # BUS Prediction with gBLUP
-buspred=FALSE
+buspred=TRUE
+if(!is.null(Pred))buspred=FALSE
 if(buspred)
 {
    X=DP$GD[,-1]
-print(dim(X))
-print(dim(DP$myallCV))
-print(dim(ic_PCA))
-   if(!is.null(ic_PCA)) 
+# print(dim(X))
+# print(dim(IC$myallCV))
+# print(dim(ic_PCA))
+   if(!is.null(IC$myallCV)) 
    {
-     busCV=cbind(ic_PCA,X[,myBus$seqQTN])
+     busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
    }else{
      busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
    }
@@ -82,6 +83,8 @@ print(dim(ic_PCA))
      model="gBLUP",
      file.output=F)
     Pred=busGAPIT$Pred
+      if(DP$file.output) write.csv(Pred,paste("GAPIT.",DP$kinship.algorithm,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
+
 }
  va=myBus$vg
  ve=myBus$ve

@@ -135,6 +135,8 @@ if(!is.null(CV))
 # print(dim(GD))
 # print(dim(farmcpuCV))
 #print(Y)
+# colnames(GD)[-1]=as.character(GM[,1])
+
 myFarmCPU=FarmCPU(
         Y=Y,#Phenotype
         GD=GD,#Genotype
@@ -296,7 +298,9 @@ print("FarmCPU has been done succeedly!!")
 if(method=="BlinkC")
 {
   print("BlinkC will be started !!")
-blink_GD=t(GD[,-1])
+  colnames(GD)[-1]=as.character(GM[,1])
+
+# blink_GD=t(GD[,-1])
 blink_GM=GM
 blink_Y=Y
 blink_Y[is.na(blink_Y)]="NaN"
@@ -322,7 +326,7 @@ result=read.table("trait1_GWAS_result.txt",head=T)
 result=result[,c(1,2,3,5,4)]
 xs=t(GD[,-1])
 #print(dim(xs))
-gene_taxa=colnames(GD)[-1]
+gene_taxa=as.character(GM[,1])
 ss=apply(xs,1,sum)
 ns=nrow(GD)
 storage=cbind(.5*ss/ns,1-.5*ss/ns)
@@ -352,14 +356,19 @@ REMLs=NULL
 }
 if(method=="Blink")
 {
-  if(!require(devtools))  install.packages("devtools")
-  if(!require(devtools))  system("git config --global http.proxy http://proxyuser:proxypwd@proxy.server.com:8080")
-  if(!require(devtools))  install.packages("devtools")
+  # if(!require(devtools))  install.packages("devtools")
+  # if(!require(devtools))  system("git config --global http.proxy http://proxyuser:proxypwd@proxy.server.com:8080")
+  # if(!require(devtools))  install.packages("devtools")
   #if(!require(BLINK)) devtools::install_github("YaoZhou89/BLINK", host = "api.github.com")
-  if(!require(BLINK)) devtools::install_github("jiabowang/BLINK")
-
+  # if(!require(BLINK)) devtools::install_github("jiabowang/BLINK")
+  if(!require(bigmemory)) install.packages("bigmemory")
+  if(!require(biganalytics)) install.packages("biganalytics")
+library(bigmemory)  #for FARM-CPU
+library(biganalytics) #for FARM-CPU
   #source("http://zzlab.net/GAPIT/gapit_functions.txt")
   #source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
+  colnames(GD)[-1]=as.character(GM[,1])
+
   blink_GD=t(GD[,-1])
   blink_GM=GM
   blink_Y=Y
@@ -367,8 +376,8 @@ if(method=="Blink")
   if(!is.null(CV))blink_CV=CV[,-1]
 
   #print(head(blink_CV))
-  library(BLINK)
-  source("http://zzlab.net/GAPIT/BLINK.R")
+  # library(BLINK)
+  # source("http://zzlab.net/GAPIT/BLINK.R")
   myBlink=Blink(Y=blink_Y,GD=blink_GD,GM=blink_GM,CV=blink_CV,maxLoop=10,time.cal=T)
   #print(head(myBlink$GWAS))
   seqQTN=myBlink$seqQTN
@@ -561,6 +570,7 @@ if(ncol(KI)!=nrow(GD)) print("Please make sure dim of K equal number of GD !!")
 # print(dim(CV))
  # print(KI[1:5,1:5])
 rownames(GD)=1:nrow(GD)
+# colnames(GD)[-1]=as.character(GM[,1])
 if(is.null(CV))
 {
 mymlmm=mlmm(
@@ -601,7 +611,7 @@ effect=mymlmm$opt_thresh$coef[-1,]
 colnames(GWAS_result)=c("SNP","P.value")
 xs=t(GD[,-1])
 #print(dim(xs))
-gene_taxa=colnames(GD)[-1]
+gene_taxa=as.character(GM[,1])
 colnames(GM)=c("SNP","Chromosome","position")
 ss=apply(xs,1,sum)
 ns=nrow(GD)
@@ -612,13 +622,14 @@ nobs=ns
 GWAS_GM=merge(GM,GWAS_result, by.x = "SNP", by.y = "SNP")
 mc=matrix(NA,nrow(GWAS_GM),1)
 GWAS_GM=cbind(GWAS_GM,mc)
-#print(head(GWAS_GM))
+# print(dim(GWAS_GM))
 #print(head(maf))
 #maf=NULL
 GWAS_GM_maf=merge(GWAS_GM,maf, by.x = "SNP", by.y = "SNP")
+# print(dim(GWAS_GM_maf))
 
 GWAS=cbind(GWAS_GM_maf,nobs)
-#print(head(GWAS))
+# print(dim(GWAS))
 GWAS=GWAS[order(GWAS$P.value),]
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))

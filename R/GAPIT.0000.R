@@ -31,30 +31,28 @@ if(!require(multtest))
 	#source("http://www.bioconductor.org/biocLite.R")
     #biocLite("multtest")
 }
+
 if(!require(gplots)) install.packages("gplots")
 if(!require(LDheatmap)) install.packages("LDheatmap")
 if(!require(genetics)) install.packages("genetics")
 if(!require(ape)) install.packages("ape")
+if(!require(compiler)) install.packages("compiler")
+
 if(!require(EMMREML)) install.packages("EMMREML")
 if(!require(scatterplot3d)) install.packages("scatterplot3d")
-#if(!require(scatterplot3d)) install.packages("scatterplot3d")
 
-# required_pkg = c("MASS", "data.table","biganalytics","ape", "magrittr","bigmemory", "gplots", "compiler", "scatterplot3d", "R.utils", "rrBLUP", "BGLR")
-# missing_pkg = required_pkg[!(required_pkg %in% installed.packages()[,"Package"])]
-# if(length(missing_pkg)) install.packages(missing_pkg, repos="http://cran.rstudio.com/")
 if(!'multtest'%in% installed.packages()[,"Package"]){
 	if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
+    BiocManager::install("multtest")
     BiocManager::install("snpStats")
-	#source("http://www.bioconductor.org/biocLite.R")
-	#biocLite("multtest")
-	#biocLite("snpStats")
 }
 
 
 
 
-GAPIT.Version="2018.08.18, GAPIT 3.0"
+
+GAPIT.Version="2020.10.24, GAPIT 3.0"
 print(paste("All packages are loaded already !  ","GAPIT.Version is ",GAPIT.Version,sep=""))
 return(GAPIT.Version)
 }
