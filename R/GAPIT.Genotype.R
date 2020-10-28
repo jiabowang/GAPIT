@@ -348,7 +348,7 @@ Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Sampling genotype")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Sampling genotype")
 #print(KI)
 #Plot third part kinship
-if(!is.null(KI))
+if(!is.null(KI)&file.output)
   {
   if(KI!=1) 
     {
