@@ -1,7 +1,7 @@
 `GAPIT` <-
 function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NULL,GK=NULL,testY=NULL,
  group.from=1000000 ,group.to=1000000,group.by=20,DPP=100000, 
- kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden", 
+ kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden", buspred=FALSE,
  bin.from=10000,bin.to=10000,bin.by=10000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
  SNP.P3D=TRUE,SNP.effect="Add",SNP.impute="Middle",PCA.total=0, SNP.fraction = 1, seed = NULL, BINS = 20,SNP.test=TRUE,
  SNP.MAF=0,FDR.Rate = 1, SNP.FDR=1,SNP.permutation=FALSE,SNP.CV=NULL,SNP.robust="GLM",
@@ -9,7 +9,7 @@ function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NUL
  file.G=NULL, file.Ext.G=NULL,file.GD=NULL, file.GM=NULL, file.Ext.GD=NULL,file.Ext.GM=NULL, 
  ngrid = 100, llim = -10, ulim = 10, esp = 1e-10,LD.chromosome=NULL,LD.location=NULL,LD.range=NULL,PCA.col=NULL,PCA.3d=FALSE,NJtree.group=NULL,NJtree.type=c("fan","unrooted"),
  sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.1,plot.bin=10^5,
- file.output=TRUE,cutOff=0.01, Model.selection = FALSE,output.numerical = FALSE,
+ file.output=TRUE,cutOff=0.05, Model.selection = FALSE,output.numerical = FALSE,
  output.hapmap = FALSE, Create.indicator = FALSE,Multi_iter=FALSE,num_regwas=10,opt="extBIC",
   QTN=NULL, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = FALSE,Random.model=FALSE,
   method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",bin.size=c(1000000),bin.selection=c(10,20,50,100,200,500,1000),
@@ -201,7 +201,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              DP$model=model
 # print(Para$SNP.test)
              IC=GAPIT.IC(DP=DP)
-             SS=GAPIT.SS(DP=DP,IC=IC)
+             SS=GAPIT.SS(DP=DP,IC=IC,buspred=buspred)
              if(Para$SNP.test&Para$file.output)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
           }#for loop trait
 #print(SNP.test)

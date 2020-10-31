@@ -1,5 +1,5 @@
 `GAPIT.SS` <-
-function(DP=NULL,IC=NULL){
+function(DP=NULL,IC=NULL,buspred=FALSE){
 #Object: To Sufficient Statistics (SS) for GWAS and GS
 #Designed by Zhiwu Zhang
 #Writen by Jiabo Wang
@@ -54,7 +54,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
  Pred=myBus$Pred
 
  # BUS Prediction with gBLUP
-buspred=TRUE
+
 if(!is.null(Pred))buspred=FALSE
 if(buspred)
 {
