@@ -207,8 +207,9 @@
  herit_fwd[[i]]<-mod_fwd[[i]]$vg/(mod_fwd[[i]]$vg+mod_fwd[[i]]$ve) 
  rm(M,Y_t,cof_fwd_t,Res_H0,Q_,RSS)} 
  cat('step ',i-1,' done! pseudo-h=',round(herit_fwd[[i]],3),'\n')} 
+ seqQTN=match(addcof_fwd[-1],colnames(X))
+ # print(seqQTN)
  rm(i) 
-  
  ##gls at last forward step 
  M<-solve(chol(mod_fwd[[length(mod_fwd)]]$vg*K_norm+mod_fwd[[length(mod_fwd)]]$ve*diag(n))) 
  Y_t<-crossprod(M,Y) 
@@ -393,7 +394,10 @@
  if(! is.null(thresh)){ 
    opt_thresh_out<-bestmodel_pvals(opt_thresh) 
  } 
- output <- list(step_table=fwdbwd_table,pval_step=pval_step,RSSout=plot_RSS,bonf_thresh=-log10(0.05/m),opt_extBIC=opt_extBIC_out,opt_mbonf=opt_mbonf_out) 
+ # print(cof)
+ # print(pval_step)
+ # print(plot_RSS)
+ output <- list(step_table=fwdbwd_table,pval_step=pval_step,RSSout=plot_RSS,bonf_thresh=-log10(0.05/m),opt_extBIC=opt_extBIC_out,opt_mbonf=opt_mbonf_out,seqQTN=seqQTN) 
  if(! is.null(thresh)){ 
    output$thresh <- -log10(thresh) 
    output$opt_thresh <- opt_thresh_out 

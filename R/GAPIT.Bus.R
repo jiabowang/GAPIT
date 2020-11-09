@@ -606,7 +606,7 @@ effect=mymlmm$opt_thresh$coef[-1,]
    taxa=names(Y)[2]
    cof_marker=rownames(effect)
    effect=cbind(cof_marker,effect)
-   write.table(effect, paste("GAPIT.", taxa, ".MLMM.effect.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   # write.table(effect, paste("GAPIT.", taxa, ".MLMM.effect.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
 colnames(GWAS_result)=c("SNP","P.value")
 xs=t(GD[,-1])
@@ -633,6 +633,7 @@ GWAS=cbind(GWAS_GM_maf,nobs)
 GWAS=GWAS[order(GWAS$P.value),]
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
+seqQTN=mymlmm$seqQTN
 GPS=NULL
 #h2=mymlmm$step_table$h2[length(mymlmm$step_table$h2)]
 h2=NULL

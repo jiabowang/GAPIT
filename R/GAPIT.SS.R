@@ -56,6 +56,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
  # BUS Prediction with gBLUP
 
 if(!is.null(Pred))buspred=FALSE
+print(myBus$seqQTN)
 if(buspred)
 {
    X=DP$GD[,-1]
@@ -64,14 +65,31 @@ if(buspred)
 # print(dim(ic_PCA))
    if(!is.null(IC$myallCV)) 
    {
-     busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
+     if(!is.null(myBus$seqQTN))
+         {
+          busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
+         }else{
+          numMarker=nrow(GWAS)
+          sp=sort(GWAS$P.value)
+          spd=abs(DP$cutOff-sp)
+          index_fdr=grep(min(spd),spd)[1]
+          FDRcutoff=DP$cutOff*index_fdr/numMarker
+          seqQTN=as.numeric(rownames(GWAS[GWAS$P.value<FDRcutoff,]))
+          busCV=cbind(IC$myallCV,X[,seqQTN])
+         }
+
    }else{
      busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
    }
 
    if(is.null(DP$KI))
    {
-    KI= GAPIT.kinship.VanRaden(snps=as.matrix(DP$GD[,-1]))
+    if(!is.null(myBus$seqQTN))
+      {
+        KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,!myBus$seqQTN]))
+        }else{
+        KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,!seqQTN]))
+        }
     colnames(KI)=as.character(DP$GD[,1])
     busKI=cbind(as.data.frame(DP$GD[,1]),KI)
     colnames(busKI)[1]=c("Taxa")
