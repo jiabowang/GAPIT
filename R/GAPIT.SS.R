@@ -86,9 +86,9 @@ if(buspred)
    {
     if(!is.null(myBus$seqQTN))
       {
-        KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,!myBus$seqQTN]))
+        KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,-myBus$seqQTN]))
         }else{
-        KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,!seqQTN]))
+        KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,-seqQTN]))
         }
     colnames(KI)=as.character(DP$GD[,1])
     busKI=cbind(as.data.frame(DP$GD[,1]),KI)
@@ -96,7 +96,8 @@ if(buspred)
    }else{
     busKI=DP$KI
    }
-   
+   print(dim(busKI))
+   print(busKI[1:10,1:10])
    colnames(busCV)[1]=c("Taxa")
 
    busGAPIT=GAPIT(
