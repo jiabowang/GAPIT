@@ -1,5 +1,5 @@
 `GAPIT.SS` <-
-function(DP=NULL,IC=NULL,buspred=FALSE){
+function(DP=NULL,IC=NULL,buspred=FALSE,lmpred=TRUE){
 #Object: To Sufficient Statistics (SS) for GWAS and GS
 #Designed by Zhiwu Zhang
 #Writen by Jiabo Wang
@@ -54,18 +54,81 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
  Pred=myBus$Pred
 
  # BUS Prediction with gBLUP
-
+# lmpred=TRUE
 if(!is.null(Pred))buspred=FALSE
 print(myBus$seqQTN)
 if(buspred)
 {  
-   print("Linear Regression to Predict missing phenotype !!")
    X=DP$GD[,-1]
 # print(dim(X))
 # print(dim(IC$myallCV))
 # print(dim(ic_PCA))
+   if(lmpred)
+   {
+   print("Linear Regression to Predict phenotype !!")
+    # colnames(busCV)[1]=c("Taxa")
+    index=as.character(DP$GD[,1])%in%as.character(IC$PCA[,1])
    if(!is.null(IC$myallCV)) 
    {
+     if(!is.null(myBus$seqQTN))
+         {
+          # busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
+          GD1 = as.matrix(X[index,myBus$seqQTN])
+          CV1 = as.matrix(IC$PCA[,-1])
+
+         }else{
+          numMarker=nrow(GWAS)
+          sp=sort(GWAS$P.value)
+          spd=abs(DP$cutOff-sp)
+          index_fdr=grep(min(spd),spd)[1]
+          FDRcutoff=DP$cutOff*index_fdr/numMarker
+          seqQTN=as.numeric(rownames(GWAS[GWAS$P.value<FDRcutoff,]))
+          # busCV=cbind(IC$myallCV,X[,seqQTN])
+          GD1 = as.matrix(X[index,seqQTN])
+          CV1 = as.matrix(IC$PCA[,-1])
+         }
+    Group=1:nrow(IC$myallCV)
+    RefInf=rep(2,nrow(IC$myallCV))
+    RefInf[index]=1
+    ID=1:nrow(IC$myallCV)
+    BLUP=NA
+    PEV=NA
+    BLUE=NA
+    # print(dim(GD1))
+    # print(ic_Y[!is.na(ic_Y[,2]),2])
+    mylm = lm(ic_Y[!is.na(ic_Y[,2]),2] ~CV1+ GD1)
+    # print("!!")
+    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],X))))
+    colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
+    
+   }else{
+     busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
+    CV1=NULL
+    Group=1:nrow(IC$myallCV)
+    RefInf=rep(2,nrow(IC$myallCV))
+    RefInf[index]=1
+    ID=1:nrow(IC$myallCV)
+    BLUP=NA
+    PEV=NA
+    BLUE=NA
+    # print(dim(GD1))
+    # print(ic_Y[!is.na(ic_Y[,2]),2])
+    mylm = lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
+    # print("!!")
+    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],X))))
+    colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
+    
+   }
+    
+    # print(dim(CV1))
+    # print(table(index))
+     print("Linear Regression to Predict phenotype Done !!")
+   
+   }else{
+   print("aBLUP to Predict phenotype !!")
+
+   if(!is.null(IC$myallCV)) 
+    {
      if(!is.null(myBus$seqQTN))
          {
           busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
@@ -79,57 +142,44 @@ if(buspred)
           busCV=cbind(IC$myallCV,X[,seqQTN])
          }
 
-   }else{
+     }else{
      busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
-   }
+    }
+    pv=GWAS$P.value
+    noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
 
-   # if(is.null(DP$KI))
-   # {
-   #  if(!is.null(myBus$seqQTN))
-   #    {
-   #      KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,-myBus$seqQTN]))
-   #      }else{
-   #      KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,-seqQTN]))
-   #      }
-   #  colnames(KI)=as.character(DP$GD[,1])
-   #  busKI=cbind(as.data.frame(DP$GD[,1]),KI)
-   #  colnames(busKI)[1]=c("Taxa")
-   # }else{
-   #  busKI=DP$KI
-   # }
+    if(is.null(DP$KI))
+   {
+    if(!is.null(myBus$seqQTN))
+      {
+        KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,-unique(noneff,myBus$seqQTN)]))
+        }else{
+        KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,-unique(noneff,seqQTN)]))
+        }
+    colnames(KI)=as.character(DP$GD[,1])
+    busKI=cbind(as.data.frame(DP$GD[,1]),KI)
+    colnames(busKI)[1]=c("Taxa")
+   }else{
+    busKI=DP$KI
+   }
    # print(dim(busKI))
    # print(busKI[1:10,1:10])
-   colnames(busCV)[1]=c("Taxa")
+   # print(cor(busCV[,-1]))
+   busGAPIT=GAPIT(
+     Y=ic_Y,
+     K=busKI,
+     CV=busCV,
+     model="gBLUP",
+     file.output=F)
+    Pred=busGAPIT$Pred
+   print("aBLUP to Predict phenotype Done!!")
 
-   # busGAPIT=GAPIT(
-   #   Y=ic_Y,
-   #   K=busKI,
-   #   CV=busCV,
-   #   # PCA.total=3,
-   #   model="gBLUP",
-   #   file.output=F)
-   #  Pred=busGAPIT$Pred
+   }#lmpred
+}#buspred
+ 
+ if(DP$file.output) write.csv(Pred,paste("GAPIT.",DP$kinship.algorithm,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
 
-    CV1 = as.matrix(IC$PCA[,-1])
-    index=as.character(DP$GD[,1])%in%as.character(IC$PCA[,1])
-    # print(dim(CV1))
-    # print(table(index))
-    GD1 = as.matrix(X[index,myBus$seqQTN])
-    Group=1:nrow(IC$myallCV)
-    RefInf=rep(2,nrow(IC$myallCV))
-    RefInf[index]=1
-    ID=1:nrow(IC$myallCV)
-    BLUP=NA
-    PEV=NA
-    BLUE=NA
-    # print(dim(GD1))
-    mylm = lm(ic_Y[!is.na(ic_Y[,2]),2] ~ CV1 + GD1)
-    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],X))))
-    colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-      if(DP$file.output) write.csv(Pred,paste("GAPIT.",DP$kinship.algorithm,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
-   print("Linear Regression to Predict missing phenotype Done !!")
 
-}
  va=myBus$vg
  ve=myBus$ve
  h2=va/(va+ve)

@@ -354,11 +354,24 @@ X <-  X0 #covariate variables such as population structure
 j=1
   if (is.null(Z)) Z=diag(x=1,nrow(K),ncol(K))
   if (group==1)   K=1
-  #print(head(X))
+  # print(head(X))
   # print(length(ys))
   # print(dim(X))
-  # print(dim(K))
+  # print(apply(X,2,var))
   # print(dim(Z))
+  xxt=F
+  while(!xxt)
+    {
+       x.inv <- try(tcrossprod(X %*% solve(crossprod(X)), X), silent = TRUE)
+       if ('try-error' %in% class(x.inv))
+        {
+          X=X[,-ncol(X)]
+        }else{
+          xxt=T}
+     }
+     print("For tcrossprod(X %*% solve(crossprod(X)), X) reduce dim of X to :")
+     print(dim(X))
+  # aa=tcrossprod(X %*% solve(crossprod(X)), X)
    emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
 
    print(paste(order_count, "of",numSetting,"--","Vg=",round(emma_test$Vu,4), "VE=",round(emma_test$Ve,4),"-2LL=",round(-2*emma_test$loglik,2), "  Clustering=",ca,"  Group number=", group ,"  Group kinship=",kt,sep = " "))
@@ -424,7 +437,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   }
 
   # print(head(emma_REMLE$uhat))
-   #print(emma_REMLE$uhat[53:62])
+   my_allX=my_allX[,1:ncol(X)]
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(my_taxa,emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")

@@ -71,7 +71,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     #print(numMarker)
     bonferroniCutOff=-log10(cutOff/numMarker)
     sp=sort(GI.MP[,3])
-    spd=abs(cutOff-sp)
+    spd=abs(cutOff-sp*numMarker/cutOff)
     index_fdr=grep(min(spd),spd)[1]
     FDRcutoff=-log10(cutOff*index_fdr/numMarker)
     #Replace P the -log10 of the P-values

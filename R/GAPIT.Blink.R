@@ -98,7 +98,7 @@
                 if(theLoop==2){
                 bonferroniCutOff=cutOff/nm
                 sp=sort(seqQTN.p)
-                spd=abs(cutOff-sp)
+                spd=abs(cutOff-sp*nm/cutOff)
                 index_fdr=grep(min(spd),spd)[1]
                 FDRcutoff=cutOff*index_fdr/nm
                 index.p=seqQTN.p<(FDRcutoff)
@@ -188,7 +188,7 @@
                 }
             }else{
                 sp=sort(seqQTN.p)
-                spd=abs(cutOff-sp)
+                spd=abs(cutOff-sp*nm/cutOff)
                 index_fdr=grep(min(spd),spd)[1]
                 FDRcutoff=cutOff*index_fdr/nm
                 # index.p=seqQTN.p<(FDRcutoff)

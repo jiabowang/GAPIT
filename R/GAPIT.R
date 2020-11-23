@@ -1,7 +1,7 @@
 `GAPIT` <-
 function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NULL,GK=NULL,testY=NULL,
  group.from=1000000 ,group.to=1000000,group.by=20,DPP=100000, 
- kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden", buspred=FALSE,
+ kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden", buspred=FALSE,lmpred=FALSE,
  bin.from=10000,bin.to=10000,bin.by=10000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
  SNP.P3D=TRUE,SNP.effect="Add",SNP.impute="Middle",PCA.total=0, SNP.fraction = 1, seed = NULL, BINS = 20,SNP.test=TRUE,
  SNP.MAF=0,FDR.Rate = 1, SNP.FDR=1,SNP.permutation=FALSE,SNP.CV=NULL,SNP.robust="GLM",
@@ -201,7 +201,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              DP$model=model
 # print(Para$SNP.test)
              IC=GAPIT.IC(DP=DP)
-             SS=GAPIT.SS(DP=DP,IC=IC,buspred=buspred)
+             SS=GAPIT.SS(DP=DP,IC=IC,buspred=buspred,lmpred=lmpred)
              if(Para$SNP.test&Para$file.output)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
           }#for loop trait
 #print(SNP.test)

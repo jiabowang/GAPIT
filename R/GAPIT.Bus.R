@@ -147,6 +147,7 @@ myFarmCPU=FarmCPU(
         method.sub.final=method.sub.final,method.bin=method.bin,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
         file.output=FALSE
         )
+# print(head(myFarmCPU$GWAS))
 seqQTN=myFarmCPU$seqQTN
 seq_farm=myFarmCPU$seqQTN
 taxa=names(Y)[2]
