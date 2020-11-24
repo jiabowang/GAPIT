@@ -67,15 +67,14 @@ if(buspred)
    {
    print("Linear Regression to Predict phenotype !!")
     # colnames(busCV)[1]=c("Taxa")
-    index=as.character(DP$GD[,1])%in%as.character(IC$PCA[,1])
-   if(!is.null(IC$myallCV)) 
-   {
-     if(!is.null(myBus$seqQTN))
+    # print(length(IC$GT))
+    index=as.character(DP$GD[,1])%in%as.character(ic_Y[,1])
+    # print(cbind(ic_Y,IC$PCA))
+    if(!is.null(myBus$seqQTN))
          {
           # busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
           GD1 = as.matrix(X[index,myBus$seqQTN])
-          CV1 = as.matrix(IC$PCA[,-1])
-
+          GD2 = as.matrix(X[,myBus$seqQTN])
          }else{
           numMarker=nrow(GWAS)
           sp=sort(GWAS$P.value)
@@ -85,20 +84,33 @@ if(buspred)
           seqQTN=as.numeric(rownames(GWAS[GWAS$P.value<FDRcutoff,]))
           # busCV=cbind(IC$myallCV,X[,seqQTN])
           GD1 = as.matrix(X[index,seqQTN])
-          CV1 = as.matrix(IC$PCA[,-1])
+          GD2 = as.matrix(X[,seqQTN])
          }
-    Group=1:nrow(IC$myallCV)
-    RefInf=rep(2,nrow(IC$myallCV))
+   if(!is.null(IC$myallCV)) 
+   {
+    CV1 = as.matrix(IC$PCA[,-1])
+    Group=1:nrow(DP$GD)
+    RefInf=rep(2,nrow(DP$GD))
+    print(table(index))
     RefInf[index]=1
     ID=1:nrow(IC$myallCV)
-    BLUP=NA
-    PEV=NA
-    BLUE=NA
-    # print(dim(GD1))
+    BLUP=rep(NA,nrow(DP$GD))
+    PEV=rep(NA,nrow(DP$GD))
+    BLUE=rep(NA,nrow(DP$GD))
+    print("The dimension of CV in lm model :")
+    print(dim(CV1))
+    print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
-    mylm = lm(ic_Y[!is.na(ic_Y[,2]),2] ~CV1+ GD1)
-    # print("!!")
-    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],X))))
+    mylm = lm(ic_Y[,2] ~cbind(CV1, GD1))
+    print(cor(ic_Y[,2],as.numeric(predict(mylm,as.data.frame(cbind(CV1,GD1))))))
+    # Pred = cbind(as.data.frame(DP$GD[index,1]),as.data.frame(predict(mylm,as.data.frame(cbind(CV1,GD1)))))
+    # colnames(Pred)=c("Taxa","Prediction")
+    # print(mylm)
+    # print(str(mylm))
+    aa=as.numeric(mylm$coefficients[-1]%*%t(as.matrix(cbind(IC$myallCV[,-1],GD2))))
+    # print(length(predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2)))))
+    pred0=cbind(Group,RefInf,ID,BLUP,PEV,BLUE,as.data.frame(aa))
+    Pred = cbind(as.data.frame(DP$GD[,1]),as.matrix(pred0))
     colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
     
    }else{
@@ -115,7 +127,7 @@ if(buspred)
     # print(ic_Y[!is.na(ic_Y[,2]),2])
     mylm = lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
     # print("!!")
-    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],X))))
+    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
     colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
     
    }
@@ -150,18 +162,15 @@ if(buspred)
 
     if(is.null(DP$KI))
    {
-    if(!is.null(myBus$seqQTN))
-      {
-        KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,-unique(noneff,myBus$seqQTN)]))
-        }else{
-        KI= GAPIT.kinship.VanRaden(snps=as.matrix(X[,-unique(noneff,seqQTN)]))
-        }
+    KI= GAPIT.kinship.VanRaden(snps=as.matrix(X))
     colnames(KI)=as.character(DP$GD[,1])
     busKI=cbind(as.data.frame(DP$GD[,1]),KI)
     colnames(busKI)[1]=c("Taxa")
    }else{
     busKI=DP$KI
    }
+   print("The dimension of CV in lm model :")
+   print(dim(busCV))
    # print(dim(busKI))
    # print(busKI[1:10,1:10])
    # print(cor(busCV[,-1]))

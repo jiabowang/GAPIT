@@ -11,7 +11,13 @@ UO=try(t(KWO)%*%solve(KW)%*%UW,silent=TRUE)
 #print(dim(KWO)) #kinship without inference
 #print(dim(KW))  #kinship within inference
 #print(dim(UW))  #BLUP AND PEV of reference
-if(inherits(UO, "try-error")) UO=t(KWO)%*%ginv(KW)%*%UW
+
+if(inherits(UO, "try-error")) 
+{
+write.csv(KW,"KW.csv",quote=F,row.names=F)
+KW=read.csv("KW.csv",head=T)
+UO=t(KWO)%*%ginv(as.matrix(KW))%*%UW
+}
 n=ncol(UW) #get number of columns, add additional for individual name
 
 BLUP=data.frame(as.matrix(GAU[,1:4]))

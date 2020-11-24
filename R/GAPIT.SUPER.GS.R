@@ -441,19 +441,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(my_taxa,emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")
-   # print("@@@@")
-   # print(dim(emma_BLUE))
-   # print(length(ys))
-   # if(nrow(emma_BLUE)==length(ys))
-   # {
-   #  Group=1:length(my_taxa)
-   #  ID=Group
-   #  RefInf=rep(1,length(my_taxa))
-   #  BB=as.data.frame(cbind(my_taxa,Group,RefInf,ID,emma_REMLE$uhat,emma_REMLE$PEVuhat,emma_BLUE[,2]))
-   #  colnames(BB)=c("Taxa","Group","RefInf","ID","BLUP","PEV","emma_BLUE")
-   # # print(head(BB))
-
-   # }else{
+  
    gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
    BB= merge(gs$BLUP, emma_BLUE, by.x = "Taxa", by.y = "Taxa",sort=F)
    # print(head(BB))
