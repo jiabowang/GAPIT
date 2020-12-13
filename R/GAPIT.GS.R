@@ -10,14 +10,20 @@ function(KW,KO,KWO,GAU,UW){
 UO=try(t(KWO)%*%solve(KW)%*%UW,silent=TRUE)
 #print(dim(KWO)) #kinship without inference
 #print(dim(KW))  #kinship within inference
-print(dim(UW))  #BLUP AND PEV of reference
+# print(dim(UW))  #BLUP AND PEV of reference
 
 if(inherits(UO, "try-error")) 
 {
-write.csv(KW,"KW.csv",quote=F,row.names=F)
-KW=read.csv("KW.csv",head=T)
-UO=t(KWO)%*%ginv(as.matrix(KW))%*%UW
-system("remove KW.csv")
+	GTT=try(t(KWO)%*%ginv(as.matrix(KW))%*%UW)
+	if(inherits(GTT,"try-error"))
+	{
+        write.csv(KW,"KW.csv",quote=F,row.names=F)
+        KW=read.csv("KW.csv",head=T)
+        UO=t(KWO)%*%ginv(as.matrix(KW))%*%UW
+        system("rm KW.csv")
+    }else{
+    	UO=GTT
+    }
 }
 n=ncol(UW) #get number of columns, add additional for individual name
 
@@ -29,8 +35,8 @@ UW=UW[which(rownames(UW)==colnames(KW)),] # get phenotype groups order
 ID.W=as.numeric(as.matrix(W_BLUP[,4]))
 n.W=max(ID.W)
 DS.W=diag(n.W)[ID.W,]
-print(dim(DS.W))
-print(dim(UW))
+# print(dim(DS.W))
+# print(dim(UW))
 ind.W=DS.W%*%UW
 
 all.W=cbind(W_BLUP,ind.W)

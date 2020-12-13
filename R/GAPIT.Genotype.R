@@ -416,20 +416,20 @@ Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Before SUPER")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Before SUPER")
 
 #SUPER
-if(!is.null(GP) & kinship.algorithm=="SUPER" & !is.null(bin.size) & !is.null(inclosure.size))
-{
-  mySpecify=GAPIT.Specify(GI=GI,GP=GP,bin.size=bin.size,inclosure.size=inclosure.size)
-  SNP.QTN=mySpecify$index
-  if(!is.null(GD))
-  {
-	  GK=GD[,SNP.QTN]
-    SNPVar=apply(as.matrix(GK),2,var)
-    GK=GK[,SNPVar>0]
-    GK=cbind(as.data.frame(GT),as.data.frame(GK)) #add taxa  
-  } 
-}
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Before creating kinship")
-Memory=GAPIT.Memory(Memory=Memory,Infor="Before creating kinship")
+# if(!is.null(GP) & kinship.algorithm=="SUPER" & !is.null(bin.size) & !is.null(inclosure.size))
+# {
+#   mySpecify=GAPIT.Specify(GI=GI,GP=GP,bin.size=bin.size,inclosure.size=inclosure.size)
+#   SNP.QTN=mySpecify$index
+#   if(!is.null(GD))
+#   {
+# 	  GK=GD[,SNP.QTN]
+#     SNPVar=apply(as.matrix(GK),2,var)
+#     GK=GK[,SNPVar>0]
+#     GK=cbind(as.data.frame(GT),as.data.frame(GK)) #add taxa  
+#   } 
+# }
+# Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Before creating kinship")
+# Memory=GAPIT.Memory(Memory=Memory,Infor="Before creating kinship")
 
 #Create kinship from genotype if not provide
 if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU","Blink","MLMM"))

@@ -51,6 +51,9 @@ print("GAPIT.IC in process...")
      taxa_GD=as.character(GD[,1])
      taxa_comGD=as.character(GD[,1])
      taxa_CV=as.character(CV[,1])
+     # print(length(taxa_GD))
+     # print(length(taxa_CV))
+     # print(length(taxa_Y))
      taxa_comall=intersect(intersect(taxa_GD,taxa_Y),taxa_CV)
      comCV=CV[taxa_CV%in%taxa_comall,]
      comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
