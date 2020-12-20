@@ -67,9 +67,11 @@ SUPER_GS_GAPIT=GAPIT.SUPER.GS(Y=Y,GD=GD,GM=GM,KI=KI,Z=Z,CV=CV,GK=GK,kinship.algo
                       GT=GT,PC=PC,GI=GI,Timmer = Timmer, Memory = Memory,model=model,
                       sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,QC=QC,GTindex=GTindex,LD=LD,file.output=GAPIT3.output,cutOff=cutOff
                         )
+# Compression=as.matrix(SUPER_GS_GAPIT$Compression)
+# opt=
 	print("SUPER_GS_GAPIT FUNCTION DONE")	
 	return (list(Compression=SUPER_GS_GAPIT$Compression,kinship.optimum=SUPER_GS_GAPIT$SUPER_kinship,kinship=SUPER_GS_GAPIT$kinship, PC=SUPER_GS_GAPIT$PC,GWAS=GWAS, 
-    GPS=SUPER_GS_GAPIT$GPS,Pred=SUPER_GS_GAPIT$Pred,Timmer=Timmer,Memory=Memory,SUPER_GD=SUPER_GS_GAPIT$SUPER_GD,GWAS=NULL,QTN=NULL))
+    GPS=SUPER_GS_GAPIT$GPS,Pred=SUPER_GS_GAPIT$Pred,Timmer=Timmer,Memory=Memory,h2=SUPER_GS_GAPIT$h2,SUPER_GD=SUPER_GS_GAPIT$SUPER_GD,GWAS=NULL,QTN=NULL))
 					
 }else{
 #print("@@@@@@@")

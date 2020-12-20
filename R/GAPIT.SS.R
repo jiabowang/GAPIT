@@ -123,6 +123,9 @@ if(buspred)
     BLUP=NA
     PEV=NA
     BLUE=NA
+    print("The dimension of CV in lm model :")
+    print(dim(CV1))
+    print(dim(GD1))
     # print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
     mylm = lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
@@ -283,6 +286,10 @@ bc=gapitMain$effect.cv
 mp=gapitMain$P
 Compression=gapitMain$Compression
 GAPIT.Compression.Visualization(Compression = Compression, name.of.trait = DP$name.of.trait)
+print(list(GWAS=GWAS,Pred=Pred,FDR=NULL,Power=NULL,
+  Power.Alpha=NULL,alpha=NULL,h2=h2,va=va,ve=ve,Compression=Compression,
+  mc=mc,bc=bc,mp=mp,TV=gapitMain$TV,
+  Timmer=Timmer,Memory=Memory))
 return (list(GWAS=GWAS,Pred=Pred,FDR=NULL,Power=NULL,
   Power.Alpha=NULL,alpha=NULL,h2=h2,va=va,ve=ve,Compression=Compression,
   mc=mc,bc=bc,mp=mp,TV=gapitMain$TV,

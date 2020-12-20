@@ -388,12 +388,15 @@ Compression[order_count,6]=emma_test$Ve
    optimum_group=group
    optimum_Clustering=ca
    optimum_groupK=kt
+   optimum_h2=emma_test$Vu/(emma_test$Vu+emma_test$Ve)
 }else{
   if(emma_test_reml<save_remle){
    save_remle=emma_test_reml
    optimum_group=group
    optimum_Clustering=ca
    optimum_groupK=kt
+   optimum_h2=emma_test$Vu/(emma_test$Vu+emma_test$Ve)
+
   }
 }
 }   # kt end
@@ -401,6 +404,8 @@ Compression[order_count,6]=emma_test$Ve
   } # ka end
   } # group end
   print(Compression)
+  # write.csv(Compression,paste("GAPIT.",Compression,".csv",sep=""), row.names = FALSE,col.names = TRUE)
+
  if(optimum_group==1)  
 {
 optimum_group=2
@@ -452,6 +457,6 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   if(file.output) write.csv(all_gs,paste("GAPIT.",model,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
 
   print("GAPIT SUPER GS completed successfully for multiple traits. Results are saved")
-  return (list(GPS=BB,Pred=all_gs,Compression=Compression,kinship=my_allKI,SUPER_kinship=SUPER_myKI,SUPER_GD=SUPER_optimum_GD ,PC=my_allCV,Timmer=Timmer,Memory=Memory,GWAS=NULL ))
+  return (list(GPS=BB,Pred=all_gs,Compression=Compression,kinship=my_allKI,SUPER_kinship=SUPER_myKI,SUPER_GD=SUPER_optimum_GD ,PC=my_allCV,Timmer=Timmer,Memory=Memory,GWAS=NULL,h2=optimum_h2 ))
 
 }
