@@ -10,6 +10,5 @@ Description: More about what it does (maybe more than one line)
 License: GPL (>= 2)
 Depends: R (>= 3.5.0)
 Imports: multtest, gplots,MASS, compiler
-License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
