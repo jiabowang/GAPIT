@@ -767,18 +767,21 @@ if(which.min(as.numeric(Compression[,4]))==which.max(as.numeric(Compression[,5])
 
 
 
-Compression=Compression0
+# Compression=Compression0
 
-print(paste("Compress Optimum: ",ca,kt,group,va, va,ve ,sep = " "))
+print(paste("Compress Optimum: ",ca,kt,group,va,va,ve,sep = " "))
 }else{
 Compression=Compression[order(as.numeric(Compression[,4]),decreasing = FALSE),]  #sort on REML
 
 kt=Compression[1,1]
 ca=Compression[1,2]
 group=Compression[1,3]
-print(paste("Optimum: ",Compression[1,2],Compression[1,1],Compression[1,3],Compression[1,5], Compression[1,6],Compression[1,4] ,sep = " "))
+print(paste("Optimum: ",Compression[1,2],Compression[1,1],Compression[1,3],Compression[1,5],Compression[1,6],Compression[1,4],sep = " "))
 }
 }#end  if(numSetting>1)
+Compression=Compression[order(as.numeric(Compression[,4]),decreasing = FALSE),]
+print(Compression)
+
 
 print("--------------  Sandwich bottom ------------------------") 
 

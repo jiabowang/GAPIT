@@ -403,7 +403,9 @@ Compression[order_count,6]=emma_test$Ve
 
   } # ka end
   } # group end
+  Compression=Compression[order(as.numeric(Compression[,4]),decreasing = FALSE),]
   print(Compression)
+
   # write.csv(Compression,paste("GAPIT.",Compression,".csv",sep=""), row.names = FALSE,col.names = TRUE)
 
  if(optimum_group==1)  
