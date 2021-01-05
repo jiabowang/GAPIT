@@ -1026,7 +1026,8 @@ print("Compression Visualization done")
 if(length(Compression)<1){
   h2.opt= NULL
 }else{
-if(length(Compression)<=6) Compression=t(as.matrix(Compression[which(Compression[,4]!="NULL" | Compression[,4]!="NaN"),]))
+  print(Compression)
+if(length(Compression)<6) Compression=t(as.matrix(Compression[which(Compression[,4]!="NULL" | Compression[,4]!="NaN"),]))
 if(length(Compression)==6) Compression=matrix(Compression,1,6) 
 if(length(Compression)>6) Compression=Compression[which(Compression[,4]!="NULL" | Compression[,4]!="NaN"),]
 Compression.best=Compression[1,] 
