@@ -105,10 +105,15 @@ if(buspred)
     print(cor(ic_Y[,2],as.numeric(predict(mylm,as.data.frame(cbind(CV1,GD1))))))
     # Pred = cbind(as.data.frame(DP$GD[index,1]),as.data.frame(predict(mylm,as.data.frame(cbind(CV1,GD1)))))
     # colnames(Pred)=c("Taxa","Prediction")
-    # print(mylm)
-    # print(str(mylm))
-    aa=as.numeric(mylm$coefficients[-1]%*%t(as.matrix(cbind(IC$myallCV[,-1],GD2))))
-    # print(length(predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2)))))
+    # print(mylm$coefficients)
+    # print(head(cbind(IC$myallCV,GD2))
+    if(var(IC$myallCV[,2])==0)
+      {kk=1:2
+        }else{
+          kk=1
+        }
+    aa=as.numeric(mylm$coefficients[-kk]%*%t(as.matrix(cbind(IC$myallCV[,-kk],GD2))))
+    # print(aa)
     pred0=cbind(Group,RefInf,ID,BLUP,PEV,BLUE,as.data.frame(aa))
     Pred = cbind(as.data.frame(DP$GD[,1]),as.matrix(pred0))
     colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
@@ -130,6 +135,7 @@ if(buspred)
     # print(ic_Y[!is.na(ic_Y[,2]),2])
     mylm = lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
     # print("!!")
+    print(predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
     Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
     colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
     
