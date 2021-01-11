@@ -15,10 +15,15 @@ if(is.null(GD)&is.null(G)&is.null(KI))stop ("GAPIT Says:GAPIT need genotype!!!")
 if(!is.null(GD) & is.null(GM) & (is.null(G)) &SNP.test) stop("GAPIT Says: Genotype data and map files should be in pair")
 if(is.null(GD) & !is.null(GM) & (is.null(G)) &SNP.test) stop("GAPIT Says: Genotype data and map files should be in pair")
 
-if(!is.null(GD)&!is.null(Y)|!is.null(G)&!is.null(Y))
+if(!is.null(GD)&!is.null(Y))
 {
-if (is.null(GD[,1]%in%Y[,1])|is.null(colnames(G)[-c(1:11)]%in%Y[,1]))stop("GAPIT Says: There are no common taxa between genotype and phenotype")
+if (is.null(GD[,1]%in%Y[,1]))stop("GAPIT Says: There are no common taxa between genotype and phenotype")
 }
+if(!is.null(G)&!is.null(Y))
+{
+if (is.null(colnames(G)[-c(1:11)]%in%Y[,1]))stop("GAPIT Says: There are no common taxa between genotype and phenotype")
+}
+
 if (!is.null(Y)) nY=nrow(Y)
 if (!is.null(Y)) ntrait=ncol(Y)-1
 print(paste("There are ",ntrait," traits in phenotype data."))
