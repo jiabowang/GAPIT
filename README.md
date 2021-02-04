@@ -12,7 +12,7 @@ If you use GAPIT and publish your analysis, please report the program version an
 
   
   The citation for GAPIT3 is:
-   Wang J.,Zhang Z., 2018 GAPIT Version 3:An Interactive Analytical Tool for Genomic Association and Prediction. preprint.
+   Wang, J., Zhang, Z., 2020. GAPIT Version 3: Boosting Power and Accuracy for Genomic Association and Prediction. bioRxiv 2020.11.29.403170.
 
   The citation for GAPIT2 is:
    Tang Y., Liu X., Wang J., Li M., Wang Q., et al., 2016 GAPIT Version 2: An Enhanced Integrated Tool for Genomic Association and Prediction. Plant J. 9.
