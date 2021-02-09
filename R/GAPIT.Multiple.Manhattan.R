@@ -252,7 +252,7 @@ for(k in 1:Nenviron)
              }
         }
         #Add a horizontal line for bonferroniCutOff
-        abline(h=bonferroniCutOff,lty=2,untf=T,lwd=3,col="red")
+        abline(h=bonferroniCutOff,lty=2,untf=T,lwd=3,col="forestgreen")
         axis(2, xaxp=c(1,themax,5),cex.axis=1,tick=F)
         if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)
         mtext(side=4,paste(environ_name[k],sep=""),line=3,cex=1)
@@ -424,7 +424,7 @@ for(k in 1:Nenviron)
           #points(interQTN[,2], interQTN[,3], type="p",pch=8, cex=1,lwd=1.5,col="dimgrey")
           }
         #Add a horizontal line for bonferroniCutOff
-        abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="darkgreen")
+        abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
         axis(2, xaxp=c(1,themax,5),cex.axis=1,tick=F)
         if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)
         mtext(side=4,paste(environ_name[k],sep=""),line=3,cex=1)

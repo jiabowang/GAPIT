@@ -534,7 +534,7 @@ print(paste("bin---",bin,"---inc---",inc,sep=""))
   SUPER_GD=SUPER_GD[,SNPVar>0]
   GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
   SUPER_GD=cbind(as.data.frame(GT),as.data.frame(SUPER_GD)) #add taxa
-
+# print(dim(GK))
   #GP=NULL
 }# end of if(is.null(GK)) 
 
@@ -839,6 +839,7 @@ print("---------------Sandwich bottom: reload bins ---------------------------")
 
 #SUPER: Final screening
   GK=GK.save
+  # print(GK)
   myBread=GAPIT.Bread(Y=Y,CV=CV,Z=Z,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.bottom,GTindex=GTindex,LD=LD,file.output=file.output)
   
   print("SUPER saving results...")
