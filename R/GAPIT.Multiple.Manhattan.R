@@ -1,5 +1,5 @@
 `GAPIT.Multiple.Manhattan` <-
-function(model_store,DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,Y=NULL,GM=NULL,interQTN=NULL,plot.style="Oceanic",plot.line=FALSE){
+function(model_store,DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,Y=NULL,GM=NULL,interQTN=NULL,plot.style="Oceanic",plot.line=TRUE){
     #Object: Make a Manhattan Plot
     #Options for plot.type = "Separate_Graph_for_Each_Chromosome" and "Same_Graph_for_Each_Chromosome"
     #Output: A pdf of the Manhattan Plot
@@ -53,7 +53,6 @@ for(i in 1:length(environ_name))
   sig_pos=append(sig_pos,as.numeric(rownames(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),])))
 
 }
-
 #if(length(sig_pos)!=0)sig_pos=sig_pos[!duplicated(sig_pos)]
  if(length(sig_pos[!is.na(sig_pos)])!=0)
  {     x_matrix=as.matrix(table(sig_pos))
@@ -87,9 +86,10 @@ for(i in 1:length(environ_name))
        new_xz=new_xz[new_xz[,2]!="0",]
        new_xz=matrix(new_xz,length(as.vector(new_xz))/4,4)
        #print(new_xz)
-       plot.line=TRUE
+       # plot.line=TRUE
        #print(new_xz)
 }
+
 #print(as.numeric(new_xz[,4]))
 #print(head(result0))
 # print(as.numeric(new_xz[,1]))
@@ -125,7 +125,7 @@ for(k in 1:Nenviron)
     GI.MP <- GI.MP[GI.MP[,3]<=1,]
     #Remove chr 0 and 99
     GI.MP <- GI.MP[GI.MP[,1]!=0,]
-    total_chromo=max(GI.MP[,1])
+    total_chromo=length(unique(GI.MP[,1]))
     # print(dim(GI.MP))
     if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1
     numMarker=nrow(GI.MP)
@@ -294,7 +294,7 @@ for(k in 1:Nenviron)
     GI.MP <- GI.MP[GI.MP[,3]<=1,]
     #Remove chr 0 and 99
     GI.MP <- GI.MP[GI.MP[,1]!=0,]
-    total_chromo=max(GI.MP[,1])
+    total_chromo=length(unique(GI.MP[,1]))
     # print(dim(GI.MP))
     if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1
     numMarker=nrow(GI.MP)
