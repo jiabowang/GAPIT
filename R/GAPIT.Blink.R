@@ -676,8 +676,10 @@
     ww=crossprod(w,w)
     wy=crossprod(w,y)
     yy=crossprod(y,y)
-    wwi=solve(ww)
-    
+    # wwi=solve(ww) Revised by Jiabo on 2021.3.4
+    wwi <- try(solve(ww),silent=TRUE)
+     if(inherits(wwi, "try-error")){
+     wwi <- ginv(ww)
     #Statistics on the reduced model without marker
     rhs=wy
     gc()
