@@ -680,6 +680,7 @@
     wwi <- try(solve(ww),silent=TRUE)
      if(inherits(wwi, "try-error")){
      wwi <- ginv(ww)
+     }
     #Statistics on the reduced model without marker
     rhs=wy
     gc()
