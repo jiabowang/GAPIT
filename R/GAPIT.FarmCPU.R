@@ -457,8 +457,12 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     ww=crossprod(w,w)
     wy=crossprod(w,y)
     yy=crossprod(y,y)
-    wwi=solve(ww)
-    
+    # wwi=solve(ww) Revised by Jiabo on 2021.3.4
+    wwi <- try(solve(ww),silent=TRUE)
+     if(inherits(wwi, "try-error")){
+      # print("!!!!!")
+     wwi <- ginv(ww)
+     }
     print("Prediction")
     print(date())
     
@@ -699,8 +703,12 @@ function(y,w=NULL,GDP,orientation="col",model="A",ncpus=2,myModel=NULL,seqQTN=NU
     ww=crossprod(w,w)
     wy=crossprod(w,y)
     yy=crossprod(y,y)
-    wwi=solve(ww)
-    
+    # wwi=solve(ww) Revised by Jiabo on 2021.3.4
+    wwi <- try(solve(ww),silent=TRUE)
+     if(inherits(wwi, "try-error")){
+      # print("!!!!!")
+     wwi <- ginv(ww)
+     }
     #print("Prediction")
     #print(date())
     
