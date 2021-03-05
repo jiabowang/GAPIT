@@ -46,7 +46,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
  myBus=GAPIT.Bus(Y=ic_Y,CV=ic_PCA,Z=NULL,GK=NULL,KI=ic_KI,GD=ic_GD,GM=ic_GM,GT=IC$GT,
                 method=DP$kinship.algorithm,GTindex=DP$GTindex,LD=DP$LD,opt=DP$opt,
                 bin.size=DP$bin.size,bin.selection=DP$bin.selection,alpha=DP$alpha,WS=DP$WS,
-                cutOff=DP$cutOff,p.threshold=DP$p.threshold,QTN.threshold=DP$QTN.threshold,
+                cutOff=DP$cutOff,p.threshold=DP$p.threshold,QTN.threshold=DP$QTN.threshold,FDRcut=DP$FDRcut,
                 maf.threshold=DP$maf.threshold,method.GLM=DP$method.GLM,method.sub=DP$method.sub,
                 method.sub.final=DP$method.sub.final,method.bin=DP$method.bin,Random.model=DP$Random.model,
 				        DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter,num_regwas=DP$num_regwas )

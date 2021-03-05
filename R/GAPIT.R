@@ -1,7 +1,7 @@
 `GAPIT` <-
 function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NULL,GK=NULL,testY=NULL,
  group.from=1000000 ,group.to=1000000,group.by=20,DPP=100000, 
- kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden", buspred=FALSE,lmpred=FALSE,
+ kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden", buspred=FALSE,lmpred=FALSE,FDRcut=FALSE,
  bin.from=10000,bin.to=10000,bin.by=10000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
  SNP.P3D=TRUE,SNP.effect="Add",SNP.impute="Middle",PCA.total=0, SNP.fraction = 1, seed = NULL, BINS = 20,SNP.test=TRUE,
  SNP.MAF=0,FDR.Rate = 1, SNP.FDR=1,SNP.permutation=FALSE,SNP.CV=NULL,SNP.robust="GLM",
@@ -122,7 +122,7 @@ if(!is.null(Y))
             }
         all.memo=c(all.memo,Para$memo)
 # print(Para$memo)
-GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=DPP,kinship.cluster=kinship.cluster, kinship.group=kinship.group,kinship.algorithm=kinship.algorithm, 
+GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=DPP,kinship.cluster=kinship.cluster, kinship.group=kinship.group,kinship.algorithm=kinship.algorithm, FDRcut=FDRcut,
          bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction = SNP.fraction, seed = seed, BINS = 20,SNP.test=SNP.test,
          SNP.MAF=SNP.MAF,FDR.Rate = FDR.Rate, SNP.FDR=SNP.FDR,SNP.permutation=SNP.permutation,SNP.CV=NULL,SNP.robust="GLM",file.from=file.from, file.to=file.to, file.total=file.total, file.fragment = file.fragment,file.path=file.path, 
          file.G=file.G, file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,ngrid = 100, llim = -10, ulim = 10, esp = 1e-10,Inter.Plot=Inter.Plot,Inter.type=Inter.type,
@@ -151,7 +151,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
         if(m==1)
           {
             DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI0,Z=Z,CV=CV,CV.Inheritance=Para$CV.Inheritance,GP=GP,GK=GK,
-            group.from=Para$group.from ,group.to= Para$group.to,group.by=Para$group.by,DPP= Para$DPP, 
+            group.from=Para$group.from ,group.to= Para$group.to,group.by=Para$group.by,DPP= Para$DPP, FDRcut=Para$FDRcut,
             kinship.cluster=Para$kinship.cluster, kinship.group=Para$kinship.group,kinship.algorithm=Para$ kinship.algorithm, NJtree.group=Para$NJtree.group,NJtree.type=Para$NJtree.type,plot.bin=Para$plot.bin,PCA.col=Para$PCA.col,PCA.3d=Para$PCA.3d,
              sangwich.top=Para$sangwich.top,sangwich.bottom=Para$sangwich.bottom,LD=Para$LD,bin.from= Para$bin.from,bin.to= Para$bin.to,bin.by= Para$bin.by,inclosure.from= Para$inclosure.from,inclosure.to= Para$inclosure.to,inclosure.by= Para$inclosure.by,
              SNP.P3D= Para$SNP.P3D,SNP.effect= Para$SNP.effect,SNP.impute= Para$SNP.impute,PCA.total= Para$PCA.total, SNP.fraction = Para$SNP.fraction, seed = Para$seed, 

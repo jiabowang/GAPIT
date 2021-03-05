@@ -2,7 +2,7 @@
 function(Y=NULL,CV=NULL,Z=NULL,GT=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,
          WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
          method=NULL,delta=NULL,vg=NULL,ve=NULL,LD=0.01,GTindex=NULL,
-         cutOff=0.01,Multi_iter=FASLE,num_regwas=10,Random.model=FALSE,
+         cutOff=0.01,Multi_iter=FASLE,num_regwas=10,Random.model=FALSE,FDRcut=FALSE,
          p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,
          method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",
          DPP=1000000,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
@@ -379,7 +379,7 @@ library(biganalytics) #for FARM-CPU
   #print(head(blink_CV))
   # library(BLINK)
   # source("http://zzlab.net/GAPIT/BLINK.R")
-  myBlink=Blink(Y=blink_Y,GD=blink_GD,GM=blink_GM,CV=blink_CV,maxLoop=10,time.cal=T)
+  myBlink=Blink(Y=blink_Y,GD=blink_GD,GM=blink_GM,CV=blink_CV,maxLoop=10,time.cal=T,FDRcut=FDRcut)
   #print(head(myBlink$GWAS))
   seqQTN=myBlink$seqQTN
   taxa=names(blink_Y)[2]

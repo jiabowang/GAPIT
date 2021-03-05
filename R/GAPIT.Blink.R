@@ -1,4 +1,4 @@
-`Blink` <- function(Y=NULL,QTN.position=NULL,GD=NULL,GM=NULL,CV=NULL,DPP=100000000,kinship.algorithm="FARM-CPU",file.output=TRUE,cutOff=0.01,method.GLM="FarmCPU.LM",Prior=NULL,ncpus=1,maxLoop=10,LD=0.7,threshold.output=.0001,alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),WS=c(1e0,1e3,1e4,1e5,1e6,1e7),GP=NULL
+`Blink` <- function(Y=NULL,QTN.position=NULL,GD=NULL,GM=NULL,CV=NULL,DPP=100000000,kinship.algorithm="FARM-CPU",file.output=TRUE,cutOff=0.01,method.GLM="FarmCPU.LM",Prior=NULL,ncpus=1,maxLoop=10,LD=0.7,threshold.output=.0001,alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),WS=c(1e0,1e3,1e4,1e5,1e6,1e7),GP=NULL,FDRcut=FALSE
 ,maxOut=10,converge=1,iteration.output=FALSE,acceleration=0,threshold=NA,model="A",MAF.calculate=FALSE,plot.style="FarmCPU",p.threshold=NA,maf.threshold=0,bound=FALSE,method.sub="reward",method.sub.final="reward",stepwise=FALSE,BIC.method="naive",LD.wise=FALSE,time.cal=FALSE,Prediction = F){
   # Jiabo modified the Blink GS codes in 2020.9
   print("----------------------Welcome to Blink----------------------")
@@ -101,7 +101,12 @@
                 spd=abs(cutOff-sp*nm/cutOff)
                 index_fdr=grep(min(spd),spd)[1]
                 FDRcutoff=cutOff*index_fdr/nm
-                index.p=seqQTN.p<(FDRcutoff)
+                if(FDRcut)
+                {
+                  index.p=seqQTN.p<(FDRcutoff)
+                  }else{
+                  index.p=seqQTN.p<(bonferroniCutOff)
+                  }
                   if(!is.na(p.threshold)){
                       index.p=seqQTN.p<p.threshold
                   }
@@ -191,8 +196,15 @@
                 spd=abs(cutOff-sp*nm/cutOff)
                 index_fdr=grep(min(spd),spd)[1]
                 FDRcutoff=cutOff*index_fdr/nm
+
+                if(FDRcut)
+                {
+                  index.cutoff=FDRcutoff
+                  }else{
+                  index.cutoff=bonferroniCutOff
+                  }
                 # index.p=seqQTN.p<(FDRcutoff)
-              if(min(myPrior,na.rm=TRUE)>FDRcutoff){
+              if(min(myPrior,na.rm=TRUE)>index.cutoff){
             seqQTN=NULL
                   print("Top snps have little effect, set seqQTN to NULL!")
               }
@@ -601,42 +613,6 @@
   rm(GDneob,Porderb)
   return(seqQTN)
 }
-#
-# `Blink.LDRemove`<-function(GDneo=NULL,LD=NULL,Porder=NULL,bound=FALSE,model="A",orientation=NULL){
-# #`Blink.LDRemovebackup`<-function(GDneo=NULL,LD=NULL,Porder=NULL,bound=FALSE,model="A",orientation=NULL){
-# #Objects: LD remove, especially length(Porder)>10000
-# #Authors: Yao Zhou
-# #Last update: 08/15/2016
-#   seqQTN=NULL
-#   is.done=FALSE
-#   l=1000
-#   lp=length(Porder)
-#   tt=1
-#   n = ncol(GDneo)
-#   n.limit = n/log(n)
-#   while(!is.done){
-#     tt = tt+1
-#     Pordern=Blink.LDRemoveDivided(GDneo=GDneo,LD=LD,Porder=Porder,orientation=orientation,model=model,l=l)
-#     index=Porder %in% Pordern
-#     if(orientation=="col"){
-#       GDneo = GDneo[,index]
-#     }else{
-#       GDneo = GDneo[index,]
-#     }
-#     ls=length(Pordern)
-#     if(ls==lp) lp=l*tt
-#     if(ls<=lp){
-#       is.done=TRUE
-#     }
-#     Porder = Pordern
-#   }
-#   if(length(Porder) > 1){
-#     seqQTN=Blink.LDRemoveBlock(GDneo=GDneo,LD=LD,Porder=Porder,orientation=orientation,model=model)
-#   }else{
-#     seqQTN = Porder
-#   }
-#   return(seqQTN)
-# }
 
 `Blink.LM` <-function(y,w=NULL,GDP,orientation="col"){
     N=length(y) #Total number of taxa, including missing ones
