@@ -76,17 +76,12 @@ for(j in 2:num)
 	blupGAPIT <- GAPIT(
 	Y=myY,
 	KI=myKI,
-	# #group.from=max.groups,
-	# group.from=1,
-	# group.to=max.groups,
 	model="gBLUP",
-	#group.by=10,
-	#PCA.total=3,
 	SNP.test=FALSE,
 	file.output=FALSE
 	)
 
-	blup_prediction=blupGAPIT$GPS
+	blup_prediction=blupGAPIT$Pred
  
 	blue<-blupGAPIT$Pred$BLUE
 	mean_blue<-mean(blue)
@@ -102,9 +97,9 @@ for(j in 2:num)
 
 	inf_all<-cbind(blup_prediction.inf,inf_pred)
 	ref_all<-cbind(blup_prediction.ref,ref_pred)
-
-	inf_Y_all<-merge(y,inf_all,by.x="Taxa",by.y="Taxa")
-	ref_Y_all<-merge(y,ref_all,by.x="Taxa",by.y="Taxa")
+    # print(head(inf_all))
+	inf_Y_all<-merge(y,inf_all,by.x=colnames(y)[1],by.y=colnames(inf_all)[1])
+	ref_Y_all<-merge(y,ref_all,by.x=colnames(y)[1],by.y=colnames(ref_all)[1])
 
 	name.of.trait=noquote(names(Y.raw)[2])
 

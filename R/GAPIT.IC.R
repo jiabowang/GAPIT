@@ -11,31 +11,27 @@ print("GAPIT.IC in process...")
      PC=DP$PC
      CV=DP$CV
      GD=DP$GD
-
      noCV=FALSE
      if(is.null(CV)){
      noCV=TRUE
-     CV=Y[,1:2]
+     if(ncol(GD)==0)
+     {
+       CV=Y[,1:2]
+          }else{
+       CV=GD[,1:2]
+     }
      CV[,2]=1
      colnames(CV)=c("taxa","overall")
      print(paste("There is 0 Covarinces.",sep=""))
-
      }
-
      Y=Y[!is.na(Y[,2]),]
      taxa_Y=as.character(Y[,1])
      # print(head(Y))
      if(DP$PCA.total>0&!is.null(DP$CV))CV=GAPIT.CVMergePC(DP$CV,PC)
      if(DP$PCA.total>0&is.null(DP$CV))CV=PC
-          # print(all.equal(as.character(GD[,1]),as.character(CV[,1])))
-          # print(all.equal(as.character(DP$CV[,1]),as.character(CV[,1])))
-          # print(all.equal(as.character(PC[,1]),as.character(CV[,1])))
-     # print(dim(GD))
-     # print(dim(DP$KI))
      if(ncol(GD)==0&!is.null(DP$KI))
      {
      taxa_KI=as.character(DP$KI[,1])
-     
      taxa_CV=as.character(CV[,1])
      taxa_comall=intersect(intersect(taxa_KI,taxa_Y),taxa_CV)
      # print(length(taxa_comall))
@@ -48,6 +44,7 @@ print("GAPIT.IC in process...")
      comGD=NULL
 
      }else{
+     print("@@@@")
      taxa_GD=as.character(GD[,1])
      taxa_comGD=as.character(GD[,1])
      taxa_CV=as.character(CV[,1])
