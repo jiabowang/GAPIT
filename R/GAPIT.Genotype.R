@@ -304,7 +304,7 @@ GM=GI
 
 chor_taxa=as.character(unique(GM[,2]))
 
-chor_taxa[order(gsub("([A-Z]+)([0-9]+)", "\\1", chor_taxa), as.numeric(gsub("([A-Z]+)([0-9]+)", "\\2", chor_taxa)))]
+chor_taxa=[order(gsub("([A-Z]+)([0-9]+)", "\\1", chor_taxa), as.numeric(gsub("([A-Z]+)([0-9]+)", "\\2", chor_taxa)))]
 chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
 if(!setequal(integer(0),chr_letter))
   {     
