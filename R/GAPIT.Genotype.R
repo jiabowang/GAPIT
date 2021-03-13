@@ -303,8 +303,7 @@ GM=GI
 # modified by Jiabo in 20190927. sorted number of chrom by numeric and charicter
 
 chor_taxa=as.character(unique(GM[,2]))
-
-chor_taxa=chor_taxa[order(gsub("([A-Z]+)([0-9]+)", "\\1", chor_taxa), as.numeric(gsub("([A-Z]+)([0-9]+)", "\\2", chor_taxa)))]
+chor_taxa=chor_taxa[order(as.numeric(as.character(chor_taxa)))]
 chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
 if(!setequal(integer(0),chr_letter))
   {     
@@ -549,6 +548,7 @@ if(PCA.total>0)
 #print("LD section")
 if(!is.null(GLD) &file.output)
   {
+    # print(dim(GLD))
   if(nrow(GLD)>500)
     {
     GLD=GLD[1,]
@@ -563,26 +563,35 @@ if(!is.null(GLD) &file.output)
     hapmapgeno[hapmapgeno=="--"]=NA
     hapmapgeno[hapmapgeno=="++"]=NA
     hapmapgeno[hapmapgeno=="//"]=NA
+    # print(GLD)
     LDdist=as.numeric(as.vector(GLD[,4]))
     LDsnpName=GLD[,1]
     colnames(hapmapgeno)=LDsnpName
+    sigsnp=match(LD.location,LDdist)
 #Prune SNM names
 #LDsnpName=LDsnpName[GAPIT.Pruning(LDdist,DPP=7)]
-    LDsnpName=LDsnpName[c(1,length(LDsnpName))] #keep the first and last snp names only
-#print(hapmapgeno)
+    LDsnpName=LDsnpName[c(sigsnp)] #keep the first and last snp names only
+    # print(LDsnpName)
+    color.rgb <- colorRampPalette(rev(c("snow","red")),space="rgb")
+    
+    # print(color.rgb)
     print("Getting genotype object")
     LDsnp=makeGenotypes(hapmapgeno,sep="",method=as.genotype)   #This need to be converted to genotype object
     print("Caling LDheatmap...")
-    pdf(paste("GAPIT.LD.chromosom",LD.chromosome,"(",round(max(0,LD.location-LD.range)/1000000),"_",round((LD.location+LD.range)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
 #pdf(paste("GAPIT.LD.pdf",sep=""), width = 12, height = 12)
+    pdf(paste("GAPIT.LD.chromosom",LD.chromosome,"(",round(max(0,LD.location-LD.range)/1000000),"_",round((LD.location+LD.range)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
     par(mar = c(25,25,25,25))
+
     MyHeatmap <- try(LDheatmap(LDsnp, LDdist, LDmeasure="r", add.map=TRUE,
-    SNP.name=LDsnpName,color=rev(cm.colors(20)), name="myLDgrob", add.key=TRUE,geneMapLabelY=0.1) )
+    SNP.name=LDsnpName,color=color.rgb(20), name="myLDgrob", add.key=TRUE,geneMapLabelY=0.1) )  
     if(!inherits(MyHeatmap, "try-error")) 
       {
   #Modify the plot
+      library(grid)
+      # LDheatmap.highlight(MyHeatmap, i = sigsnp, j=sigsnp+1, col = "red")
+      grid.edit(gPath("myLDgrob","heatMap","heatmap"),gp=gpar(col="white",lwd=8))
       grid.edit(gPath("myLDgrob", "Key", "title"), gp=gpar(cex=.5, col="blue"))  #edit key title size and color
-      grid.edit(gPath("myLDgrob", "geneMap", "title"), gp=gpar(just=c("center","bottom"), cex=0.8, col="black")) #Edit gene map title
+      grid.edit(gPath("myLDgrob", "heatMap", "title"), gp=gpar(just=c("center","bottom"), cex=0.8, col="black")) #Edit gene map title
       grid.edit(gPath("myLDgrob", "geneMap","SNPnames"), gp = gpar(cex=0.3,col="black")) #Edit SNP name
       }else{
       print("Warning: error in converting genotype. No LD plot!")

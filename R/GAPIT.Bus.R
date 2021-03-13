@@ -2,7 +2,7 @@
 function(Y=NULL,CV=NULL,Z=NULL,GT=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,
          WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
          method=NULL,delta=NULL,vg=NULL,ve=NULL,LD=0.01,GTindex=NULL,
-         cutOff=0.01,Multi_iter=FASLE,num_regwas=10,Random.model=FALSE,FDRcut=FALSE,
+         cutOff=0.01,Multi_iter=FALSE,num_regwas=10,Random.model=FALSE,FDRcut=FALSE,
          p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,
          method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",
          DPP=1000000,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
@@ -164,24 +164,26 @@ maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
 GWAS$maf=maf
 #print(head(GWAS))
 GWAS[is.na(GWAS[,4]),4]=1
-
+GWAS2=GWAS
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 sig_pass=TRUE
 if(nrow(sig)==0)sig_pass=FALSE
-
+# print(Multi_iter&sig_pass)
+# print(Multi_iter)
+# print(sig_pass)
 if(Multi_iter&sig_pass)
 {
 
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 sig=sig[!is.na(sig[,4]),]
-sig_position=as.numeric(as.matrix(sig[,1:3])[,2])*10^10+as.numeric(as.matrix(sig[,1:3])[,3])
+sig_position=as.numeric(as.matrix(sig[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(sig[,3]))
 sig=sig[order(sig_position),]
 sig_order=as.numeric(rownames(sig))
 #if(setequal(sig_order,numeric(0))) break
 
 n=nrow(sig)
-if(length(sig_order)!=1){
-  diff_order=abs(sig_order[-length(sig_order)]-sig_order[-1])
+if(n!=1){
+  diff_order=abs(sig_order[-n]-sig_order[-1])
 
   diff_index=diff_order<num_regwas
 
@@ -238,18 +240,20 @@ if(n!=num_bins)
     }
     # Next code can control with or without core marker in seconde model
     aim_area[aim_order]=FALSE  # without
+    # print(length(seq_farm))
+    # print(seq_farm%in%aim_order)
     if(!is.null(farmcpuCV))
     {
-      secondCV=cbind(farmcpuCV,X[seq_farm[!seq_farm%in%aim_order]])
+      secondCV=cbind(farmcpuCV,X[,seq_farm[!seq_farm%in%aim_order]])
     }else{
-      secondCV=cbind(GD[,1],X[seq_farm[!seq_farm%in%aim_order]])
-
+      secondCV=cbind(GD[,1],X[,seq_farm[!seq_farm%in%aim_order]])
     }
+    # print(dim(secondCV))
     aim_area=aim_area[1:(nrow(GWAS))]
     #if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
         # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
-        
+        secondCV=NULL
         secondGD=GD[,c(TRUE,aim_area)]
         secondGM=GM[aim_area,]
         print("Now that is multiple iteration for new farmcpu !!!")
@@ -263,6 +267,8 @@ if(n!=num_bins)
         Second_GWAS= myGAPIT_Second$GWAS [,1:4]
         Second_GWAS[is.na(Second_GWAS[,4]),4]=1
         orignal_GWAS=GWAS[aim_area,]
+        # write.csv(cbind(orignal_GWAS,Second_GWAS),paste("TEST_",i,".csv",sep=""),quote=F)
+
         GWAS_index=match(Second_GWAS[,1],GWAS[,1])
         #test_GWAS=GWAS
         GWAS[GWAS_index,4]=Second_GWAS[,4]
@@ -274,7 +280,6 @@ GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
 nobs=ns
-
 # print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
 #print(head(GWAS))
@@ -399,7 +404,8 @@ GWAS[is.na(GWAS[,4]),4]=1
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 sig_pass=TRUE
 if(nrow(sig)==0)sig_pass=FALSE
-
+# print("!!!!")
+# print(Multi_iter&sig_pass)
 if(Multi_iter&sig_pass)
 {
 
@@ -469,9 +475,9 @@ if(n!=num_bins)
     }
     # Next code can control with or without core marker in seconde model
     aim_area[aim_order]=FALSE  # without
-    if(!is.null(farmcpuCV))
+    if(!is.null(blink_CV))
     {
-      secondCV=cbind(farmcpuCV,X[seqQTN[!seqQTN%in%aim_order]])
+      secondCV=cbind(blink_CV,X[seqQTN[!seqQTN%in%aim_order]])
     }else{
       secondCV=cbind(GD[,1],X[seqQTN[!seqQTN%in%aim_order]])
 
