@@ -135,8 +135,10 @@ for(k in 1:Nenviron)
     y.lim <- ceiling(max(GI.MP[,3]))
     
     chm.to.analyze <- unique(GI.MP[,1])
-    chm.to.analyze=chm.to.analyze[order(chm.to.analyze)]
+    # print(chm.to.analyze)
+    # chm.to.analyze=chm.to.analyze[order(chm.to.analyze)]
     nchr=length(chm.to.analyze)
+    # print(chm.to.analyze)
     GI.MP[,6]=1:(nrow(GI.MP))
     MP_store=GI.MP
         index_GI=MP_store[,3]>=0
@@ -252,7 +254,7 @@ for(k in 1:Nenviron)
              }
         }
         #Add a horizontal line for bonferroniCutOff
-        abline(h=bonferroniCutOff,lty=2,untf=T,lwd=3,col="forestgreen")
+        abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
         axis(2, xaxp=c(1,themax,5),cex.axis=1,tick=F)
         if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)
         mtext(side=4,paste(environ_name[k],sep=""),line=3,cex=1)
@@ -304,7 +306,7 @@ for(k in 1:Nenviron)
     y.lim <- ceiling(max(GI.MP[,3]))
     
     chm.to.analyze <- unique(GI.MP[,1])
-    chm.to.analyze=chm.to.analyze[order(chm.to.analyze)]
+    # chm.to.analyze=chm.to.analyze[order(chm.to.analyze)]
     nchr=length(chm.to.analyze)
     GI.MP[,6]=1:(nrow(GI.MP))
     MP_store=GI.MP
@@ -400,20 +402,14 @@ for(k in 1:Nenviron)
         #plot.color=rep(c( '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(ncolor/5))
 
             plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),
-            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=wd,cex=1.8,cex.main=2)
+            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=0.5,cex=0.7,cex.main=2)
             mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
-        #Label QTN positions
-        #print(head(QTN))
-        #print(head(interQTN))
-          
-        
-        #}
         if(plot.line){
           #print(x)
           #print(as.numeric(new_xz[,2]))
           # if(!is.null(nrow(new_xz)))  {abline(v=as.numeric(new_xz[,4]),col=plot.color[as.numeric(new_xz[,3])],lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
-          if(!is.null(nrow(new_xz)))  {abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
-             }else{abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
+          if(!is.null(nrow(new_xz)))  {abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=2)
+             }else{abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=2)
              }
         }
         if(!simulation){abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{

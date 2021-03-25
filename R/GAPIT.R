@@ -53,6 +53,21 @@ if(!is.null(Y))
         if(toupper(model)=="GBLUP") model="gBLUP"
         if(toupper(model)=="CBLUP") model="cBLUP"
         if(toupper(model)=="SBLUP") model="sBLUP"
+        if(toupper(model)=="FARMCPU2") 
+        {model="FarmCPU2"
+         # Multi_iter=TRUE
+         # memo=paste(memo,"_Back",sep="")
+        }
+        if(toupper(model)=="BLINK2") 
+        {model="Blink2"
+         # Multi_iter=TRUE
+         # memo=paste(memo,"_Back",sep="")
+        }
+        if(toupper(model)=="MLMM2") 
+        {model="MLMM2"
+         # Multi_iter=TRUE
+         # memo=paste(memo,"_Back",sep="")
+        }
 
         if(group.from<nrow(Y)) model="CMLM"
   # }  
@@ -111,6 +126,15 @@ if(!is.null(Y))
         if(model=="FarmCPU")Para$kinship.algorithm="FarmCPU"
         if(model=="MLMM")Para$kinship.algorithm="MLMM"
         if(model=="Blink")Para$kinship.algorithm="Blink"
+        if(model=="FarmCPU2")
+        {Para$kinship.algorithm="FarmCPU"
+         Para$Multi_iter=TRUE}
+        if(model=="MLMM2")
+        {Para$kinship.algorithm="MLMM"
+        Para$Multi_iter=TRUE}
+        if(model=="Blink2")
+        {Para$kinship.algorithm="Blink"
+        Para$Multi_iter=TRUE}
         if(model=="BlinkC")Para$kinship.algorithm="BlinkC"
         if(is.null(memo))
             {
@@ -181,6 +205,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              DP$bin.by= Para$bin.by
              DP$inclosure.from= Para$inclosure.from
              DP$inclosure.to= Para$inclosure.toDP$inclosure.by= Para$inclosure.by
+             DP$Multi_iter=Para$Multi_iter
           }
 
         for (trait in 2: ncol(Y))  

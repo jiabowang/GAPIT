@@ -150,6 +150,7 @@ myFarmCPU=FarmCPU(
 # print(head(myFarmCPU$GWAS))
 seqQTN=myFarmCPU$seqQTN
 seq_farm=myFarmCPU$seqQTN
+# print(length(seq_farm))
 taxa=names(Y)[2]
 #print(taxa)
 GWAS=myFarmCPU$GWAS
@@ -184,9 +185,7 @@ sig_order=as.numeric(rownames(sig))
 n=nrow(sig)
 if(n!=1){
   diff_order=abs(sig_order[-n]-sig_order[-1])
-
   diff_index=diff_order<num_regwas
-
   count=0
   diff_index2=count
   for(i in 1:length(diff_index))
@@ -203,6 +202,7 @@ sig_bins=rle(diff_index2)$lengths
 num_bins=length(sig_bins)
 
 # sig_diff_index=sig_diff<windowsize
+# print(sig_bins)
 #GWAS0=GWAS
 #####################
 print("The number of significant markers is")
@@ -224,37 +224,42 @@ if(n!=num_bins)
        j=(sum(sig_bins[1:(i-1)])+1):sum(sig_bins[1:i])
       }
     aim_marker=sig[j,]
-    #print(aim_marker)
-    aim_order=as.numeric(rownames(aim_marker))
+    # print(aim_marker)
+    aim_order=match(as.character(aim_marker[,1]),as.character(GM[,1]))
     aim_area=rep(FALSE,(nrow(GWAS)))
-    # print(head(sig))
-    # print(aim_order)
+    # print(nrow(GWAS))
+    
 
     #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
     if(min(aim_order)<num_regwas)
     {
       aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
-
     }else{
       aim_area[c((min(aim_order)-num_regwas):(max(aim_order)+num_regwas))]=TRUE
     }
     # Next code can control with or without core marker in seconde model
     aim_area[aim_order]=FALSE  # without
+    # print(table(aim_area))
     # print(length(seq_farm))
-    # print(seq_farm%in%aim_order)
+    # print(seq_farm)
+    # print(seq_farm[!seq_farm%in%aim_order])
     if(!is.null(farmcpuCV))
     {
       secondCV=cbind(farmcpuCV,X[,seq_farm[!seq_farm%in%aim_order]])
     }else{
       secondCV=cbind(GD[,1],X[,seq_farm[!seq_farm%in%aim_order]])
+      # secondCV=cbind(GD[,1],X[,aim_order])
+
     }
-    # print(dim(secondCV))
-    aim_area=aim_area[1:(nrow(GWAS))]
-    #if(setequal(aim_area,logical(0))) next
+    # print(table(aim_area))
+    # print(dim(GD))
+    # aim_area=aim_area[1:(nrow(GWAS))]
+    # if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
         # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
         secondCV=NULL
         secondGD=GD[,c(TRUE,aim_area)]
+        # print(dim(secondGD))
         secondGM=GM[aim_area,]
         print("Now that is multiple iteration for new farmcpu !!!")
         myGAPIT_Second <- FarmCPU(
@@ -267,11 +272,17 @@ if(n!=num_bins)
         Second_GWAS= myGAPIT_Second$GWAS [,1:4]
         Second_GWAS[is.na(Second_GWAS[,4]),4]=1
         orignal_GWAS=GWAS[aim_area,]
-        # write.csv(cbind(orignal_GWAS,Second_GWAS),paste("TEST_",i,".csv",sep=""),quote=F)
+        write.csv(cbind(orignal_GWAS,Second_GWAS),paste("TEST_",i,".csv",sep=""),quote=F)
 
-        GWAS_index=match(Second_GWAS[,1],GWAS[,1])
+        # GWAS_index=match(Second_GWAS[,1],GWAS[,1])
         #test_GWAS=GWAS
-        GWAS[GWAS_index,4]=Second_GWAS[,4]
+        for(kk in 1:nrow(Second_GWAS))
+        {
+          GWAS_index=match(as.character(Second_GWAS[kk,1]),as.character(GWAS[,1]))
+          GWAS[GWAS_index,4]=Second_GWAS[kk,4]
+
+        }
+        # GWAS[GWAS_index,4]=Second_GWAS[,4]
    }
  }
 }
