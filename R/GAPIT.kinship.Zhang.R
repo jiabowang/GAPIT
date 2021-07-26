@@ -2,8 +2,8 @@
   function(snps,hasInbred=TRUE) {
     # Object: To calculate ZHANG (Zones Harbored Adjustments of Negligent Genetic) relationship
     # Authors: Zhwiu Zhang
-    # Last update: october 25, 2014 
-    ############################################################################################## 
+    # Last update: october 25, 2014
+    ##############################################################################################
     print("Calculating ZHANG relationship defined by Zhiwu Zhang...")
     #Remove invariants
     fa=colSums(snps)/(2*nrow(snps))
@@ -17,13 +17,13 @@
     
     nSNP=ncol(snps)
     nInd=nrow(snps)
-    n=nInd 
+    n=nInd
     snpMean= apply(snps,2,mean)   #get mean for each snp
     print("substracting mean...")
     snps=t(snps)-snpMean    #operation on matrix and vector goes in direction of column
     print("Getting X'X...")
     #K=tcrossprod((snps), (snps))
-    K=crossprod((snps), (snps)) 
+    K=crossprod((snps), (snps))
     if(is.na(K[1,1])) stop ("GAPIT says: Missing data is not allowed for numerical genotype data")
     
     print("Adjusting...")
@@ -60,4 +60,3 @@
     return(K)
   }
 #=============================================================================================
-
