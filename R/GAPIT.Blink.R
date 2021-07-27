@@ -57,14 +57,10 @@
     seqTaxa=which(!is.na(Y[,trait]))
     Y1=Y[seqTaxa,]
     if(!is.null(CV)){
-      if(ncol(CV)==1){
-        CV1=CV[seqTaxa]
-      }else{
-        CV1=CV[seqTaxa,]
-      }
-    }else{
-      CV1=NULL
-    }
+        CV1=CV[seqTaxa,] #Thanks for jloat's suggestion in Jul 23 2021
+        }else{
+        CV1=NULL
+        }
     if(orientation=="col"){
             if(is.big.matrix(GD)){
                 GD1=deepcopy(GD,rows=seqTaxa,cols=index)
@@ -223,8 +219,8 @@
                 GWAS[,4][which(GWAS[,4]>1)]=1
                 colnames(GWAS)=c(colnames(GM),"P.value","maf","nobs","Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP","FDR_Adjusted_P-values")
                 Vp=var(Y1[,2],na.rm=TRUE)
-                if(file.output) GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
-                    myPower=GAPIT.Power(WS=WS, alpha=alpha, maxOut=maxOut,seqQTN=QTN.position,GM=GM,GWAS=GWAS,MaxBP=1e10)
+                # if(file.output) GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
+                    # myPower=GAPIT.Power(WS=WS, alpha=alpha, maxOut=maxOut,seqQTN=QTN.position,GM=GM,GWAS=GWAS,MaxBP=1e10)
             }
               break
       }
@@ -285,13 +281,13 @@
       GWAS=cbind(GM[MAF.index,],P,MAF,NA,NA,NA,NA)
       colnames(GWAS)=c(colnames(GM),"P.value","maf","nobs","Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP","FDR_Adjusted_P-values")
       Vp=var(Y1[,2],na.rm=TRUE)
-      if(file.output){
-        if(theLoop==1&&is.null(CV)){
-          GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
-        }else{
-          GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
-        }
-      }# end of file.out
+      # if(file.output){
+      #   if(theLoop==1&&is.null(CV)){
+      #     GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
+      #   }else{
+      #     GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
+      #   }
+      # }# end of file.out
     } #end of theLoop
     PEV=NULL
     if(Prediction){
