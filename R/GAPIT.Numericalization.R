@@ -77,7 +77,6 @@ if(Major.allele.zero){
       count.temp <- count.temp[order(count.temp[,1], decreasing = TRUE),]
       if(len==3)order =  c(count.temp[,2],3)else order = count.temp[,2]
     }
-
     #Two bit: Make sure that the SNP with the major allele is on the top, and the SNP with the minor allele is on the third position
     if(bit==2){ 
       count.temp = cbind(count, seq(1:len))
@@ -87,7 +86,9 @@ if(Major.allele.zero){
     }
 
     count = count[order]
+    # print(count)
     lev = lev[order]
+    # print(lev)
 
   }   #End  if(len<=1 | len> 3)
 } #End  if(Major.allele.zero)
@@ -105,17 +106,17 @@ if(bit==1 & len==3){
 #print(count)
 position=order(count)
 
-#Jiabo creat this code to convert AT TT to 1 and 2.2018.5.29
+#Jiabo creat this code to convert AT TA to 1 and 2.2018.5.29
 
-lev1=lev
-if(bit==2&len==3) 
-{
-lev1[1]=lev[count==sort(count)[1]]
-lev1[2]=lev[count==sort(count)[2]]
-lev1[3]=lev[count==sort(count)[3]]
-position=c(1:3)
-lev=lev1
-}
+# lev1=lev
+# if(bit==2&len==3) 
+# {
+# lev1[1]=lev[count==sort(count)[1]]
+# lev1[2]=lev[count==sort(count)[2]]
+# lev1[3]=lev[count==sort(count)[3]]
+# position=c(1:3)
+# lev=lev1
+# }
 #print(lev)
 #print(position)
 #print(inter)

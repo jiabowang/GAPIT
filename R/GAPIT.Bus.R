@@ -254,10 +254,10 @@ if(n!=num_bins)
     # print(table(aim_area))
     # print(dim(GD))
     # aim_area=aim_area[1:(nrow(GWAS))]
-    # if(setequal(aim_area,logical(0))) next
+    if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
         # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
-        secondCV=NULL
+        # secondCV=NULL
         secondGD=GD[,c(TRUE,aim_area)]
         # print(dim(secondGD))
         secondGM=GM[aim_area,]
@@ -272,7 +272,7 @@ if(n!=num_bins)
         Second_GWAS= myGAPIT_Second$GWAS [,1:4]
         Second_GWAS[is.na(Second_GWAS[,4]),4]=1
         orignal_GWAS=GWAS[aim_area,]
-        write.csv(cbind(orignal_GWAS,Second_GWAS),paste("TEST_",i,".csv",sep=""),quote=F)
+        # write.csv(cbind(orignal_GWAS,Second_GWAS),paste("TEST_",i,".csv",sep=""),quote=F)
 
         # GWAS_index=match(Second_GWAS[,1],GWAS[,1])
         #test_GWAS=GWAS
@@ -317,7 +317,7 @@ if(method=="BlinkC")
   print("BlinkC will be started !!")
   colnames(GD)[-1]=as.character(GM[,1])
 
-# blink_GD=t(GD[,-1])
+blink_GD=t(GD[,-1])
 blink_GM=GM
 blink_Y=Y
 blink_Y[is.na(blink_Y)]="NaN"
@@ -390,13 +390,15 @@ library(biganalytics) #for FARM-CPU
   blink_GM=GM
   blink_Y=Y
   blink_CV=NULL
-  if(!is.null(CV))blink_CV=CV[,-1]
+  if(!is.null(CV))blink_CV=CV[,-1,drop=FALSE] #Thanks for jloat's suggestion in Jul 23 2021
 
   #print(head(blink_CV))
   # library(BLINK)
   # source("http://zzlab.net/GAPIT/BLINK.R")
-  myBlink=Blink(Y=blink_Y,GD=blink_GD,GM=blink_GM,CV=blink_CV,maxLoop=10,time.cal=T,FDRcut=FDRcut)
-  #print(head(myBlink$GWAS))
+  totaltaxa=cbind(blink_Y[,1],GD[,1])
+  # print(totaltaxa)
+  myBlink=Blink(Y=blink_Y,GD=blink_GD,GM=blink_GM,CV=blink_CV,maxLoop=10,cutOff=cutOff,time.cal=T,FDRcut=FDRcut)
+  # print(head(myBlink$GWAS))
   seqQTN=myBlink$seqQTN
   taxa=names(blink_Y)[2]
   GWAS=myBlink$GWAS[,1:4]

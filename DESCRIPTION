@@ -8,7 +8,7 @@ Authors@R: c(
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: GPL (>= 2)
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.0.0)
 Imports: multtest, gplots,MASS, compiler
 Encoding: UTF-8
 LazyData: true

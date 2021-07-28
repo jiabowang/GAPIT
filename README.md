@@ -79,11 +79,11 @@ Function Loading
 -------
   Now GAPIT can load library by only one funciton. 
       
-    source("http://www.zzlab.net/GAPIT/GAPIT.library.R")
+    source("http://zzlab.net/GAPIT/GAPIT.library.R")
   
   After loading library, we need to source GAPIT function.
   
-    source("http://www.zzlab.net/GAPIT/gapit_functions.txt")
+    source("http://zzlab.net/GAPIT/gapit_functions.txt")
   
   Or you can load GAPIT from github with devtools.
   
