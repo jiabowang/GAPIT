@@ -390,7 +390,7 @@ library(biganalytics) #for FARM-CPU
   blink_GM=GM
   blink_Y=Y
   blink_CV=NULL
-  if(!is.null(CV))blink_CV=CV[,-1]
+  if(!is.null(CV))blink_CV=CV[,-1,drop=FALSE] #Thanks for jloat's suggestion in Jul 23 2021
 
   #print(head(blink_CV))
   # library(BLINK)

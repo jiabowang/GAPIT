@@ -12,3 +12,6 @@ Depends: R (>= 4.0.0)
 Imports: multtest, gplots,MASS, compiler
 Encoding: UTF-8
 LazyData: true
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

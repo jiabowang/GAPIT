@@ -55,17 +55,17 @@ if(!is.null(Y))
         if(toupper(model)=="SBLUP") model="sBLUP"
         if(toupper(model)=="FARMCPU2") 
         {model="FarmCPU2"
-         # Multi_iter=TRUE
+         Multi_iter=TRUE
          # memo=paste(memo,"_Back",sep="")
         }
         if(toupper(model)=="BLINK2") 
         {model="Blink2"
-         # Multi_iter=TRUE
+         Multi_iter=TRUE
          # memo=paste(memo,"_Back",sep="")
         }
         if(toupper(model)=="MLMM2") 
         {model="MLMM2"
-         # Multi_iter=TRUE
+         Multi_iter=TRUE
          # memo=paste(memo,"_Back",sep="")
         }
 
@@ -88,18 +88,21 @@ if(!is.null(Y))
             Para$group.from=1
             Para$group.to=1
             Para$group.by=group.by
+            Para$kinship.algorithm="VanRaden"
           }
         if(model=="MLM")
           {
             Para$group.from=1000000
             Para$group.to=1000000
             Para$group.by=group.by
+            Para$kinship.algorithm="VanRaden"
           }
         if(model=="CMLM")
           {
             if(group.from>=group.to)Para$group.from=1
             Para$group.to=group.to
             Para$group.by=group.by
+            Para$kinship.algorithm="VanRaden"
 #if(Para$group.from==Para$group.to)Para$group.from=10
             print(group.from)
             print(group.to)
@@ -122,6 +125,7 @@ if(!is.null(Y))
             if(is.null(Para$sangwich.top))Para$sangwich.top="MLM"
             if(!is.null(sangwich.bottom)&is.null(Para$sangwich.bottom))Para$sangwich.bottom=sangwich.bottom  
             if(is.null(Para$sangwich.bottom))Para$sangwich.bottom="SUPER"
+            Para$kinship.algorithm="VanRaden"
           }
         if(model=="FarmCPU")Para$kinship.algorithm="FarmCPU"
         if(model=="MLMM")Para$kinship.algorithm="MLMM"
@@ -194,7 +198,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              iteration.method= Para$iteration.method,PCA.View.output=Para$PCA.View.output, 
              output.hapmap = Para$output.hapmap, file.output= Para$file.output,Geno.View.output=Para$Geno.View.output,plot.style=Para$plot.style,SUPER_GD= Para$SUPER_GD,SUPER_GS= Para$SUPER_GS,CG=Para$CG,model=model)
           }else{ 
-             DP$kinship.algorithm=Para$ kinship.algorithm
+             DP$kinship.algorithm=Para$kinship.algorithm
              DP$group.from=Para$group.from
              DP$group.to=Para$group.to
              DP$group.by=Para$group.by
@@ -216,7 +220,12 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              print(paste("Processing trait: ",traitname,sep=""))
              if(!is.null(Para$memo)) traitname=paste(Para$memo,".",traitname,sep="")
              if(!is.null(Y) & Para$file.output)ViewPhenotype<-GAPIT.Phenotype.View(myY=Y[,c(1,trait)],traitname=traitname,memo=Para$memo)
-             # print(dim(KI0))
+             if(!Para$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC")&is.null(DP$KI))
+             {
+                myKI_test=GAPIT.kinship.VanRaden(snps=as.matrix(DP$GD[,-1]))     #  build kinship
+                colnames(myKI_test)=as.character(DP$GD[,1])
+                KI0=cbind(as.character(DP$GD[,1]),as.data.frame(myKI_test))
+             }
              if(!is.null(KI0))DP$KI=KI0 
              Judge=GAPIT.Judge(Y=Y[,c(1,trait)],G=DP$G,GD=DP$GD,KI=DP$KI,GM=DP$GM,group.to=DP$group.to,group.from=DP$group.from,sangwich.top=DP$sangwich.top,sangwich.bottom=DP$sangwich.bottom,kinship.algorithm=DP$kinship.algorithm,PCA.total=DP$PCA.total,model=DP$model,SNP.test=DP$SNP.test)
              DP$group.from=Judge$group.from
