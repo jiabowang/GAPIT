@@ -179,7 +179,7 @@ if(QC)
 {
   qc <- GAPIT.QC(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
   GTindex=qc$GTindex
-  Y=qc$Y
+  #Y=qc$Y # here make twice qc and chaos with numeric taxa, Thanks for Dennis. 20210913
   KI=qc$KI
   CV=qc$CV
   Z=qc$Z
