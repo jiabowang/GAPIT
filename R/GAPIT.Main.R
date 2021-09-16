@@ -170,26 +170,27 @@ colnames(CV)=c("taxa","overall")
 }
 
 #Remove duplicat and integragation of data
-print("QC is in process...")
+# print("QC is in process...")
 
 CVI <- CV
 
 # print(dim(Z))
-if(QC)
-{
-  qc <- GAPIT.QC(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
-  GTindex=qc$GTindex
-  #Y=qc$Y # here make twice qc and chaos with numeric taxa, Thanks for Dennis. 20210913
-  KI=qc$KI
-  CV=qc$CV
-  Z=qc$Z
-  GK=qc$GK
-  if(noCV)CVI=qc$CV #this part will make GS without CV not present all prediction
-  my_taxa=as.character(KI[,1])
-}
-#print(GTindex)
+# if(QC)
+# {
+#   qc <- GAPIT.QC(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
+#   GTindex=qc$GTindex
+#   #Y=qc$Y # here make twice qc and chaos with numeric taxa, Thanks for Dennis. 20210913
+#   KI=qc$KI
+#   CV=qc$CV
+#   Z=qc$Z
+#   GK=qc$GK
+#   if(noCV)CVI=qc$CV #this part will make GS without CV not present all prediction
+#   my_taxa=as.character(KI[,1])
+# }
+GTindex=match(as.character(Y[,1]),as.character(KI[,1]))
+my_taxa=as.character(KI[,1])
+CV=CV[as.character(CV[,1])%in%as.character(Y[,1]),]
 
-#print(dim(KI))
 #Output phenotype
 colnames(Y)=c("Taxa",name.of.trait)
 if(file.output)
