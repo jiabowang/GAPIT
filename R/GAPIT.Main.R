@@ -114,7 +114,7 @@ if(is.null(GD) & is.null(GT)) {
 }
 
 if(is.null(GT)) {
-  GT=as.character(Y[,1])
+  GT=as.character(GD[,1])
 }
 #print("@@@@@@@@")
 #print(GD)
@@ -170,26 +170,32 @@ colnames(CV)=c("taxa","overall")
 }
 
 #Remove duplicat and integragation of data
-# print("QC is in process...")
+print("QC is in process...")
 
 CVI <- CV
 
 # print(dim(Z))
+# print("!!!!!")
 # if(QC)
 # {
 #   qc <- GAPIT.QC(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
 #   GTindex=qc$GTindex
-#   #Y=qc$Y # here make twice qc and chaos with numeric taxa, Thanks for Dennis. 20210913
+#   Y=qc$Y  # here make twice qc and chaos with numeric taxa, Thanks for Dennis. 20210913
 #   KI=qc$KI
 #   CV=qc$CV
 #   Z=qc$Z
 #   GK=qc$GK
-#   if(noCV)CVI=qc$CV #this part will make GS without CV not present all prediction
-#   my_taxa=as.character(KI[,1])
+#   # if(noCV)CVI=qc$CV #this part will make GS without CV not present all prediction
 # }
-GTindex=match(as.character(Y[,1]),as.character(KI[,1]))
+
+# print(length(GK))
+GTindex=match(as.character(KI[,1]),as.character(Y[,1]))
+GTindex=GTindex[!is.na(GTindex)]
+# KI=KI[GTindex,GTindex+1]
 my_taxa=as.character(KI[,1])
 CV=CV[as.character(CV[,1])%in%as.character(Y[,1]),]
+# print(dim(KI))
+# print(dim(CV))
 
 #Output phenotype
 colnames(Y)=c("Taxa",name.of.trait)
@@ -250,7 +256,10 @@ print("-------------------Sandwich top bun-----------------------------------")
     nG=ncol(GD)
     if(nG>nY){snpsam=sample(1:nG,nY)}else{snpsam=1:nG}
     GK=GD[GTindex,snpsam]
+    # print(dim(GK))
+    # print(GK[270:279,1:5])
     SNPVar=apply(as.matrix(GK),2,var)
+    # print(SNPVar)
     GK=GK[,SNPVar>0]
     GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
     
@@ -259,8 +268,8 @@ print("-------------------Sandwich top bun-----------------------------------")
   #myGD=cbind(as.data.frame(GT),as.data.frame(GD)) 
   file.output.temp=file.output
   file.output=FALSE
-  #print(sangwich.top)
-  GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=file.output)$GWAS
+  #print(sangwich.top)[GTindex,c(1,GTindex+1)]
+  GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT[GTindex]),as.data.frame(GD[GTindex,])),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=file.output)$GWAS
   file.output=file.output.temp
   
   
@@ -441,25 +450,6 @@ zcol=ncol(zc$Z)-1
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Prio PreP3D")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Prio PreP3D")
 
-#Evaluating maximum likelohood
-#print("Calling EMMAxP3D...")
-
-#print("It made it to here")
-#print("The dimension of xs is:")
-#print("The value of SNP.impute is")
-#print(SNP.impute)
-
-#write.table(zc$Z, "Z.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-
-# print(head(ys))
-# print(as.matrix(as.data.frame(GD[GTindex,colInclude]))[1:5,1:5])
-# print(as.matrix(bk$KW)[1:5,1:5])
-# print(ys)
-# # print(as.matrix(as.data.frame(GD[GTindex,colInclude])))
-# print(dim(as.matrix(bk$KW)))
-# print(as.matrix(bk$KW)[,1])
-# print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
-
 p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[GTindex,colInclude])),K = as.matrix(bk$KW) ,Z=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol),X0=X0,CVI=CVI,CV.Inheritance=CV.Inheritance,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
         SNP.permutation=SNP.permutation, GP=GP,SNP.fraction=SNP.fraction,
 			 file.path=file.path,file.from=file.from,file.to=file.to,file.total=file.total, file.fragment = file.fragment, byFile=byFile, file.G=file.G,file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
@@ -534,7 +524,9 @@ print(paste("bin---",bin,"---inc---",inc,sep=""))
   GK=GK[,SNPVar>0]
   SUPER_GD=SUPER_GD[,SNPVar>0]
   GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
-  SUPER_GD=cbind(as.data.frame(GT),as.data.frame(SUPER_GD)) #add taxa
+  # print(length(GT))
+  # print(dim(SUPER_GD))
+  SUPER_GD=cbind(as.data.frame(GT[GTindex]),as.data.frame(SUPER_GD)) #add taxa
 # print(dim(GK))
   #GP=NULL
 }# end of if(is.null(GK)) 
@@ -841,7 +833,7 @@ print("---------------Sandwich bottom: reload bins ---------------------------")
 #SUPER: Final screening
   GK=GK.save
   # print(GK)
-  myBread=GAPIT.Bread(Y=Y,CV=CV,Z=Z,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.bottom,GTindex=GTindex,LD=LD,file.output=file.output)
+  myBread=GAPIT.Bread(Y=Y,CV=CV,Z=Z,GK=GK,GD=cbind(as.data.frame(GT[GTindex]),as.data.frame(GD)),GM=GI,method=sangwich.bottom,GTindex=GTindex,LD=LD,file.output=file.output)
   
   print("SUPER saving results...")
 
