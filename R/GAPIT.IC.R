@@ -39,8 +39,7 @@ print("GAPIT.IC in process...")
      comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
      comY=Y[taxa_Y%in%taxa_comall,]
      comY <- comY[match(taxa_comall,as.character(comY[,1])),]
-     # print(head(comY))
-     # print(dim(comY))
+    
      comGD=NULL
 
      }else{
@@ -48,9 +47,6 @@ print("GAPIT.IC in process...")
      taxa_GD=as.character(GD[,1])
      taxa_comGD=as.character(GD[,1])
      taxa_CV=as.character(CV[,1])
-     # print(length(taxa_GD))
-     # print(length(taxa_CV))
-     # print(length(taxa_Y))
      taxa_comall=intersect(intersect(taxa_GD,taxa_Y),taxa_CV)
      comCV=CV[taxa_CV%in%taxa_comall,]
      comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
@@ -60,11 +56,6 @@ print("GAPIT.IC in process...")
 
      comY=Y[taxa_Y%in%taxa_comall,]
      comY <- comY[match(taxa_comall,as.character(comY[,1])),]
-     # print("@@@@@")
-     # print(dim(comY))
-     # print(all.equal(as.character(Y[,1]),as.character(comCV[,1])))
-     # print(all.equal(as.character(GD[,1]),as.character(comCV[,1])))
-     # print(all.equal(as.character(comY[,1]),as.character(comCV[,1])))
      }
 
 

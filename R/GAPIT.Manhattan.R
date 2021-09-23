@@ -13,46 +13,25 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     #print(cutOff)
     #do nothing if null input
     if(is.null(GI.MP)) return
-	#if(is.null(GD)) return
-    #print("Dimension of GI.MP")
-    #print(dim(GI.MP))
-    #print(head(GI.MP))
-    #print(tail(GI.MP))
-    #print(CG)
-    
-    #seqQTN=c(300,1000,2500)
   #Handler of lable paosition only indicated by negatie position
-  position.only=F
+    position.only=F
     if(!is.null(seqQTN)){
       if(seqQTN[1]<0){
         seqQTN=-seqQTN
         position.only=T
-      }
-      
-    }
-    
-    #if(is.null(GD)) print ("GD is not same dim as GM")
+      }      
+    }  
     borrowSlot=4
     GI.MP[,borrowSlot]=0 
     GI.MP[,5]=1:(nrow(GI.MP))
     GI.MP=matrix(as.numeric(as.matrix(GI.MP) ) ,nrow(GI.MP),ncol(GI.MP))
     GI.MP=GI.MP[order(GI.MP[,2]),]
     GI.MP=GI.MP[order(GI.MP[,1]),]
-    # print("@@@@@")
-    # print(head(GI.MP))
-    #Inicial as 0
-    
-    if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1
-    
+    #Inicial as 0   
+    if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1   
     if(!is.null(GD))
     {  if(ncol(GD)!=nrow(GI.MP))print("GD does not mach GM in Manhattan !!!")
     }
-    #print(ncol(GD))
-    #print(nrow(GI.MP))
-    #print(GI.MP)
-    #print("!!")
-    #GI.MP[,5]=1:(nrow(GI.MP))
-	#print(head(GI.MP,20))
     #Remove all SNPs that do not have a choromosome, bp position and p value(NA)
     GI.MP <- GI.MP[!is.na(GI.MP[,1]),]
     GI.MP <- GI.MP[!is.na(GI.MP[,2]),]
@@ -90,11 +69,6 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     GI.MP[,5]=1:(nrow(GI.MP))
     y.lim <- ceiling(max(GI.MP[,3]))
     chm.to.analyze <- unique(GI.MP[,1])
-    #print(dim(GI.MP))
-    #print(dim(GD))
-    #print("name of chromosomes:")
-    #print(chm.to.analyze)
-    
     chm.to.analyze=chm.to.analyze[order(chm.to.analyze)]
     numCHR= length(chm.to.analyze)
     #GI.MP[,5]=1:(nrow(GI.MP))
@@ -127,9 +101,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             #sub.bin.mp=bin.mp[GI.MP[,1]==chm.to.analyze[i],]
             #subset=cbind(subset,sub.bin.mp)
             sig.mp=subset[subset[,3]>bonferroniCutOff,,drop=FALSE]
-            sig.index=subset[,3]>bonferroniCutOff ### index of significont SNP
-            
-            
+            sig.index=subset[,3]>bonferroniCutOff ### index of significont SNP          
             num.row=nrow(sig.mp)
             if(!is.null(dim(sig.mp)))sig.mp=sig.mp[!duplicated(sig.mp[,7]),]
             num.row=nrow(sig.mp)
@@ -143,9 +115,6 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             {
                 for(j in 1:num.row)
                 {   sig.mp=matrix(sig.mp,num.row,8)
-                    
-                    #print(sig.mp[j,7])
-                    #print(unique(subset[,7]))
                     bin.store=subset[which(subset[,7]==sig.mp[j,7]),]
                     if(is.null(dim(bin.store)))
                       {subset[which(subset[,7]==sig.mp[j,7]),8]=1
@@ -164,21 +133,12 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
                         bin.store[k,8]=r2
                         
                     }
-                    #print(bin.store)
-                    #r2_storage[is.na(r2_storage)]=0
-                    #print(bin.store)
                     subset[bin.store[,1],8]=bin.store[,8]
                     #print()
                 }###end for each sig.mp
-                #sub.bin.mp=bin.mp[subset[,3]>bonferroniCutOff,]
-                #print(head(bin.set))
-            
+         
             }###end if empty of sig.mp
-            #print("@@@@@@@@@@@@@@@@")
             rm(sig.mp,num.row)
-            #print(head(subset))
-			#print(head(subset))
-			#print(dim(X))
             y.lim <- ceiling(max(subset[,3]))+1  #set upper for each chr
             if(length(subset)>3){
                 x <- as.numeric(subset[,2])/10^(6)
@@ -206,12 +166,6 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             r2_color[which(r2_color[,2]<=0.6&r2_color[,2]>0.4),2]=do_color[n_col*0.6]
             r2_color[which(r2_color[,2]<=0.8&r2_color[,2]>0.6),2]=do_color[n_col*0.4]
             r2_color[which(r2_color[,2]<=1&r2_color[,2]>0.8),2]=do_color[n_col/n_col]
-            
-            
-            #print(unique(r2_color[,2]))
-            
-            ##print(paste("after prune: chr: ",i, "length: ",length(x),"max p",max(y), "min p",min(y), "max x",max(x), "Min x",min(x)))
-			
             par(mar=c(0,0,0,0))
             par(mar=c(5,5,2,1),cex=0.8)
 
@@ -222,12 +176,6 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             
             abline(h=bonferroniCutOff,col="forestgreen")
             abline(h=FDRcutoff,col="forestgreen",lty=2)
-
-            ##print("manhattan plot (chr) finished")
-            #layout.show(nf)	
-            #provcol <-c("darkblue","cyan","green3","brown1","brown1")
-            #provcol <-heat.colors(50)
-            #par(mar=c(0,0,0,0))
             par(mar=c(15,5,6,5),cex=0.5)
             
             barplot(matrix(rep(1,times=n_col),n_col,1),beside=T,col=do_color,border=do_color,axes=FALSE,)
