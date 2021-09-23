@@ -12,26 +12,26 @@ Citation
 If you use GAPIT and publish your analysis, please report the program version and cite the appropriate article:
 
   
-  The citation for GAPIT3 is:
-   Wang J., Zhang Z., GAPIT Version 3: Boosting Power and Accuracy for Genomic Association and Prediction, Genomics, Proteomics & Bioinformatics (2021), doi: https://doi.org/10.1016/j.gpb. 2021.08.005.
+The citation for GAPIT3 is:
+Wang J., Zhang Z., GAPIT Version 3: Boosting Power and Accuracy for Genomic Association and Prediction, Genomics, Proteomics & Bioinformatics (2021), doi: https://doi.org/10.1016/j.gpb.2021.08.005.
 
-  The citation for GAPIT2 is:
-   Tang Y., Liu X., Wang J., Li M., Wang Q., et al., 2016 GAPIT Version 2: An Enhanced Integrated Tool for Genomic Association and Prediction. Plant J. 9.
+The citation for GAPIT2 is:
+Tang Y., Liu X., Wang J., Li M., Wang Q., et al., 2016 GAPIT Version 2: An Enhanced Integrated Tool for Genomic Association and Prediction. Plant J. 9, https://10.3835/plantgenome2015.11.0120.
   
-  The citation for GAPIT1 is:
-   Lipka A. E., Tian F., Wang Q., Peiffer J., Li M., et al., 2012 GAPIT: genome association and prediction integrated tool. Bioinformatics 28: 2397–2399.
-  
-  The citation for SUPER method is:
-   Wang Q., Tian F., Pan Y., Buckler E. S., Zhang Z., 2014 A SUPER Powerful Method for Genome Wide Association Study (Y Li, Ed.). PLoS One 9: e107684.
+The citation for GAPIT1 is:
+Lipka A. E., Tian F., Wang Q., Peiffer J., Li M., et al., 2012 GAPIT: genome association and prediction integrated tool. Bioinformatics 28: 2397–2399, https://doi.org/10.1093/bioinformatics/bts444.
 
-  The citation for cBLUP and sBLUP is:
-   Wang J., Zhou Z., Zhang Z., Li H., Liu D., et al., 2018 Expanding the BLUP alphabet for genomic prediction adaptable to the genetic architectures of complex traits. Heredity
+The citation for SUPER method is:
+Wang Q., Tian F., Pan Y., Buckler E. S., Zhang Z., 2014 A SUPER Powerful Method for Genome Wide Association Study (Y Li, Ed.). PLoS One 9: e107684, https://doi.org/10.1371/journal.pone.0107684.
 
-  The citation for Farm-CPU is:
-   Liu X., Huang M., Fan B., Buckler E. S., Zhang Z., 2016 Iterative Usage of Fixed and Random Effect Models for Powerful and Efficient Genome-Wide Association Studies. PLoS Genet. 12: e1005767.
+The citation for cBLUP and sBLUP is:
+Wang J., Zhou Z., Zhang Z., Li H., Liu D., et al., 2018 Expanding the BLUP alphabet for genomic prediction adaptable to the genetic architectures of complex traits. Heredity https://doi.org/10.1038/s41437-018-0075-0.
 
-  The citation for P3D is:
-   Zhang Z., Ersoz E., Lai C. Q., Todhunter R. J., Tiwari H. K., et al., 2010 Mixed linear model approach adapted for genome-wide association studies. Nat. Genet. 42: 355–360.
+The citation for Farm-CPU is:
+Liu X., Huang M., Fan B., Buckler E. S., Zhang Z., 2016 Iterative Usage of Fixed and Random Effect Models for Powerful and Efficient Genome-Wide Association Studies. PLoS Genet. 12: e1005767. https://doi.org/10.1371/journal.pgen.1005767.
+
+The citation for P3D is:
+Zhang Z., Ersoz E., Lai C. Q., Todhunter R. J., Tiwari H. K., et al., 2010 Mixed linear model approach adapted for genome-wide association studies. Nat. Genet. 42: 355–360. https://doi.org/10.1038/ng.546.
 
 
 Authors: 
@@ -74,14 +74,26 @@ Contents:
 Start
 ======
 
-   GAPIT is a package that is run in the R software environment, which can be freely downloaded from [http://www.r-project.org](http://www.r-project.org) or [http://www.rstudio.com](http://www.rstudio.com).
+
+GAPIT is a package that is run in the R software environment.
+R can be freely downloaded from [http://www.r-project.org](http://www.r-project.org).
+We also recommend the integrated development environment RStudio which is also freely available at [http://www.rstudio.com](http://www.rstudio.com).
 
 Function Loading
 -------
+
+## Installing GAPIT3
+
+
+### Installation by source from ZZlab
+
   Now GAPIT can load library by only one funciton. 
-      
-    source("http://zzlab.net/GAPIT/GAPIT.library.R")
-  
+
+```      
+R> source("http://zzlab.net/GAPIT/GAPIT.library.R")
+```
+
+
   After loading library, we need to source GAPIT function.
   
     source("http://zzlab.net/GAPIT/gapit_functions.txt")
