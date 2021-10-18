@@ -1,5 +1,5 @@
 `GAPIT.Multiple.Manhattan` <-
-function(model_store,DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,Y=NULL,GM=NULL,interQTN=NULL,plot.style="Oceanic",plot.line=TRUE){
+function(model_store,DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,Y=NULL,GM=NULL,interQTN=NULL,plot.style="Oceanic",plot.line=TRUE,chor_taxa=NULL){
     #Object: Make a Manhattan Plot
     #Options for plot.type = "Separate_Graph_for_Each_Chromosome" and "Same_Graph_for_Each_Chromosome"
     #Output: A pdf of the Manhattan Plot
@@ -256,7 +256,15 @@ for(k in 1:Nenviron)
         #Add a horizontal line for bonferroniCutOff
         abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
         axis(2, xaxp=c(1,themax,5),cex.axis=1,tick=F)
-        if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)
+        if(k==Nenviron)
+        {
+          if(length(chor_taxa)!=length(ticks))chor_taxa=NULL
+        #print(unique(GI.MP[,1]))
+        if(!is.null(chor_taxa))
+        {axis(1, at=ticks,cex.axis=1,labels=chor_taxa,tick=F)
+        }else{axis(1, at=ticks,cex.axis=1,labels=chm.to.analyze,tick=F)}
+
+          }
         mtext(side=4,paste(environ_name[k],sep=""),line=3,cex=1)
 box()
 }#end of environ_name
@@ -422,7 +430,16 @@ for(k in 1:Nenviron)
         #Add a horizontal line for bonferroniCutOff
         abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
         axis(2, xaxp=c(1,themax,5),cex.axis=1,tick=F)
-        if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)
+        if(k==Nenviron)
+        {
+          if(length(chor_taxa)!=length(ticks))chor_taxa=NULL
+        #print(unique(GI.MP[,1]))
+        if(!is.null(chor_taxa))
+        {axis(1, at=ticks,cex.axis=1,labels=chor_taxa,tick=F)
+        }else{axis(1, at=ticks,cex.axis=1,labels=chm.to.analyze,tick=F)}
+
+          
+        }
         mtext(side=4,paste(environ_name[k],sep=""),line=3,cex=1)
 box()
 }#end of environ_name

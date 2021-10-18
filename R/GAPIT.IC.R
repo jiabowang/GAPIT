@@ -43,7 +43,7 @@ print("GAPIT.IC in process...")
      comGD=NULL
 
      }else{
-     print("@@@@")
+     # print("@@@@")
      taxa_GD=as.character(GD[,1])
      taxa_comGD=as.character(GD[,1])
      taxa_CV=as.character(CV[,1])
