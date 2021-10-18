@@ -9,9 +9,9 @@ test_that("multiplication works", {
 
 test_that("GAPIT mdp (Y and X) import works", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3documentation")
+                             package = "GAPIT3")
   myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3documentation")
+                            package = "GAPIT3")
 
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
   myGenotypes  <- read.table(myGenoFile, header = FALSE)
@@ -27,9 +27,9 @@ test_that("GAPIT mdp (Y and X) import works", {
 
 test_that("GAPIT wrapper works", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3documentation")
+                             package = "GAPIT3")
   myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3documentation")
+                            package = "GAPIT3")
 
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
   myGenotypes  <- read.table(myGenoFile, header = FALSE)
