@@ -423,7 +423,7 @@
     }
   }else{
     print("please choose one method for BIC")
-    break
+#    break
   }
 
   BICv=rep(NA,length(position))
@@ -767,9 +767,17 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
 }#The function FarmCPU.SUB ends here
 
 
-`Blink.cor`<-function(Y,GD,w=NULL,orientation="row",ms=ms,n=ny,m=nm){
+`Blink.cor` <- function(Y, # Phenotype
+                        GD, # Hapmap genetic data
+                        w = NULL, 
+                        orientation = "row",
+                        ms = ms, # Marker size for slicing
+                        n = ny, # Individual number
+                        m = nm # Marker number
+                        ){
   #Objects: calculate R value with covariates
-  #Input: pheontype(nx1), ms is marker size for slicing the genotype, genotype(orientation="row", mxn or orientation="col", nxm,) and covariates(nxp)
+  #Input: pheontype(nx1), ms is marker size for slicing the genotype, 
+  #genotype(orientation="row", mxn or orientation="col", nxm,) and covariates(nxp)
   #   n is individual number, m is marker number, p is covariate number
   #Output: abs(r)
   #Author: Yao Zhou
@@ -891,7 +899,14 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
     w=GDP[,-i]
     if(nsnp==1) w=NULL
     GD=as.matrix(GDP[,i])
-    rsnp[i,1]=Blink.cor(Y=Y,w=w,GD=GD,orientation=orientation,,ms=ms,n=ny,m=nm)
+    rsnp[i,1]=Blink.cor(Y = Y,
+                        w = w,
+                        GD = GD,
+                        orientation = orientation,
+                        #,,
+                        ms = ms, 
+                        n = ny, m = nm
+                        )
   }
   rm(GDP, GD, w, ncov, nf)
     return(rsnp)

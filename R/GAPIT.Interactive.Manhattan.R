@@ -91,11 +91,11 @@ if(c("m")%in%plot.type)
     )%>%
    add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
    add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
-   layout(title = "Interactive.Manhattan.Plot",
-         #showticklabels = FALSE,
-         #legend = list(orientation = 'h'),
-         xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
-         yaxis = list (title = "-Log10(p)"))
+   plotly::layout(title = "Interactive.Manhattan.Plot",
+                  #showticklabels = FALSE,
+                  #legend = list(orientation = 'h'),
+                  xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
+                  yaxis = list (title = "-Log10(p)"))
 
     htmltools::save_html(p, paste("Interactive.Manhattan.",name.of.trait,".html",sep=""))
 }
@@ -142,12 +142,12 @@ if(c("q")%in%plot.type)
     opacity=0.5,
     )%>%add_lines(x=log.Quantiles,y=log.Quantiles,color=I("red"), 
     mode = 'lines',name="Diag",text="")%>%
-    layout(title = "Interactive.QQ.Plot",
-        xaxis = list(title = "Expected -Log10(p)"),
-         yaxis = list (title = "Observed -Log10(p)"),
-         #showticklabels = FALSE,
-         showlegend = FALSE)
-        htmltools::save_html(qp, paste("Interactive.QQ ",name.of.trait,".html",sep=""))
+          plotly::layout(title = "Interactive.QQ.Plot",
+                         xaxis = list(title = "Expected -Log10(p)"),
+                         yaxis = list (title = "Observed -Log10(p)"),
+                         #showticklabels = FALSE,
+                         showlegend = FALSE)
+    htmltools::save_html(qp, paste("Interactive.QQ ",name.of.trait,".html",sep=""))
 
 
 }   
