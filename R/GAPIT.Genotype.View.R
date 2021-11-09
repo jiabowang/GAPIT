@@ -189,7 +189,7 @@ save_Density_Cor[countSDC,1]<-abs(as.numeric(as.matrix(results3_100[k,3]))-as.nu
 save_Density_Cor[countSDC,2]<-cor(myGD3_100[,j],myGD3_100[,k])
 #options(digits=8)
 #save_Density_Cor[countSDC,3]<-as.numeric(as.matrix(format(cor(myGD3_100[,j],myGD3_100[,k])%*% cor(myGD3_100[,j],myGD3_100[,k]),digits=8)))
-save_Density_Cor[countSDC,3]<-cor(myGD3_100[,j],myGD3_100[,k])%*% cor(myGD3_100[,j],myGD3_100[,k])
+save_Density_Cor[countSDC,3]<-save_Density_Cor[countSDC,2]^2
 save_Density_Cor_name[countSDC,1]<-paste(results3_100[j,1],"::::",results3_100[k,1],seq="")
 countSDC<-countSDC+1
 }

@@ -33,7 +33,8 @@ cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
     X=X0
     
     #########SVD of X
-    K.X.svd= svd(snp.pool,LINPACK=TRUE)######rivised by Jiabo Wang 2016.1.8
+    # K.X.svd= svd(snp.pool,LINPACK=TRUE)######rivised by Jiabo Wang 2016.1.8
+    K.X.svd= svd(snp.pool)
     # snp.pool=NA problem occurred
     #####rivised 2012.4.15 by qishan wang
     d=K.X.svd$d
