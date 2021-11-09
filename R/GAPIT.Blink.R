@@ -315,7 +315,9 @@
           GDpred = deepcopy(GD,rows=seqQTN)
         }
       }
-      PEV = Blink.Pred(Y = YP,GD = GDpred, CV = CV,orientation = orientation)
+      PEV = Blink.Pred(Y = YP,GD = GDpred, CV = CV
+                       #,orientation = orientation
+                       )
     }
     if(time.cal){
       print("LD.time(sec):")
