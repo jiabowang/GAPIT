@@ -131,6 +131,255 @@ GAPIT(
   Para = NULL
 )
 }
+\arguments{
+\item{Y}{= NULL,}
+
+\item{G}{= NULL,}
+
+\item{GD}{= NULL,}
+
+\item{GM}{= NULL,}
+
+\item{KI}{= NULL,}
+
+\item{Z}{= NULL,}
+
+\item{CV}{= NULL,}
+
+\item{CV.Inheritance}{= NULL,}
+
+\item{GP}{= NULL,}
+
+\item{GK}{= NULL,}
+
+\item{testY}{= NULL,}
+
+\item{group.from}{= 1e+06,}
+
+\item{group.to}{= 1e+06,}
+
+\item{group.by}{= 20,}
+
+\item{DPP}{= 1e+05,}
+
+\item{kinship.cluster}{= "average",}
+
+\item{kinship.group}{= "Mean",}
+
+\item{kinship.algorithm}{= "VanRaden",}
+
+\item{buspred}{= FALSE,}
+
+\item{lmpred}{= FALSE,}
+
+\item{FDRcut}{= FALSE,}
+
+\item{bin.from}{= 10000,}
+
+\item{bin.to}{= 10000,}
+
+\item{bin.by}{= 10000,}
+
+\item{inclosure.from}{= 10,}
+
+\item{inclosure.to}{= 10,}
+
+\item{inclosure.by}{= 10,}
+
+\item{SNP.P3D}{= TRUE,}
+
+\item{SNP.effect}{= "Add",}
+
+\item{SNP.impute}{= "Middle",}
+
+\item{PCA.total}{= 0,}
+
+\item{SNP.fraction}{= 1,}
+
+\item{seed}{= NULL,}
+
+\item{BINS}{= 20,}
+
+\item{SNP.test}{= TRUE,}
+
+\item{SNP.MAF}{= 0,}
+
+\item{FDR.Rate}{= 1,}
+
+\item{SNP.FDR}{= 1,}
+
+\item{SNP.permutation}{= FALSE,}
+
+\item{SNP.CV}{= NULL,}
+
+\item{SNP.robust}{= "GLM",}
+
+\item{file.from}{= 1,}
+
+\item{file.to}{= 1,}
+
+\item{file.total}{= NULL,}
+
+\item{file.fragment}{= 99999,}
+
+\item{file.path}{= NULL,}
+
+\item{file.G}{= NULL,}
+
+\item{file.Ext.G}{= NULL,}
+
+\item{file.GD}{= NULL,}
+
+\item{file.GM}{= NULL,}
+
+\item{file.Ext.GD}{= NULL,}
+
+\item{file.Ext.GM}{= NULL,}
+
+\item{ngrid}{= 100,}
+
+\item{llim}{= -10,}
+
+\item{ulim}{= 10,}
+
+\item{esp}{= 1e-10,}
+
+\item{LD.chromosome}{= NULL,}
+
+\item{LD.location}{= NULL,}
+
+\item{LD.range}{= NULL,}
+
+\item{PCA.col}{= NULL,}
+
+\item{PCA.3d}{= FALSE,}
+
+\item{NJtree.group}{= NULL,}
+
+\item{NJtree.type}{= c("fan", "unrooted"),}
+
+\item{sangwich.top}{= NULL,}
+
+\item{sangwich.bottom}{= NULL,}
+
+\item{QC}{= TRUE,}
+
+\item{GTindex}{= NULL,}
+
+\item{LD}{= 0.1,}
+
+\item{plot.bin}{= 10^5,}
+
+\item{file.output}{= TRUE,}
+
+\item{cutOff}{= 0.05,}
+
+\item{Model.selection}{= FALSE,}
+
+\item{output.numerical}{= FALSE,}
+
+\item{output.hapmap}{= FALSE,}
+
+\item{Create.indicator}{= FALSE,}
+
+\item{Multi_iter}{= FALSE,}
+
+\item{num_regwas}{= 10,}
+
+\item{opt}{= "extBIC",}
+
+\item{QTN}{= NULL,}
+
+\item{QTN.round}{= 1,}
+
+\item{QTN.limit}{= 0,}
+
+\item{QTN.update}{= TRUE,}
+
+\item{QTN.method}{= "Penalty",}
+
+\item{Major.allele.zero}{= FALSE,}
+
+\item{Random.model}{= FALSE,}
+
+\item{method.GLM}{= "FarmCPU.LM",}
+
+\item{method.sub}{= "reward",}
+
+\item{method.sub.final}{= "reward",}
+
+\item{method.bin}{= "static",}
+
+\item{bin.size}{= c(1e+06),}
+
+\item{bin.selection}{= c(10, 20, 50, 100, 200, 500, 1000),}
+
+\item{memo}{= NULL,}
+
+\item{Prior}{= NULL,}
+
+\item{ncpus}{= 1,}
+
+\item{maxLoop}{= 3,}
+
+\item{threshold.output}{= 0.01,}
+
+\item{Inter.Plot}{= FALSE,}
+
+\item{Inter.type}{= c("m", "q"),}
+
+\item{WS}{= c(1, 1000, 10000, 1e+05, 1e+06, 1e+07),}
+
+\item{alpha}{= c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),}
+
+\item{maxOut}{= 100,}
+
+\item{QTN.position}{= NULL,}
+
+\item{CG}{= NULL,}
+
+\item{converge}{= 1,}
+
+\item{iteration.output}{= FALSE,}
+
+\item{acceleration}{= 0,}
+
+\item{iteration.method}{= "accum",}
+
+\item{PCA.View.output}{= TRUE,}
+
+\item{Geno.View.output}{= TRUE,}
+
+\item{plot.style}{= "Oceanic",}
+
+\item{SUPER_GD}{= NULL,}
+
+\item{SUPER_GS}{= FALSE,}
+
+\item{h2}{= NULL,}
+
+\item{NQTN}{= NULL,}
+
+\item{QTNDist}{= "normal",}
+
+\item{effectunit}{= 1,}
+
+\item{category}{= 1,}
+
+\item{r}{= 0.25,}
+
+\item{cveff}{= NULL,}
+
+\item{a2}{= 0,}
+
+\item{adim}{= 2,}
+
+\item{Multiple_analysis}{= FALSE,}
+
+\item{model}{= "MLM",}
+
+\item{Para}{= NULL}
+}
 \description{
 GAPIT analyzes phenotypic and genotypics data to infer association.
 }
@@ -149,7 +398,6 @@ myGAPIT <- GAPIT(
   model = "MLM"
 )
 }
-
 
 
 }

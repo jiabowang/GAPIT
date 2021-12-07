@@ -141,7 +141,7 @@ Predicted=pred_all$gBLUP[pred_all$refinf==1]
 
 
 
- p <- plot_ly(
+ p <- plotly::plot_ly(
     type = 'scatter',
     x = ~Observed,
     y = ~Predicted,
@@ -151,7 +151,7 @@ Predicted=pred_all$gBLUP[pred_all$refinf==1]
     color = I("red"),
     symbol= I(1),
     name=c("gBLUP with Ref")
-    )%>%add_trace(
+    ) %>% plotly::add_trace(
     type = 'scatter',
     x = ~observed[pred_all$refinf==1],
     y = ~cBLUP[pred_all$refinf==1],
@@ -161,7 +161,7 @@ Predicted=pred_all$gBLUP[pred_all$refinf==1]
     color = I("blue"),
     symbol= I(1),
     name=c("cBLUP with Ref")
-    )%>%add_trace(
+    ) %>% plotly::add_trace(
     type = 'scatter',
     x = ~observed[pred_all$refinf==1],
     y = ~sBLUP[pred_all$refinf==1],
@@ -171,7 +171,7 @@ Predicted=pred_all$gBLUP[pred_all$refinf==1]
     color = I("green"),
     symbol= I(1),
     name=c("sBLUP with Ref")
-    )%>%add_trace(
+    ) %>% plotly::add_trace(
     type = 'scatter',
     x = ~observed[pred_all$refinf>1],
     y = ~cBLUP[pred_all$refinf>1],
@@ -181,7 +181,7 @@ Predicted=pred_all$gBLUP[pred_all$refinf==1]
     color = I("blue"),
     symbol= I(4),
     name=c("cBLUP with Inf")
-    )%>%add_trace(
+    ) %>% plotly::add_trace(
     type = 'scatter',
     x = ~observed[pred_all$refinf>1],
     y = ~sBLUP[pred_all$refinf>1],
@@ -191,7 +191,7 @@ Predicted=pred_all$gBLUP[pred_all$refinf==1]
     color = I("green"),
     symbol= I(4),
     name=c("sBLUP with Inf")
-    )%>%add_trace(
+    ) %>% plotly::add_trace(
     type = 'scatter',
     x = ~observed[pred_all$refinf>1],
     y = ~gBLUP[pred_all$refinf>1],

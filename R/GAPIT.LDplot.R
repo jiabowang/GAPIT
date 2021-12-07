@@ -46,7 +46,7 @@
     # print(color.rgb)
     print("Getting genotype object")
     # print(hapmapgeno)
-    LDsnp=makeGenotypes(hapmapgeno,sep="",method=as.genotype)   #This need to be converted to genotype object
+    LDsnp=genetics::makeGenotypes(hapmapgeno,sep="",method=genetics::as.genotype)   #This need to be converted to genotype object
     # print(LDsnp)
     # print(LDdist)
     print("Calling LDheatmap...")
@@ -62,10 +62,10 @@
     
   #Modify the plot
 #      library(grid)
-      grid.edit(gPath("myLDgrob", "geneMap","SNPnames"), gp = gpar(cex=0.35,col="blue")) #Edit SNP name
+      grid::grid.edit(grid::gPath("myLDgrob", "geneMap","SNPnames"), gp = grid::gpar(cex=0.35,col="blue")) #Edit SNP name
       
       if(!is.null(marker))
-      {LDheatmap.highlight(MyHeatmap, i = marker[1], j=marker[2], col = "blue",lwd=1.5)
+      {LDheatmap::LDheatmap.highlight(MyHeatmap, i = marker[1], j=marker[2], col = "blue",lwd=1.5)
       }
       # LDheatmap(MyHeatmap, SNP.name = LDsnpName)
       # grid.edit(gPath("myLDgrob","heatMap","heatmap"),gp=gpar(col="white",lwd=1))

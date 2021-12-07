@@ -79,7 +79,7 @@ if(c("m")%in%plot.type)
   #print("!!!!!")
   #print(head(Position))
 #  library(plotly)
-  p <- plot_ly(
+  p <- plotly::plot_ly(
     type = 'scatter',
     x = ~Position,
     y = ~P_value,
@@ -89,9 +89,9 @@ if(c("m")%in%plot.type)
     text = ~paste("SNP: ", taxa, "<br>Posi: ", posi,"<br>MAF: ", round(maf,2),"<br>Effect: ",round(effect,2)),
     color = ~as.character(zz)
     )%>%
-   add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
-   add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
-   layout(title = "Interactive.Manhattan.Plot",
+   plotly::add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
+   plotly::add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
+   graphics::layout(title = "Interactive.Manhattan.Plot",
          #showticklabels = FALSE,
          #legend = list(orientation = 'h'),
          xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
@@ -132,7 +132,7 @@ if(c("q")%in%plot.type)
         Expected=log.Quantiles
         Observed=log.P.values
         #abline(a = 0, b = 1, col = "red",lwd=2)
-        qp <- plot_ly(
+        qp <- plotly::plot_ly(
     type = 'scatter',
     x = ~Expected,
     y = ~Observed,
@@ -140,9 +140,9 @@ if(c("q")%in%plot.type)
     #size=2*y/max(y),
     name = "SNP",
     opacity=0.5,
-    )%>%add_lines(x=log.Quantiles,y=log.Quantiles,color=I("red"), 
+    ) %>% plotly::add_lines(x=log.Quantiles,y=log.Quantiles,color=I("red"), 
     mode = 'lines',name="Diag",text="")%>%
-    layout(title = "Interactive.QQ.Plot",
+    graphics::layout(title = "Interactive.QQ.Plot",
         xaxis = list(title = "Expected -Log10(p)"),
          yaxis = list (title = "Observed -Log10(p)"),
          #showticklabels = FALSE,

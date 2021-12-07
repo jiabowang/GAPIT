@@ -42,8 +42,8 @@
   P=GP
   gc()
   if(ncol(GD)>nm & orientation=="col"){
-    if(is.big.matrix(GD)){
-      GD=deepcopy(GD,rows=1:nrow(GD),cols=2:ncol(GD))
+    if(bigmemory::is.big.matrix(GD)){
+      GD=bigmemory::deepcopy(GD,rows=1:nrow(GD),cols=2:ncol(GD))
     }else{
       GD=as.matrix(GD[,-1])
     }
@@ -62,14 +62,14 @@
         CV1=NULL
         }
     if(orientation=="col"){
-            if(is.big.matrix(GD)){
-                GD1=deepcopy(GD,rows=seqTaxa,cols=index)
+            if(bigmemory::is.big.matrix(GD)){
+                GD1=bigmemory::deepcopy(GD,rows=seqTaxa,cols=index)
             }else{
                 GD1=GD[seqTaxa,index]
             }
         }else{
-            if(is.big.matrix(GD)){
-                GD1=deepcopy(GD,rows=index,cols=seqTaxa)
+            if(bigmemory::is.big.matrix(GD)){
+                GD1=bigmemory::deepcopy(GD,rows=index,cols=seqTaxa)
             }else{
                 GD1=GD[index,seqTaxa]
                 GD1=as.matrix(GD1)
@@ -136,13 +136,13 @@
               Porder=Porder_new
                   }
 
-            if(is.big.matrix(GD1)){
+            if(bigmemory::is.big.matrix(GD1)){
               if(orientation=="col"){
-                GDnew=deepcopy(GD1,cols=seqQTN.selected)
-                GDneo=deepcopy(GDnew,cols=Porder)
+                GDnew=bigmemory::deepcopy(GD1,cols=seqQTN.selected)
+                GDneo=bigmemory::deepcopy(GDnew,cols=Porder)
               }else{
-                GDnew=deepcopy(GD1,rows=seqQTN.selected)
-                GDneo=deepcopy(GDnew,rows=Porder)
+                GDnew=bigmemory::deepcopy(GD1,rows=seqQTN.selected)
+                GDneo=bigmemory::deepcopy(GDnew,rows=Porder)
               }
             }else{
               if(orientation=="col"){
@@ -298,7 +298,7 @@
       }else{
         seqQTN = p.rank[1]
       }
-      if(!is.big.matrix(GD)){
+      if(!bigmemory::is.big.matrix(GD)){
         if(orientation=="col"){
           GDpred = GD[,seqQTN]
         }else{
@@ -310,9 +310,9 @@
         }
       }else{
         if(orientation=="col"){
-          GDpred = deepcopy(GD,cols=seqQTN)
+          GDpred = bigmemory::deepcopy(GD,cols=seqQTN)
         }else{
-          GDpred = deepcopy(GD,rows=seqQTN)
+          GDpred = bigmemory::deepcopy(GD,rows=seqQTN)
         }
       }
       PEV = Blink.Pred(Y = YP,
@@ -439,7 +439,7 @@
     ww=crossprod(w)
     ncov=ncol(ww)+1
   }
-  wwi=ginv(ww)
+  wwi=MASS::ginv(ww)
 
 
   pos.pre=0
@@ -479,7 +479,7 @@
     t1 = wwi %*% wx
     t2 = xx - xw %*% t1
     if (!is.null(t2)){
-    M22 = ginv(t2)
+    M22 = MASS::ginv(t2)
     t3=xw %*% wwi
     M21=-M22 %*% t3
     M12=-t1 %*% M22
@@ -656,7 +656,7 @@
     wwi <- try(solve(ww),silent=TRUE)
      if(inherits(wwi, "try-error")){
       print("!!!!!")
-     wwi <- ginv(ww)
+     wwi <- MASS::ginv(ww)
      }
     #Statistics on the reduced model without marker
     rhs=wy
@@ -706,7 +706,7 @@
 ## Authors: Yao Zhou
 ## Last update: 2/6/2017
 
-  if(is.big.matrix(GD)) GD = as.matrix(GD)
+  if(bigmemory::is.big.matrix(GD)) GD = as.matrix(GD)
   if(orientation =="row"){
     GD = t(GD)
     if(nrow(GD)==1) GD = t(GD)

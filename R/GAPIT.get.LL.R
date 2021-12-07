@@ -110,7 +110,7 @@ compiler::cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
         #zw1=solve(beta1+beta2)
         zw1 <- try(solve(beta1+beta2),silent=TRUE)
         if(inherits(zw1, "try-error")){
-            zw1 <- ginv(beta1+beta2)
+            zw1 <- MASS::ginv(beta1+beta2)
         }
         
         #zw1=ginv(beta1+beta2)

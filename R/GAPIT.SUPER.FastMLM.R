@@ -91,7 +91,7 @@ for (i in 1:m)
          
            iXX <- try(solve(XX1+XX2),silent=T)
      if(inherits(iXX, "try-error")){
-     iXX <- ginv(XX1+XX2)
+     iXX <- MASS::ginv(XX1+XX2)
      }
       #################  end get ixx
       ################   begin get beta
@@ -145,7 +145,7 @@ beta4= beta4+beta
 beta4<-beta4/delta
 
 #######get final beta
-beta=ginv(beta1+beta2)%*%(beta3+beta4)
+beta = MASS::ginv(beta1+beta2)%*%(beta3+beta4)
    
       ##############
       ################    end get beta
@@ -221,7 +221,7 @@ for (i in 1:m)
          XX2<- crossprod((I-tcrossprod(U1,U1))%*%X,(I-tcrossprod(U1,U1))%*%X)/delta
                 iXX <- try(solve(XX1+XX2),silent=T)
      if(inherits(iXX, "try-error")){
-     iXX <- ginv(XX1+XX2)
+     iXX <- MASS::ginv(XX1+XX2)
      }
       #################  end get ixx
       ################   begin get beta
@@ -273,7 +273,7 @@ beta4= beta4+beta
 beta4<-beta4/delta
 
 #######get final beta
-beta=ginv(beta1+beta2)%*%(beta3+beta4)
+beta = MASS::ginv(beta1+beta2)%*%(beta3+beta4)
    
       ##############
       ################    end get beta

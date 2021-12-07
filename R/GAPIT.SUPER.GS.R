@@ -372,7 +372,7 @@ j=1
      print("For tcrossprod(X %*% solve(crossprod(X)), X) reduce dim of X to :")
      print(dim(X))
   # aa=tcrossprod(X %*% solve(crossprod(X)), X)
-   emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
+   emma_test <- EMMREML::emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
 
    print(paste(order_count, "of",numSetting,"--","Vg=",round(emma_test$Vu,4), "VE=",round(emma_test$Ve,4),"-2LL=",round(-2*emma_test$loglik,2), "  Clustering=",ca,"  Group number=", group ,"  Group kinship=",kt,sep = " "))
   emma_test_reml=-2*emma_test$loglik
@@ -433,7 +433,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   
   # print(my_allCV)
   
-   emma_REMLE <- emmreml(y=as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
+   emma_REMLE <- EMMREML::emmreml(y=as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
   }else{
    emma_REMLE=emma_test
    print("gBLUP with only one time emma")

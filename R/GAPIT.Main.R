@@ -685,7 +685,7 @@ if(Model.selection == TRUE){
     print(dim(X0))
     
     print("The head of X0 after model selection is")
-    print(head(X0))
+    print(utils::head(X0))
     
 
 } # where does it start: 522
@@ -853,7 +853,7 @@ if(!byPass)
 if(length(bk$KW)>1 &length(bk$KW)<length(KI) & length(bk$KW)<1000 &GAPIT3.output){
 grDevices::pdf(paste("GAPIT.",name.of.trait,".Kin.Optimum.pdf",sep=""), width = 12, height = 12)
 graphics::par(mar = c(25,25,25,25))
-heatmap.2(as.matrix(bk$KW),  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
+gplots::heatmap.2(as.matrix(bk$KW),  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
 grDevices::dev.off()
 }
 }
@@ -1180,8 +1180,8 @@ if(!byPass){
     
     effect.est.data.frame <- data.frame(effect.est)
     colnames(effect.est.data.frame) <- c("X1", "X2", "X3")
-    print(head(GI.counter.data.frame))
-    print(head(effect.est.data.frame))
+    print(utils::head(GI.counter.data.frame))
+    print(utils::head(effect.est.data.frame))
     #Do a merge statement
     GWAS.2 <- merge(GI.counter.data.frame, effect.est.data.frame, by.x = "X4", by.y = "X1")
     

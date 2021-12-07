@@ -379,7 +379,7 @@ if(!is.null(KI)&file.output)
       graphics::par(mar = c(25,25,25,25))
       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="prepare heatmap")
       Memory=GAPIT.Memory(Memory=Memory,Infor="prepare heatmap")
-      heatmap.2(theKin,  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
+      gplots::heatmap.2(theKin,  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
       grDevices::dev.off()
       print("Kinship heat map PDF created!") 
       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="plot heatmap")
@@ -395,7 +395,7 @@ if(!is.null(KI)&file.output)
            graphics::par(mar = c(5,5,5,5))
            Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="prepare NJ TREE")
            Memory=GAPIT.Memory(Memory=Memory,Infor="prepare NJ TREE")
-           plot(as.phylo(hc), type = NJtree.type[tr], tip.color =type_col[clusMember],  use.edge.length = TRUE, col = "gray80",cex=0.8)
+           plot(ape::as.phylo(hc), type = NJtree.type[tr], tip.color =type_col[clusMember],  use.edge.length = TRUE, col = "gray80",cex=0.8)
            graphics::legend("topright",legend=paste(c("Tatal individuals is: ","Cluster method: ","Group number: "), Optimum[c(1:3)], sep=""),lty=0,cex=1.3,bty="n",bg=graphics::par("bg"))
            grDevices::dev.off()
            }
@@ -491,7 +491,7 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
       print("Creating heat map for kinship...")
       grDevices::pdf(paste("GAPIT.Kin.",kinship.algorithm,".pdf",sep=""), width = 12, height = 12)
       graphics::par(mar = c(25,25,25,25))
-      heatmap.2(theKin,  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
+      gplots::heatmap.2(theKin,  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
       grDevices::dev.off()
       print("Kinship heat map created")
     ## Jiabo Wang add NJ Tree of kinship at 4.5.2017
@@ -504,7 +504,7 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
            graphics::par(mar = c(0,0,0,0))
            Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="prepare NJ TREE")
            Memory=GAPIT.Memory(Memory=Memory,Infor="prepare NJ TREE")   
-           plot(as.phylo(hc), type = NJtree.type[tr], tip.color =type_col[clusMember],  use.edge.length = TRUE, col = "gray80",cex=0.6)
+           plot(ape::as.phylo(hc), type = NJtree.type[tr], tip.color =type_col[clusMember],  use.edge.length = TRUE, col = "gray80",cex=0.6)
     #legend("topright",legend=c(paste("Tatal numerber of individuals is ",),lty=0,cex=1.3,bty="n",bg=par("bg"))
            graphics::legend("topright",legend=paste(c("Tatal individuals is: ","Group method: ","Group number: "), Optimum[c(1:3)], sep=""),lty=0,cex=1.3,bty="n",bg=graphics::par("bg"))
            grDevices::dev.off()
@@ -580,23 +580,23 @@ if(!is.null(GLD) &file.output)
     
     # print(color.rgb)
     print("Getting genotype object")
-    LDsnp=makeGenotypes(hapmapgeno,sep="",method=as.genotype)   #This need to be converted to genotype object
+    LDsnp=genetics::makeGenotypes(hapmapgeno,sep="",method=genetics::as.genotype)   #This need to be converted to genotype object
     print("Caling LDheatmap...")
 #pdf(paste("GAPIT.LD.pdf",sep=""), width = 12, height = 12)
     grDevices::pdf(paste("GAPIT.LD.chromosom",LD.chromosome,"(",round(max(0,LD.location-LD.range)/1000000),"_",round((LD.location+LD.range)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
     graphics::par(mar = c(25,25,25,25))
 
-    MyHeatmap <- try(LDheatmap(LDsnp, LDdist, LDmeasure="r", add.map=TRUE,
+    MyHeatmap <- try(LDheatmap::LDheatmap(LDsnp, LDdist, LDmeasure="r", add.map=TRUE,
     SNP.name=LDsnpName,color=color.rgb(20), name="myLDgrob", add.key=TRUE,geneMapLabelY=0.1) )  
     if(!inherits(MyHeatmap, "try-error")) 
       {
   #Modify the plot
 #      library(grid)
       # LDheatmap.highlight(MyHeatmap, i = sigsnp, j=sigsnp+1, col = "red")
-      grid.edit(gPath("myLDgrob","heatMap","heatmap"),gp=gpar(col="white",lwd=8))
-      grid.edit(gPath("myLDgrob", "Key", "title"), gp=gpar(cex=.5, col="blue"))  #edit key title size and color
-      grid.edit(gPath("myLDgrob", "heatMap", "title"), gp=gpar(just=c("center","bottom"), cex=0.8, col="black")) #Edit gene map title
-      grid.edit(gPath("myLDgrob", "geneMap","SNPnames"), gp = gpar(cex=0.3,col="black")) #Edit SNP name
+      grid::grid.edit(grid::gPath("myLDgrob","heatMap","heatmap"),gp=grid::gpar(col="white",lwd=8))
+      grid::grid.edit(grid::gPath("myLDgrob", "Key", "title"), gp=grid::gpar(cex=.5, col="blue"))  #edit key title size and color
+      grid::grid.edit(grid::gPath("myLDgrob", "heatMap", "title"), gp=grid::gpar(just=c("center","bottom"), cex=0.8, col="black")) #Edit gene map title
+      grid::grid.edit(grid::gPath("myLDgrob", "geneMap","SNPnames"), gp = grid::gpar(cex=0.3,col="black")) #Edit SNP name
       }else{
       print("Warning: error in converting genotype. No LD plot!")
       }

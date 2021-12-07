@@ -161,7 +161,7 @@ if(!is.null(CV))
 
 }
 #command3=paste(command2,"+(1|gene_",j,")",sep="")
-    dflme <- lmer(command2, data=tree2,control=lmerControl(check.nobs.vs.nlev = "ignore",
+    dflme <- lme4::lmer(command2, data=tree2, control = lme4::lmerControl(check.nobs.vs.nlev = "ignore",
      check.nobs.vs.rankZ = "ignore",
      check.nobs.vs.nRE="ignore"))
 
@@ -201,7 +201,7 @@ if(!is.na(sum(gene_list[1,c(4:8)])))
         grDevices::pdf(paste("GAPIT.", name.of.trait,".MAF_Effect_VP.pdf" ,sep = ""), width = 9,height=5.75)
         
         n=10
-        layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
+        graphics::layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
         do_color = grDevices::colorRampPalette(c("green", "red"))(n)
 
             graphics::par(mar=c(4,5,2,8),cex=1)

@@ -161,7 +161,7 @@ if(optOnly){
 
      iX0X0 <- try(solve(X0X0),silent=TRUE)
      if(inherits(iX0X0, "try-error")){
-     iX0X0 <- ginv(X0X0)
+     iX0X0 <- MASS::ginv(X0X0)
      print("At least two of your covariates are linearly dependent. Please reconsider the covariates you are using for GWAS and GPS")
      }
     iXX <- iX0X0
@@ -169,7 +169,7 @@ if(optOnly){
 
       if(is.null(K)){
         iXX <- try(solve(crossprod(X,X)),silent=TRUE)
-        if(inherits(iXX, "try-error"))iXX <- ginv(crossprod(X,X))
+        if(inherits(iXX, "try-error"))iXX <- MASS::ginv(crossprod(X,X))
         XY = crossprod(X,yv)
       }
       beta <- crossprod(iXX,XY) #Note: we can use crossprod here because iXX is symmetric
@@ -698,7 +698,7 @@ for (i in loopStart:mloop){
        A21=UU[vids.FALSE,vids.TRUE]
        A22=UU[vids.FALSE,vids.FALSE]
        A22i =try(solve(A22),silent=TRUE )
-       if(inherits(A22i, "try-error")) A22i <- ginv(A22)
+       if(inherits(A22i, "try-error")) A22i <- MASS::ginv(A22)
 
        F11=A11-A12%*%A22i%*%A21
        XX=crossprod(X,F11)%*%X
@@ -707,7 +707,7 @@ for (i in loopStart:mloop){
       if(i == 0 &file==file.from &frag==1){
        iX0X0 <- try(solve(X0X0),silent=TRUE)
        if(inherits(iX0X0, "try-error")){
-         iX0X0 <- ginv(X0X0)
+         iX0X0 <- MASS::ginv(X0X0)
          print("At least two of your covariates are linearly dependent. Please reconsider the covariates you are using for GWAS and GPS")
        }
        iXX <- iX0X0
@@ -758,7 +758,7 @@ for (i in loopStart:mloop){
 
       if(is.null(K)){
         iXX <- try(solve(crossprod(X,X)),silent=TRUE)
-        if(inherits(iXX, "try-error"))iXX <- ginv(crossprod(X,X))
+        if(inherits(iXX, "try-error"))iXX <- MASS::ginv(crossprod(X,X))
         XY = crossprod(X,yv)
       }
 
@@ -822,17 +822,17 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="ReducdModel")
 
         #PEV
         C11=try(vgs*solve(crossprod(Xt,Xt)),silent=TRUE)
-        if(inherits(C11, "try-error")) C11=vgs*ginv(crossprod(Xt,Xt))
+        if(inherits(C11, "try-error")) C11=vgs*MASS::ginv(crossprod(Xt,Xt))
 
         C21=-K%*%crossprod(Zt,Xt)%*%C11
 		Kinv=try(solve(K)  ,silent=TRUE  ) 
-        if(inherits(Kinv, "try-error")) Kinv=ginv(K)
+        if(inherits(Kinv, "try-error")) Kinv=MASS::ginv(K)
         
         if(!is.null(Z)) term.0=crossprod(Z,Z)/ves
         if(is.null(Z)) term.0=diag(1/ves,nrow(K))
 
         term.1=try(solve(term.0+Kinv/vgs ) ,silent=TRUE )
-        if(inherits(term.1, "try-error")) term.1=ginv(term.0+Kinv/vgs )
+        if(inherits(term.1, "try-error")) term.1=MASS::ginv(term.0+Kinv/vgs )
 
         term.2=C21%*%crossprod(Xt,Zt)%*%K
         C22=(term.1-term.2 )

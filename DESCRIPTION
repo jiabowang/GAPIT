@@ -24,6 +24,7 @@ Imports:
     LDheatmap,
     lme4,
     MASS,
+    methods,
     multtest,
     plotly,
     RcppArmadillo,
@@ -31,7 +32,8 @@ Imports:
     rglwidget,
     scatterplot3d,
     snowfall,
-    snpStats
+    snpStats,
+    usethis
 Encoding: UTF-8
 LazyData: true
 Suggests: 

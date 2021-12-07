@@ -123,15 +123,15 @@ function(){
                 #print("seqQTN")
                 #print(seqQTN)
                 if(orientation=="col"){
-                    if(is.big.matrix(GDP)){
-                        GK=deepcopy(GDP,cols=seqQTN)
+                    if(bigmemory::is.big.matrix(GDP)){
+                        GK=bigmemory::deepcopy(GDP,cols=seqQTN)
                     }else{
                         GK=GDP[,seqQTN] #GK has the first as taxa in FarmCPU.Burger. But not get uesd.
                         #GK=GDP[,seqQTN]
                     }
                 }else{
                     #if(is.big.matrix(GDP)){
-                    #GK=deepcopy(GDP,rows=seqQTN)
+                    #GK=bigmemory::deepcopy(GDP,rows=seqQTN)
                     #GK=t(GK)
                     #}else{
                     #GK=cbind(Y[,1],t(GDP[c(1,seqQTN),])) #GK has the first as taxa in FarmCPU.Burger. But not get uesd.
@@ -477,7 +477,7 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     wwi <- try(solve(ww),silent=TRUE)
      if(inherits(wwi, "try-error")){
       # print("!!!!!")
-     wwi <- ginv(ww)
+     wwi <- MASS::ginv(ww)
      }
     print("Prediction")
     print(date())
@@ -510,15 +510,15 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     print(date())
     print("dimension of GD")
     print(dim(x))
-    print(is(x))
+    print(methods::is(x))
     
     #sfInit(parallel=ncpus>1, cpus=ncpus)
     #print(sprintf('%s cpus are used', sfCpus()))
     
     #---------------------------------------------------------
     #P <- apply(x,direction,function(x){
-    P <- sfApply(x,direction,function(x){
-        print("debug sfApply")
+    P <- snowfall::sfApply(x,direction,function(x){
+        print("debug snowfall::sfApply")
         r=1 #initial creteria for correlation between a and d
         if(model=="AD"){
             d=1-abs(x-middle)
@@ -723,7 +723,7 @@ function(y,w=NULL,GDP,orientation="col",model="A",ncpus=2,myModel=NULL,seqQTN=NU
     wwi <- try(solve(ww),silent=TRUE)
      if(inherits(wwi, "try-error")){
       # print("!!!!!")
-     wwi <- ginv(ww)
+     wwi <- MASS::ginv(ww)
      }
     #print("Prediction")
     #print(date())
@@ -1073,7 +1073,7 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
     }
     
     #handler of multiple CPU on big.matrix
-    if(ncpus>1 & is.big.matrix(GD)){
+    if(ncpus>1 & bigmemory::is.big.matrix(GD)){
         #print("Multiple CPUs are not avaiable for big.matrix. ")
         #print("The big.matrix will be converted to regular matrix which takes more memmory")
         #stop("Import the genotype as regula R matrix or set single CPU")
@@ -1098,9 +1098,9 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
     #handler of GD with taxa column
     if(ncol(GD)>nm & orientation=="col"){
         #print("GD has taxa column")
-        if(is.big.matrix(GD)){
+        if(bigmemory::is.big.matrix(GD)){
             #retain as bi.matrix
-            GD=deepcopy(GD,rows=1:nrow(GD),cols=2:ncol(GD))  #This cause problem with multi cpu
+            GD=bigmemory::deepcopy(GD,rows=1:nrow(GD),cols=2:ncol(GD))  #This cause problem with multi cpu
         }else{
             GD=as.matrix(GD[,-1])
         }
@@ -1191,14 +1191,14 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
         
         #GD based on big.matrix and orientation
         if(orientation=="col"){
-            if(is.big.matrix(GD)){
-                GD1=deepcopy(GD,rows=seqTaxa,cols=index)
+            if(bigmemory::is.big.matrix(GD)){
+                GD1=bigmemory::deepcopy(GD,rows=seqTaxa,cols=index)
             }else{
                 GD1=GD[seqTaxa,index]
             }
         }else{
-            if(is.big.matrix(GD)){
-                GD1=deepcopy(GD,rows=index,cols=seqTaxa)
+            if(bigmemory::is.big.matrix(GD)){
+                GD1=bigmemory::deepcopy(GD,rows=index,cols=seqTaxa)
             }else{
                 GD1=GD[index,seqTaxa]
             }
@@ -1217,14 +1217,14 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
             
             #GD based on big.matrix and orientation
             if(orientation=="col"){
-                if(is.big.matrix(GD)){
-                    GD2=deepcopy(GD,rows=seqTaxa2,cols=index)
+                if(bigmemory::is.big.matrix(GD)){
+                    GD2=bigmemory::deepcopy(GD,rows=seqTaxa2,cols=index)
                 }else{
                     GD2=GD[seqTaxa2,index]
                 }
             }else{
-                if(is.big.matrix(GD)){
-                    GD2=deepcopy(GD,rows=index,cols=seqTaxa2)
+                if(bigmemory::is.big.matrix(GD)){
+                    GD2=bigmemory::deepcopy(GD,rows=index,cols=seqTaxa2)
                 }else{
                     GD2=GD[index,seqTaxa2]
                 }
@@ -1573,7 +1573,7 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
         #===============================================================================
     }# end of loop on trait
     
-    if(ncpus>1)sfStop()
+    if(ncpus>1)snowfall::sfStop()
     gc()
     if(ncol(Y)==2) {
         # return (list(GWAS=GWAS,GPS=NULL,Pred=pred,compression=NULL,kinship.optimum=NULL,kinship=NULL,ycor=ycor,FDR=myPower$FDR,Power=myPower$Power,Power.Alpha=myPower$Power.Alpha,alpha=myPower$alpha,betapc=myGLM$betapc,seqQTN=seqQTN))
@@ -1667,14 +1667,14 @@ function(GDP=NULL,GM=NULL,seqQTN=NULL,seqQTN.p=NULL,orientation="col",threshold=
     #This section has problem of turning big.matrix to R matrix
     #It is OK as x is small
     if(orientation=="col"){
-        if(is.big.matrix(GDP)){
-            x=as.matrix(deepcopy(GDP,rows=index,cols=seqQTN) )
+        if(bigmemory::is.big.matrix(GDP)){
+            x=as.matrix(bigmemory::deepcopy(GDP,rows=index,cols=seqQTN) )
         }else{
             x=GDP[index,seqQTN]
         }
     }else{
-        if(is.big.matrix(GDP)){
-            x=t(as.matrix(deepcopy(GDP,rows=seqQTN,cols=index) ))
+        if(bigmemory::is.big.matrix(GDP)){
+            x=t(as.matrix(bigmemory::deepcopy(GDP,rows=seqQTN,cols=index) ))
         }else{
             x=t(GDP[seqQTN,index] )
         }
@@ -1735,14 +1735,14 @@ function(GDP=NULL,GM=NULL,seqQTN=NULL,seqQTN.p=NULL,orientation="col",threshold=
     #This section has problem of turning big.matrix to R matrix
     
     if(orientation=="col"){
-        if(is.big.matrix(GDP)){
-            bin=as.matrix(deepcopy(GDP,cols=seqQTN) )
+        if(bigmemory::is.big.matrix(GDP)){
+            bin=as.matrix(bigmemory::deepcopy(GDP,cols=seqQTN) )
         }else{
             bin=GDP[,seqQTN]
         }
     }else{
-        if(is.big.matrix(GDP)){
-            bin=t(as.matrix(deepcopy(GDP,rows=seqQTN,) ))
+        if(bigmemory::is.big.matrix(GDP)){
+            bin=t(as.matrix(bigmemory::deepcopy(GDP,rows=seqQTN,) ))
         }else{
             bin=t(GDP[seqQTN,] )
         }
