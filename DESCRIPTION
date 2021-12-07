@@ -9,9 +9,14 @@ Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: GPL (>= 2)
 Depends: R (>= 4.0.0)
-Imports: multtest, gplots,MASS, compiler
+Imports: 
+    compiler,
+    gplots,
+    MASS,
+    multtest
 Encoding: UTF-8
 LazyData: true
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+RoxygenNote: 7.1.2

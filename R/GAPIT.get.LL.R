@@ -1,5 +1,5 @@
 `GAPIT.get.LL` <-
-cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
+compiler::cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
     # evaluation of the maximum likelihood
     #Input: ys, xs, vg, delta, Z, X0, snp.pool
     #Output: LL

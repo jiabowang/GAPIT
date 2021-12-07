@@ -1,3 +1,28 @@
+
+#' GAPIT Genome Association and Prediction Integrated Tools
+#' 
+#' @description 
+#' GAPIT analyzes phenotypic and genotypics data to infer association.
+#' 
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz", package = "GAPIT3")
+#' myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz", package = "GAPIT3")
+#' myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+#' myGenotypes  <- read.table(myGenoFile, header = FALSE)
+#' 
+#' myGAPIT <- GAPIT(
+#'   Y = myPhenotypes,
+#'   G = myGenotypes,
+#'   PCA.total = 3,
+#'   model = "MLM"
+#' )
+#' }
+#'
+#'
+#' @export
 `GAPIT` <-
 function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NULL,GK=NULL,testY=NULL,
  group.from=1000000 ,group.to=1000000,group.by=20,DPP=100000, 
