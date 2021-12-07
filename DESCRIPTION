@@ -9,7 +9,29 @@ Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: GPL (>= 2)
 Depends: R (>= 4.0.0)
-Imports: multtest, gplots,MASS, compiler
+biocViews:
+Imports:
+    ape,
+    biganalytics,
+    bigmemory,
+    compiler,
+    EMMREML,
+    genetics,
+    gplots,
+    grid,
+    htmltools,
+    lattice,
+    LDheatmap,
+    lme4,
+    MASS,
+    multtest,
+    plotly,
+    RcppArmadillo,
+    rgl,
+    rglwidget,
+    scatterplot3d,
+    snowfall,
+    snpStats
 Encoding: UTF-8
 LazyData: true
 Suggests: 

@@ -52,9 +52,16 @@ chor_taxa=myGenotype$chor_taxa
 
 #if G exist turn to GD and GM
 
-if(output.numerical) write.table(GD,  "GAPIT.Genotype.Numerical.txt", quote = FALSE, sep = "\t", row.names = TRUE,col.names = NA)
-if(output.hapmap) write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt", quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+if(output.numerical){
+    utils::write.table(GD,  "GAPIT.Genotype.Numerical.txt",
+    quote = FALSE, sep = "\t", row.names = TRUE,col.names = NA)
+}
 
+if(output.hapmap){
+    utils::write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt",
+                       quote = FALSE, sep = "\t", row.names = FALSE,
+                       col.names = FALSE)
+}
 
 rownames(GD)=GT
 colnames(GD)=GI[,1]

@@ -84,34 +84,34 @@ return(NULL)
     colnames(power)=paste("QTN=",tkk,sep="")
 
     if(plot.style=="FarmCPU"){
-    write.table(power,file=paste("FarmCPU.",trait,".ROC.csv",sep=""),quote = TRUE, sep = ",", row.names = TRUE,col.names = NA)
+    utils::write.table(power,file=paste("FarmCPU.",trait,".ROC.csv",sep=""),quote = TRUE, sep = ",", row.names = TRUE,col.names = NA)
     }
     if(plot.style=="rainbow"){
-        write.table(power,file=paste("GAPIT.",trait,".ROC.csv",sep=""),quote = TRUE, sep = ",", row.names = TRUE,col.names = NA)
+        utils::write.table(power,file=paste("GAPIT.",trait,".ROC.csv",sep=""),quote = TRUE, sep = ",", row.names = TRUE,col.names = NA)
     }
     FDR_log<-FDR/10
     #palette(c("black","red","blue","brown", "orange","cyan", "green",rainbow(nc)))
     if(plot.style=="FarmCPU"){
-    pdf(paste("FarmCPU.", trait,".ROC.pdf" ,sep = ""), width = 5,height=5)
-    par(mar = c(5,6,5,3))
+    grDevices::pdf(paste("FarmCPU.", trait,".ROC.pdf" ,sep = ""), width = 5,height=5)
+    graphics::par(mar = c(5,6,5,3))
     }
     if(plot.style=="rainbow"){
-        pdf(paste("GAPIT.", trait,".ROC.pdf" ,sep = ""), width = 7,height=7)
-        par(mar = c(5,5,5,3))
+        grDevices::pdf(paste("GAPIT.", trait,".ROC.pdf" ,sep = ""), width = 7,height=7)
+        graphics::par(mar = c(5,5,5,3))
     }
   
- palette(c("black","red","blue","brown", "orange","cyan", "green",rainbow(nc)))
+ grDevices::palette(c("black","red","blue","brown", "orange","cyan", "green", grDevices::rainbow(nc)))
     plot(FDR_log,power[,1],log="x",type="o",yaxt="n",lwd=3,col=1,xlab="Type I error",ylab="Power",main = trait,cex.axis=1.3, cex.lab=1.3)
-    axis(side=2,at=tc1,labels=tc1,cex.lab=1.3,cex.axis=1.3)
+    graphics::axis(side=2,at=tc1,labels=tc1,cex.lab=1.3,cex.axis=1.3)
     for(i in 2:nc){
-        lines(power[,i]~FDR_log, lwd=3,type="o",pch=i,col=i)
+        graphics::lines(power[,i]~FDR_log, lwd=3,type="o",pch=i,col=i)
     }
     #legend("bottomright", colnames(power), pch = c(1:nc), lty = c(1,2),col=c(1:nc))
-   legend("bottomright", colnames(power), pch = c(nc:1), lty = c(1,2),col=c(nc:1),lwd=2,bty="n")
-    palette("default")      # reset back to the default
+   graphics::legend("bottomright", colnames(power), pch = c(nc:1), lty = c(1,2),col=c(nc:1),lwd=2,bty="n")
+    grDevices::palette("default")      # reset back to the default
     #print("@@@@@@@@@@@@@@")
     #print(power)
-    dev.off()
+    grDevices::dev.off()
 print("ROC completed!")
     
 }   #GAPIT.ROC ends here

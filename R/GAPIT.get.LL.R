@@ -20,7 +20,7 @@ cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
     deltaExpStart = -5
     deltaExpEnd = 5
     snp.pool=snp.pool[,]
-    if(!is.null(snp.pool)&&var(snp.pool)==0){
+    if(!is.null(snp.pool)&&stats::var(snp.pool)==0){
         deltaExpStart = 100
         deltaExpEnd = deltaExpStart
         #print("deltaExp change here")

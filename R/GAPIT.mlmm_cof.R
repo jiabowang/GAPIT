@@ -147,24 +147,24 @@
  M<-solve(chol(mod_fwd[[1]]$vg*K_norm+mod_fwd[[1]]$ve*diag(n))) 
  Y_t<-crossprod(M,Y) 
  cof_fwd_t<-crossprod(M,cbind(fix_cofs,cof_fwd[[1]])) 
- fwd_lm[[1]]<-summary(lm(Y_t~0+cof_fwd_t)) 
+ fwd_lm[[1]]<-summary(stats::lm(Y_t~0+cof_fwd_t)) 
  Res_H0<-fwd_lm[[1]]$residuals 
  Q_<-qr.Q(qr(cof_fwd_t)) 
   
  RSS<-list() 
  for (j in 1:(nbchunks-1)) { 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% addcof_fwd[[1]]])[,((j-1)*round(m/nbchunks)+1):(j*round(m/nbchunks))]) 
- RSS[[j]]<-apply(X_t,2,function(x){sum(lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ RSS[[j]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
  rm(X_t)} 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% addcof_fwd[[1]]])[,((j)*round(m/nbchunks)+1):(m-(ncol(cof_fwd[[1]])))]) 
- RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
  rm(X_t,j) 
   
  RSSf[[2]]<-unlist(RSS) 
  RSS_H0[[2]]<-sum(Res_H0^2) 
  df2[[2]]<-n-df1-ncol(fix_cofs)-ncol(cof_fwd[[1]]) 
  Ftest[[2]]<-(rep(RSS_H0[[2]],length(RSSf[[2]]))/RSSf[[2]]-1)*df2[[2]]/df1 
- pval[[2]]<-pf(Ftest[[2]],df1,df2[[2]],lower.tail=FALSE) 
+ pval[[2]] <- stats::pf(Ftest[[2]],df1,df2[[2]],lower.tail=FALSE) 
  addcof_fwd[[2]]<-names(which(RSSf[[2]]==min(RSSf[[2]]))[1]) 
  cof_fwd[[2]]<-cbind(cof_fwd[[1]],X[,colnames(X) %in% addcof_fwd[[2]]]) 
   colnames(cof_fwd[[2]])[ncol(cof_fwd[[2]])]<-addcof_fwd[[2]] 
@@ -182,24 +182,24 @@
  M<-solve(chol(mod_fwd[[i-1]]$vg*K_norm+mod_fwd[[i-1]]$ve*diag(n))) 
  Y_t<-crossprod(M,Y) 
  cof_fwd_t<-crossprod(M,cbind(fix_cofs,cof_fwd[[i-1]])) 
- fwd_lm[[i-1]]<-summary(lm(Y_t~0+cof_fwd_t)) 
+ fwd_lm[[i-1]]<-summary(stats::lm(Y_t~0+cof_fwd_t)) 
  Res_H0<-fwd_lm[[i-1]]$residuals 
  Q_ <- qr.Q(qr(cof_fwd_t)) 
   
  RSS<-list() 
  for (j in 1:(nbchunks-1)) { 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[i-1]])])[,((j-1)*round(m/nbchunks)+1):(j*round(m/nbchunks))]) 
- RSS[[j]]<-apply(X_t,2,function(x){sum(lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ RSS[[j]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
  rm(X_t)} 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[i-1]])])[,((j)*round(m/nbchunks)+1):(m-(ncol(cof_fwd[[i-1]])))]) 
- RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
  rm(X_t,j) 
   
  RSSf[[i]]<-unlist(RSS) 
  RSS_H0[[i]]<-sum(Res_H0^2) 
  df2[[i]]<-n-df1-ncol(fix_cofs)-ncol(cof_fwd[[i-1]]) 
  Ftest[[i]]<-(rep(RSS_H0[[i]],length(RSSf[[i]]))/RSSf[[i]]-1)*df2[[i]]/df1 
- pval[[i]]<-pf(Ftest[[i]],df1,df2[[i]],lower.tail=FALSE) 
+ pval[[i]] <- stats::pf(Ftest[[i]],df1,df2[[i]],lower.tail=FALSE) 
  addcof_fwd[[i]]<-names(which(RSSf[[i]]==min(RSSf[[i]]))[1]) 
  cof_fwd[[i]]<-cbind(cof_fwd[[i-1]],X[,colnames(X) %in% addcof_fwd[[i]]]) 
  colnames(cof_fwd[[i]])[ncol(cof_fwd[[i]])]<-addcof_fwd[[i]] 
@@ -214,7 +214,7 @@
  M<-solve(chol(mod_fwd[[length(mod_fwd)]]$vg*K_norm+mod_fwd[[length(mod_fwd)]]$ve*diag(n))) 
  Y_t<-crossprod(M,Y) 
  cof_fwd_t<-crossprod(M,cbind(fix_cofs,cof_fwd[[length(mod_fwd)]])) 
- fwd_lm[[length(mod_fwd)]]<-summary(lm(Y_t~0+cof_fwd_t)) 
+ fwd_lm[[length(mod_fwd)]]<-summary(stats::lm(Y_t~0+cof_fwd_t)) 
   
  Res_H0<-fwd_lm[[length(mod_fwd)]]$residuals 
  Q_ <- qr.Q(qr(cof_fwd_t)) 
@@ -222,17 +222,17 @@
  RSS<-list() 
  for (j in 1:(nbchunks-1)) { 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[length(mod_fwd)]])])[,((j-1)*round(m/nbchunks)+1):(j*round(m/nbchunks))]) 
- RSS[[j]]<-apply(X_t,2,function(x){sum(lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ RSS[[j]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
  rm(X_t)} 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[length(mod_fwd)]])])[,((j)*round(m/nbchunks)+1):(m-(ncol(cof_fwd[[length(mod_fwd)]])))]) 
- RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
  rm(X_t,j) 
   
  RSSf[[length(mod_fwd)+1]]<-unlist(RSS) 
  RSS_H0[[length(mod_fwd)+1]]<-sum(Res_H0^2) 
  df2[[length(mod_fwd)+1]]<-n-df1-ncol(fix_cofs)-ncol(cof_fwd[[length(mod_fwd)]]) 
  Ftest[[length(mod_fwd)+1]]<-(rep(RSS_H0[[length(mod_fwd)+1]],length(RSSf[[length(mod_fwd)+1]]))/RSSf[[length(mod_fwd)+1]]-1)*df2[[length(mod_fwd)+1]]/df1 
- pval[[length(mod_fwd)+1]]<-pf(Ftest[[length(mod_fwd)+1]],df1,df2[[length(mod_fwd)+1]],lower.tail=FALSE) 
+ pval[[length(mod_fwd)+1]] <- stats::pf(Ftest[[length(mod_fwd)+1]],df1,df2[[length(mod_fwd)+1]],lower.tail=FALSE) 
  rm(M,Y_t,cof_fwd_t,Res_H0,Q_,RSS) 
   
  ##get max pval at each forward step 
@@ -265,7 +265,7 @@
  M<-solve(chol(mod_bwd[[1]]$vg*K_norm+mod_bwd[[1]]$ve*diag(n))) 
  Y_t<-crossprod(M,Y) 
  cof_bwd_t<-crossprod(M,cbind(fix_cofs,cof_bwd[[1]])) 
- bwd_lm[[1]]<-summary(lm(Y_t~0+cof_bwd_t)) 
+ bwd_lm[[1]]<-summary(stats::lm(Y_t~0+cof_bwd_t)) 
   
  rm(M,Y_t,cof_bwd_t) 
   
@@ -279,7 +279,7 @@
  M<-solve(chol(mod_bwd[[i]]$vg*K_norm+mod_bwd[[i]]$ve*diag(n))) 
  Y_t<-crossprod(M,Y) 
  cof_bwd_t<-crossprod(M,cbind(fix_cofs,cof_bwd[[i]])) 
- bwd_lm[[i]]<-summary(lm(Y_t~0+cof_bwd_t)) 
+ bwd_lm[[i]]<-summary(stats::lm(Y_t~0+cof_bwd_t)) 
  rm(M,Y_t,cof_bwd_t)} 
   
  rm(i) 
@@ -327,7 +327,7 @@
  M<-solve(chol(null$vg*K_norm+null$ve*diag(n))) 
  Y_t<-crossprod(M,Y) 
  Xo_t<-crossprod(M,as.matrix(Xo)) 
- null_lm<-summary(lm(Y_t~0+Xo_t)) 
+ null_lm<-summary(stats::lm(Y_t~0+Xo_t)) 
  rm(null,M,Y_t,Xo_t) 
  RSS_null<-sum((Y-as.matrix(Xo)%*%null_lm$coef[,1])^2) 
   
@@ -369,22 +369,22 @@
  		M<-solve(chol(mixedmod$vg*K_norm+mixedmod$ve*diag(n))) 
  		Y_t<-crossprod(M,Y) 
  		cof_t<-crossprod(M,cbind(fix_cofs,cof)) 
- 		GLS_lm<-summary(lm(Y_t~0+cof_t)) 
+ 		GLS_lm<-summary(stats::lm(Y_t~0+cof_t)) 
  		Res_H0<-GLS_lm$residuals 
  		Q_ <- qr.Q(qr(cof_t)) 
  		RSS<-list() 
  		for (j in 1:(nbchunks-1)) { 
  		X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof)])[,((j-1)*round(m/nbchunks)+1):(j*round(m/nbchunks))]) 
- 		RSS[[j]]<-apply(X_t,2,function(x){sum(lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ 		RSS[[j]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
  		rm(X_t)} 
  		X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof)])[,((j)*round(m/nbchunks)+1):(m-ncol(cof))]) 
- 		RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ 		RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
  		rm(X_t,j) 
  		RSSf<-unlist(RSS) 
  		RSS_H0<-sum(Res_H0^2) 
  		df2<-n-df1-ncol(fix_cofs)-ncol(cof) 
  		Ftest<-(rep(RSS_H0,length(RSSf))/RSSf-1)*df2/df1 
- 		pval<-pf(Ftest,df1,df2,lower.tail=FALSE) 
+ 		pval <- stats::pf(Ftest,df1,df2,lower.tail=FALSE) 
  		list('out'=rbind(data.frame(SNP=colnames(cof),'pval'=GLS_lm$coef[(ncol(fix_cofs)+1):(ncol(fix_cofs)+ncol(cof)),4]), 
  		                 data.frame('SNP'=names(pval),'pval'=pval)), 
  		     'cof'=colnames(cof), 

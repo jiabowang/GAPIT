@@ -940,7 +940,7 @@ gc()
         if(!is.null(K)) stats[i, j] <- beta[q1]/sqrt(iXX[q1, q1] *vgs) 
         if(is.null(K)) stats[i, j] <- beta[q1]/sqrt(iXX[q1, q1] *ves)
         effect.est[i, ] <- beta[q1]
-        ps[i, ] <- 2 * pt(abs(stats[i, ]), dfs[i, ],lower.tail = FALSE)
+        ps[i, ] <- 2 * stats::pt(abs(stats[i, ]), dfs[i, ],lower.tail = FALSE)
         if(is.na(ps[i,]))ps[i,]=1
         #print(c(i,ps[i,],stats[i,],beta[q1],iXX[q1, q1]))
        } 
@@ -950,7 +950,7 @@ gc()
         if(!is.null(K)) stats[i, j] <- (F.num.first.two %*% beta[(q0+1):q1])/(length((q0+1):q1)*vgs)
         if(is.null(K)) stats[i, j] <- (F.num.first.two %*% beta[(q0+1):q1])/(length((q0+1):q1)*ves)
         effect.est <- rbind(effect.est, cbind(rep(i,length((q0+1):q1)), indicator$unique.SNPs, beta[(q0+1):q1])) #Replace with rbind
-        ps[i, ] <- pf(stats[i, j], df1=length((q0+1):q1), df2=(nr-ncol(X)), lower.tail = FALSE) #Alex, are these denominator degrees of freedom correct?
+        ps[i, ] <- stats::pf(stats[i, j], df1=length((q0+1):q1), df2=(nr-ncol(X)), lower.tail = FALSE) #Alex, are these denominator degrees of freedom correct?
         dfs[i,] <- nr-nrow(X)
         
        }
@@ -997,16 +997,16 @@ if(!fullGD)
 { 
   #print("!!!!!!!!!!")
   #print(dim(GI))
-  write.table(GI, paste("GAPIT.TMP.GI.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = TRUE)
-  write.table(ps, paste("GAPIT.TMP.ps.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
-  write.table(maf, paste("GAPIT.TMP.maf.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
-  write.table(nobs, paste("GAPIT.TMP.nobs.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
-  write.table(rsquare_base, paste("GAPIT.TMP.rsquare.base.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
-  write.table(rsquare, paste("GAPIT.TMP.rsquare.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
-  write.table(df, paste("GAPIT.TMP.df.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
-  write.table(tvalue, paste("GAPIT.TMP.tvalue.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
-  write.table(stderr, paste("GAPIT.TMP.stderr.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
-  write.table(effect.est, paste("GAPIT.TMP.effect.est.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+  utils::write.table(GI, paste("GAPIT.TMP.GI.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = TRUE)
+  utils::write.table(ps, paste("GAPIT.TMP.ps.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+  utils::write.table(maf, paste("GAPIT.TMP.maf.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+  utils::write.table(nobs, paste("GAPIT.TMP.nobs.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+  utils::write.table(rsquare_base, paste("GAPIT.TMP.rsquare.base.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+  utils::write.table(rsquare, paste("GAPIT.TMP.rsquare.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+  utils::write.table(df, paste("GAPIT.TMP.df.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+  utils::write.table(tvalue, paste("GAPIT.TMP.tvalue.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+  utils::write.table(stderr, paste("GAPIT.TMP.stderr.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+  utils::write.table(effect.est, paste("GAPIT.TMP.effect.est.",name.of.trait,file,".",frag,".txt",sep=""), quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
  
   #rm(dfs,stats,ps,nobs,maf,GI)   #This cause problem on return
   #gc()

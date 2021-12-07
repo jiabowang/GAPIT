@@ -1,4 +1,4 @@
-`GAPIT.Power.compare` <-function(myG=NUll,myGD=NULL,myGM=NULL,myKI=NULL,myY=NULL,myCV=NULL,rep=NULL,h2=NULL,NQTN=NULL){
+`GAPIT.Power.compare` <-function(myG=NULL,myGD=NULL,myGM=NULL,myKI=NULL,myY=NULL,myCV=NULL,rep=NULL,h2=NULL,NQTN=NULL){
 # Object: compare to Power against FDR for GLM,MLM,CMLM,ECMLM,SUPER
 # rep:repetition times
 # Authors: You Tang & Jiabo Wang
@@ -43,7 +43,7 @@ rep.Power.Alpha.ECMLM<-data.frame(matrix(0,12,6))
 ##PCA
 ##---------------------##
 
-PCA<-prcomp(X)
+PCA <- stats::prcomp(X)
 PCVar<-PCA$sdev^2
 myPC<-PCA$x[,1:3]
 m1<-as.data.frame(myPC)
@@ -54,20 +54,20 @@ myCV<-as.data.frame(myCV)
 ##-----end step 2  for tfam---###
 kcv1<-matrix(1,nrow(myCV),1)
 kcv<-cbind(data.frame(kcv1),myCV)
-write.table(kcv,"pca.txt",row.names = FALSE,col.names = FALSE,sep="\t",quote=FALSE)
+utils::write.table(kcv,"pca.txt",row.names = FALSE,col.names = FALSE,sep="\t",quote=FALSE)
 
 for(i in 1:rep)
 {
-addm<-matrix(rnorm(NQTN,0,1),NQTN,1)
+addm<-matrix(stats::rnorm(NQTN,0,1),NQTN,1)
 QTN.position<-sample(1:m,NQTN,replace=FALSE)
 
 SNPQ<-as.matrix(X[,QTN.position])
 ge<-SNPQ%*%addm
 
-vg<-var(ge)
+vg <- stats::var(ge)
 ve<-vg*(1-h2)/h2
 SDE<-sqrt(ve)
-res<-rnorm(n,0,SDE)
+res <- stats::rnorm(n,0,SDE)
 
 y=as.data.frame(ge+res)
 myY<-cbind(taxa,y)
@@ -226,62 +226,62 @@ colnames(rep.FDR.ECMLM)=  paste("FDR(",myWS,")",sep="")
 colnames(rep.power.ECMLM)=paste("Power(",myWS,")",sep="")
 colnames(rep.Power.Alpha.ECMLM)=paste("Power(",myWS,")",sep="")
 
-write.csv(cbind(rep.FDR.GLM,rep.power.GLM),paste(h2,"_",NQTN,".Power.by.FDR.GLM",rep,".csv",sep=""))
-write.csv(cbind(myalpha,rep.Power.Alpha.GLM),paste(h2,"_",NQTN,".Power.by.TypeI.GLM",".csv",sep=""))
+utils::write.csv(cbind(rep.FDR.GLM,rep.power.GLM),paste(h2,"_",NQTN,".Power.by.FDR.GLM",rep,".csv",sep=""))
+utils::write.csv(cbind(myalpha,rep.Power.Alpha.GLM),paste(h2,"_",NQTN,".Power.by.TypeI.GLM",".csv",sep=""))
 
-write.csv(cbind(rep.FDR.MLM,rep.power.MLM),paste(h2,"_",NQTN,".Power.by.FDR.MLM",rep,".csv",sep=""))
-write.csv(cbind(myalpha,rep.Power.Alpha.MLM),paste(h2,"_",NQTN,".Power.by.TypeI.MLM",".csv",sep=""))
+utils::write.csv(cbind(rep.FDR.MLM,rep.power.MLM),paste(h2,"_",NQTN,".Power.by.FDR.MLM",rep,".csv",sep=""))
+utils::write.csv(cbind(myalpha,rep.Power.Alpha.MLM),paste(h2,"_",NQTN,".Power.by.TypeI.MLM",".csv",sep=""))
 
-write.csv(cbind(rep.FDR.SUPER,rep.power.SUPER),paste(h2,"_",NQTN,".Power.by.FDR.SUPER",rep,".csv",sep=""))
-write.csv(cbind(myalpha,rep.Power.Alpha.SUPER),paste(h2,"_",NQTN,".Power.by.TypeI.SUPER",".csv",sep=""))
+utils::write.csv(cbind(rep.FDR.SUPER,rep.power.SUPER),paste(h2,"_",NQTN,".Power.by.FDR.SUPER",rep,".csv",sep=""))
+utils::write.csv(cbind(myalpha,rep.Power.Alpha.SUPER),paste(h2,"_",NQTN,".Power.by.TypeI.SUPER",".csv",sep=""))
 
-write.csv(cbind(rep.FDR.CMLM,rep.power.CMLM),paste(h2,"_",NQTN,".Power.by.FDR.CMLM",rep,".csv",sep=""))
-write.csv(cbind(myalpha,rep.Power.Alpha.CMLM),paste(h2,"_",NQTN,".Power.by.TypeI.CMLM",".csv",sep=""))
+utils::write.csv(cbind(rep.FDR.CMLM,rep.power.CMLM),paste(h2,"_",NQTN,".Power.by.FDR.CMLM",rep,".csv",sep=""))
+utils::write.csv(cbind(myalpha,rep.Power.Alpha.CMLM),paste(h2,"_",NQTN,".Power.by.TypeI.CMLM",".csv",sep=""))
 
-write.csv(cbind(rep.FDR.ECMLM,rep.power.ECMLM),paste(h2,"_",NQTN,".Power.by.FDR.ECMLM",rep,".csv",sep=""))
-write.csv(cbind(myalpha,rep.Power.Alpha.ECMLM),paste(h2,"_",NQTN,".Power.by.TypeI.ECMLM",".csv",sep=""))
+utils::write.csv(cbind(rep.FDR.ECMLM,rep.power.ECMLM),paste(h2,"_",NQTN,".Power.by.FDR.ECMLM",rep,".csv",sep=""))
+utils::write.csv(cbind(myalpha,rep.Power.Alpha.ECMLM),paste(h2,"_",NQTN,".Power.by.TypeI.ECMLM",".csv",sep=""))
 
-write.csv(cbind(rep.FDR.GLM[,6],rep.power.GLM[,6],rep.FDR.MLM[,6],rep.power.MLM[,6],rep.FDR.CMLM[,6],rep.power.CMLM[,6],rep.FDR.ECMLM[,6],rep.power.ECMLM[,6],rep.FDR.SUPER[,6],rep.power.SUPER[,6]),paste(h2,"_",NQTN,".Power.by.FDR.GLM.MLM.SUPER",rep,".csv",sep=""))
+utils::write.csv(cbind(rep.FDR.GLM[,6],rep.power.GLM[,6],rep.FDR.MLM[,6],rep.power.MLM[,6],rep.FDR.CMLM[,6],rep.power.CMLM[,6],rep.FDR.ECMLM[,6],rep.power.ECMLM[,6],rep.FDR.SUPER[,6],rep.power.SUPER[,6]),paste(h2,"_",NQTN,".Power.by.FDR.GLM.MLM.SUPER",rep,".csv",sep=""))
 	name.of.trait=noquote(names(myY)[2])
 
 
-pdf(paste("GAPIT.Power ", name.of.trait,".compare to GLM,MLM,CMLM,ECMLM,SUPER.", ".pdf", sep = ""), width = 4.5, height = 4.5,pointsize=9)
-par(mar = c(5,6,5,3))
+grDevices::pdf(paste("GAPIT.Power ", name.of.trait,".compare to GLM,MLM,CMLM,ECMLM,SUPER.", ".pdf", sep = ""), width = 4.5, height = 4.5,pointsize=9)
+graphics::par(mar = c(5,6,5,3))
 	#win.graph(width=6, height=4, pointsize=9)
 	#palette(c("blue","red","green4","brown4","orange",rainbow(5)))
-	palette(c("green4","red","blue","brown4","orange",rainbow(5)))
+	grDevices::palette(c("green4","red","blue","brown4","orange",grDevices::rainbow(5)))
 	plot(rep.FDR.SUPER[,6],rep.power.SUPER[,6],bg="lightgray",xlab="FDR",ylab="Power",ylim=c(0,1),xlim=c(0,1),main="Power against FDR",type="o",pch=20,col=1,cex=1.0,cex.lab=1.3, cex.axis=1, lwd=2,las=1)
-        lines(rep.power.ECMLM[,6]~rep.FDR.ECMLM[,6], lwd=2,type="o",pch=20,col=2)
-	lines(rep.power.CMLM[,6]~rep.FDR.CMLM[,6], lwd=2,type="o",pch=20,col=3)
-	lines(rep.power.MLM[,6]~rep.FDR.MLM[,6], lwd=2,type="o",pch=20,col=4)
-	lines(rep.power.GLM[,6]~rep.FDR.GLM[,6], lwd=2,type="o",pch=20,col=5)
-	legend("bottomright",c("SUPER","ECMLM","CMLM","MLM","GLM"), pch = 20, lty =1,col=c(1:5),lwd=2,cex=1.0,bty="n")
+        graphics::lines(rep.power.ECMLM[,6]~rep.FDR.ECMLM[,6], lwd=2,type="o",pch=20,col=2)
+	graphics::lines(rep.power.CMLM[,6]~rep.FDR.CMLM[,6], lwd=2,type="o",pch=20,col=3)
+	graphics::lines(rep.power.MLM[,6]~rep.FDR.MLM[,6], lwd=2,type="o",pch=20,col=4)
+	graphics::lines(rep.power.GLM[,6]~rep.FDR.GLM[,6], lwd=2,type="o",pch=20,col=5)
+	graphics::legend("bottomright",c("SUPER","ECMLM","CMLM","MLM","GLM"), pch = 20, lty =1,col=c(1:5),lwd=2,cex=1.0,bty="n")
 	#
 
-dev.off()
+grDevices::dev.off()
 
 ###add type I error and power###
 
 kkt<-cbind(rep.Power.Alpha.SUPER[,1],rep.Power.Alpha.ECMLM[,1],rep.Power.Alpha.CMLM[,1],rep.Power.Alpha.MLM[,1],rep.Power.Alpha.GLM[,1])
-write.csv(cbind(myalpha,rep.Power.Alpha.SUPER[,1],rep.Power.Alpha.ECMLM[,1],rep.Power.Alpha.CMLM[,1],rep.Power.Alpha.MLM[,1],rep.Power.Alpha.GLM[,1]),paste(h2,"_",NQTN,".Type I error.Power.by.FDR.GLM.MLM.SUPER",rep,".csv",sep=""))
+utils::write.csv(cbind(myalpha,rep.Power.Alpha.SUPER[,1],rep.Power.Alpha.ECMLM[,1],rep.Power.Alpha.CMLM[,1],rep.Power.Alpha.MLM[,1],rep.Power.Alpha.GLM[,1]),paste(h2,"_",NQTN,".Type I error.Power.by.FDR.GLM.MLM.SUPER",rep,".csv",sep=""))
 
 myalpha1<-myalpha/10
 
-pdf(paste("GAPIT.Type I error_Power ", name.of.trait,".compare to GLM,MLM,CMLM,ECMLM,SUPER.", ".pdf", sep = ""), width = 6, height = 4.5,pointsize=9)
-par(mar = c(5,6,5,3))
+grDevices::pdf(paste("GAPIT.Type I error_Power ", name.of.trait,".compare to GLM,MLM,CMLM,ECMLM,SUPER.", ".pdf", sep = ""), width = 6, height = 4.5,pointsize=9)
+graphics::par(mar = c(5,6,5,3))
 	#win.graph(width=6, height=4, pointsize=9)
 	#palette(c("blue","red","green4","brown4","orange",rainbow(5)))
-	palette(c("green4","red","blue","brown4","orange",rainbow(5)))
+	grDevices::palette(c("green4","red","blue","brown4","orange", grDevices::rainbow(5)))
 	plot(myalpha1,rep.Power.Alpha.SUPER[,1],log="x",bg="lightgray",xlab="Type I error",ylab="Power",main="Power against FDR",type="o",pch=20,col=1,cex=1.0,cex.lab=1.3, cex.axis=1, lwd=2,las=1,ylim=c(min(kkt),max(kkt)))
 	#plot(myalpha1,rep.Power.Alpha.SUPER[,1],bg="lightgray",xlab="Type I error",ylab="Power",ylim=c(0,1),xlim=c(0,1),main="Power against FDR",type="o",pch=20,col=1,cex=1.0,cex.lab=1.3, cex.axis=1, lwd=2,las=1)
-        lines(rep.Power.Alpha.ECMLM[,1]~myalpha1, lwd=2,type="o",pch=20,col=2)
-	lines(rep.Power.Alpha.CMLM[,1]~myalpha1, lwd=2,type="o",pch=20,col=3)
-	lines(rep.Power.Alpha.MLM[,1]~myalpha1, lwd=2,type="o",pch=20,col=4)
-	lines(rep.Power.Alpha.GLM[,1]~myalpha1, lwd=2,type="o",pch=20,col=5)
-	legend("bottomright",c("SUPER","ECMLM","CMLM","MLM","GLM"), pch = 20, lty =1,col=c(1:5),lwd=2,cex=1.0,bty="n")
+        graphics::lines(rep.Power.Alpha.ECMLM[,1]~myalpha1, lwd=2,type="o",pch=20,col=2)
+	graphics::lines(rep.Power.Alpha.CMLM[,1]~myalpha1, lwd=2,type="o",pch=20,col=3)
+	graphics::lines(rep.Power.Alpha.MLM[,1]~myalpha1, lwd=2,type="o",pch=20,col=4)
+	graphics::lines(rep.Power.Alpha.GLM[,1]~myalpha1, lwd=2,type="o",pch=20,col=5)
+	graphics::legend("bottomright",c("SUPER","ECMLM","CMLM","MLM","GLM"), pch = 20, lty =1,col=c(1:5),lwd=2,cex=1.0,bty="n")
 	#
 
-dev.off()
+grDevices::dev.off()
 
 
 print(paste("GAPIT.Power ", name.of.trait,".compare to GLM,MLM,CMLM,ECMLM,SUPER.","successfully!" ,sep = ""))

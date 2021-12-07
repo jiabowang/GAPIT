@@ -36,7 +36,7 @@
     m=nm  #number of markers
     
     #Set QTN effects
-    if (QTNDist=="normal"){ addeffect<-rnorm(NQTN,0,1)
+    if (QTNDist=="normal"){ addeffect<-stats::rnorm(NQTN,0,1)
     }else
     {addeffect=effectunit^(1:NQTN)}
     
@@ -64,7 +64,7 @@
     
     
     effect=SNPQ%*%addeffect
-    effectvar=var(effect)
+    effectvar=stats::var(effect)
 
 #Interaction
 cp=0*effect
@@ -75,7 +75,7 @@ if(a2>0&NQTN>=nint){
     cp=apply(SNPQ[,Int.position],1,prod)
   }
 
-  cpvar=var(cp)
+  cpvar = stats::var(cp)
   
   intvar=(effectvar-a2*effectvar)/a2
   if(is.na(cp[1]))stop("something wrong in simulating interaction")
@@ -98,11 +98,11 @@ if(a2>0&NQTN>=nint){
     
     #Variance explained by each SNP
     effectInd=SNPQ%*%diag(addeffect)
-    varInd=apply(effectInd,2,var)
+    varInd = apply(effectInd, 2, stats::var)
     effectSeq=order(varInd,decreasing = TRUE)
     
     #Simulating Residual and phenotype
-    residual=rnorm(n,0,sqrt(residualvar))
+    residual = stats::rnorm(n,0,sqrt(residualvar))
 
     #environment effect
     if(!is.null(cveff)){
@@ -110,7 +110,7 @@ if(a2>0&NQTN>=nint){
     vy=effectvar+residualvar
     #print(vy)
     ev=cveff*vy/(1-cveff)
-    ec=sqrt(ev)/sqrt(diag(var(CV[,-1])))    
+    ec=sqrt(ev)/sqrt(diag(stats::var(CV[,-1])))    
     enveff=as.matrix(myCV[,-1])%*%ec
     
     #print(cbind(effectvar,residualvar,ev,ec))
@@ -129,7 +129,7 @@ if(a2>0&NQTN>=nint){
     if(category>1){
       myQuantile =(0:category)/category
       y.num= myY[,2]
-      cutoff=quantile(y.num, myQuantile)
+      cutoff = stats::quantile(y.num, myQuantile)
       y.cat= .bincode(y.num,cutoff,include.lowest = T)
       myY[,2]=y.cat
     }
@@ -144,7 +144,7 @@ if(a2>0&NQTN>=nint){
       x=(effect-mean(effect))
       x=x/as.numeric(sqrt(effectvar))
       myF=GAPIT.BIPH(x,h2=h2,r=r)
-      p=runif(n)
+      p=stats::runif(n)
       index=p<myF
       myY[index,2]=1
       myY[!index,2]=0

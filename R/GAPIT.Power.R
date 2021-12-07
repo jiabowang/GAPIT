@@ -64,7 +64,7 @@ QTN=GWAS[myQTN$index,]
 qtnLoc=which(QTN[,8]==1) #get the position of QTN
 P.QTN=QTN[qtnLoc,4] #p value of QTN
 P.marker=QTN[-qtnLoc,4] #p value of non qtn (marker)
-cutOff=matrix(quantile(P.marker, alpha,na.rm=TRUE),ncol=1)#xiaoalei changed
+cutOff=matrix(stats::quantile(P.marker, alpha,na.rm=TRUE),ncol=1)#xiaoalei changed
 myPower.Alpha=apply(cutOff,1,function(x){
   Power=length(which(P.QTN<x))/length(P.QTN)
 })

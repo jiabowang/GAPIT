@@ -18,7 +18,7 @@ if(rel<2){stop("Validation Invalid. Please select replications >1 !")}
 #t<-2
 y<-y[!is.na(y[,2]),] 
 y<-y[,c(1,2)]
-y<- na.omit(y)
+y<- stats::na.omit(y)
 #############
 commonGeno <- unique(as.character(y[,1]))[unique(as.character(y[,1])) %in% myGD[,1]]
 cG<-data.frame(commonGeno)
@@ -34,13 +34,13 @@ k1<-as.matrix(X)
 k2=GAPIT.kinship.VanRaden(snps=k1)
 myKI<-as.data.frame(k2)
 myKI<-cbind(myGD[,1],myKI)
-write.table(y,"Y.txt",quote=F,sep="\t",row.names=F,col.names=T)
-write.table(myKI,"K.txt",quote=F,row.names=F,col.names=F,sep="\t")
+utils::write.table(y,"Y.txt",quote=F,sep="\t",row.names=F,col.names=T)
+utils::write.table(myKI,"K.txt",quote=F,row.names=F,col.names=F,sep="\t")
 gc()
-myK<- read.table("K.txt",head=F)
-y= read.table("Y.txt",head=T)
+myK<- utils::read.table("K.txt",head=F)
+y = utils::read.table("Y.txt",head=T)
 
-y<- na.omit(y)
+y <- stats::na.omit(y)
 y=y[(y[,1] %in% myK[,1]),]
 m=nrow(y)
 if(is.null(tc))
@@ -116,14 +116,14 @@ YP.ref <- merge(y, prediction.ref, by.x = 1, by.y = "Taxa")
 YP.inf <- merge(y, prediction.inf, by.x = 1, by.y = "Taxa")
 
 #Calculate correlation and store them
-r.ref=cor(as.numeric(as.vector(YP.ref[,2])),as.numeric(as.vector(YP.ref[,6]) ))
-r.inf=cor(as.numeric(as.vector(YP.inf[,2])),as.numeric(as.vector(YP.inf[,6]) ))
+r.ref=stats::cor(as.numeric(as.vector(YP.ref[,2])),as.numeric(as.vector(YP.ref[,6]) ))
+r.inf=stats::cor(as.numeric(as.vector(YP.inf[,2])),as.numeric(as.vector(YP.inf[,6]) ))
 
 if(r.inf<0){
 #r.inf=cor(as.numeric(as.vector(YP.inf[,2])),as.numeric(as.vector(YP.inf[,2]+YP.inf[,6])))
 combine_output=cbind(as.numeric(as.vector(YP.inf[,2])),as.numeric(as.vector(YP.inf[,6]) ))
 
-write.csv(combine_output, paste("Accuracy_folders",num,k,i,rel,".csv",sep=""))
+utils::write.csv(combine_output, paste("Accuracy_folders",num,k,i,rel,".csv",sep=""))
 #stop("...........")
 }
 storage.ref[k,i]=r.ref
@@ -147,15 +147,15 @@ allstorage.ref[,w]=as.matrix(rowMeans(storage.ref))
 combine_output=cbind(storage.inf,allstorage.inf[,w])
 combine_output1=cbind(storage.ref,allstorage.ref[,w])
 colnames(combine_output)=c(paste("folders",c(1:num),sep=""),"mean")
-write.csv(combine_output, paste("Accuracy_folders",num,"by CMLM,rel_",rel,".csv",sep=""))
-write.csv(combine_output1, paste("Accuracy_folders  ref",num,"by CMLM,rel_",rel,".csv",sep=""))
+utils::write.csv(combine_output, paste("Accuracy_folders",num,"by CMLM,rel_",rel,".csv",sep=""))
+utils::write.csv(combine_output1, paste("Accuracy_folders  ref",num,"by CMLM,rel_",rel,".csv",sep=""))
 
 }	
 sr<-nrow(tc1)
 ##output means accuracy by rel for every folders 
 colnames(allstorage.inf)=c(paste(tc1[c(1:sr),]," folders",sep=""))
-write.csv(allstorage.inf, paste("Accuracy_folders",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
-write.csv(allstorage.ref, paste("Accuracy_folders  ref",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
+utils::write.csv(allstorage.inf, paste("Accuracy_folders",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
+utils::write.csv(allstorage.ref, paste("Accuracy_folders  ref",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
 
 	name.of.trait=noquote(names(Y.raw)[2])
 #rrel=round(rel/2)
@@ -182,16 +182,16 @@ ppp[c,2]<-as.matrix(mean(bbm[,c]))
 }
 ppp<-as.matrix(cbind(ppp,tc1))
 #colnames(ppp)<-c(rel)
-sj<-runif(1, 0, 1)
+sj <- stats::runif(1, 0, 1)
 #name.of.trait="qqq"
-pdf(paste("GAPIT.cross_validation ", name.of.trait,sj,".compare to different folders.", ".pdf", sep = ""),width = 4.5, height = 4,pointsize=9)
-par(mar = c(5,6,5,3))
-palette(c("blue","red",rainbow(2)))
+grDevices::pdf(paste("GAPIT.cross_validation ", name.of.trait,sj,".compare to different folders.", ".pdf", sep = ""),width = 4.5, height = 4,pointsize=9)
+graphics::par(mar = c(5,6,5,3))
+grDevices::palette(c("blue","red",grDevices::rainbow(2)))
 plot(ppp[,3],ppp[,2],xaxt="n",ylim=c(0,1.04),xlim=c(min(tc1)-1,max(tc1)+1),bg="lightgray",xlab="Number of folds",ylab="Correlation",type="o",pch=1,col=1,cex=1.0,cex.lab=1.7, cex.axis=1.3, lwd=3,las=1,lty =2)
-	axis(side=1,at=tc1,labels=tc1,cex.lab=1.7)
-        lines(ppp[,1]~ppp[,3], lwd=3,type="o",pch=19,col=2,lty =1)
-	legend("bottomright",horiz = FALSE,c("Reference","Inference"),pch = c(1,19), lty =c(2,1),col=c(1:2),lwd=2,cex=1.2,bty="n")
-dev.off()
+	graphics::axis(side=1,at=tc1,labels=tc1,cex.lab=1.7)
+        graphics::lines(ppp[,1]~ppp[,3], lwd=3,type="o",pch=19,col=2,lty =1)
+	graphics::legend("bottomright",horiz = FALSE,c("Reference","Inference"),pch = c(1,19), lty =c(2,1),col=c(1:2),lwd=2,cex=1.2,bty="n")
+grDevices::dev.off()
 print(paste("GAPIT.cross validation ", name.of.trait,".compare to different folders.","successfully!" ,sep = ""))
 return(list(allstorage.inf))
 }#end GAPIT.cross validation compare to different folders by replicate Times

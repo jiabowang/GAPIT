@@ -18,11 +18,11 @@ if(genoFormat=="hapmap"){
         G=NULL
         if(frag==1){
           skip.1=0
-          G <- try(read.delim(paste(file.path,file.G,file, ".",file.Ext.G,sep=""),
+          G <- try(utils::read.delim(paste(file.path,file.G,file, ".",file.Ext.G,sep=""),
                           head = FALSE,skip = skip.1, nrows = file.fragment+1),silent=TRUE)
         }else{
           skip.1 <- (frag-1)*file.fragment +1
-          G <- try(read.delim(paste(file.path,file.G,file, ".",file.Ext.G,sep=""),
+          G <- try(utils::read.delim(paste(file.path,file.G,file, ".",file.Ext.G,sep=""),
                           head = FALSE,skip = skip.1, nrows = file.fragment),silent=TRUE )
         }
         
@@ -98,17 +98,17 @@ if(genoFormat=="EMMA"){
         GD=NULL
         skip.1 <- (frag-1)*file.fragment
         #Skip the remaining columns
-        GD.temp <- try(read.table(paste(file.path,file.GD, file, ".", file.Ext.GD,sep=""), head = TRUE, nrows = 1),silent=TRUE)
+        GD.temp <- try(utils::read.table(paste(file.path,file.GD, file, ".", file.Ext.GD,sep=""), head = TRUE, nrows = 1),silent=TRUE)
         num.SNP <- ncol(GD.temp)-1
         rm(GD.temp)
         read.in <- min(file.fragment,(num.SNP-skip.1))
         skip.2 <- max((num.SNP - (skip.1 + read.in)),0)
         print(paste(file.path,file.GD,file, ".",file.Ext.GD,sep=""))
 
-        GD <- try(read.table(paste(file.path,file.GD,file, ".",file.Ext.GD,sep=""), head = TRUE,
+        GD <- try(utils::read.table(paste(file.path,file.GD,file, ".",file.Ext.GD,sep=""), head = TRUE,
                   colClasses = c("factor", rep("NULL", skip.1), rep("numeric", read.in),
                   rep("NULL", skip.2))) ,silent=TRUE)
-        GI <- try(read.table(paste(file.path,file.GM,file, ".",file.Ext.GM,sep=""), head = TRUE,
+        GI <- try(utils::read.table(paste(file.path,file.GM,file, ".",file.Ext.GM,sep=""), head = TRUE,
                   skip=skip.1, nrows=file.fragment) ,silent=TRUE)
                   
         if(inherits(GD, "try-error"))  {

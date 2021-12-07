@@ -7,7 +7,7 @@ function(X,taxa, PC.number = min(ncol(X),nrow(X)),file.output=TRUE,PCA.total=0,P
 ############################################################################################## 
 #Conduct the PCA 
 print("Calling prcomp...")
-PCA.X <- prcomp(X)
+PCA.X <- stats::prcomp(X)
 eigenvalues <- PCA.X$sdev^2
 evp=eigenvalues/sum(eigenvalues)
 nout=min(10,length(evp))
@@ -17,18 +17,18 @@ if(is.null(PCA.col)) PCA.col="red"
 print("Creating PCA graphs...")
 #Create a Scree plot 
 if(file.output & PC.number>1) {
-pdf("GAPIT.PCA.eigenValue.pdf", width = 12, height = 12)
-  par(mar=c(5,5,4,5)+.1,cex=2)
+grDevices::pdf("GAPIT.PCA.eigenValue.pdf", width = 12, height = 12)
+  graphics::par(mar=c(5,5,4,5)+.1,cex=2)
   #par(mar=c(10,9,9,10)+.1)
   plot(xout,eigenvalues[xout],type="b",col="blue",xlab="Principal components",ylab="Variance")
-  par(new=TRUE)
+  graphics::par(new=TRUE)
   plot(xout,evp[xout]*100,type="n",col="red",xaxt="n",yaxt="n",xlab="",ylab="")
-  axis(4)
-  mtext("Percentage (%)",side=4,line=3,cex=2)
-dev.off()
+  graphics::axis(4)
+  graphics::mtext("Percentage (%)",side=4,line=3,cex=2)
+grDevices::dev.off()
 
-pdf("GAPIT.PCA.2D.pdf", width = 8, height = 8)
-par(mar = c(5,5,5,5))
+grDevices::pdf("GAPIT.PCA.2D.pdf", width = 8, height = 8)
+graphics::par(mar = c(5,5,5,5))
 maxPlot=min(as.numeric(PC.number[1]),3)
 
 for(i in 1:(maxPlot-1)){
@@ -37,31 +37,32 @@ plot(PCA.X$x[,i],PCA.X$x[,j],xlab=paste("PC",i,sep=""),ylab=paste("PC",j,sep="")
 
 }
 }
-dev.off()
+grDevices::dev.off()
 
 #output 3D plot
 if(PCA.3d==TRUE)
 {   
   if(1>2)
-  {if(!require(lattice)) install.packages("lattice")
-   library(lattice)
+  {
+#  if(!require(lattice)) install.packages("lattice")
+#   library(lattice)
    pca=as.data.frame(PCA.X$x)
    
-   png(file="example%03d.png", width=500, heigh=500)
+   grDevices::png(file="example%03d.png", width=500, heigh=500)
     for (i in seq(10, 80 , 1)){
         print(cloud(PC1~PC2*PC3,data=pca,screen=list(x=i,y=i-40),pch=20,color="red",
         col.axis="blue",cex=1,cex.lab=1.4, cex.axis=1.2,lwd=3))
         }
-    dev.off()
+    grDevices::dev.off()
     system("convert -delay 40 *.png GAPIT.PCA.3D.gif")
     
     # cleaning up
     file.remove(list.files(pattern=".png"))
     }
 
-    if(!require(rgl)) install.packages("rgl")
-    if(!require(rglwidget)) install.packages("rglwidget")
-    library(rgl)
+#    if(!require(rgl)) install.packages("rgl")
+#    if(!require(rglwidget)) install.packages("rglwidget")
+#    library(rgl)
     
     PCA1 <- PCA.X$x[,1]
     PCA2 <- PCA.X$x[,2]
@@ -69,7 +70,7 @@ if(PCA.3d==TRUE)
     plot3d(min(PCA1), min(PCA2), min(PCA3),xlim=c(min(PCA1),max(PCA1)),
      ylim=c(min(PCA2),max(PCA2)),zlim=c(min(PCA3),max(PCA3)),
      xlab="PCA1",ylab="PCA2",zlab="PCA3",
-     col = rgb(255, 255, 255, 100, maxColorValue=255),radius=0.01)
+     col = grDevices::rgb(255, 255, 255, 100, maxColorValue=255),radius=0.01)
     num_col=length(unique(PCA.col))
     if(num_col==1)
     { 
@@ -109,13 +110,27 @@ if(PCA.3d==TRUE)
     if (interactive()) widgets
     htmltools::save_html(widgets, "Interactive.PCA.html")
 }
-    if(!require(scatterplot3d)) install.packages("scatterplot3d")
-    library(scatterplot3d)
+#    if(!require(scatterplot3d)) install.packages("scatterplot3d")
+#    library(scatterplot3d)
 
-    pdf("GAPIT.PCA.3D.pdf", width = 7, height = 7)
-    par(mar = c(5,5,5,5))
-    scatterplot3d(PCA.X$x[,1],PCA.X$x[,2],PCA.X$x[,3],xlab=paste("PC",1,sep=""),ylab=paste("PC",2,sep=""),zlab=paste("PC",3,sep="") ,pch=20,color=PCA.col,col.axis="blue",cex=1,cex.lab=1.4, cex.axis=1.2,lwd=3,angle=55,scale.y=0.7)
-    dev.off()
+    grDevices::pdf("GAPIT.PCA.3D.pdf", width = 7, height = 7)
+    graphics::par(mar = c(5,5,5,5))
+    scatterplot3d(PCA.X$x[,1],
+                  PCA.X$x[,2],
+                  PCA.X$x[,3],
+                  xlab = paste("PC",1,sep=""),
+                  ylab = paste("PC",2,sep=""),
+                  zlab = paste("PC",3,sep=""),
+                  pch = 20,
+                  color = PCA.col,
+                  col.axis = "blue",
+                  cex.symbols = 1,
+                  cex.lab = 1.4,
+                  cex.axis = 1.2,
+                  lwd = 3,
+                  angle = 55,
+                  scale.y = 0.7)
+    grDevices::dev.off()
 }
 print("Joining taxa...")
 #Extract number of PCs needed
@@ -129,11 +144,11 @@ PCs <- cbind(taxa,as.data.frame(PCA.X$x))
 
 print("Exporting PCs...")
 #Write the PCs into a text file
-if(file.output) write.table(PCs[,1:(PCA.total+1)], "GAPIT.PCA.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+if(file.output) utils::write.table(PCs[,1:(PCA.total+1)], "GAPIT.PCA.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
-if(file.output) write.table(PCA.X$rotation[,1:PC.number], "GAPIT.PCA.loadings.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+if(file.output) utils::write.table(PCA.X$rotation[,1:PC.number], "GAPIT.PCA.loadings.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
-if(file.output) write.table(eigenvalues, "GAPIT.PCA.eigenvalues.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+if(file.output) utils::write.table(eigenvalues, "GAPIT.PCA.eigenvalues.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
 #Return the PCs
 return(list(PCs=PCs,EV=PCA.X$sdev^2,nPCs=NULL))

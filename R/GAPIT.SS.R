@@ -101,13 +101,13 @@ if(buspred)
     print(dim(CV1))
     print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
-    mylm = lm(ic_Y[,2] ~cbind(CV1, GD1))
-    print(cor(ic_Y[,2],as.numeric(predict(mylm,as.data.frame(cbind(CV1,GD1))))))
+    mylm = stats::lm(ic_Y[,2] ~cbind(CV1, GD1))
+    print(stats::cor(ic_Y[,2],as.numeric(stats::predict(mylm,as.data.frame(cbind(CV1,GD1))))))
     # Pred = cbind(as.data.frame(DP$GD[index,1]),as.data.frame(predict(mylm,as.data.frame(cbind(CV1,GD1)))))
     # colnames(Pred)=c("Taxa","Prediction")
     # print(mylm$coefficients)
     # print(head(cbind(IC$myallCV,GD2))
-    if(var(IC$myallCV[,2])==0)
+    if(stats::var(IC$myallCV[,2])==0)
       {kk=1:2
         }else{
           kk=1
@@ -133,10 +133,10 @@ if(buspred)
     print(dim(GD1))
     # print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
-    mylm = lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
+    mylm = stats::lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
     # print("!!")
-    print(predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
-    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
+    print(stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
+    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
     colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
     
    }
@@ -185,7 +185,7 @@ if(buspred)
    # print(cor(busCV[,-1]))
    busGAPIT=GAPIT(
      Y=ic_Y,
-     K=busKI,
+     KI=busKI,
      CV=busCV,
      model="gBLUP",
      file.output=F)
@@ -195,7 +195,7 @@ if(buspred)
    }#lmpred
 }#buspred
  
- if(DP$file.output) write.csv(Pred,paste("GAPIT.",DP$kinship.algorithm,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
+ if(DP$file.output) utils::write.csv(Pred,paste("GAPIT.",DP$kinship.algorithm,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
 
 
  va=myBus$vg

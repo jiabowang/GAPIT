@@ -92,7 +92,7 @@ thisY=thisY[!is.na(thisY)]
 if(length(thisY) <3){
  shortcut=TRUE
  }else{
-  if(var(thisY) ==0) shortcut=TRUE
+  if(stats::var(thisY) ==0) shortcut=TRUE
 }
         
 if(shortcut){
@@ -200,7 +200,7 @@ CV=CV[as.character(CV[,1])%in%as.character(Y[,1]),]
 #Output phenotype
 colnames(Y)=c("Taxa",name.of.trait)
 if(file.output)
-{try(write.table(Y, paste("GAPIT.", name.of.trait,".phenotype.csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
+{try(utils::write.table(Y, paste("GAPIT.", name.of.trait,".phenotype.csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
 }
 #TDP
 if(kinship.algorithm=="None" )
@@ -217,7 +217,7 @@ theGWAS=cbind(GM,theTDP$p,NA,NA,NA)
 return (list(Compression=NULL,kinship.optimum=NULL, kinship=NULL,PC=NULL,GWAS=theGWAS, GPS=NULL,Pred=NULL,REMLs=NULL,QTN=theTDP$QTN,Timmer=Timmer,Memory=Memory,h2= NULL))
 }
 
-rm(qc)
+#rm(qc)
 gc()
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="QC")
@@ -258,7 +258,7 @@ print("-------------------Sandwich top bun-----------------------------------")
     GK=GD[GTindex,snpsam]
     # print(dim(GK))
     # print(GK[270:279,1:5])
-    SNPVar=apply(as.matrix(GK),2,var)
+    SNPVar=apply(as.matrix(GK), 2, stats::var)
     # print(SNPVar)
     GK=GK[,SNPVar>0]
     GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
@@ -519,7 +519,7 @@ if(!is.null(GP))
 print(paste("bin---",bin,"---inc---",inc,sep=""))
   GK=GD[GTindex,myGenotype$SNP.QTN]
   SUPER_GD=GD[,myGenotype$SNP.QTN]
-  SNPVar=apply(as.matrix(GK),2,var)
+  SNPVar=apply(as.matrix(GK), 2, stats::var)
   
   GK=GK[,SNPVar>0]
   SUPER_GD=SUPER_GD[,SNPVar>0]
@@ -672,7 +672,7 @@ if(Model.selection == TRUE){
  
     colnames(BIC.Vector) <- c("Number of PCs/Covariates", "BIC (larger is better) - Schwarz 1978", "log Likelihood Function Value")
     
-    write.table(BIC.Vector, paste("GAPIT.", name.of.trait, ".BIC.Model.Selection.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+    utils::write.table(BIC.Vector, paste("GAPIT.", name.of.trait, ".BIC.Model.Selection.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
     
     #print(BIC.Vector)
     
@@ -726,7 +726,7 @@ adjust_value=as.numeric(Compression[1,4])-min(as.numeric(Compression[,4]),rm.na=
 # nocompress_value=as.numeric(Compression[1,4])
 # REML_storage=as.numeric(Compression[,4])
 
-adjust_sq=sqrt(var(as.numeric(Compression[,4])))
+adjust_sq=sqrt(stats::var(as.numeric(Compression[,4])))
 # threshold=adjust_mean*0.1       
 if(which.min(as.numeric(Compression[,4]))!=1)     ###added by Jiabo Wang 2015.7.20
 {
@@ -851,10 +851,10 @@ print("--------------------Final results presentations------------------------")
 if(!byPass) 
 { 
 if(length(bk$KW)>1 &length(bk$KW)<length(KI) & length(bk$KW)<1000 &GAPIT3.output){
-pdf(paste("GAPIT.",name.of.trait,".Kin.Optimum.pdf",sep=""), width = 12, height = 12)
-par(mar = c(25,25,25,25))
-heatmap.2(as.matrix(bk$KW),  cexRow =.2, cexCol = 0.2, col=rev(heat.colors(256)), scale="none", symkey=FALSE, trace="none")
-dev.off()
+grDevices::pdf(paste("GAPIT.",name.of.trait,".Kin.Optimum.pdf",sep=""), width = 12, height = 12)
+graphics::par(mar = c(25,25,25,25))
+heatmap.2(as.matrix(bk$KW),  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
+grDevices::dev.off()
 }
 }
 
@@ -882,16 +882,16 @@ while(numSNP==file.fragment) {     #this is problematic if the read end at the l
 #reload results from files
 print(paste("Current file ",file,"Fragment: ",frag))
 
-theGI <- try(read.table(paste("GAPIT.TMP.GI.",name.of.trait,file,".",frag,".txt",sep=""), head = TRUE)   ,silent=TRUE)
-theP <- try(read.table(paste("GAPIT.TMP.ps.",name.of.trait,file,".",frag,".txt",sep=""), head = FALSE)   ,silent=TRUE)
-theMAF <- try(read.table(paste("GAPIT.TMP.maf.",name.of.trait,file,".",frag,".txt",sep=""), head = FALSE),silent=TRUE)
-thenobs <- try(read.table(paste("GAPIT.TMP.nobs.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
-thersquare_base <- try(read.table(paste("GAPIT.TMP.rsquare.base.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
-thersquare <- try(read.table(paste("GAPIT.TMP.rsquare.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
-          thedf  <- try(read.table(paste("GAPIT.TMP.df.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
-          thetvalue  <- try(read.table(paste("GAPIT.TMP.tvalue.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
-          thestderr  <- try(read.table(paste("GAPIT.TMP.stderr.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
-theeffect.est <- try(read.table(paste("GAPIT.TMP.effect.est.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
+theGI <- try(utils::read.table(paste("GAPIT.TMP.GI.",name.of.trait,file,".",frag,".txt",sep=""), head = TRUE)   ,silent=TRUE)
+theP <- try(utils::read.table(paste("GAPIT.TMP.ps.",name.of.trait,file,".",frag,".txt",sep=""), head = FALSE)   ,silent=TRUE)
+theMAF <- try(utils::read.table(paste("GAPIT.TMP.maf.",name.of.trait,file,".",frag,".txt",sep=""), head = FALSE),silent=TRUE)
+thenobs <- try(utils::read.table(paste("GAPIT.TMP.nobs.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
+thersquare_base <- try(utils::read.table(paste("GAPIT.TMP.rsquare.base.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
+thersquare <- try(utils::read.table(paste("GAPIT.TMP.rsquare.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
+          thedf  <- try(utils::read.table(paste("GAPIT.TMP.df.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
+          thetvalue  <- try(utils::read.table(paste("GAPIT.TMP.tvalue.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
+          thestderr  <- try(utils::read.table(paste("GAPIT.TMP.stderr.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
+theeffect.est <- try(utils::read.table(paste("GAPIT.TMP.effect.est.",name.of.trait,file,".",frag,".txt",sep=""),head= FALSE),silent=TRUE)
 
 if(inherits(theGI, "try-error"))  {
 #if(nrow(theGI)<1){
@@ -1143,7 +1143,7 @@ if(!byPass &GAPIT3.output)
 {
 print("Exporting BLUP and Pred")
   #try(write.table(gs$BLUP, paste("GAPIT.", name.of.trait,".BLUP.csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
-  try(write.table(Pred, paste("GAPIT.", name.of.trait,".PRED.csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
+  try(utils::write.table(Pred, paste("GAPIT.", name.of.trait,".PRED.csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
 }
 
 if(byPass) 
@@ -1255,7 +1255,7 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Manhattan plot")
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")	
 
   #print("Creating ROC table and plot" )
-	if(file.output) myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=var(ys),trait=name.of.trait)
+	if(file.output) myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=stats::var(ys),trait=name.of.trait)
   #print("ROC table and plot created" )
 
   #MAF plots
@@ -1266,9 +1266,9 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Manhattan plot")
   #print(dim(GWAS))
 
   if(file.output){
-   write.table(GWAS, paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-   write.table(DTS, paste("GAPIT.", name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-   if(!byPass) write.table(GWAS.2, paste("GAPIT.", name.of.trait, ".Allelic_Effect_Estimates.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(GWAS, paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(DTS, paste("GAPIT.", name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   if(!byPass) utils::write.table(GWAS.2, paste("GAPIT.", name.of.trait, ".Allelic_Effect_Estimates.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
   }
 
 
@@ -1292,10 +1292,10 @@ Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Report")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Report")
 if(file.output){
 file=paste("GAPIT.", name.of.trait,".Timming.csv" ,sep = "")
-write.table(Timmer, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+utils::write.table(Timmer, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
 file=paste("GAPIT.", name.of.trait,".Memory.Stage.csv" ,sep = "")
-write.table(Memory, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+utils::write.table(Memory, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 }
 print(paste(name.of.trait, "has been analyzed successfully!") )
 print(paste("The results are saved in the directory of ", getwd()) )

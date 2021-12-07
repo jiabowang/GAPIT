@@ -10,8 +10,16 @@ function(){
     FarmCPU.Version="FarmCPU v1.02, Dec 21, 2016"
     return(FarmCPU.Version)
 }
-`FarmCPU.BIN` <-
-function(Y=NULL,GDP=NULL,GM=NULL,CV=NULL,P=NULL,orientation="col",method="random",b=c(5e5,5e6,5e7),s=seq(10,100,10),theLoop=NULL,bound=NULL){
+`FarmCPU.BIN` <-function(
+    Y = NULL,
+    GDP = NULL,
+    GM = NULL,
+    CV = NULL,
+    P = NULL,
+    orientation = "col",
+    method = "random",
+    b = c(5e5,5e6,5e7),
+    s = seq(10,100,10), theLoop = NULL, bound = NULL){
     #Input: Y - n by 2 matrix with fist column as taxa name and second as trait
     #Input: GDP - n by m+1 matrix. The first colum is taxa name. The rest are m genotype
     #Input: GM - m by 3  matrix for SNP name, chromosome and BP
@@ -264,11 +272,11 @@ function(Y=NULL,GDP=NULL,GM=NULL,CV=NULL,orientation="row",package="FarmCPU.LM",
         #cbind(lmcoefOnly[,1],lmcoefOnly[,3],lmcoefOnly[,2],lmcoefOnly[,4])
         #})
         
-        P<-matrix(NA,nr=nrow(GDP),nc=4*(nf+1))
+        P<-matrix(NA,nrow=nrow(GDP),ncol=4*(nf+1))
         for(i in 1:nrow(GDP)){
             x <- GDP[i,]
-            fmla <- formula(myModel)
-            myLM=lm(fmla)
+            fmla <- stats::formula(myModel)
+            myLM = stats::lm(fmla)
             lms=summary(myLM)
             lmcoef=lms$coefficients
             lmcoefOnly=lmcoef[-1,]  #remove intercept
@@ -316,14 +324,14 @@ function(Y=NULL,GDP=NULL,GM=NULL,CV=NULL,orientation="row",package="FarmCPU.LM",
         GDP=GDP[!missing,]
         
         #set index for markers with no variation
-        varSNP=apply(GDP,2,var)
+        varSNP=apply(GDP, 2, stats::var)
         indexSNP=which(varSNP!=0)
         
         P0 <- apply(GDP[,indexSNP],2,function(x){
             x = cbind(ccv,x)
-            fast.lm=fastLmPure(y=Y[,2],X = x)
+            fast.lm = RcppArmadillo::fastLmPure(y=Y[,2],X = x)
             tvalue=fast.lm$coefficients[-1]/fast.lm$stderr[-1]
-            pvalue=2*pt(abs(tvalue),fast.lm$df.residual,lower.tail = FALSE)
+            pvalue = 2 * stats::pt(abs(tvalue), fast.lm$df.residual, lower.tail = FALSE)
             cbind(fast.lm$coefficients[-1],tvalue,fast.lm$stderr[-1],pvalue)
         })
         
@@ -356,7 +364,15 @@ function(Y=NULL,GDP=NULL,GM=NULL,CV=NULL,orientation="row",package="FarmCPU.LM",
         #print("theCV")
         #print(head(theCV))
         if(ncpus==1)myLM=FarmCPU.LM(y=Y[,2],w=theCV,GDP=GDP,orientation=orientation,model=model,ncpus=ncpus,myModel=myModel,seqQTN=seqQTN,npc=npc)
-        if(ncpus>1)myLM=FarmCPU.LM.Parallel(y=Y[,2],w=theCV,x=GDP,orientation=orientation,model=model,ncpus=ncpus,npc=npc)
+        if(ncpus>1){myLM = FarmCPU.LM.Parallel(y=Y[,2],
+                    w = theCV,
+                    x = GDP,
+                    orientation = orientation,
+                    model = model,
+                    ncpus = ncpus#,
+                    #npc=npc
+                    )
+        }
         #print("Memory used after calling LM")
         #print(memory.size())
         gc()
@@ -408,7 +424,7 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     if(!is.null(w))print(dim(w))
     
     print("Memory used at begining of LM")
-    print(memory.size())
+    print(utils::memory.size())
     gc()
     #Constant section (non individual marker specific)
     #---------------------------------------------------------
@@ -472,7 +488,7 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     ve=(yy-crossprod(beta,rhs))/df
     se=sqrt(diag(wwi)*ve)
     tvalue=beta/se
-    pvalue <- 2 * pt(abs(tvalue), df,lower.tail = FALSE)
+    pvalue <- 2 * stats::pt(abs(tvalue), df,lower.tail = FALSE)
     P0=c(beta[-1],tvalue[-1],se[-1],pvalue[-1])
     yp=w%*%beta
     
@@ -487,7 +503,7 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     if(length(t0)<length(t1)) middle=1
     
     print("Memory used after setting LM")
-    print(memory.size())
+    print(utils::memory.size())
     gc()
     #Dynamic section on individual marker
     print("Iterating.................")
@@ -506,7 +522,7 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
         r=1 #initial creteria for correlation between a and d
         if(model=="AD"){
             d=1-abs(x-middle)
-            r=abs(cor(x[1:nd],d[1:nd]))
+            r=abs(stats::cor(x[1:nd],d[1:nd]))
             if(is.na(r))r=1
             if(r<=threshold) x=cbind(x,d) # having both a and d as marker effects
         }
@@ -571,7 +587,7 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
         }
         
         tvalue=beta/se
-        pvalue <- 2 * pt(abs(tvalue), df,lower.tail = FALSE)
+        pvalue <- 2 * stats::pt(abs(tvalue), df,lower.tail = FALSE)
         
         #Handler of dependency between  marker are covariate
         #if(abs(B22[1,1])<10e-8)pvalue[]=NA
@@ -608,7 +624,7 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     print("iteration accoplished")
     print(date())
     print("Memory used after iteration")
-    print(memory.size())
+    print(utils::memory.size())
     gc()
     
     #Final report
@@ -623,7 +639,7 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     
     
     print("Memory used at end of LM")
-    print(memory.size())
+    print(utils::memory.size())
     gc()
     
     return(list(P=P,P0=P0,PF=PF,Pred=yp))
@@ -718,7 +734,7 @@ function(y,w=NULL,GDP,orientation="col",model="A",ncpus=2,myModel=NULL,seqQTN=NU
     ve=(yy-crossprod(beta,rhs))/df
     se=sqrt(diag(wwi)*ve)
     tvalue=beta/se
-    pvalue <- 2 * pt(abs(tvalue), df,lower.tail = FALSE)
+    pvalue <- 2 * stats::pt(abs(tvalue), df,lower.tail = FALSE)
     P0=c(beta[-1],tvalue[-1],se[-1],pvalue[-1])
     yp=w%*%beta
     
@@ -778,7 +794,7 @@ function(y,w=NULL,GDP,orientation="col",model="A",ncpus=2,myModel=NULL,seqQTN=NU
         r=1 #initial creteria for correlation between a and d
         if(model=="AD"){
             d=1-abs(x-middle)
-            r=abs(cor(x[1:nd],d[1:nd]))
+            r=abs(stats::cor(x[1:nd],d[1:nd]))
             if(is.na(r))r=1
             if(r<=threshold) x=cbind(x,d) # having both a and d as marker effects
         }
@@ -839,7 +855,7 @@ function(y,w=NULL,GDP,orientation="col",model="A",ncpus=2,myModel=NULL,seqQTN=NU
         }
         
         tvalue=beta/se
-        pvalue <- 2 * pt(abs(tvalue), df,lower.tail = FALSE)
+        pvalue <- 2 * stats::pt(abs(tvalue), df,lower.tail = FALSE)
         
         #Handler of dependency between  marker are covariate
         if(!is.na(abs(B22[1,1]))){
@@ -927,34 +943,34 @@ function(y,w=NULL,GDP,orientation="col",model="A",ncpus=2,myModel=NULL,seqQTN=NU
     ycor=NA
     if(!is.null(pred)) {
         index=!is.na(pred[,2])
-        write.table(pred, paste("FarmCPU.", name.of.trait, ".Pred.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+        utils::write.table(pred, paste("FarmCPU.", name.of.trait, ".Pred.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
         #pred=read.table("FarmCPU.Iteration_02.Farm-CPU.Sim1.Pred.csv",sep=",",header=T)
         
-        pdf(paste("FarmCPU.", name.of.trait,".Pred.pdf" ,sep = ""), width = 5,height=5)
-        par(mar = c(5,6,5,3))
-        pred.lm = lm(pred[,3][index]~pred[,2][index])
+        grDevices::pdf(paste("FarmCPU.", name.of.trait,".Pred.pdf" ,sep = ""), width = 5,height=5)
+        graphics::par(mar = c(5,6,5,3))
+        pred.lm = stats::lm(pred[,3][index]~pred[,2][index])
         plot(pred[,3][index]~pred[,2][index],pch=20,col='black',ylab="Predicted phenotype",xlab="Observed phenotype",cex.axis=1,cex=1,cex.lab=1,las=1,bty='n',xlim=c(floor(min(pred[,2],na.rm=T)),ceiling(max(pred[,2],na.rm=T))*1.2),ylim=c(floor(min(pred[,3],na.rm=T)),ceiling(max(pred[,3],na.rm=T))*1.2),xaxs="i",yaxs="i")
-        abline(pred.lm,lty=5,col='red',lwd=2)
+        graphics::abline(pred.lm,lty=5,col='red',lwd=2)
         #legend(max(pred[,3])+1,max(pred[,2])+1, paste("R^2 = ", 0.5), col = 'black', text.col = "black", lty = 1, ncol=1, cex = 1, lwd=2, bty='o')
         cor=round(summary(pred.lm)$r.sq, 3)
-        text(max(pred[,2],na.rm=T)*1, max(pred[,3],na.rm=T)*1, paste("R^2=", cor), col= "forestgreen", cex = 1, pos=3)
+        graphics::text(max(pred[,2],na.rm=T)*1, max(pred[,3],na.rm=T)*1, paste("R^2=", cor), col= "forestgreen", cex = 1, pos=3)
         #title(paste("R^2 = ", round(summary(pred.lm)$r.sq, 3)), col= "black", cex = 1)
-        dev.off()
+        grDevices::dev.off()
     }
     #print("Create prediction table for unknown phenotype...")
     if(!is.null(ypred)){
         yindex=!is.na(ypred[,2])
         ypredrna=ypred[,2][yindex]
-        write.table(ypred, paste("FarmCPU.", name.of.trait, ".unknownY.Pred.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+        utils::write.table(ypred, paste("FarmCPU.", name.of.trait, ".unknownY.Pred.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
         if(length(ypredrna)!=0){
-            pdf(paste("FarmCPU.", name.of.trait,".unknownY.Pred.pdf" ,sep = ""), width = 5,height=5)
-            par(mar = c(5,6,5,3))
-            ypred.lm = lm(ypred[,3][yindex]~ypredrna)
+            grDevices::pdf(paste("FarmCPU.", name.of.trait,".unknownY.Pred.pdf" ,sep = ""), width = 5,height=5)
+            graphics::par(mar = c(5,6,5,3))
+            ypred.lm = stats::lm(ypred[,3][yindex]~ypredrna)
             plot(ypred[,3][yindex]~ypredrna,pch=20,col='black',ylab="Predicted phenotype",xlab="Observed phenotype",cex.axis=1,cex=1,cex.lab=1,las=1,bty='n',xlim=c(floor(min(pred[,2],na.rm=T)),ceiling(max(ypred[,2],na.rm=T))*1.2),ylim=c(floor(min(pred[,3],na.rm=T)),ceiling(max(ypred[,3],na.rm=T))*1.2),xaxs="i",yaxs="i")
-            abline(ypred.lm,lty=5,col='red',lwd=2)
+            graphics::abline(ypred.lm,lty=5,col='red',lwd=2)
             ycor=round(summary(ypred.lm)$r.sq, 3)
-            text(max(ypred[,2],na.rm=T)*1,max(ypred[,3],na.rm=T)*1, paste("R^2=", ycor), col= "forestgreen", cex = 1, pos=3)
-            dev.off()
+            graphics::text(max(ypred[,2],na.rm=T)*1,max(ypred[,3],na.rm=T)*1, paste("R^2=", ycor), col= "forestgreen", cex = 1, pos=3)
+            grDevices::dev.off()
         }else{
             print("There is no observed phenotype for predicted phenotype")
         }
@@ -1065,7 +1081,7 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
     
     #print("number of CPU required")
     #print(ncpus)
-    if(ncpus>1) sfInit(parallel=ncpus>1, cpus=ncpus)
+    if(ncpus>1) snowfall::sfInit(parallel=ncpus>1, cpus=ncpus)
     
     P=GP
     
@@ -1255,9 +1271,9 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
             #print(date())
             
             if(theLoop<=2){
-                myBin=FarmCPU.BIN(Y=Y1[,c(1,trait)],GD=GD1,GM=GM,CV=CV1,orientation=orientation,P=myPrior,method=method.bin,b=bin.size,s=bin.selection,theLoop=theLoop,bound=bound)
+                myBin=FarmCPU.BIN(Y=Y1[,c(1,trait)],GDP=GD1,GM=GM,CV=CV1,orientation=orientation,P=myPrior,method=method.bin,b=bin.size,s=bin.selection,theLoop=theLoop,bound=bound)
             }else{
-                myBin=FarmCPU.BIN(Y=Y1[,c(1,trait)],GD=GD1,GM=GM,CV=theCV,orientation=orientation,P=myPrior,method=method.bin,b=bin.size,s=bin.selection,theLoop=theLoop)
+                myBin=FarmCPU.BIN(Y=Y1[,c(1,trait)],GDP=GD1,GM=GM,CV=theCV,orientation=orientation,P=myPrior,method=method.bin,b=bin.size,s=bin.selection,theLoop=theLoop)
             }
             
             #Step 2c: Remove bin dependency
@@ -1300,7 +1316,7 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
                 if(!is.null(pred)) pred=cbind(Y1,myGLM$Pred) #Need to be consistant to CMLM
                 #print(pred)
                 p.GLM=GWAS[,4]
-                p.GLM.log=-log10(quantile(p.GLM,na.rm=TRUE,0.05))
+                p.GLM.log=-log10(stats::quantile(p.GLM,na.rm=TRUE,0.05))
                 #set.seed(666)
                 #bonf.log=-log10(quantile(runif(nm),0.05))
                 bonf.log=1.3
@@ -1311,14 +1327,14 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
                 #colnames(GWAS)=c(colnames(GM),"P.value","maf","nobs","Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP","FDR_Adjusted_P-values")
                 colnames(GWAS)=c(colnames(GM),"P.value","maf","effect")
                 
-                Vp=var(Y1[,2],na.rm=TRUE)
+                Vp = stats::var(Y1[,2],na.rm=TRUE)
                 
                 #print("Calling Report..")
                 if(file.output){
                     if(npc!=0){
                         betapc=cbind(c(1:npc),myGLM$betapc)
                         colnames(betapc)=c("CV","Effect")
-                        write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep=""),quote=F,row.names=FALSE)
+                        utils::write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep=""),quote=F,row.names=FALSE)
                     }
                     GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=ypred,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
                     myPower=GAPIT.Power(WS=WS, alpha=alpha, maxOut=maxOut,seqQTN=QTN.position,GM=GM,GWAS=GWAS,MaxBP=1e10)
@@ -1376,7 +1392,7 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
                 }
             }
             
-            myRemove=FarmCPU.Remove(GD=GD1,GM=GM,seqQTN=seqQTN,seqQTN.p=seqQTN.p,orientation=orientation,threshold=.7)
+            myRemove=FarmCPU.Remove(GDP=GD1,GM=GM,seqQTN=seqQTN,seqQTN.p=seqQTN.p,orientation=orientation,threshold=.7)
             
             #Recoding QTNs history
             seqQTN=myRemove$seqQTN
@@ -1430,7 +1446,16 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
                     #theCV=myRemove$bin
                 }
             }
-            myGLM=FarmCPU.GLM(Y=Y1[,c(1,trait)],GDP=GD1,GM=GM,CV=theCV,orientation=orientation,package=method.GLM,ncpus=ncpus,model=model,seqQTN=seqQTN,npc=npc)
+            myGLM=FarmCPU.GLM(Y = Y1[,c(1,trait)],
+                              GDP = GD1,
+                              GM = GM,
+                              CV = theCV,
+                              orientation = orientation,
+                              package = method.GLM,
+                              ncpus = ncpus,
+                              model = model,
+                              seqQTN = seqQTN,
+                              npc = npc)
             #Step 4: Background unit substitution
             #print(date())
             #print("Memory used before SUB")
@@ -1503,12 +1528,12 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
                 GWAS=cbind(GM,P,MAF,myGLM$B)
                 #colnames(GWAS)=c(colnames(GM),"P.value","maf","nobs","Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP","FDR_Adjusted_P-values")
                 colnames(GWAS)=c(colnames(GM),"P.value","maf","effect")
-                Vp=var(Y1[,2],na.rm=TRUE)
+                Vp = stats::var(Y1[,2],na.rm=TRUE)
                 
                 if(!is.null(ypred)){
                     yindex=!is.na(ypred[,2])
                     ypredrna=ypred[,2][yindex]
-                    ypred.lm = lm(ypred[,3][yindex]~ypredrna)
+                    ypred.lm = stats::lm(ypred[,3][yindex]~ypredrna)
                     ycor=round(summary(ypred.lm)$r.sq, 3)
                     #print(ycor)
                 }
@@ -1521,7 +1546,7 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
                         if(npc!=0){
                             betapc=cbind(c(1:npc),myGLM$betapc)
                             colnames(betapc)=c("CV","Effect")
-                            write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep=""),quote=F,row.names=FALSE)
+                            utils::write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep=""),quote=F,row.names=FALSE)
                         }
                         
                         GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
@@ -1530,7 +1555,7 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
                         if(npc!=0){
                             betapc=cbind(c(1:npc),myGLM$betapc)
                             colnames(betapc)=c("CV","Effect")
-                            write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep=""),quote=F,row.names=FALSE)
+                            utils::write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep=""),quote=F,row.names=FALSE)
                         }
                         
                         GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=ypred,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
@@ -1665,7 +1690,7 @@ function(GDP=NULL,GM=NULL,seqQTN=NULL,seqQTN.p=NULL,orientation="col",threshold=
     #x=x[,order(seqQTN.p)]
     #print("x")
     #print(head(x))
-    r=cor(as.matrix(x))
+    r = stats::cor(as.matrix(x))
     #print("r")
     #print(r)
     #print("indexing r")
@@ -1789,13 +1814,13 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
             if(method=="penalty") P.QTN=apply(GLM$P[,index],2,max,na.rm=TRUE)
             if(method=="reward") P.QTN=apply(GLM$P[,index],2,min,na.rm=TRUE)
             if(method=="mean") P.QTN=apply(GLM$P[,index],2,mean,na.rm=TRUE)
-            if(method=="median") P.QTN=apply(GLM$P[,index],2,median,na.rm=TRUE)
+            if(method=="median") P.QTN=apply(GLM$P[, index], 2, stats::median, na.rm=TRUE)
             if(method=="onsite") P.QTN=GLM$P0[(length(GLM$P0)-nqtn+1):length(GLM$P0)]
         }else{
             if(method=="penalty") P.QTN=max(GLM$P[,index],na.rm=TRUE)
             if(method=="reward") P.QTN=min(GLM$P[,index],na.rm=TRUE)
             if(method=="mean") P.QTN=mean(GLM$P[,index],na.rm=TRUE)
-            if(method=="median") P.QTN=median(GLM$P[,index],median,na.rm=TRUE)
+            if(method=="median") P.QTN = stats::median(GLM$P[,index], stats::median, na.rm=TRUE)
             if(method=="onsite") P.QTN=GLM$P0[(length(GLM$P0)-nqtn+1):length(GLM$P0)]
         }
         
@@ -1854,7 +1879,7 @@ function(GD=NULL,GM=NULL,Y=NULL,trait="",theRep=100){
         }
     }#end of theRep
     
-    write.table(pvalue.final,paste("FarmCPU.p.threshold.optimize.",trait,".txt",sep=""),sep="\t",col.names=F,quote=F,row.names=F)
+    utils::write.table(pvalue.final,paste("FarmCPU.p.threshold.optimize.",trait,".txt",sep=""),sep="\t",col.names=F,quote=F,row.names=F)
     
     print("The p.threshold of this data set should be:")
     print(sort(pvalue.final)[ceiling(theRep*0.05)])

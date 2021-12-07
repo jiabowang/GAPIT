@@ -53,7 +53,7 @@ theLog=as.matrix(cbind(facto,value))
 #theLog=as.character(as.matrix(cbind(facto,value)))
 colnames(theLog)=c("Model", "Value")
 file=paste("GAPIT.", name.of.trait,".Log.csv" ,sep = "")
-write.table(theLog, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+utils::write.table(theLog, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
 return (theLog)
 }
