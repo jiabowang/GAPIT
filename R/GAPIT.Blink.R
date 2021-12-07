@@ -211,14 +211,14 @@
           if(!isDone | iteration.output){
           gc()
               p.GLM=GWAS[,4]
-                p.GLM.log=-log10(quantile(p.GLM,na.rm=TRUE,0.05))
+                p.GLM.log=-log10(stats::quantile(p.GLM,na.rm=TRUE,0.05))
                 bonf.log=1.3
                 bonf.compare=p.GLM.log/bonf.log
                 p.FARMCPU.log=-log10(p.GLM)/bonf.compare
               GWAS[,4]=10^(-p.FARMCPU.log)
                 GWAS[,4][which(GWAS[,4]>1)]=1
                 colnames(GWAS)=c(colnames(GM),"P.value","maf","nobs","Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP","FDR_Adjusted_P-values")
-                Vp=var(Y1[,2],na.rm=TRUE)
+                Vp=stats::var(Y1[,2],na.rm=TRUE)
                 # if(file.output) GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
                     # myPower=GAPIT.Power(WS=WS, alpha=alpha, maxOut=maxOut,seqQTN=QTN.position,GM=GM,GWAS=GWAS,MaxBP=1e10)
             }
@@ -280,7 +280,7 @@
       stderr=myGLM$P[,3*nf-shift]
       GWAS=cbind(GM[MAF.index,],P,MAF,NA,NA,NA,NA)
       colnames(GWAS)=c(colnames(GM),"P.value","maf","nobs","Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP","FDR_Adjusted_P-values")
-      Vp=var(Y1[,2],na.rm=TRUE)
+      Vp=stats::var(Y1[,2],na.rm=TRUE)
       # if(file.output){
       #   if(theLoop==1&&is.null(CV)){
       #     GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
@@ -315,7 +315,11 @@
           GDpred = deepcopy(GD,rows=seqQTN)
         }
       }
-      PEV = Blink.Pred(Y = YP,GD = GDpred, CV = CV,orientation = orientation)
+      PEV = Blink.Pred(Y = YP,
+                       GD = GDpred,
+                       CV = CV#,
+                       #orientation = orientation
+                       )
     }
     if(time.cal){
       print("LD.time(sec):")
@@ -489,7 +493,7 @@
     wwi=iXX
     beta=wwi %*% wy
     yp= w %*% beta
-    ve=as.numeric(var(yp-y))
+    ve=as.numeric(stats::var(yp-y))
     RSS= (yp-y)^2
     n2LL=n*log(2*pi)+n*log(ve)+2*sum(RSS/(2*ve))
     # BICv[k]=n2LL+2*(nwc+nxc-1)*log(n)
@@ -498,7 +502,7 @@
     MSE=sum(RSS)/df
     se=sqrt(diag(iXX)*MSE)
     tvalue=beta/se
-        pvalue <- 2 * pt(abs(tvalue), df,lower.tail = FALSE)
+        pvalue <- 2 * stats::pt(abs(tvalue), df,lower.tail = FALSE)
         pmatrix[1:pos,pos]=pvalue[ncov:length(pvalue)]
     }
   }
@@ -532,7 +536,7 @@
     GDneo=t(GDneo)
   }
   # cat("ncol(GDneo) is",ncol(GDneo),"\n")
-  corr=cor(GDneo)
+  corr = stats::cor(GDneo)
   corr[is.na(corr)]=1
   corr[abs(corr)<=LD]=0
   corr[abs(corr)>LD]=1
@@ -555,10 +559,10 @@
 #Last update: 08/15/2016
   GDneo = as.matrix(GDneo)
   if (orientation == "row") {
-    SNP.index = apply(GDneo,1,sd)!=0
+    SNP.index = apply(GDneo,1, stats::sd)!=0
     GDneo = GDneo[SNP.index,]
   } else {
-    SNP.index = apply(GDneo, 2, sd) != 0
+    SNP.index = apply(GDneo, 2, stats::sd) != 0
     GDneo = GDneo[, SNP.index]
   }
   Porder = Porder[SNP.index]
@@ -685,7 +689,7 @@
         ve=(yy-crossprod(beta,rhs))/df
         se=sqrt(diag(iXX)*ve)
         tvalue=beta/se
-        pvalue <- 2 * pt(abs(tvalue), df,lower.tail = FALSE)
+        pvalue <- 2 * stats::pt(abs(tvalue), df,lower.tail = FALSE)
         if(!is.na(abs(B22[1,1]))){
             if(abs(B22[1,1])<10e-8)pvalue[]=NA}
         P[i,]=c(beta[-1],tvalue[-1],se[-1],pvalue[-1])
@@ -713,12 +717,12 @@
   GD1 = GD[seqTaxa,]
   
   if(is.null(CV)){
-    mylm = lm(Y1 ~ GD1)
-    PEV = predict(mylm,as.data.frame(GD))
+    mylm = stats::lm(Y1 ~ GD1)
+    PEV = stats::predict(mylm,as.data.frame(GD))
   }else{
     CV1 = CV[seqTaxa,]
-    mylm = lm(Y1 ~ CV1 + GD1)
-    PEV = predict(mylm,as.data.frame(cbind(CV,GD)))
+    mylm = stats::lm(Y1 ~ CV1 + GD1)
+    PEV = stats::predict(mylm,as.data.frame(cbind(CV,GD)))
   }
   return(PEV) 
 }
@@ -750,13 +754,13 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
             if(method=="penalty") P.QTN=apply(GLM$P[,index],2,max,na.rm=TRUE)
             if(method=="reward") P.QTN=apply(GLM$P[,index],2,min,na.rm=TRUE)
             if(method=="mean") P.QTN=apply(GLM$P[,index],2,mean,na.rm=TRUE)
-            if(method=="median") P.QTN=apply(GLM$P[,index],2,median,na.rm=TRUE)
+            if(method=="median") P.QTN = apply(GLM$P[,index], 2, stats::median, na.rm = TRUE)
             if(method=="onsite") P.QTN=GLM$P0[(length(GLM$P0)-nqtn+1):length(GLM$P0)]
         }else{
             if(method=="penalty") P.QTN=max(GLM$P[,index],na.rm=TRUE)
             if(method=="reward") P.QTN=min(GLM$P[,index],na.rm=TRUE)
             if(method=="mean") P.QTN=mean(GLM$P[,index],na.rm=TRUE)
-            if(method=="median") P.QTN=median(GLM$P[,index],median,na.rm=TRUE)
+            if(method=="median") P.QTN=stats::median(GLM$P[,index], stats::median,na.rm=TRUE)
             if(method=="onsite") P.QTN=GLM$P0[(length(GLM$P0)-nqtn+1):length(GLM$P0)]
         }
         GLM$P[position,spot]=P.QTN
@@ -856,7 +860,7 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
 #Output: r value
 #Author: Yao Zhou
 #Last Update: 8/15/2015
-  t=qt(0.5*p,df-1,lower.tail = FALSE)
+  t = stats::qt(0.5*p,df-1,lower.tail = FALSE)
   r=sqrt(t^2/(df-1+t^2))
   return(r)
 }
@@ -870,7 +874,7 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
 #Author: Yao Zhou
 #Last Update: 8/15/2015
   tvalue=sqrt(df-1)*r/sqrt(1-r^2)
-  pvalue <- 2 * pt(abs(tvalue), df-1,lower.tail = FALSE)
+  pvalue <- 2 * stats::pt(abs(tvalue), df-1,lower.tail = FALSE)
   return(pvalue)
 }
 `BlinkR.SUB` <-function(CV,seqQTN,Y,r,ny,ms,m){
@@ -889,7 +893,7 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
     w=GDP[,-i]
     if(nsnp==1) w=NULL
     GD=as.matrix(GDP[,i])
-    rsnp[i,1]=Blink.cor(Y=Y,w=w,GD=GD,orientation=orientation,,ms=ms,n=ny,m=nm)
+    rsnp[i,1]=Blink.cor(Y=Y,w=w,GD=GD,orientation=orientation,ms=ms,n=ny,m=nm)
   }
   rm(GDP, GD, w, ncov, nf)
     return(rsnp)

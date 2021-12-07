@@ -42,18 +42,18 @@ LL.best=paste("-2LL: ",floor(LL.best0*100)/100,sep="")
 label.comp=paste(c("Cluster method: ","Group method: ","Group number: "), Compression.best[c(1:3)], sep="")
 theOptimum=c(label.comp,LL.best) 
 #print(variance)
-pdf(paste("GAPIT.", name.of.trait,".Optimum.pdf", sep = ""), width = 14)
-par(mfrow = c(1,1), mar = c(1,1,5,5), lab = c(5,5,7))
-pie(variance,  col=colors, labels=labels,angle=45,border=NA)
-legend(1.0, 0.5, legend, cex=1.5, bty="n",
+grDevices::pdf(paste("GAPIT.", name.of.trait,".Optimum.pdf", sep = ""), width = 14)
+graphics::par(mfrow = c(1,1), mar = c(1,1,5,5), lab = c(5,5,7))
+graphics::pie(variance,  col=colors, labels=labels,angle=45,border=NA)
+graphics::legend(1.0, 0.5, legend, cex=1.5, bty="n",
    fill=colors)
 
 #Display the optimum compression
-text(1.5,.0, "The optimum compression", col= "gray10")
+graphics::text(1.5,.0, "The optimum compression", col= "gray10")
 for(i in 1:4){
-text(1.5,-.1*i, theOptimum[i], col= "gray10")
+    graphics::text(1.5,-.1*i, theOptimum[i], col= "gray10")
 }
-dev.off() 
+grDevices::dev.off() 
 
 #sort Compression by group number for plot order
 Compression=Compression[order(as.numeric(Compression[,3])),]
@@ -83,8 +83,8 @@ line.vector <-  rep(1:(length(unique(Compression[,1])) * length(unique(Compressi
 #We want to have a total of three plots, one displaying the likelihood function, one displaying the variance components, and one displaying the
 # heritability 
 
-pdf(paste("GAPIT.", name.of.trait,".Compression.multiple.group", ".pdf", sep = ""), width = 14)
-par(mfrow = c(2,3), mar = c(5,5,1,1), lab = c(5,5,7))
+grDevices::pdf(paste("GAPIT.", name.of.trait,".Compression.multiple.group", ".pdf", sep = ""), width = 14)
+graphics::par(mfrow = c(2,3), mar = c(5,5,1,1), lab = c(5,5,7))
 
 # Make the likelihood function plot
 #print("Likelihood")
@@ -106,7 +106,7 @@ for(i in 1:length(unique(Compression[,1]))){
       Compression.subset <- Compression[which( (Compression[,1] == as.character(unique(Compression[,1])[i])) & (Compression[,2] == as.character(unique(Compression[,2])[j]))  ),              ]
       x <- as.numeric(Compression.subset[,3])
       y <- as.numeric(Compression.subset[,4])  
-      lines(y~x,type="l", pch = 30, lty = line.vector[i], col = color.vector[j])
+      graphics::lines(y~x,type="l", pch = 30, lty = line.vector[i], col = color.vector[j])
       label = c(label, paste(c(as.character(unique(Compression[,1]))[i]," ",as.character(unique(Compression[,2]))[j]), collapse = ""))
       }  
    }
@@ -141,7 +141,7 @@ for(i in 1:length(unique(Compression[,1]))){
       Compression.subset <- Compression[which( (Compression[,1] == as.character(unique(Compression[,1])[i])) & (Compression[,2] == as.character(unique(Compression[,2])[j]))  ),              ]
       x <- as.numeric(Compression.subset[,3])
       y <- as.numeric(Compression.subset[,5])  
-      lines(y~x,type="l", pch = 17, lty = line.vector[i], col = color.vector[j])
+      graphics::lines(y~x,type="l", pch = 17, lty = line.vector[i], col = color.vector[j])
       #label = c(label, paste(c(as.character(unique(Compression[,1]))[i]," ",as.character(unique(Compression[,2]))[j]), collapse = ""))
       }  
    }
@@ -169,7 +169,7 @@ for(i in 1:length(unique(Compression[,1]))){
       Compression.subset <- Compression[which( (Compression[,1] == as.character(unique(Compression[,1])[i])) & (Compression[,2] == as.character(unique(Compression[,2])[j]))  ),              ]
       x <- as.numeric(Compression.subset[,3])
       y <- as.numeric(Compression.subset[,6])  
-      lines(y~x,type="l", pch = 17, lty = line.vector[i], col = color.vector[j])
+      graphics::lines(y~x,type="l", pch = 17, lty = line.vector[i], col = color.vector[j])
       #label = c(label, paste(c(as.character(unique(Compression[,1]))[i]," ",as.character(unique(Compression[,2]))[j]), collapse = ""))
       }  
    }
@@ -204,7 +204,7 @@ for(i in 1:length(unique(Compression.h2[,1]))){
       Compression.subset <- Compression.h2[which( (Compression.h2[,1] == as.character(unique(Compression.h2[,1])[i])) & (Compression.h2[,2] == as.character(unique(Compression.h2[,2])[j]))  ),              ]
       x <- as.numeric(Compression.subset[,3])
       y <- as.numeric(Compression.subset[,8]) 
-      lines(y~x,type="l", pch = 17, lty = line.vector[i], col = color.vector[j])
+      graphics::lines(y~x,type="l", pch = 17, lty = line.vector[i], col = color.vector[j])
       #label = c(label, paste(c(as.character(unique(Compression[,1]))[i]," ",as.character(unique(Compression[,2]))[j]), collapse = ""))
       }  
    }
@@ -234,7 +234,7 @@ for(i in 1:length(unique(Compression[,1]))){
       Compression.subset <- Compression.h2[which( (Compression.h2[,1] == as.character(unique(Compression.h2[,1])[i])) & (Compression.h2[,2] == as.character(unique(Compression.h2[,2])[j]))  ),              ]
       x <- as.numeric(Compression.subset[,3])
       y <- as.numeric(Compression.subset[,7])  
-      lines(y~x,type="l", lty = line.vector[i], pch = 17, col = color.vector[j])
+      graphics::lines(y~x,type="l", lty = line.vector[i], pch = 17, col = color.vector[j])
       #label = c(label, paste(c(as.character(unique(Compression[,1]))[i]," ",as.character(unique(Compression[,2]))[j]), collapse = ""))
       }       
    }
@@ -254,7 +254,7 @@ line.color=rep(1:length(unique(Compression[,2])), length(unique(Compression[,1])
       legend("topleft",  label, col = color.vector[line.color], lty = line.style, ncol=legend.col,horiz=FALSE) 
    
  
-dev.off()
+grDevices::dev.off()
 }#end of Graph compression with multiple groups
 
 #Graph compression with single groups
@@ -263,8 +263,8 @@ if(length(unique(Compression[,3]))==1& length(unique(Compression[,1]))*length(un
 {
 
 #Graph the compression with only one group
-pdf(paste("GAPIT.Compression.single.group.", name.of.trait, ".pdf", sep = ""), width = 14)
-par(mfrow = c(2,2), mar = c(5,5,1,1), lab = c(5,5,7))
+grDevices::pdf(paste("GAPIT.Compression.single.group.", name.of.trait, ".pdf", sep = ""), width = 14)
+graphics::par(mfrow = c(2,2), mar = c(5,5,1,1), lab = c(5,5,7))
 
 nkt=length(unique(Compression[,1]))
 nca=length(unique(Compression[,2]))
@@ -278,23 +278,27 @@ ca.name=Compression[ca.index,2]
 
 KG<- t(tapply(as.numeric(Compression[,4]), list(kvr, kvc), mean))
 colnames(KG)=kt.name
-barplot(as.matrix(KG),  ylab= "-2 Log Likelihood",beside=TRUE, col=rainbow(length(unique(Compression[,2]))))
+graphics::barplot(as.matrix(KG),  ylab= "-2 Log Likelihood",beside=TRUE, col = grDevices::rainbow(length(unique(Compression[,2]))))
 
 
 KG<- t(tapply(as.numeric(Compression[,5]), list(kvr, kvc), mean))
 colnames(KG)=kt.name
-barplot(as.matrix(KG),  ylab= "Genetic varaince", beside=TRUE, col=rainbow(length(unique(Compression[,2]))))
+graphics::barplot(as.matrix(KG),  ylab= "Genetic varaince", beside=TRUE, col = grDevices::rainbow(length(unique(Compression[,2]))))
 
 KG<- t(tapply(as.numeric(Compression[,6]), list(kvr, kvc), mean))
 colnames(KG)=kt.name
-barplot(as.matrix(KG),  ylab= "Residual varaince", beside=TRUE, col=rainbow(length(unique(Compression[,2]))))
+graphics::barplot(as.matrix(KG),
+                  ylab= "Residual varaince", 
+                  beside=TRUE, 
+                  col=grDevices::rainbow(length(unique(Compression[,2])))
+                  )
 
 KG<- t(tapply(as.numeric(Compression[,5])/(as.numeric(Compression[,5])+as.numeric(Compression[,6])), list(kvr, kvc), mean))
 colnames(KG)=kt.name
-barplot(as.matrix(KG),  ylab= "Heritability", beside=TRUE, col=rainbow(length(unique(Compression[,2]))),ylim=c(0,1))
+graphics::barplot(as.matrix(KG),  ylab= "Heritability", beside=TRUE, col=grDevices::rainbow(length(unique(Compression[,2]))),ylim=c(0,1))
 
-legend("topleft", paste(t(ca.name)), cex=0.8,bty="n", fill=rainbow(length(unique(Compression[,2]))),horiz=TRUE)
-dev.off() 
+graphics::legend("topleft", paste(t(ca.name)), cex=0.8,bty="n", fill=grDevices::rainbow(length(unique(Compression[,2]))),horiz=TRUE)
+grDevices::dev.off()
 } #end of Graph compression with single groups
 
 print("GAPIT.Compression.Visualization accomplished successfully!")

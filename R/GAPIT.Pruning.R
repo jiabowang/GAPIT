@@ -12,7 +12,7 @@ if(length(values)<=DPP)return(c(1:length(values)))
 values=sqrt(values)  #This shift the weight a little bit to the low building.
 
 #Handler of bias plot
-rv=runif(length(values))
+rv=stats::runif(length(values))
 values=values+rv
 values=values[order(values,decreasing = T)]
 

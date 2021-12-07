@@ -359,15 +359,15 @@ if(!is.null(KI)&file.output)
       line.names <- KI[,1]
       colnames(theKin)=KI[,1]
       rownames(theKin)=KI[,1]
-      distance.matrix=dist(theKin,upper=TRUE)
-      hc=hclust(distance.matrix,method=kinship.cluster)
-      hcd = as.dendrogram(hc)
+      distance.matrix = stats::dist(theKin,upper=TRUE)
+      hc = stats::hclust(distance.matrix,method=kinship.cluster)
+      hcd = stats::as.dendrogram(hc)
     ##plot NJtree
       if(!is.null(NJtree.group))
         {
-        clusMember <- cutree(hc, k = NJtree.group)
+        clusMember <- stats::cutree(hc, k = NJtree.group)
         compress_z=table(clusMember,paste(line.names))
-        type_col=rainbow(NJtree.group)
+        type_col = grDevices::rainbow(NJtree.group)
         Optimum=c(nrow(theKin),kinship.cluster,NJtree.group)
         }
       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="set kinship")
@@ -375,12 +375,12 @@ if(!is.null(KI)&file.output)
       if(file.output)
       {
       print("Creating heat map for kinship...")
-      pdf(paste("GAPIT.Kin.thirdPart.pdf",sep=""), width = 12, height = 12)
-      par(mar = c(25,25,25,25))
+      grDevices::pdf(paste("GAPIT.Kin.thirdPart.pdf",sep=""), width = 12, height = 12)
+      graphics::par(mar = c(25,25,25,25))
       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="prepare heatmap")
       Memory=GAPIT.Memory(Memory=Memory,Infor="prepare heatmap")
-      heatmap.2(theKin,  cexRow =.2, cexCol = 0.2, col=rev(heat.colors(256)), scale="none", symkey=FALSE, trace="none")
-      dev.off()
+      heatmap.2(theKin,  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
+      grDevices::dev.off()
       print("Kinship heat map PDF created!") 
       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="plot heatmap")
       Memory=GAPIT.Memory(Memory=Memory,Infor="plot heatmap")
@@ -391,16 +391,20 @@ if(!is.null(KI)&file.output)
         for(tr in 1:length(NJtree.type))
            {
            print("Creating NJ Tree for kinship...")
-           pdf(paste("GAPIT.Kin.NJtree.",NJtree.type[tr],".pdf",sep=""), width = 12, height = 12)
-           par(mar = c(5,5,5,5))
+           grDevices::pdf(paste("GAPIT.Kin.NJtree.",NJtree.type[tr],".pdf",sep=""), width = 12, height = 12)
+           graphics::par(mar = c(5,5,5,5))
            Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="prepare NJ TREE")
            Memory=GAPIT.Memory(Memory=Memory,Infor="prepare NJ TREE")
            plot(as.phylo(hc), type = NJtree.type[tr], tip.color =type_col[clusMember],  use.edge.length = TRUE, col = "gray80",cex=0.8)
-           legend("topright",legend=paste(c("Tatal individuals is: ","Cluster method: ","Group number: "), Optimum[c(1:3)], sep=""),lty=0,cex=1.3,bty="n",bg=par("bg"))
-           dev.off()
+           graphics::legend("topright",legend=paste(c("Tatal individuals is: ","Cluster method: ","Group number: "), Optimum[c(1:3)], sep=""),lty=0,cex=1.3,bty="n",bg=graphics::par("bg"))
+           grDevices::dev.off()
            }
         }
-        if(!is.null(compress_z))write.table(compress_z,paste("GAPIT.Kin.NJtree.compress_z.txt",sep=""),quote=F)
+        if(!is.null(compress_z)){
+            utils::write.table(compress_z, 
+                paste("GAPIT.Kin.NJtree.compress_z.txt",sep=""),
+                quote=F)
+        }
         print("Kinship NJ TREE PDF created!")
  
         Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="plot NJ TREE")
@@ -422,7 +426,7 @@ if(!is.null(GP) & kinship.algorithm=="SUPER" & !is.null(bin.size) & !is.null(inc
   if(!is.null(GD))
   {
 	  GK=GD[,SNP.QTN]
-    SNPVar=apply(as.matrix(GK),2,var)
+    SNPVar=apply(as.matrix(GK),2, stats::var)
     GK=GK[,SNPVar>0]
     GK=cbind(as.data.frame(GT),as.data.frame(GK)) #add taxa  
   } 
@@ -472,12 +476,12 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
     line.names <- myGT
     if (!is.null(NJtree.group))
       {
-      distance.matrix=dist(theKin,upper=TRUE)
-      hc=hclust(distance.matrix,method=kinship.cluster)
-      hcd = as.dendrogram(hc)
-      clusMember <- cutree(hc, k = NJtree.group)
+      distance.matrix = stats::dist(theKin,upper=TRUE)
+      hc = stats::hclust(distance.matrix, method = kinship.cluster)
+      hcd = stats::as.dendrogram(hc)
+      clusMember <- stats::cutree(hc, k = NJtree.group)
       compress_z=table(clusMember,paste(line.names))
-      type_col=rainbow(NJtree.group)
+      type_col = grDevices::rainbow(NJtree.group)
       Optimum=c(nrow(theKin),kinship.cluster,NJtree.group)
       }
     print("kinship calculated")
@@ -485,10 +489,10 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
       {
     #Create heat map for kinship
       print("Creating heat map for kinship...")
-      pdf(paste("GAPIT.Kin.",kinship.algorithm,".pdf",sep=""), width = 12, height = 12)
-      par(mar = c(25,25,25,25))
-      heatmap.2(theKin,  cexRow =.2, cexCol = 0.2, col=rev(heat.colors(256)), scale="none", symkey=FALSE, trace="none")
-      dev.off()
+      grDevices::pdf(paste("GAPIT.Kin.",kinship.algorithm,".pdf",sep=""), width = 12, height = 12)
+      graphics::par(mar = c(25,25,25,25))
+      heatmap.2(theKin,  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
+      grDevices::dev.off()
       print("Kinship heat map created")
     ## Jiabo Wang add NJ Tree of kinship at 4.5.2017
       if (!is.null(NJtree.group))      
@@ -496,17 +500,17 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
         print("Creating NJ Tree for kinship...")
         for(tr in 1:length(NJtree.type))
            {
-           pdf(paste("GAPIT.Kin.NJtree.",NJtree.type[tr],".pdf",sep=""), width = 12, height = 12)
-           par(mar = c(0,0,0,0))
+           grDevices::pdf(paste("GAPIT.Kin.NJtree.",NJtree.type[tr],".pdf",sep=""), width = 12, height = 12)
+           graphics::par(mar = c(0,0,0,0))
            Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="prepare NJ TREE")
            Memory=GAPIT.Memory(Memory=Memory,Infor="prepare NJ TREE")   
            plot(as.phylo(hc), type = NJtree.type[tr], tip.color =type_col[clusMember],  use.edge.length = TRUE, col = "gray80",cex=0.6)
     #legend("topright",legend=c(paste("Tatal numerber of individuals is ",),lty=0,cex=1.3,bty="n",bg=par("bg"))
-           legend("topright",legend=paste(c("Tatal individuals is: ","Group method: ","Group number: "), Optimum[c(1:3)], sep=""),lty=0,cex=1.3,bty="n",bg=par("bg"))
-           dev.off()
+           graphics::legend("topright",legend=paste(c("Tatal individuals is: ","Group method: ","Group number: "), Optimum[c(1:3)], sep=""),lty=0,cex=1.3,bty="n",bg=graphics::par("bg"))
+           grDevices::dev.off()
            }
     # print(Optimum)   
-        write.table(compress_z,paste("GAPIT.Kin.NJtree.compress_z.txt",sep=""),quote=F)
+        utils::write.table(compress_z,paste("GAPIT.Kin.NJtree.compress_z.txt",sep=""),quote=F)
         print("Kinship NJ TREE PDF created!")  
         Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="plot NJ TREE")
         Memory=GAPIT.Memory(Memory=Memory,Infor="plot NJ TREE")
@@ -517,7 +521,7 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
     #Write the kinship into a text file
     KI=cbind(myGT,as.data.frame(theKin)) #This require big memory. Need a way to solve it.
     print("Writing kinship to file...")
-    if(file.output) write.table(KI, paste("GAPIT.Kin.",kinship.algorithm,".csv",sep=""), quote = FALSE, sep = ",", row.names = FALSE,col.names = FALSE)
+    if(file.output) utils::write.table(KI, paste("GAPIT.Kin.",kinship.algorithm,".csv",sep=""), quote = FALSE, sep = ",", row.names = FALSE,col.names = FALSE)
     print("Kinship save as file")    
     rm(theKin)
     gc()
@@ -572,22 +576,22 @@ if(!is.null(GLD) &file.output)
 #LDsnpName=LDsnpName[GAPIT.Pruning(LDdist,DPP=7)]
     LDsnpName=LDsnpName[c(sigsnp)] #keep the first and last snp names only
     # print(LDsnpName)
-    color.rgb <- colorRampPalette(rev(c("snow","red")),space="rgb")
+    color.rgb <- grDevices::colorRampPalette(rev(c("snow","red")),space="rgb")
     
     # print(color.rgb)
     print("Getting genotype object")
     LDsnp=makeGenotypes(hapmapgeno,sep="",method=as.genotype)   #This need to be converted to genotype object
     print("Caling LDheatmap...")
 #pdf(paste("GAPIT.LD.pdf",sep=""), width = 12, height = 12)
-    pdf(paste("GAPIT.LD.chromosom",LD.chromosome,"(",round(max(0,LD.location-LD.range)/1000000),"_",round((LD.location+LD.range)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
-    par(mar = c(25,25,25,25))
+    grDevices::pdf(paste("GAPIT.LD.chromosom",LD.chromosome,"(",round(max(0,LD.location-LD.range)/1000000),"_",round((LD.location+LD.range)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
+    graphics::par(mar = c(25,25,25,25))
 
     MyHeatmap <- try(LDheatmap(LDsnp, LDdist, LDmeasure="r", add.map=TRUE,
     SNP.name=LDsnpName,color=color.rgb(20), name="myLDgrob", add.key=TRUE,geneMapLabelY=0.1) )  
     if(!inherits(MyHeatmap, "try-error")) 
       {
   #Modify the plot
-      library(grid)
+#      library(grid)
       # LDheatmap.highlight(MyHeatmap, i = sigsnp, j=sigsnp+1, col = "red")
       grid.edit(gPath("myLDgrob","heatMap","heatmap"),gp=gpar(col="white",lwd=8))
       grid.edit(gPath("myLDgrob", "Key", "title"), gp=gpar(cex=.5, col="blue"))  #edit key title size and color
@@ -596,7 +600,7 @@ if(!is.null(GLD) &file.output)
       }else{
       print("Warning: error in converting genotype. No LD plot!")
       }
-    dev.off()
+    grDevices::dev.off()
     print("LD heatmap crated")
     }else{ # alternative of if(nrow(GLD)>1)
     print("Warning: There are less than two SNPs on the region you sepcified. No LD plot!")

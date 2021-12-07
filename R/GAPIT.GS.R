@@ -17,8 +17,8 @@ if(inherits(UO, "try-error"))
 	GTT=try(t(KWO)%*%ginv(as.matrix(KW))%*%UW)
 	if(inherits(GTT,"try-error"))
 	{
-        write.csv(KW,"KW.csv",quote=F,row.names=F)
-        KW=read.csv("KW.csv",head=T)
+        utils::write.csv(KW,"KW.csv",quote=F,row.names=F)
+        KW=utils::read.csv("KW.csv",head=T)
         UO=t(KWO)%*%ginv(as.matrix(KW))%*%UW
         system("rm KW.csv")
     }else{

@@ -23,33 +23,30 @@ function(){
 #Designed by Zhiwu Zhang
 #Authors of paper on Bioinformatics (2012, 28:2397-2399): Alex Lipka, Feng Tian, Qishan Wang, Xiaolei Liu, Meng Li,You Tang and Zhiwu Zhang
 #Authors of paper on Plant Genome (2016, Vol 9, No. 2): You Tang, Xiaolei Liu, Jiabo Wang, Meng Li, Qishan Wang, Feng Tian, Zhongbin Su, Yuchun Pan, Di Liu, Alexander E. Lipka, Edward S. Buckler, and Zhiwu Zhang
-if(!require(multtest)) 
-{
-	if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-    BiocManager::install("multtest")
-	#source("http://www.bioconductor.org/biocLite.R")
-    #biocLite("multtest")
-}
+#if(!require(multtest)) 
+#{
+#	if (!requireNamespace("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+#    BiocManager::install("multtest")
+#	#source("http://www.bioconductor.org/biocLite.R")
+#    #biocLite("multtest")
+#}
 
-if(!require(gplots)) install.packages("gplots")
-if(!require(LDheatmap)) install.packages("LDheatmap")
-if(!require(genetics)) install.packages("genetics")
-if(!require(ape)) install.packages("ape")
-if(!require(compiler)) install.packages("compiler")
+#if(!require(gplots)) install.packages("gplots")
+#if(!require(LDheatmap)) install.packages("LDheatmap")
+#if(!require(genetics)) install.packages("genetics")
+#if(!require(ape)) install.packages("ape")
+#if(!require(compiler)) install.packages("compiler")
 
-if(!require(EMMREML)) install.packages("EMMREML")
-if(!require(scatterplot3d)) install.packages("scatterplot3d")
+#if(!require(EMMREML)) install.packages("EMMREML")
+#if(!require(scatterplot3d)) install.packages("scatterplot3d")
 
-if(!'multtest'%in% installed.packages()[,"Package"]){
-	if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager")
-    BiocManager::install("multtest")
-    BiocManager::install("snpStats")
-}
-
-
-
+#if(!'multtest'%in% installed.packages()[,"Package"]){
+#	if (!requireNamespace("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+#    BiocManager::install("multtest")
+#    BiocManager::install("snpStats")
+#}
 
 
 GAPIT.Version="2020.10.24, GAPIT 3.0"

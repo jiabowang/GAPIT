@@ -47,7 +47,7 @@ function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
       {
         if( ( dLL[i]*dLL[i+1] < 0 ) && ( dLL[i] > 0 ) && ( dLL[i+1] < 0 ) ) 
         {
-          r <- uniroot(emma.delta.REML.dLL.wo.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas=etas)
+          r <- stats::uniroot(emma.delta.REML.dLL.wo.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas=etas)
           optlogdelta <- append(optlogdelta, r$root)
           optLL <- append(optLL, emma.delta.REML.LL.wo.Z(r$root,eig.R$values, etas))
         }
@@ -85,7 +85,7 @@ function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
       {
         if( ( dLL[i]*dLL[i+1] < 0 ) && ( dLL[i] > 0 ) && ( dLL[i+1] < 0 ) ) 
         {
-          r <- uniroot(emma.delta.REML.dLL.w.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas.1=etas.1, n=n, t1=t, etas.2.sq = etas.2.sq )
+          r <- stats::uniroot(emma.delta.REML.dLL.w.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas.1=etas.1, n=n, t1=t, etas.2.sq = etas.2.sq )
           optlogdelta <- append(optlogdelta, r$root)
           optLL <- append(optLL, emma.delta.REML.LL.w.Z(r$root,eig.R$values, etas.1, n, t, etas.2.sq ))
         }

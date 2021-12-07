@@ -121,11 +121,11 @@ GWAS=cbind(GM,mySUPERFaST$ps,mySUPERFaST$stats,mySUPERFaST$dfs,mySUPERFaST$effec
 #FarmCPU
 if(method=="FarmCPU")
 {
-  if(!require(bigmemory)) install.packages("bigmemory")
-  if(!require(biganalytics)) install.packages("biganalytics")
-library(bigmemory)  #for FARM-CPU
-library(biganalytics) #for FARM-CPU
-if(!exists('FarmCPU', mode='function'))source("http://www.zzlab.net/FarmCPU/FarmCPU_functions.txt")#web source code
+#  if(!require(bigmemory)) install.packages("bigmemory")
+#  if(!require(biganalytics)) install.packages("biganalytics")
+#library(bigmemory)  #for FARM-CPU
+#library(biganalytics) #for FARM-CPU
+#if(!exists('FarmCPU', mode='function'))source("http://www.zzlab.net/FarmCPU/FarmCPU_functions.txt")#web source code
 colnames(GM)[1]="SNP"
 
 myFarmCPU=FarmCPU(

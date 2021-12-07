@@ -14,8 +14,8 @@ function(Y,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,GK=NULL,kinship.algorithm=NULL
 print("--------------------- Welcome to GAPIT SUPER GS----------------------------")
 Timmer=GAPIT.Timmer(Infor="GAPIT.SUPER.GS")
 Memory=GAPIT.Memory(Infor="GAPIT.SUPER.GS")
-  if(!require(EMMREML)) install.packages("EMMREML")
-  library(EMMREML)
+#  if(!require(EMMREML)) install.packages("EMMREML")
+#  library(EMMREML)
 
 shortcut=FALSE
 LL.save=1e10
@@ -27,7 +27,7 @@ name.of.trait=colnames(Y)[2]
 if(length(thisY) <3){
  shortcut=TRUE
  }else{
-  if(var(thisY) ==0) shortcut=TRUE
+  if(stats::var(thisY) ==0) shortcut=TRUE
 }
 if(shortcut){
 print(paste("Y is empty. No GWAS/GS performed for ",name.of.trait,sep=""))
@@ -120,7 +120,7 @@ print("-------------------start SUPER BREAD-----------------------------------")
     nG=ncol(GD)
     if(nG>nY){snpsam=sample(1:nG,nY)}else{snpsam=1:nG}
     GK=GD[GTindex,snpsam]
-    SNPVar=apply(as.matrix(GK),2,var)
+    SNPVar=apply(as.matrix(GK), 2, stats::var)
 	#print(snpsam)
 if (snpsam==1)stop ("GAPIT says: SUPER_GS must putin GD and GM.")
     GK=GK[,SNPVar>0]
@@ -169,7 +169,7 @@ count=count+1
 #print(paste("bin---",bin,"---inc---",inc,sep=""))
   GK=GD[GTindex,SNP.QTN]
   SUPER_GD=GD[,SNP.QTN]
-  SNPVar=apply(as.matrix(GK),2,var)
+  SNPVar=apply(as.matrix(GK), 2, stats::var)
   GK=GK[,SNPVar>0]
   SUPER_GD=SUPER_GD[,SNPVar>0]
   GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
@@ -457,7 +457,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
    all_gs=cbind(BB,prediction)
    colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-  if(file.output) write.csv(all_gs,paste("GAPIT.",model,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
+  if(file.output) utils::write.csv(all_gs,paste("GAPIT.",model,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
 
   print("GAPIT SUPER GS completed successfully for multiple traits. Results are saved")
   return (list(GPS=BB,Pred=all_gs,Compression=Compression,kinship=my_allKI,SUPER_kinship=SUPER_myKI,SUPER_GD=SUPER_optimum_GD ,PC=my_allCV,Timmer=Timmer,Memory=Memory,GWAS=NULL,h2=optimum_h2 ))

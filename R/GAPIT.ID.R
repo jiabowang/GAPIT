@@ -68,13 +68,13 @@ GWAS=RS
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")	
 
   print("Creating ROC table and plot" )
-if(file.output) myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=var(ys),trait=name.of.trait)
+if(file.output) myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=stats::var(ys),trait=name.of.trait)
   print("ROC table and plot created" )
   print("MAF plot..." )
 if(file.output&maf_pass) myMAF1=GAPIT.MAF(MAF=maf,P=ps,E=NULL,trait=name.of.trait)
   if(file.output){
-   write.table(GWAS, paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-   write.table(DTS, paste("GAPIT.", name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(GWAS, paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(DTS, paste("GAPIT.", name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
    #if(!byPass) write.table(GWAS.2, paste("GAPIT.", name.of.trait, ".Allelic_Effect_Estimates.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
   }#end file.output
   }#end DP
@@ -191,7 +191,7 @@ if(!is.null(IC$GD)&DP$SNP.test)
   # print(head(tvalue))
   # print(head(stderr))
   # print(head(var(as.matrix(IC$Y[,2]))))
-if(DP$file.output) myROC=GAPIT.ROC(t=as.numeric(tvalue),se=as.numeric(stderr),Vp=var(as.matrix(IC$Y[,2])),trait=DP$name.of.trait)
+if(DP$file.output) myROC=GAPIT.ROC(t=as.numeric(tvalue),se=as.numeric(stderr),Vp=stats::var(as.matrix(IC$Y[,2])),trait=DP$name.of.trait)
   print("ROC table and plot created" )
 
   print("MAF plot..." )
@@ -234,8 +234,8 @@ if(DP$Inter.Plot)
      new_GI[,2]=chro
    }
 
-   write.table(new_GI, paste("GAPIT.", DP$name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-   write.table(DTS, paste("GAPIT.", DP$name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(new_GI, paste("GAPIT.", DP$name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(DTS, paste("GAPIT.", DP$name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
    #print(head(GWAS.2))
    #if(byPass) write.table(GWAS.2[,1:4], paste("GAPIT.", DP$name.of.trait, ".Allelic_Effect_Estimates.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
      }#end file.output

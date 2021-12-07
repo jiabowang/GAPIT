@@ -79,26 +79,26 @@ for(k in 1:npc)
 } # end of npca
 
 
-write.csv(cbind(power_npca,fdr_npca),paste(h2,"_",NQTN,"_",method[j],".Power.by.FDR_rep_",rep,".csv",sep=""))
+utils::write.csv(cbind(power_npca,fdr_npca),paste(h2,"_",NQTN,"_",method[j],".Power.by.FDR_rep_",rep,".csv",sep=""))
 # write.csv(power_rep,paste(h2,"_",NQTN,"_",method[j],".Power.by.FDR_rep_",rep,".csv",sep=""))
 
-    pdf(paste("GAPIT.Power_",h2,"_",NQTN,"_" ,"compare in ",method[j], ".pdf", sep = ""), width = 4.5, height = 4.5,pointsize=9)
-    par(mar = c(5,6,5,3))
+    grDevices::pdf(paste("GAPIT.Power_",h2,"_",NQTN,"_" ,"compare in ",method[j], ".pdf", sep = ""), width = 4.5, height = 4.5,pointsize=9)
+    graphics::par(mar = c(5,6,5,3))
 	#win.graph(width=6, height=4, pointsize=9)
 	#palette(c("blue","red","green4","brown4","orange",rainbow(5)))
-	ncol=rainbow(npc)
-	palette(c("green4","red","blue","brown4","orange",rainbow(npc)))
+	ncol=grDevices::rainbow(npc)
+	grDevices::palette(c("green4","red","blue","brown4","orange",grDevices::rainbow(npc)))
 	plot(power_npca[,1]~fdr_npca[,1],bg="lightgray",xlab="FDR",ylab="Power",ylim=c(0,1),xlim=c(0,1),main="Power against FDR",type="o",pch=20,col=ncol[1],cex=1,cex.lab=1.3, cex.axis=1, lwd=1,las=1)
     for(i in 2:npc){
-    lines(power_npca[,i]~fdr_npca[,i], lwd=1,type="o",pch=20,col=ncol[i])
+    graphics::lines(power_npca[,i]~fdr_npca[,i], lwd=1,type="o",pch=20,col=ncol[i])
 	}
 	# lines(rep.power.CMLM[,6]~rep.FDR.CMLM[,6], lwd=2,type="o",pch=20,col=3)
 	# lines(rep.power.MLM[,6]~rep.FDR.MLM[,6], lwd=2,type="o",pch=20,col=4)
 	# lines(rep.power.GLM[,6]~rep.FDR.GLM[,6], lwd=2,type="o",pch=20,col=5)
-	legend("bottomright",legend_text, pch = 20, lty =1,col=ncol,lwd=1,cex=1.0,bty="n")
+	graphics::legend("bottomright",legend_text, pch = 20, lty =1,col=ncol,lwd=1,cex=1.0,bty="n")
 	#
 
-dev.off()
+grDevices::dev.off()
 
 rm(myGAPIT)
 } #end of whole function

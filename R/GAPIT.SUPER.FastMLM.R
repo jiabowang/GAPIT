@@ -58,7 +58,7 @@ for (i in 1:m)
   if(min(xs[,i])!=max(xs[,i]))
   {
       #SUPER
-      snp.corr=cor(xs[,i],snp.pool)
+      snp.corr = stats::cor(xs[,i],snp.pool)
       index.k=which( abs(snp.corr)<=LDsqr )
       #handler of snp correlated with all QTNs
       if(length(index.k)<2){
@@ -157,7 +157,7 @@ beta=ginv(beta1+beta2)%*%(beta3+beta4)
 } #loop for markers
 
 #print("Calculating p-values...")
-ps[,j] <- 2 * pt(abs(stats[,j]), dfs[,j],  lower.tail = FALSE)
+ps[,j] <- 2 * stats::pt(abs(stats[,j]), dfs[,j],  lower.tail = FALSE)
 } #end of loop on traits
 
 return(list(beta=betavalue, ps = ps, stats = stats, dfs = dfs,effect=betavalue))
@@ -285,7 +285,7 @@ beta=ginv(beta1+beta2)%*%(beta3+beta4)
 } #loop for markers
 
 #print("Calculating p-values...")
-ps[,j] <- 2 * pt(abs(stats[,j]), dfs[,j],  lower.tail = FALSE)
+ps[,j] <- 2 * stats::pt(abs(stats[,j]), dfs[,j],  lower.tail = FALSE)
 } #end of loop on traits
 
 return(list(beta=betavalue, ps = ps, stats = stats, dfs = dfs,effect=betavalue))

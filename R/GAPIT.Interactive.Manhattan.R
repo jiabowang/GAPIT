@@ -75,10 +75,10 @@ if(c("m")%in%plot.type)
   z[z<10]=paste("0",z[z<10],sep="")
   zz=paste("Chr_",z,sep="")
   #print(zz)
-  if(!require(plotly)) install.packages("plotly")
+#  if(!require(plotly)) install.packages("plotly")
   #print("!!!!!")
   #print(head(Position))
-  library(plotly)
+#  library(plotly)
   p <- plot_ly(
     type = 'scatter',
     x = ~Position,
@@ -120,8 +120,8 @@ if(c("q")%in%plot.type)
         for(j in 1:N1){
             i=ceiling((10^-log.Quantiles[j])*N)
             if(i==0)i=1
-            c95[j] <- qbeta(0.95,i,N-i+1)
-            c05[j] <- qbeta(0.05,i,N-i+1)
+            c95[j] <- stats::qbeta(0.95,i,N-i+1)
+            c05[j] <- stats::qbeta(0.05,i,N-i+1)
             #print(c(j,i,c95[j],c05[j]))
         }
         
