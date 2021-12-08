@@ -6,6 +6,10 @@ Genome Association and Prediction Integrated Tools
 
 ![The GAPIT logo](./tools/LOGO_WEB.png "Genome Association and Prediction Integrated Tools logo")
 
+  <!-- badges: start -->
+  [![R-CMD-check](https://github.com/knausb/GAPIT3/workflows/R-CMD-check/badge.svg)](https://github.com/knausb/GAPIT3/actions)
+  <!-- badges: end -->
+
 
 Citation
 =====
