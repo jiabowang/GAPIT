@@ -1,7 +1,27 @@
+#'
 #' GAPIT.Main
 #' 
 #' @description 
 #' GAPIT.Main
+#'
+#' @param Y data.frame of phenotype data, samples in rows, traits in columns
+#' @param G data.frame of genotypic data, HAPMAP format
+#' @param GD data.frame of genotypic data
+#' @param GM genetic map for GD
+#' @param KI param
+#' @param Z param
+#' @param CV param
+#' @param CV.Inheritance param
+#' @param SNP.P3D param
+#' @param GP param
+#' @param GK param
+#' @param group.from param
+#' @param group.to param
+#' @param group.by param
+#' @param kinship.cluster param
+#' @param kinship.group param
+#'
+#'
 #'
 #' @return 
 #' A list

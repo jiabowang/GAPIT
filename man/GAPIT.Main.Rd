@@ -99,6 +99,39 @@ GAPIT.Main(
   chor_taxa = chor_taxa
 )
 }
+\arguments{
+\item{Y}{data.frame of phenotype data, samples in rows, traits in columns}
+
+\item{G}{data.frame of genotypic data, HAPMAP format}
+
+\item{GD}{data.frame of genotypic data}
+
+\item{GM}{genetic map for GD}
+
+\item{KI}{param}
+
+\item{Z}{param}
+
+\item{CV}{param}
+
+\item{CV.Inheritance}{param}
+
+\item{SNP.P3D}{param}
+
+\item{GP}{param}
+
+\item{GK}{param}
+
+\item{group.from}{param}
+
+\item{group.to}{param}
+
+\item{group.by}{param}
+
+\item{kinship.cluster}{param}
+
+\item{kinship.group}{param}
+}
 \value{
 A list
 }

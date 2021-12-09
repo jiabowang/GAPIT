@@ -21,6 +21,35 @@ GAPIT.ID(
   plot.bin = 10^9
 )
 }
+\arguments{
+\item{DP}{param}
+
+\item{IC}{param}
+
+\item{SS}{param}
+
+\item{RS}{param}
+
+\item{cutOff}{param}
+
+\item{DPP}{param}
+
+\item{Create.indicator}{param}
+
+\item{FDR.Rate}{param}
+
+\item{QTN.position}{param}
+
+\item{plot.style}{param}
+
+\item{file.output}{param}
+
+\item{SNP.MAF}{param}
+
+\item{CG}{param}
+
+\item{plot.bin}{param}
+}
 \value{
 An invisible NULL.
 }

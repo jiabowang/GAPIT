@@ -3,6 +3,22 @@
 #' @description 
 #' GAPIT.ID
 #'
+#' @param DP param
+#' @param IC param
+#' @param SS param
+#' @param RS param
+#' @param cutOff param
+#' @param DPP param
+#' @param Create.indicator param
+#' @param FDR.Rate param
+#' @param QTN.position param
+#' @param plot.style param
+#' @param file.output param
+#' @param SNP.MAF param
+#' @param CG param
+#' @param plot.bin param
+#'
+#'
 #' @return 
 #' An invisible NULL.
 #'
