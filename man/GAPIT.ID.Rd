@@ -56,3 +56,6 @@ An invisible NULL.
 \description{
 GAPIT.ID
 }
+\author{
+Zhiwu Zhang and Jiabo Wang
+}

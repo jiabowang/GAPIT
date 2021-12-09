@@ -22,6 +22,8 @@
 #' @return 
 #' An invisible NULL.
 #'
+#' @author Zhiwu Zhang and Jiabo Wang
+#'
 #' @export
 `GAPIT.ID` <- function(
   DP=NULL,

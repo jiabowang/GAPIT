@@ -23,3 +23,6 @@ An invisible NULL.
 \description{
 Compression visualization
 }
+\author{
+Alex Lipka and Zhiwu Zhang
+}

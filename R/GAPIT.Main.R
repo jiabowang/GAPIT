@@ -21,10 +21,87 @@
 #' @param kinship.cluster param
 #' @param kinship.group param
 #'
-#'
+#' @param kinship.algorithm param
+#' @param DPP param
+#' @param ngrid param
+#' @param llin param
+#' @param ulim param
+#' @param esp param
+#' @param GAPIT3.output param
+#' @param file.path param
+#' @param file.from param
+#' @param file.to param
+#' @param file.total param
+#' @param file.fragment param
+#' @param file.G param
+#' @param file.Ext.G param
+#' @param file.GD param
+#' @param file.GM param
+#' @param file.Ext.GD param
+#' @param file.Ext.GM param
+#' @param SNP.MAF param
+#' @param FDR.Rate param
+#' @param SNP.FDR param
+#' @param SNP.effect param
+#' @param SNP.impute param
+#' @param PCA.total param
+#' @param GAPIT.Version param
+#' @param name.of.trait param
+#' @param GT param
+#' @param SNP.fraction param
+#' @param seed param
+#' @param BINS param
+#' @param SNP.test param
+#' @param SNP.robust param
+#' @param LD.chromosome param
+#' @param LD.location param
+#' @param LD.range param
+#' @param model param
+#' @param bin.from param
+#' @param bin.to param
+#' @param bin.by param
+#' @param inclosure.from param
+#' @param inclosure.to param
+#' @param inclosure.by param
+#' @param SNP.permutation param
+#' @param SNP.CV param
+#' @param NJtree.group param
+#' @param NJtree.type param
+#' @param plot.bin param
+#' @param genoFormat param
+#' @param hasGenotype param
+#' @param byFile param
+#' @param fullGD param
+#' @param PC param
+#' @param GI param
+#' @param Timmer param
+#' @param Memory param
+#' @param sangwich.top param
+#' @param sangwich.bottom param
+#' @param QC param
+#' @param GTindex param
+#' @param LD param
+#' @param file.output param
+#' @param cutOff param
+#' @param Model.selection param
+#' @param Create.indicator param
+#' @param QTN param
+#' @param QTN.round param
+#' @param QTN.limit param
+#' @param QTN.update param
+#' @param QTN.method param
+#' @param Major.allele.zero param
+#' @param QTN.position param
+#' @param SUPER_GD param
+#' @param SUPER_GS param
+#' @param plot.style param
+#' @param CG param
+#' @param chor_taxa param
 #'
 #' @return 
 #' A list
+#'
+#' @author Zhiwu Zhang and Jiabo Wang
 #'
 #' @export
 `GAPIT.Main` <-

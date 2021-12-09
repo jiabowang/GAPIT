@@ -133,6 +133,7 @@
 #' @seealso 
 #' GAPIT.DP(), GAPIT.Phenotype.View(), GAPIT.judge(), GAPIT.IC(), GAPIT.SS(), GAPIT.ID().
 #' 
+#' @author Zhiwu Zhang and Jiabo Wang
 #' 
 #' @examples 
 #' \dontrun{

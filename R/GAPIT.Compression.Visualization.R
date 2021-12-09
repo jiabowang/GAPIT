@@ -11,6 +11,8 @@
 #' @return 
 #' An invisible NULL.
 #'
+#' @author Alex Lipka and Zhiwu Zhang
+#'
 #' @export
 `GAPIT.Compression.Visualization` <-
   function(Compression = Compression,
