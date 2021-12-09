@@ -127,7 +127,7 @@
 #' @param a2 = 0,
 #' @param adim = 2,
 #' @param Multiple_analysis = FALSE,
-#' @param model = "MLM",
+#' @param model = "MLM", options: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, or cBLUP
 #' @param Para = NULL
 #' 
 #' 

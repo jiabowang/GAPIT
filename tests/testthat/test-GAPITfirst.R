@@ -1,6 +1,6 @@
 
 # testthat::test_dir("tests/")
-# 
+# library("testthat")
 
 test_that("multiplication works", {
   expect_equal(2 * 2, 4)
@@ -23,26 +23,6 @@ test_that("GAPIT mdp (Y and X) import works", {
   expect_true( ncol(myGenotypes) >= 12 )
 })
 
-
-
-test_that("GAPIT wrapper works", {
-  myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3")
-  myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3")
-
-  myPhenotypes <- read.table(myPhenoFile, header = TRUE)
-  myGenotypes  <- read.table(myGenoFile, header = FALSE)
-
-  setwd(tempdir())
-  getwd()
-
-  myGAPIT <- GAPIT( Y = myPhenotypes,
-                    G = myGenotypes,
-                    PCA.total = 3
-                  )
-
-# list.files()
 
 gfiles <- c("GAPIT.Heterozygosity.pdf",
             "GAPIT.Kin.VanRaden.csv",
@@ -83,11 +63,239 @@ gfiles <- c("GAPIT.Heterozygosity.pdf",
             "libloc_166_37b72f10c7c2119.rds",
             "libloc_213_36e896e939ef6a36.rds")
 
+
+test_that("GAPIT function works, MLM model", {
+  myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+                             package = "GAPIT3")
+  myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
+                            package = "GAPIT3")
+
+  myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+  myGenotypes  <- read.table(myGenoFile, header = FALSE)
+
+  setwd(tempdir())
+  getwd()
+
+  myGAPIT <- GAPIT( Y = myPhenotypes,
+                    G = myGenotypes,
+                    PCA.total = 3,
+                    model = "MLM"
+                  )
+
+# list.files()
   unlink(gfiles)
 # list.files()
 
   expect_true(inherits(myGAPIT, "list"))
   expect_true(length(myGAPIT) == 11)
+})
+
+
+test_that("GAPIT function works, GLM model", {
+  myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+                             package = "GAPIT3")
+  myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
+                            package = "GAPIT3")
+  
+  myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+  myGenotypes  <- read.table(myGenoFile, header = FALSE)
+  
+  setwd(tempdir())
+  getwd()
+  
+  myGAPIT <- GAPIT( Y = myPhenotypes,
+                    G = myGenotypes,
+                    PCA.total = 3,
+                    model = "GLM"
+  )
+  
+  # list.files()
+  unlink(gfiles)
+  # list.files()
+  
+  expect_true(inherits(myGAPIT, "list"))
+  expect_true(length(myGAPIT) == 11)
+})
+
+
+
+test_that("GAPIT function works, CMLM model", {
+  myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+                             package = "GAPIT3")
+  myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
+                            package = "GAPIT3")
+  
+  myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+  myGenotypes  <- read.table(myGenoFile, header = FALSE)
+  
+  setwd(tempdir())
+  getwd()
+  
+  myGAPIT <- GAPIT( Y = myPhenotypes,
+                    G = myGenotypes,
+                    PCA.total = 3,
+                    model = "CMLM"
+  )
+  
+  # list.files()
+  unlink(gfiles)
+  # list.files()
+  
+  expect_true(inherits(myGAPIT, "list"))
+  expect_true(length(myGAPIT) == 11)
+  expect_true(all(names(myGAPIT) == c("GWAS", "Pred", "mc", "bc", "mp",
+                                      "h2", "PCA", "GD", "GM", 
+                                      "KI", "Compression")))
+})
+
+
+test_that("GAPIT function works, MMLM model", {
+  myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+                             package = "GAPIT3")
+  myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
+                            package = "GAPIT3")
+  
+  myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+  myGenotypes  <- read.table(myGenoFile, header = FALSE)
+  
+  setwd(tempdir())
+  getwd()
+  
+  myGAPIT <- GAPIT( Y = myPhenotypes,
+                    G = myGenotypes,
+                    PCA.total = 3,
+                    model = "MMLM"
+  )
+  
+  # list.files()
+  unlink(gfiles)
+  # list.files()
+  
+  expect_true(inherits(myGAPIT, "list"))
+  expect_true(length(myGAPIT) == 11)
+  expect_true(all(names(myGAPIT) == c("GWAS", "Pred", "mc", "bc", "mp",
+                                      "h2", "PCA", "GD", "GM", 
+                                      "KI", "Compression")))
+})
+
+
+test_that("GAPIT function works, SUPER model", {
+  myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+                             package = "GAPIT3")
+  myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
+                            package = "GAPIT3")
+  
+  myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+  myGenotypes  <- read.table(myGenoFile, header = FALSE)
+  
+  setwd(tempdir())
+  getwd()
+  
+  myGAPIT <- GAPIT( Y = myPhenotypes,
+                    G = myGenotypes,
+                    PCA.total = 3,
+                    model = "SUPER"
+  )
+  
+  # list.files()
+  unlink(gfiles)
+  # list.files()
+  
+  expect_true(inherits(myGAPIT, "list"))
+  expect_true(length(myGAPIT) == 9)
+  expect_true(all(names(myGAPIT) == c("GWAS", "Pred", "mc", "mp",
+                                      "PCA", "GD", "GM", 
+                                      "KI", "Compression")))
+})
+
+
+test_that("GAPIT function works, FarmCPU model", {
+  myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+                             package = "GAPIT3")
+  myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
+                            package = "GAPIT3")
+  
+  myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+  myGenotypes  <- read.table(myGenoFile, header = FALSE)
+  
+  setwd(tempdir())
+  getwd()
+  
+  myGAPIT <- GAPIT( Y = myPhenotypes,
+                    G = myGenotypes,
+                    PCA.total = 3,
+                    model = "FarmCPU"
+  )
+  
+  # list.files()
+  unlink(gfiles)
+  # list.files()
+  
+  expect_true(inherits(myGAPIT, "list"))
+  expect_true(length(myGAPIT) == 5)
+  expect_true(all(names(myGAPIT) == c("GWAS",
+                                      "h2", "PCA",
+                                      "GD", "GM")))
+  
+})
+
+
+test_that("GAPIT function works, gBLUP model", {
+  myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+                             package = "GAPIT3")
+  myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
+                            package = "GAPIT3")
+  
+  myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+  myGenotypes  <- read.table(myGenoFile, header = FALSE)
+  
+  setwd(tempdir())
+  getwd()
+  
+  myGAPIT <- GAPIT( Y = myPhenotypes,
+                    G = myGenotypes,
+                    PCA.total = 3,
+                    model = "gBLUP"
+  )
+  
+  # list.files()
+  unlink(gfiles)
+  # list.files()
+  
+  expect_true(inherits(myGAPIT, "list"))
+  expect_true(length(myGAPIT) == 7)
+  expect_true(all(names(myGAPIT) == c("Pred",
+                                      "h2", "PCA", "GD", "GM", 
+                                      "KI", "Compression")))
+})
+
+test_that("GAPIT function works, cBLUP model", {
+  myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+                             package = "GAPIT3")
+  myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
+                            package = "GAPIT3")
+  
+  myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+  myGenotypes  <- read.table(myGenoFile, header = FALSE)
+  
+  setwd(tempdir())
+  getwd()
+  
+  myGAPIT <- GAPIT( Y = myPhenotypes,
+                    G = myGenotypes,
+                    PCA.total = 3,
+                    model = "cBLUP"
+  )
+  
+  # list.files()
+  unlink(gfiles)
+  # list.files()
+  
+  expect_true(inherits(myGAPIT, "list"))
+  expect_true(length(myGAPIT) == 7)
+  expect_true(all(names(myGAPIT) == c("Pred",
+                                      "h2", "PCA", "GD", "GM", 
+                                      "KI", "Compression")))
 })
 
 

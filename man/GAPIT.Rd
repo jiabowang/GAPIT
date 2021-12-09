@@ -376,7 +376,7 @@ GAPIT(
 
 \item{Multiple_analysis}{= FALSE,}
 
-\item{model}{= "MLM",}
+\item{model}{= "MLM", options: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, or cBLUP}
 
 \item{Para}{= NULL}
 }
