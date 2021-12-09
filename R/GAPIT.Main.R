@@ -1,18 +1,105 @@
+#' GAPIT.Main
+#' 
+#' @description 
+#' GAPIT.Main
+#'
+#' @return 
+#' A list
+#'
+#' @export
 `GAPIT.Main` <-
-function(Y,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,SNP.P3D=TRUE,GP=NULL,GK=NULL,
-                group.from=1000000 ,group.to=1,group.by=10,kinship.cluster="average", kinship.group='Mean',kinship.algorithm=NULL,DPP=50000,
-               	ngrid = 100, llin = -10, ulim = 10, esp = 1e-10,GAPIT3.output=TRUE,
-                file.path=NULL,file.from=NULL, file.to=NULL, file.total=NULL, file.fragment = 512, file.G=NULL, file.Ext.G=NULL,file.GD=NULL, file.GM=NULL, file.Ext.GD=NULL,file.Ext.GM=NULL,
-                SNP.MAF=0,FDR.Rate=1,SNP.FDR=1,SNP.effect="Add",SNP.impute="Middle",PCA.total=0,  GAPIT.Version=GAPIT.Version,
-                name.of.trait, GT = NULL, SNP.fraction = 1, seed = 123, BINS = 20,SNP.test=TRUE,SNP.robust="FaST",
-                LD.chromosome=NULL,LD.location=NULL,LD.range=NULL,model=model,
-                bin.from=10000,bin.to=5000000,bin.by=1000,inclosure.from=10,inclosure.to=1000,inclosure.by=10,
-                SNP.permutation=FALSE,SNP.CV=NULL,NJtree.group=NJtree.group,NJtree.type=NJtree.type,plot.bin=plot.bin,
-                genoFormat=NULL,hasGenotype=NULL,byFile=NULL,fullGD=NULL,PC=NULL,GI=NULL, Timmer = NULL, Memory = NULL,
-                sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.05,
-                file.output=TRUE,cutOff=0.05, Model.selection = FALSE, Create.indicator = FALSE,
-				QTN=NULL, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = FALSE,
-        QTN.position=NULL,SUPER_GD=NULL,SUPER_GS=SUPER_GS,plot.style="Beach",CG=CG,chor_taxa=chor_taxa){
+function(Y,
+         G=NULL,
+         GD=NULL,
+         GM=NULL,
+         KI=NULL,
+         Z=NULL,
+         CV=NULL,
+         CV.Inheritance=NULL,
+         SNP.P3D=TRUE,
+         GP=NULL,
+         GK=NULL,
+         group.from=1000000,
+         group.to=1,
+         group.by=10,
+         kinship.cluster="average",
+         kinship.group='Mean',
+         kinship.algorithm=NULL,
+         DPP=50000,
+         ngrid = 100, 
+         llin = -10, 
+         ulim = 10, 
+         esp = 1e-10,
+         GAPIT3.output=TRUE,
+         file.path=NULL,
+         file.from=NULL, 
+         file.to=NULL, 
+         file.total=NULL, 
+         file.fragment = 512, 
+         file.G=NULL, 
+         file.Ext.G=NULL,
+         file.GD=NULL, 
+         file.GM=NULL, 
+         file.Ext.GD=NULL,
+         file.Ext.GM=NULL,
+         SNP.MAF=0,
+         FDR.Rate=1,
+         SNP.FDR=1,
+         SNP.effect="Add",
+         SNP.impute="Middle",
+         PCA.total=0,  
+         GAPIT.Version=GAPIT.Version,
+         name.of.trait, 
+         GT = NULL, 
+         SNP.fraction = 1, 
+         seed = 123, 
+         BINS = 20,
+         SNP.test=TRUE,
+         SNP.robust="FaST",
+         LD.chromosome=NULL,
+         LD.location=NULL,
+         LD.range=NULL,
+         model=model,
+         bin.from=10000,
+         bin.to=5000000,
+         bin.by=1000,
+         inclosure.from=10,
+         inclosure.to=1000,
+         inclosure.by=10,
+         SNP.permutation=FALSE,
+         SNP.CV=NULL,
+         NJtree.group=NJtree.group,
+         NJtree.type=NJtree.type,
+         plot.bin=plot.bin,
+         genoFormat=NULL,
+         hasGenotype=NULL,
+         byFile=NULL,
+         fullGD=NULL,
+         PC=NULL,
+         GI=NULL, 
+         Timmer = NULL, 
+         Memory = NULL,
+         sangwich.top=NULL,
+         sangwich.bottom=NULL,
+         QC=TRUE,
+         GTindex=NULL,
+         LD=0.05,
+         file.output=TRUE,
+         cutOff=0.05, 
+         Model.selection = FALSE, 
+         Create.indicator = FALSE,
+				 QTN=NULL, 
+				 QTN.round=1,
+				 QTN.limit=0, 
+				 QTN.update=TRUE, 
+				 QTN.method="Penalty", 
+				 Major.allele.zero = FALSE,
+         QTN.position=NULL,
+				 SUPER_GD=NULL,
+				 SUPER_GS=SUPER_GS,
+				 plot.style="Beach",
+				 CG=CG,
+				 chor_taxa=chor_taxa){
 #Object: To perform GWAS and GPS (Genomic Prediction or Selection)
 #Output: GWAS table (text file), QQ plot (PDF), Manhattan plot (PDF), genomic prediction (text file), and
 #        genetic and residual variance components
@@ -848,14 +935,15 @@ print("--------------------Final results presentations------------------------")
 
 
 #Plotting optimum group kinship
-if(!byPass) 
-{ 
-if(length(bk$KW)>1 &length(bk$KW)<length(KI) & length(bk$KW)<1000 &GAPIT3.output){
-grDevices::pdf(paste("GAPIT.",name.of.trait,".Kin.Optimum.pdf",sep=""), width = 12, height = 12)
-graphics::par(mar = c(25,25,25,25))
-gplots::heatmap.2(as.matrix(bk$KW),  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
-grDevices::dev.off()
-}
+if(!byPass) {
+  if(length(bk$KW)>1 &length(bk$KW)<length(KI) & length(bk$KW)<1000 & GAPIT3.output){
+#    if( file.output == TRUE ){
+        grDevices::pdf(paste("GAPIT.",name.of.trait,".Kin.Optimum.pdf",sep=""), width = 12, height = 12)
+        graphics::par(mar = c(25,25,25,25))
+        gplots::heatmap.2(as.matrix(bk$KW),  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
+        grDevices::dev.off()
+#    }
+  }
 }
 
 
@@ -1014,7 +1102,10 @@ if(length(bk$KW)>ncol(X0) &file.output) {
 #Make a plot Summarzing the Compression Results, if more than one "compression level" has been assessed
 print("Compression portfolios..." )
 #print(Compression)
-if(file.output) GAPIT.Compression.Visualization(Compression = Compression, name.of.trait = name.of.trait)
+if(file.output){
+  GAPIT.Compression.Visualization(Compression = Compression, 
+                                  name.of.trait = name.of.trait)
+}
 print("Compression Visualization done")
 
 if(length(Compression)<1){

@@ -130,6 +130,9 @@
 #' @param model = "MLM", options: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, or cBLUP
 #' @param Para = NULL
 #' 
+#' @seealso 
+#' GAPIT.DP(), GAPIT.Phenotype.View(), GAPIT.judge(), GAPIT.IC(), GAPIT.SS(), GAPIT.ID().
+#' 
 #' 
 #' @examples 
 #' \dontrun{

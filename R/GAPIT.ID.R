@@ -1,8 +1,27 @@
-`GAPIT.ID` <-
-function(DP=NULL,IC=NULL,SS=NULL,RS=NULL,cutOff=0.01,
-DPP=100000,Create.indicator=FALSE,
-FDR.Rate = 1,QTN.position=NULL,plot.style="Oceanic",
-file.output=TRUE,SNP.MAF=0,CG=NULL,plot.bin=10^9 ){
+#' GAPIT.ID
+#'
+#' @description 
+#' GAPIT.ID
+#'
+#' @return 
+#' An invisible NULL.
+#'
+#' @export
+`GAPIT.ID` <- function(
+  DP=NULL,
+  IC=NULL,
+  SS=NULL,
+  RS=NULL,
+  cutOff=0.01,
+  DPP=100000,
+  Create.indicator=FALSE,
+  FDR.Rate = 1,
+  QTN.position=NULL,
+  plot.style="Oceanic",
+  file.output=TRUE,
+  SNP.MAF=0,
+  CG=NULL,
+  plot.bin=10^9 ){
 #Object: To Interpretation and Diagnoses 
 #Designed by Zhiwu Zhang
 #Writen by Jiabo Wang
@@ -118,7 +137,11 @@ Pred=SS$Pred
       effect=SS$mc
       #GI=cbind(GI,effect)
      
-   if(DP$file.output&!is.null(SS$Compression)&!is.na(SS$Compression[1,6])) GAPIT.Compression.Visualization(Compression = SS$Compression, name.of.trait = DP$name.of.trait)
+   if(DP$file.output & !is.null(SS$Compression) & !is.na(SS$Compression[1,6])){
+     GAPIT.Compression.Visualization(Compression = SS$Compression, 
+                                     name.of.trait = DP$name.of.trait,
+                                     file.output = file.output)
+   }
   
 }else{
   maf=GI$maf
@@ -242,7 +265,7 @@ if(DP$Inter.Plot)
   # }#PWI.Filtered
 }#end IC$GD)
   print("GAPIT.ID accomplished successfully for multiple traits. Results are saved")
-  return ()
+  return(invisible(NULL))
 }#is.null(DP)&is.null(IC)
 
 }  #end of GAPIT.ID function

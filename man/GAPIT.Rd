@@ -395,9 +395,13 @@ myGAPIT <- GAPIT(
   Y = myPhenotypes,
   G = myGenotypes,
   PCA.total = 3,
+  file.output = FALSE,
   model = "MLM"
 )
 }
 
 
+}
+\seealso{
+GAPIT.DP(), GAPIT.Phenotype.View(), GAPIT.judge(), GAPIT.IC(), GAPIT.SS(), GAPIT.ID().
 }
