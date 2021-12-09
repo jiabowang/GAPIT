@@ -143,6 +143,7 @@
 #'   Y = myPhenotypes,
 #'   G = myGenotypes,
 #'   PCA.total = 3,
+#'   file.output = FALSE,
 #'   model = "MLM"
 #' )
 #' }
