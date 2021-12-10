@@ -7,8 +7,9 @@ function(name.of.trait="Trait"){
 # Last update: may 29, 2011 
 ############################################################################################## 
 # print aggregate memory usage statistics 
-print(paste('R is using', utils::memory.size(), 'MB out of limit', utils::memory.limit(), 'MB')) 
-  
+if(.Platform$OS.type == "windows"){
+  print(paste('R is using', utils::memory.size(), 'MB out of limit', utils::memory.limit(), 'MB')) 
+}
 # create function to return matrix of memory consumption 
 object.sizes <- function() 
 { 

@@ -424,7 +424,8 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     if(!is.null(w))print(dim(w))
     
     print("Memory used at begining of LM")
-    print(utils::memory.size())
+    if(.Platform$OS.type == "windows"){print(utils::memory.size())}
+#    print(utils::memory.size())
     gc()
     #Constant section (non individual marker specific)
     #---------------------------------------------------------
@@ -503,7 +504,8 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     if(length(t0)<length(t1)) middle=1
     
     print("Memory used after setting LM")
-    print(utils::memory.size())
+    if(.Platform$OS.type == "windows"){print(utils::memory.size())}
+#    print(utils::memory.size())
     gc()
     #Dynamic section on individual marker
     print("Iterating.................")
@@ -624,7 +626,8 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     print("iteration accoplished")
     print(date())
     print("Memory used after iteration")
-    print(utils::memory.size())
+    if(.Platform$OS.type == "windows"){print(utils::memory.size())}
+#    print(utils::memory.size())
     gc()
     
     #Final report
@@ -639,7 +642,8 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     
     
     print("Memory used at end of LM")
-    print(utils::memory.size())
+    if(.Platform$OS.type == "windows"){print(utils::memory.size())}
+#    print(utils::memory.size())
     gc()
     
     return(list(P=P,P0=P0,PF=PF,Pred=yp))

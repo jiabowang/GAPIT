@@ -6,7 +6,12 @@ function(Memory =NULL,Infor){
 # Last update: June 6, 2011 
 ##############################################################################################
 gc()
-size <- utils::memory.size()
+if(.Platform$OS.type == "windows"){
+  size <- utils::memory.size()
+} else {
+  size <- Inf
+}
+
 #print(paste("Memory usage: ",size," for", Infor))
 if(is.null(Memory)) {
 Increased=0
