@@ -44,7 +44,7 @@ FarmCPU(
 )
 }
 \arguments{
-\item{Y}{= NULL,}
+\item{Y}{= NULL, a data.frame of phenotype data, first column is sample name, second column is the trait.}
 
 \item{GD}{= NULL,}
 

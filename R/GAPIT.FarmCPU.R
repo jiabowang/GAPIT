@@ -1039,6 +1039,7 @@ function(GM,P=NULL,Prior=NULL,kinship.algorithm="FARM-CPU"){
 #'
 #'
 #' FarmCPU
+#' 
 #' @description 
 #' FarmCPU: GWAS and GS by using FarmCPU method
 #' 

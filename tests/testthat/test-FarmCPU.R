@@ -41,7 +41,7 @@ test_that("GAPIT function works, FarmCPU model", {
 test_that("FarmCPU function works", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
                              package = "GAPIT3")
-  myGenoFile <- system.file("extdata", "mdp_genotype_test.GD.txt.gz",
+  myGenoFile <- system.file("extdata", "mdp_numeric.txt.gz",
                             package = "GAPIT3")
   
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)

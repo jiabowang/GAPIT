@@ -2,9 +2,9 @@
 # testthat::test_dir("tests/")
 # library("testthat")
 
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
-})
+# test_that("multiplication works", {
+#   expect_equal(2 * 2, 4)
+# })
 
 
 test_that("GAPIT mdp (Y and X) file import works", {

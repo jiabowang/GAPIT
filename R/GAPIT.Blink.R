@@ -1,211 +1,320 @@
-`Blink` <- function(Y=NULL,QTN.position=NULL,GD=NULL,GM=NULL,CV=NULL,DPP=100000000,kinship.algorithm="FARM-CPU",file.output=TRUE,cutOff=0.01,method.GLM="FarmCPU.LM",Prior=NULL,ncpus=1,maxLoop=10,LD=0.7,threshold.output=.0001,alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),WS=c(1e0,1e3,1e4,1e5,1e6,1e7),GP=NULL,FDRcut=FALSE
-,maxOut=10,converge=1,iteration.output=FALSE,acceleration=0,threshold=NA,model="A",MAF.calculate=FALSE,plot.style="FarmCPU",p.threshold=NA,maf.threshold=0,bound=FALSE,method.sub="reward",method.sub.final="reward",stepwise=FALSE,BIC.method="naive",LD.wise=FALSE,time.cal=FALSE,Prediction = F){
+
+
+
+#' Blink
+#'
+#' @description 
+#' Blink
+#' 
+#' @param Y = NULL, data.frame of phenotypic data, column one is sample (taxa), column two is a trait, subsequent columns are other traits.
+#' @param GD = NULL, data.frame of genetic data in 'numerical' format, samples in rows, variants in columns.
+#' @param GM = NULL, Genetic Map data.frame to provide genomic coordinates for GD
+#' @param QTN.position = NULL,
+#' @param CV = NULL, Covariates
+#' @param DPP = 100000000,
+#' @param kinship.algorithm = "FARM-CPU",
+#' @param file.output = TRUE,
+#' @param cutOff = 0.01,
+#' @param method.GLM = "FarmCPU.LM",
+#' @param Prior = NULL,
+#' @param ncpus = 1,
+#' @param maxLoop = 10,
+#' @param LD = 0.7,
+#' @param threshold.output = .0001,
+#' @param alpha = c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
+#' @param WS = c(1e0,1e3,1e4,1e5,1e6,1e7),
+#' @param GP = NULL,
+#' @param FDRcut = FALSE,
+#' @param maxOut = 10,
+#' @param converge = 1,
+#' @param iteration.output = FALSE,
+#' @param acceleration = 0,
+#' @param threshold = NA,
+#' @param model = "A",
+#' @param MAF.calculate = FALSE,
+#' @param plot.style = "FarmCPU",
+#' @param p.threshold = NA,
+#' @param maf.threshold = 0,
+#' @param bound = FALSE,
+#' @param method.sub = "reward",
+#' @param method.sub.final = "reward",
+#' @param stepwise = FALSE,
+#' @param BIC.method = "naive",
+#' @param LD.wise = FALSE,
+#' @param time.cal = FALSE,
+#' @param Prediction  =  F
+#' 
+#' 
+#' @return 
+#' list(GWAS=GWAS,myGLM=myGLM,PEV = PEV,seqQTN=seqQTN)
+#'
+#' @export
+`Blink` <- function(Y = NULL,
+                    QTN.position = NULL,
+                    GD = NULL,
+                    GM = NULL,
+                    CV = NULL,
+                    DPP = 100000000,
+                    kinship.algorithm = "FARM-CPU",
+                    file.output = TRUE,
+                    cutOff = 0.01,
+                    method.GLM = "FarmCPU.LM",
+                    Prior = NULL,
+                    ncpus = 1,
+                    maxLoop = 10,
+                    LD = 0.7,
+                    threshold.output = .0001,
+                    alpha = c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
+                    WS = c(1e0,1e3,1e4,1e5,1e6,1e7),
+                    GP = NULL,
+                    FDRcut = FALSE,
+                    maxOut = 10,
+                    converge = 1,
+                    iteration.output = FALSE,
+                    acceleration = 0,
+                    threshold = NA,
+                    model = "A",
+                    MAF.calculate = FALSE,
+                    plot.style = "FarmCPU",
+                    p.threshold = NA,
+                    maf.threshold = 0,
+                    bound = FALSE,
+                    method.sub = "reward",
+                    method.sub.final = "reward",
+                    stepwise = FALSE,
+                    BIC.method = "naive",
+                    LD.wise = FALSE,
+                    time.cal = FALSE,
+                    Prediction  =  FALSE){
   # Jiabo modified the Blink GS codes in 2020.9
   print("----------------------Welcome to Blink----------------------")
   time.start=proc.time()
   nm=nrow(GM)
   ny=nrow(Y)
-  if(is.na(threshold)) threshold=floor(ny/log(ny))
-  ngd=nrow(GD)
-  orientation="col"
-  theSNP=2
-  ns=nrow(GD)
-  seqQTN=NULL
-  if(nm==ngd){
-    orientation="row"
-    theSNP=1
-    ns=ncol(GD)
+  if(is.na(threshold)){
+    threshold = floor(ny / log(ny))
+  }
+  ngd = nrow(GD)
+  orientation = "col"
+  theSNP = 2
+  ns = nrow(GD)
+  seqQTN = NULL
+  if(nm == ngd){
+    orientation = "row"
+    theSNP = 1
+    ns = ncol(GD)
   }
   if(maf.threshold > 0) {
     MAF.calculate = TRUE
   }
 
   if(MAF.calculate==FALSE){
-        MAF=NA
-    }else{
-        MAF=apply(GD,theSNP,mean)
-        MAF=matrix(MAF,nrow=1)
-        MAF=apply(MAF,2,function(x) min(1-x/2,x/2))
-    }
-    MAF.index = 1:nm
-    if(maf.threshold > 0) {
+    MAF=NA
+  }else{
+    MAF=apply(GD,theSNP,mean)
+    MAF=matrix(MAF,nrow=1)
+    MAF=apply(X = MAF, 
+              MARGIN = 2,
+              function(x){ min(1 - x/2, x/2) }
+              )
+  }
+  MAF.index = 1:nm
+  if(maf.threshold > 0) {
     MAF.index = MAF > maf.threshold
     MAF = MAF[MAF.index]
   }
   ac=NULL
-  if(acceleration!=0) ac=rep(1.0,nm)
-  index=which(GM[,3]==0 )
-  if(length(index)>0){
+  if(acceleration != 0){
+    ac = rep(1.0, nm)
+  }
+  index = which(GM[,3] == 0 )
+  if(length(index) > 0){
     GM[index,3]=1
-   }
+  }
 
-  P=GP
+  P = GP
   gc()
-  if(ncol(GD)>nm & orientation=="col"){
-    if(bigmemory::is.big.matrix(GD)){
-      GD=bigmemory::deepcopy(GD,rows=1:nrow(GD),cols=2:ncol(GD))
+  if(ncol(GD) > nm & orientation == "col"){
+    if( bigmemory::is.big.matrix(GD) ){
+      GD = bigmemory::deepcopy(GD, 
+                               rows=1:nrow(GD), 
+                               cols=2:ncol(GD))
     }else{
       GD=as.matrix(GD[,-1])
     }
   }
   # GD=as.matrix(GD)
   gc()
-  shift=0
+  shift = 0
   for(trait in 2:2){
-    name.of.trait=colnames(Y)[trait]
-    index=MAF.index
-    seqTaxa=which(!is.na(Y[,trait]))
-    Y1=Y[seqTaxa,]
+    name.of.trait = colnames(Y)[trait]
+    index = MAF.index
+    seqTaxa = which(!is.na(Y[,trait]))
+    Y1 = Y[seqTaxa,]
     if(!is.null(CV)){
-        CV1=CV[seqTaxa,] #Thanks for jloat's suggestion in Jul 23 2021
-        }else{
-        CV1=NULL
-        }
-    if(orientation=="col"){
-            if(bigmemory::is.big.matrix(GD)){
-                GD1=bigmemory::deepcopy(GD,rows=seqTaxa,cols=index)
-            }else{
-                GD1=GD[seqTaxa,index]
-            }
-        }else{
-            if(bigmemory::is.big.matrix(GD)){
-                GD1=bigmemory::deepcopy(GD,rows=index,cols=seqTaxa)
-            }else{
-                GD1=GD[index,seqTaxa]
-                GD1=as.matrix(GD1)
-            }
-        }
-    LD.time=rep(0,maxLoop)
-    BIC.time=rep(0,maxLoop)
-    GLM.time=rep(0,maxLoop)
-    theLoop=0
-    theConverge=0
-    seqQTN.save=c(0)
-    isDone=FALSE
-    name.of.trait2=name.of.trait
+        CV1 = CV[seqTaxa,] #Thanks for jloat's suggestion in Jul 23 2021
+    }else{
+      CV1=NULL
+    }
+    if(orientation == "col"){
+      if(bigmemory::is.big.matrix(GD)){
+        GD1=bigmemory::deepcopy(GD,rows=seqTaxa,cols=index)
+      }else{
+        GD1=GD[seqTaxa,index]
+      }
+    } else {
+      if(bigmemory::is.big.matrix(GD)){
+        GD1=bigmemory::deepcopy(GD,rows=index,cols=seqTaxa)
+      }else{
+        GD1=GD[index,seqTaxa]
+        GD1=as.matrix(GD1)
+      }
+    }
+    LD.time = rep(0,maxLoop)
+    BIC.time = rep(0,maxLoop)
+    GLM.time = rep(0,maxLoop)
+    theLoop = 0
+    theConverge = 0
+    seqQTN.save = c(0)
+    isDone = FALSE
+    name.of.trait2 = name.of.trait
     while(!isDone) {
-      theLoop=theLoop+1
+      theLoop = theLoop + 1
       print(paste("----------------------Iteration:",theLoop,"----------------------",sep=" "))
-      if(iteration.output) name.of.trait2=paste("Iteration_",theLoop,".",name.of.trait,sep="")
-      myPrior=FarmCPU.Prior(GM=GM,P=P,Prior=Prior,kinship.algorithm=kinship.algorithm)
-        if(!is.null(myPrior)){
+      if(iteration.output){
+        name.of.trait2 = paste("Iteration_",
+                               theLoop,".",
+                               name.of.trait,
+                               sep="")
+      }
+      myPrior = FarmCPU.Prior(GM = GM,
+                              P = P,
+                              Prior = Prior,
+                              kinship.algorithm = kinship.algorithm)
+      if(!is.null(myPrior)){
         if(theLoop!=1){
-              seqQTN.p=myPrior
-                if(theLoop==2){
-                bonferroniCutOff=cutOff/nm
-                sp=sort(seqQTN.p)
-                spd=abs(cutOff-sp*nm/cutOff)
-                index_fdr=grep(min(spd),spd)[1]
-                FDRcutoff=cutOff*index_fdr/nm
-                if(FDRcut)
-                {
-                  index.p=seqQTN.p<(FDRcutoff)
-                  }else{
-                  index.p=seqQTN.p<(bonferroniCutOff)
-                  }
-                  if(!is.na(p.threshold)){
-                      index.p=seqQTN.p<p.threshold
-                  }
-            index.p[is.na(index.p)]=FALSE
-                  seqQTN.selected=as.numeric(which(index.p))
-              }else{
-                    index.p=seqQTN.p<(1/nm)
-                    if(!is.na(p.threshold)){
-                      index.p=seqQTN.p<p.threshold
-                  }
-            index.p[is.na(index.p)]=FALSE
-                  seqQTN.selected=as.numeric(which(index.p))
+          seqQTN.p = myPrior
+          if(theLoop == 2){
+            bonferroniCutOff = cutOff/nm
+            sp = sort(seqQTN.p)
+            spd = abs(cutOff - sp * nm/cutOff)
+            index_fdr = grep(min(spd), spd)[1]
+            FDRcutoff = cutOff * index_fdr/nm
+            if(FDRcut){
+              index.p = seqQTN.p < (FDRcutoff)
+            }else{
+              index.p = seqQTN.p < (bonferroniCutOff)
+            }
+            if(!is.na(p.threshold)){
+              index.p = seqQTN.p < p.threshold
+            }
+            index.p[ is.na(index.p) ] = FALSE
+            seqQTN.selected = as.numeric( which( index.p ) )
+            }else{
+              index.p = seqQTN.p < (1/nm)
+              if(!is.na(p.threshold)){
+                index.p=seqQTN.p<p.threshold
               }
+              index.p[is.na(index.p)] = FALSE
+              seqQTN.selected = as.numeric(which(index.p))
+            }
 
-          Porder=order(myPrior[seqQTN.selected],na.last=T,decreasing=FALSE)
-          t1=proc.time()
-          if(length(Porder)>1){
-            if(LD.wise & (length(Porder)>threshold)){
-              max_Porder=max(Porder)
-              if(max_Porder > 10000) max_Porder=10000
-              step_bin= 10
-              Porder_new=rep(Porder[1],threshold)
-              Po=1
-              for( po in 2:max_Porder){
-                if(min(abs(seqQTN.selected[Porder[po]]-seqQTN.selected[Porder_new]))>step_bin){
-                  Po=Po+1
-                  Porder_new[Po]=Porder[po]
-                  if (Po >=threshold) break
+            Porder = order(myPrior[seqQTN.selected], 
+                           na.last = TRUE, 
+                           decreasing = FALSE)
+            t1 = proc.time()
+            if(length(Porder) > 1){
+              
+              if(LD.wise & (length(Porder) > threshold)){
+                max_Porder = max(Porder)
+                if(max_Porder > 10000) max_Porder = 10000
+                step_bin = 10
+                Porder_new = rep(Porder[1],threshold)
+                Po = 1
+                for( po in 2:max_Porder){
+                  if(min(abs(seqQTN.selected[Porder[po]]-seqQTN.selected[Porder_new]))>step_bin){
+                    Po = Po + 1
+                    Porder_new[Po]=Porder[po]
+                    if (Po >=threshold) break
+                  }
+                }
+                Porder=Porder_new
+              }
+              
+              if(bigmemory::is.big.matrix(GD1)){
+                if(orientation=="col"){
+                  GDnew=bigmemory::deepcopy(GD1,cols=seqQTN.selected)
+                  GDneo=bigmemory::deepcopy(GDnew,cols=Porder)
+                }else{
+                  GDnew=bigmemory::deepcopy(GD1,rows=seqQTN.selected)
+                  GDneo=bigmemory::deepcopy(GDnew,rows=Porder)
+                }
+              } else {
+                if(orientation=="col"){
+                  GDnew=GD1[,seqQTN.selected]
+                  GDneo=GDnew[,Porder]
+                }else{
+                  GDnew=GD1[seqQTN.selected,]
+                  GDneo=GDnew[Porder,]
                 }
               }
-              Porder=Porder_new
-                  }
-
-            if(bigmemory::is.big.matrix(GD1)){
-              if(orientation=="col"){
-                GDnew=bigmemory::deepcopy(GD1,cols=seqQTN.selected)
-                GDneo=bigmemory::deepcopy(GDnew,cols=Porder)
-              }else{
-                GDnew=bigmemory::deepcopy(GD1,rows=seqQTN.selected)
-                GDneo=bigmemory::deepcopy(GDnew,rows=Porder)
-              }
+              
+              print("LD remove is working....")
+              print("Number SNPs for LD remove:")
+              print(length(Porder))
+              Psort=Blink.LDRemove(Porder=Porder,GDneo=GDneo,bound=bound,LD=LD,model=model,orientation=orientation)
+              seqQTN.can=seqQTN.selected[Psort]
+              t2=proc.time()
+              print("Model selection based on BIC is working....")
+              print("Number of SNPs for BIC selection:")
+              print(length(seqQTN.can))
+              myBIC = Blink.BICselection(Psort = seqQTN.can,
+                                         GD = GD1,
+                                         Y = Y1,
+                                         orientation = orientation,
+                                         BIC.method = BIC.method)
+              seqQTN = myBIC$seqQTN
+              #if(theLoop==6) print(seqQTN)
+              t3 = proc.time()
+              LD.time[theLoop] = as.numeric(t2)[3] - as.numeric(t1)[3]
+              BIC.time[theLoop] = as.numeric(t3)[3] - as.numeric(t2)[3]
+            }else if(length(Porder) == 1){
+              print("LD remove is working....")
+              print("Model selection based on BIC is working....")
+              seqQTN=seqQTN.selected
             }else{
-              if(orientation=="col"){
-                GDnew=GD1[,seqQTN.selected]
-                GDneo=GDnew[,Porder]
-              }else{
-                GDnew=GD1[seqQTN.selected,]
-                GDneo=GDnew[Porder,]
-              }
+              seqQTN=NULL
             }
+          }
+        }else{
+          seqQTN=NULL
+        }
 
-            print("LD remove is working....")
-            print("Number SNPs for LD remove:")
-            print(length(Porder))
-            Psort=Blink.LDRemove(Porder=Porder,GDneo=GDneo,bound=bound,LD=LD,model=model,orientation=orientation)
-            seqQTN.can=seqQTN.selected[Psort]
-            t2=proc.time()
-            print("Model selection based on BIC is working....")
-            print("Number of SNPs for BIC selection:")
-            print(length(seqQTN.can))
-            myBIC = Blink.BICselection(Psort=seqQTN.can,GD=GD1,Y=Y1,orientation=orientation,BIC.method=BIC.method)
-            seqQTN = myBIC$seqQTN
-            #if(theLoop==6) print(seqQTN)
-            t3=proc.time()
-            LD.time[theLoop]=as.numeric(t2)[3]-as.numeric(t1)[3]
-            BIC.time[theLoop]=as.numeric(t3)[3]-as.numeric(t2)[3]
-          }else if(length(Porder)==1){
-            print("LD remove is working....")
-            print("Model selection based on BIC is working....")
-            seqQTN=seqQTN.selected
+        if(theLoop==2){
+          if(!is.na(p.threshold)){
+            if(min(myPrior,na.rm=TRUE)>p.threshold){
+              seqQTN=NULL
+                print("Top snps have little effect, set seqQTN to NULL!")
+            }
           }else{
-            seqQTN=NULL
+            sp=sort(seqQTN.p)
+            spd=abs(cutOff-sp*nm/cutOff)
+            index_fdr=grep(min(spd),spd)[1]
+            FDRcutoff=cutOff*index_fdr/nm
+
+            if(FDRcut){
+              index.cutoff=FDRcutoff
+            }else{
+              index.cutoff=bonferroniCutOff
+            }
+            # index.p=seqQTN.p<(FDRcutoff)
+            if(min(myPrior,na.rm=TRUE)>index.cutoff){
+              seqQTN=NULL
+              print("Top snps have little effect, set seqQTN to NULL!")
+            }
           }
         }
-      }else{
-        seqQTN=NULL
-      }
-
-      if(theLoop==2){
-            if(!is.na(p.threshold)){
-              if(min(myPrior,na.rm=TRUE)>p.threshold){
-                  seqQTN=NULL
-                    print("Top snps have little effect, set seqQTN to NULL!")
-                }
-            }else{
-                sp=sort(seqQTN.p)
-                spd=abs(cutOff-sp*nm/cutOff)
-                index_fdr=grep(min(spd),spd)[1]
-                FDRcutoff=cutOff*index_fdr/nm
-
-                if(FDRcut)
-                {
-                  index.cutoff=FDRcutoff
-                  }else{
-                  index.cutoff=bonferroniCutOff
-                  }
-                # index.p=seqQTN.p<(FDRcutoff)
-              if(min(myPrior,na.rm=TRUE)>index.cutoff){
-            seqQTN=NULL
-                  print("Top snps have little effect, set seqQTN to NULL!")
-              }
-              }
-        }
+      
       if(theLoop==2&&is.null(seqQTN)|length(seqQTN)==0&&theLoop==2){
           print(paste("seqQTN is:",seqQTN,",stop here",sep=""))
           if(!isDone | iteration.output){
@@ -225,7 +334,7 @@
               break
       }
       if(theLoop>1){
-        if(seqQTN.save!=0 & seqQTN.save!=-1 & !is.null(seqQTN)){
+        if(all(seqQTN.save!=0 & seqQTN.save!=-1 & !is.null(seqQTN))){
           seqQTN=union(seqQTN,seqQTN.save)
         }
       }
@@ -339,14 +448,24 @@
   }#end of phenotype
   return(list(GWAS=GWAS,myGLM=myGLM,PEV = PEV,seqQTN=seqQTN))
 }#  end of function Blink
+
+
 # GWAS4_blinkc=result
 # blinkc=merge(GWAS4[,c(1,4)],GWAS4_blinkc[,c(1,5)],by.x="SNP",by.y="taxa")
+
+
+
 
 # cor(blinkc[,2],blinkc[,3])
 # cor(farmcpu[,2],farmcpu[,3])
 
 
-`Blink.BICselection` <-  function(Psort=NULL,CV=NULL,GD=NULL,Y=Y1,orientation=NULL,BIC.method="even"){
+`Blink.BICselection` <-  function(Psort = NULL,
+                                  CV = NULL,
+                                  GD = NULL,
+                                  Y = Y1,
+                                  orientation = NULL,
+                                  BIC.method = "even"){
 #Objects: fixed model selection using BIC
 #Input:Y,GD,Psort
 #   BIC.method: Naive: detect all SNPs of Psort
@@ -427,7 +546,7 @@
     }
   }else{
     print("please choose one method for BIC")
-    break
+#    break
   }
 
   BICv=rep(NA,length(position))
@@ -715,7 +834,7 @@
   }
   
   seqTaxa=which(!is.na(Y[,2]))
-  Y1=Y[seqTaxa,2]
+  Y1 = Y[seqTaxa,2]
   GD1 = GD[seqTaxa,]
   
   if(is.null(CV)){
@@ -771,7 +890,13 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
 }#The function FarmCPU.SUB ends here
 
 
-`Blink.cor`<-function(Y,GD,w=NULL,orientation="row",ms=ms,n=ny,m=nm){
+`Blink.cor`<-function(Y,
+                      GD,
+                      w = NULL,
+                      orientation = "row",
+                      ms = ms,
+                      n = ny,
+                      m = nm){
   #Objects: calculate R value with covariates
   #Input: pheontype(nx1), ms is marker size for slicing the genotype, genotype(orientation="row", mxn or orientation="col", nxm,) and covariates(nxp)
   #   n is individual number, m is marker number, p is covariate number
