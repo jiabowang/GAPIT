@@ -8,7 +8,7 @@ Released on CRAN 202X-XX-XX
 * Created manual page for `GAPIT3::GAPIT()`
 * Created manual page for `GAPIT3::GAPIT.Compression.Visualization()`, added parameter `file.output`.
 * Created manual page for `GAPIT3::GAPIT.ID()`, file.output is respected for testing, returns an invisible NULL to facilitate testing.
-
+* Omitted uncalled function `BlinkR.SUB()`
 
 
 

@@ -42,7 +42,8 @@ for(j in 2:num)
 	if(j!=num)
 		cali[,j]<-unique(as.character(y[!(y$Taxa %in% vali[,j]), 'Taxa']))
 	if(j==num)
-		calilast <<- y[!(y$Taxa %in% valilast), 'Taxa']
+		#calilast <<- y[!(y$Taxa %in% valilast), 'Taxa']
+  	calilast <- y[!(y$Taxa %in% valilast), 'Taxa']
 }
 
 	i=sample(1:num, size = 1)

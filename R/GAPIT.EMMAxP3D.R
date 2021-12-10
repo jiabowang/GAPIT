@@ -299,10 +299,24 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Clean myFRG")
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Read file fragment")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Read file fragment")
 
-    myFRG=GAPIT.Fragment( file.path=file.path,  file.total=file.total,file.G=file.G,file.Ext.G=file.Ext.G,
-                          seed=seed,SNP.fraction=SNP.fraction,SNP.effect=SNP.effect,SNP.impute=SNP.impute,genoFormat=genoFormat,
-                          file.GD=file.GD,file.Ext.GD=file.Ext.GD,file.GM=file.GM,file.Ext.GM=file.Ext.GM,file.fragment=file.fragment,file=file,frag=frag, 
-                           Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero)
+    myFRG=GAPIT.Fragment( file.path = file.path,  
+                          file.total = file.total,
+                          file.G = file.G,
+                          file.Ext.G = file.Ext.G,
+#                          seed = seed,
+                          SNP.fraction = SNP.fraction,
+                          SNP.effect = SNP.effect,
+                          SNP.impute = SNP.impute,
+                          genoFormat = genoFormat,
+                          file.GD = file.GD,
+                          file.Ext.GD = file.Ext.GD,
+                          file.GM = file.GM,
+                          file.Ext.GM = file.Ext.GM,
+                          file.fragment = file.fragment,
+                          file = file,
+                          frag = frag, 
+                          Create.indicator = Create.indicator, 
+                          Major.allele.zero = Major.allele.zero)
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Genotype file converted")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Genotype file converted")

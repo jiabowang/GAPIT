@@ -3,9 +3,9 @@
 #' @description 
 #' GAPIT.ID
 #'
-#' @param DP param
-#' @param IC param
-#' @param SS param
+#' @param DP param a list (118 elements?)
+#' @param IC param a list (9 elements?)
+#' @param SS param a list (17 elements?)
 #' @param RS param
 #' @param cutOff param
 #' @param DPP param
@@ -105,7 +105,13 @@ GWAS=RS
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")	
 
   print("Creating ROC table and plot" )
-if(file.output) myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=stats::var(ys),trait=name.of.trait)
+
+if(file.output){
+  if( !is.null(DP) ){
+    ys <- nrow(DP$G)
+  }
+  myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=stats::var(ys),trait=name.of.trait)
+}
   print("ROC table and plot created" )
   print("MAF plot..." )
 if(file.output&maf_pass) myMAF1=GAPIT.MAF(MAF=maf,P=ps,E=NULL,trait=name.of.trait)

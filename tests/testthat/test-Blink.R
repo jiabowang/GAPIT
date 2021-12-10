@@ -36,3 +36,19 @@ test_that("Blink function works", {
 })
 
 
+# test_that("Blink.BICselection works", {
+#   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+#                              package = "GAPIT3")
+#   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+#   #  myPhenotypes <- myPhenotypes[, 1:2]
+#   myPhenotypes <- myPhenotypes[, c(1, 3)]
+# 
+#   myGenomeDataFile <- system.file("extdata", 
+#                                   "mdp_numeric.txt.gz",
+#                                   package = "GAPIT3")
+#   myGD  <- read.table(myGenomeDataFile, header = TRUE)
+#     
+#   # devtools::load_all()
+#   # debug(Blink.BICselection)
+#   my_Blink <- Blink.BICselection(Y = myPhenotypes, GD = myGD)
+# })

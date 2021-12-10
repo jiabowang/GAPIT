@@ -1,5 +1,17 @@
-`GAPIT.Phenotype.Simulation` <-
-  function(GD,GM=NULL,h2=.75,NQTN=10,QTNDist="normal",effectunit=1,category=1,r=0.25,CV,cveff=NULL,a2=0,adim=2){
+`GAPIT.Phenotype.Simulation` <- function(
+  GD,
+  GM=NULL,
+  h2=.75,
+  NQTN=10,
+  QTNDist="normal",
+  effectunit=1,
+  category=1,
+  r=0.25,
+  CV,
+  cveff=NULL,
+  a2=0
+  ,adim=2
+  ){
     #Object: To simulate phenotype from genotye
     #Input: GD - n by m +1 dataframe or n by m big.matrix
     #intput: h2 - heritability
@@ -111,7 +123,8 @@ if(a2>0&NQTN>=nint){
     #print(vy)
     ev=cveff*vy/(1-cveff)
     ec=sqrt(ev)/sqrt(diag(stats::var(CV[,-1])))    
-    enveff=as.matrix(myCV[,-1])%*%ec
+    #enveff=as.matrix(myCV[,-1])%*%ec
+    enveff=as.matrix(CV[,-1])%*%ec
     
     #print(cbind(effectvar,residualvar,ev,ec))
     #print(cbind(effect,enveff,residual))

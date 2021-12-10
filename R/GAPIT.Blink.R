@@ -428,8 +428,8 @@
       }
       PEV = Blink.Pred(Y = YP,
                        GD = GDpred,
-                       CV = CV#,
-                       #orientation = orientation
+                       CV = CV,
+                       orientation = orientation
                        )
     }
     if(time.cal){
@@ -460,10 +460,17 @@
 # cor(farmcpu[,2],farmcpu[,3])
 
 
-`Blink.BICselection` <-  function(Psort = NULL,
+# `Blink.BICselection` <-  function(Psort = NULL,
+#                                   CV = NULL,
+#                                   GD = NULL,
+#                                   Y = Y1,
+#                                   orientation = NULL,
+#                                   BIC.method = "even"){
+
+`Blink.BICselection` <-  function(Y, 
+                                  Psort = NULL,
                                   CV = NULL,
                                   GD = NULL,
-                                  Y = Y1,
                                   orientation = NULL,
                                   BIC.method = "even"){
 #Objects: fixed model selection using BIC
@@ -820,7 +827,10 @@
     return(list(P=P,PF=NULL,beta=beta))
 } #end of function
 
-`Blink.Pred` <- function(GD = NULL, Y = NULL,CV = NULL){
+`Blink.Pred` <- function(GD = NULL, 
+                         Y = NULL,
+                         CV = NULL, 
+                         orientation = "col"){
 ## Objects: Prediction using significant pseudo QTNs
 ## Input: Y, CV and GD
 ## Output: Predicted Phenotype
@@ -895,8 +905,11 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
                       w = NULL,
                       orientation = "row",
                       ms = ms,
-                      n = ny,
-                      m = nm){
+#                      n = ny,
+#                      m = nm
+                      n = nrow(Y),
+                      m = nrow(GD)
+                      ){
   #Objects: calculate R value with covariates
   #Input: pheontype(nx1), ms is marker size for slicing the genotype, genotype(orientation="row", mxn or orientation="col", nxm,) and covariates(nxp)
   #   n is individual number, m is marker number, p is covariate number
@@ -1004,25 +1017,26 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
   pvalue <- 2 * stats::pt(abs(tvalue), df-1,lower.tail = FALSE)
   return(pvalue)
 }
-`BlinkR.SUB` <-function(CV,seqQTN,Y,r,ny,ms,m){
-#Objects: subsitution of r value for covariates
-#Input: Y, nx1 vector, phenotype
-#   w, all covariates without 1 
-#   seq = length(seqQTN), number of SNPs added as covariate
-#Output：r, r value for SNPs added as covariates
-#Author:Yao Zhou
-#Last update: 08/15/2016
-  rsnp=matrix(NA,nsnp,1)
-  ncov=ncol(CV)
-  nf=ncov-nsnp
-  GDP=CV[,(nf+1):ncov]
-  for(i in 1:nsnp){
-    w=GDP[,-i]
-    if(nsnp==1) w=NULL
-    GD=as.matrix(GDP[,i])
-    rsnp[i,1]=Blink.cor(Y=Y,w=w,GD=GD,orientation=orientation,ms=ms,n=ny,m=nm)
-  }
-  rm(GDP, GD, w, ncov, nf)
-    return(rsnp)
-}
+
+# `BlinkR.SUB` <-function(CV,seqQTN,Y,r,ny,ms,m){
+# #Objects: subsitution of r value for covariates
+# #Input: Y, nx1 vector, phenotype
+# #   w, all covariates without 1 
+# #   seq = length(seqQTN), number of SNPs added as covariate
+# #Output：r, r value for SNPs added as covariates
+# #Author:Yao Zhou
+# #Last update: 08/15/2016
+#   rsnp=matrix(NA,nsnp,1)
+#   ncov=ncol(CV)
+#   nf=ncov-nsnp
+#   GDP=CV[,(nf+1):ncov]
+#   for(i in 1:nsnp){
+#     w=GDP[,-i]
+#     if(nsnp==1) w=NULL
+#     GD=as.matrix(GDP[,i])
+#     rsnp[i,1]=Blink.cor(Y=Y,w=w,GD=GD,orientation=orientation,ms=ms,n=ny,m=nm)
+#   }
+#   rm(GDP, GD, w, ncov, nf)
+#     return(rsnp)
+# }
 

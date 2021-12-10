@@ -1597,7 +1597,10 @@ function(GM,P=NULL,Prior=NULL,kinship.algorithm="FARM-CPU"){
             
             #acceleration
             if(!is.null(ac)){
-                ac=FarmCPU.Accelerate(ac=ac,QTN=myRemove$seqQTN,acceleration=acceleration)
+                # ac = FarmCPU.Accelerate(ac = ac, 
+                #                         QTN = myRemove$seqQTN, 
+                #                         acceleration = acceleration)
+                # The function 'FarmCPU.Accelerate()' does not exist.
                 P=P/ac
             }
             #print("Acceleration in bus")
