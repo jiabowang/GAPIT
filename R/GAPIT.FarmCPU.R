@@ -1,3 +1,6 @@
+#'
+#'
+#'
 
 `FarmCPU.0000` <-
 function(){
@@ -10,6 +13,7 @@ function(){
     FarmCPU.Version="FarmCPU v1.02, Dec 21, 2016"
     return(FarmCPU.Version)
 }
+
 `FarmCPU.BIN` <-function(
     Y = NULL,
     GDP = NULL,
@@ -363,7 +367,17 @@ function(Y=NULL,GDP=NULL,GM=NULL,CV=NULL,orientation="row",package="FarmCPU.LM",
         }
         #print("theCV")
         #print(head(theCV))
-        if(ncpus==1)myLM=FarmCPU.LM(y=Y[,2],w=theCV,GDP=GDP,orientation=orientation,model=model,ncpus=ncpus,myModel=myModel,seqQTN=seqQTN,npc=npc)
+        if(ncpus == 1){
+          myLM = FarmCPU.LM(y = Y[,2],
+                            w = theCV,
+                            GDP = GDP, 
+                            orientation = orientation,
+                            model = model,
+                            ncpus = ncpus,
+                            myModel = myModel,
+                            seqQTN = seqQTN,
+                            npc = npc)
+        }
         if(ncpus>1){myLM = FarmCPU.LM.Parallel(y=Y[,2],
                     w = theCV,
                     x = GDP,
@@ -487,7 +501,8 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
     rhs=wy
     beta <- crossprod(wwi,rhs)
     ve=(yy-crossprod(beta,rhs))/df
-    se=sqrt(diag(wwi)*ve)
+#    se=sqrt(diag(wwi)*ve)
+    se=sqrt(diag(wwi) * as.vector(ve))
     tvalue=beta/se
     pvalue <- 2 * stats::pt(abs(tvalue), df,lower.tail = FALSE)
     P0=c(beta[-1],tvalue[-1],se[-1],pvalue[-1])
@@ -584,8 +599,10 @@ function(y,w=NULL,x,orientation="col",model="A",ncpus=2){
         #using iXX in the same as above to derive se
         if(abs(r)>threshold & model=="AD"){
             se=sqrt(diag(iXX[-(q0+k),-(q0+k)])*ve)
+            
         }else{
-            se=sqrt(diag(iXX)*ve)
+            #se=sqrt(diag(iXX)*ve)
+            se = sqrt(diag(iXX) * c(ve))
         }
         
         tvalue=beta/se
@@ -736,7 +753,8 @@ function(y,w=NULL,GDP,orientation="col",model="A",ncpus=2,myModel=NULL,seqQTN=NU
     rhs=wy
     beta <- crossprod(wwi,rhs)
     ve=(yy-crossprod(beta,rhs))/df
-    se=sqrt(diag(wwi)*ve)
+#    se=sqrt(diag(wwi)*ve)
+    se=sqrt(diag(wwi) * as.vector(ve))
     tvalue=beta/se
     pvalue <- 2 * stats::pt(abs(tvalue), df,lower.tail = FALSE)
     P0=c(beta[-1],tvalue[-1],se[-1],pvalue[-1])
@@ -855,7 +873,13 @@ function(y,w=NULL,GDP,orientation="col",model="A",ncpus=2,myModel=NULL,seqQTN=NU
         if(abs(r)>threshold & model=="AD"){
             se=sqrt(diag(iXX[-(q0+k),-(q0+k)])*ve)
         }else{
-            se=sqrt(diag(iXX)*ve)
+            # browser()
+            # se=sqrt(diag(iXX)*ve)
+            # se = sqrt(diag(iXX) * c(ve))
+            myDiag <- diag(iXX)
+            myDiag[ myDiag < 0 ] <- 0
+            ve[ ve < 0 ] <- 0
+            se = sqrt(myDiag * c(ve))
         }
         
         tvalue=beta/se
@@ -1011,11 +1035,104 @@ function(GM,P=NULL,Prior=NULL,kinship.algorithm="FARM-CPU"){
     #print("debug set prior   b")
     return(P)
 }#The function FarmCPU.Prior ends here
-`FarmCPU` <-
-function(Y=NULL,GD=NULL,GM=NULL,CV=NULL,GP=NULL,Yt=NULL,DPP=1000000,kinship.algorithm="FARM-CPU",file.output=TRUE,cutOff=0.01,method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
-memo=NULL,Prior=NULL,ncpus=1,maxLoop=10,threshold.output=.01,
-WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),maxOut=100,QTN.position=NULL,
-converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,plot.style="FarmCPU",p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,ycor=NULL,bound=NULL){
+
+#'
+#'
+#' FarmCPU
+#' @description 
+#' FarmCPU: GWAS and GS by using FarmCPU method
+#' 
+#' 
+#' @param Y = NULL, a data.frame of phenotype data, first column is sample name, second column is the trait.
+#' @param GD = NULL,
+#' @param GM = NULL,
+#' @param CV = NULL,
+#' @param GP = NULL,
+#' @param Yt = NULL,
+#' @param DPP = 1000000,
+#' @param kinship.algorithm = "FARM-CPU",
+#' @param file.output = TRUE,
+#' @param cutOff = 0.01,
+#' @param method.GLM = "FarmCPU.LM",
+#' @param method.sub = "reward",
+#' @param method.sub.final = "reward",
+#' @param method.bin = "static",
+#' @param bin.size = c(5e5,5e6,5e7),
+#' @param bin.selection = seq(10,100,10),
+#' @param memo = NULL,
+#' @param Prior = NULL,
+#' @param ncpus = 1,
+#' @param maxLoop = 10,
+#' @param threshold.output = .01,
+#' @param WS = c(1e0,1e3,1e4,1e5,1e6,1e7),
+#' @param alpha = c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
+#' @param maxOut = 100,
+#' @param QTN.position = NULL,
+#' @param converge = 1,
+#' @param iteration.output = FALSE,
+#' @param acceleration = 0,
+#' @param model = "A",
+#' @param MAF.calculate = FALSE,
+#' @param plot.style = "FarmCPU",
+#' @param p.threshold = NA,
+#' @param QTN.threshold = 0.01,
+#' @param maf.threshold = 0.03,
+#' @param ycor = NULL,
+#' @param bound = NULL
+#' 
+#' 
+#' @return 
+#' A list.
+#' 
+#' 
+#' @author Xiaolei Liu and Zhiwu Zhang
+#' 
+#' 
+#' @examples 
+#' \dontrun{
+#' myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz", package = "GAPIT3")
+#' myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+#' myFarmCPU <- FarmCPU(myPhenotypes[, 1:2])
+#' }
+#' 
+#' 
+#' @export
+`FarmCPU` <- function(Y = NULL,
+                      GD = NULL,
+                      GM = NULL,
+                      CV = NULL,
+                      GP = NULL,
+                      Yt = NULL,
+                      DPP = 1000000,
+                      kinship.algorithm = "FARM-CPU",
+                      file.output = TRUE,
+                      cutOff = 0.01,
+                      method.GLM = "FarmCPU.LM",
+                      method.sub = "reward",
+                      method.sub.final = "reward",
+                      method.bin = "static",
+                      bin.size = c(5e5,5e6,5e7),
+                      bin.selection = seq(10,100,10),
+                      memo = NULL,
+                      Prior = NULL,
+                      ncpus = 1,
+                      maxLoop = 10,
+                      threshold.output = .01,
+                      WS = c(1e0,1e3,1e4,1e5,1e6,1e7),
+                      alpha = c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
+                      maxOut = 100,
+                      QTN.position = NULL,
+                      converge = 1,
+                      iteration.output = FALSE,
+                      acceleration = 0,
+                      model = "A",
+                      MAF.calculate = FALSE,
+                      plot.style = "FarmCPU",
+                      p.threshold = NA,
+                      QTN.threshold = 0.01,
+                      maf.threshold = 0.03,
+                      ycor = NULL,
+                      bound = NULL){
     #Object: GWAS and GS by using FarmCPU method
     #Input: Y,GD,GM,CV
     #Input: GD - n by m +1 dataframe or n by m big.matrix
@@ -1034,46 +1151,46 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
     #print(dim(GD))
     #print(dim(GM))
     print("--------------------- Welcome to FarmCPU ----------------------------")
-    echo=TRUE
-    FarmCPU.Version=FarmCPU.0000()
+    echo = TRUE
+    FarmCPU.Version = FarmCPU.0000()
     print("FarmCPU Started...")
     if(ncol(Y)>2) stop("FarmCPU only accept single phenotype, please specify a column, like myY[,c(1,3)]")
     #Set orientation
     #Strategy: the number of rows in GD and GM are the same if GD has SNP as row
-    nm=nrow(GM)
-    ny=nrow(Y)
-    ngd1=nrow(GD)
-    ngd2=ncol(GD)
+    nm = nrow(GM)
+    ny = nrow(Y)
+    ngd1 = nrow(GD)
+    ngd2 = ncol(GD)
     if(!is.null(CV)){
-        CV=as.matrix(CV)
-        npc=ncol(CV)
+        CV = as.matrix(CV)
+        npc = ncol(CV)
     }else{
-        npc=0
+        npc = 0
     }
-    ngd1=abs(ngd1-nm)
-    ngd2=abs(ngd2-nm)
-    orientation="col"
-    theSNP=2
-    ns=nrow(GD)
+    ngd1 = abs(ngd1-nm)
+    ngd2 = abs(ngd2-nm)
+    orientation = "col"
+    theSNP = 2
+    ns = nrow(GD)
     if(min(ngd1,ngd2)==0){
-        orientation="row"
-        theSNP=1
-        ns=ncol(GD)
+        orientation = "row"
+        theSNP = 1
+        ns = ncol(GD)
     }
     
     #acceleration
-    ac=NULL
-    if(acceleration!=0) ac=rep(1.0,nm)
+    ac = NULL
+    if(acceleration!=0) ac = rep(1.0,nm)
     
     #Handler of non numeric chr
     #GM[,2]=as.numeric(GM[,2])
     
     #Handler 0 bp
-    index=which(GM[,3]==0 )
+    index = which(GM[,3]==0 )
     if(length(index)>0){
         #print("Warning: there is 0 bp which was set to 1")
         #print(length(index))
-        GM[index,3]=1      #This is problematic
+        GM[index,3] = 1      #This is problematic
     }
     
     #handler of multiple CPU on big.matrix
@@ -1085,11 +1202,11 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
     
     #print("number of CPU required")
     #print(ncpus)
-    if(ncpus>1) snowfall::sfInit(parallel=ncpus>1, cpus=ncpus)
+    if(ncpus>1) snowfall::sfInit(parallel = ncpus>1, cpus = ncpus)
     
-    P=GP
+    P = GP
     
-    if(!is.null(GP))P=GP[,4] #get the p value
+    if(!is.null(GP))P = GP[,4] #get the p value
     
     #print("maxLoop")
     #print(maxLoop)
@@ -1104,14 +1221,14 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
         #print("GD has taxa column")
         if(bigmemory::is.big.matrix(GD)){
             #retain as bi.matrix
-            GD=bigmemory::deepcopy(GD,rows=1:nrow(GD),cols=2:ncol(GD))  #This cause problem with multi cpu
+            GD = bigmemory::deepcopy(GD,rows = 1:nrow(GD),cols = 2:ncol(GD))  #This cause problem with multi cpu
         }else{
-            GD=as.matrix(GD[,-1])
+            GD = as.matrix(GD[,-1])
         }
     }#end of if(ncol...
     
     #Change to regula matrix for multiple CPUs
-    if(ncpus>1)  GD=as.matrix(GD)
+    if(ncpus>1)  GD = as.matrix(GD)
     
     #print("after remove taxa in GD")
     gc()
@@ -1121,9 +1238,9 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
     #print(dim(GD))
     
     if(model=="A"){
-        shift=0
+        shift = 0
     }else if(model=="AD"){
-        shift=1
+        shift = 1
     }else {
         print("Please choose 'A' model or 'AD' model")
     }
@@ -1132,17 +1249,17 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
     
     #calculating MAF
     if(MAF.calculate==FALSE){
-        MAF=NA
+        MAF = NA
     }else{
-        MAF=apply(GD,theSNP,mean)
-        MAF=matrix(MAF,nrow=1)
-        MAF=apply(MAF,2,function(x) min(1-x/2,x/2))
+        MAF = apply(GD,theSNP,mean)
+        MAF = matrix(MAF,nrow = 1)
+        MAF = apply(MAF,2,function(x) min(1-x/2,x/2))
     }
     
     for (trait in 2: ncol(Y))  {
-        name.of.trait=colnames(Y)[trait]
+        name.of.trait = colnames(Y)[trait]
         #print(paste("Processing trait: ",name.of.trait,sep=""))
-        if(!is.null(memo)) name.of.trait=paste(memo,".",name.of.trait,sep="")
+        if(!is.null(memo)) name.of.trait = paste(memo,".",name.of.trait,sep = "")
         
         #===============================================================================
         #handler of missing phenotype (keep raw Y,CV and GD)
@@ -1151,23 +1268,23 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
         #print(memory.size())
         
         #index for missing phenotype
-        index=1:nm
-        seqTaxa=which(!is.na(Y[,trait]))
+        index = 1:nm
+        seqTaxa = which(!is.na(Y[,trait]))
         if(MAF.calculate==TRUE){
             if(is.na(maf.threshold)){
-                if(length(seqTaxa)<=100) maf.threshold=0.05
+                if(length(seqTaxa)<=100) maf.threshold = 0.05
                 #if(length(seqTaxa)>100&&length(seqTaxa)<=500) maf.threshold=0.01
                 #if(length(seqTaxa)>300&&length(seqTaxa)<=500) maf.threshold=0.05
                 #if(length(seqTaxa)>500&&length(seqTaxa)<=1000) maf.threshold=0.01
-                if(length(seqTaxa)>100) maf.threshold=0
+                if(length(seqTaxa)>100) maf.threshold = 0
             }else{
-                maf.threshold=maf.threshold
+                maf.threshold = maf.threshold
             }
-            mafindex=(1:nm)[MAF>=maf.threshold]
-            MAF=MAF[mafindex]
-            index=mafindex
-            GM=GM[index,]
-            nm=length(index)
+            mafindex = (1:nm)[MAF>=maf.threshold]
+            MAF = MAF[mafindex]
+            index = mafindex
+            GM = GM[index,]
+            nm = length(index)
         }
         #predict = !(length(seqTaxa)==nrow(Y))#judge whether there is NA in phenotype
         predict = !is.null(Yt)#judge whether there is two phenotypes
@@ -1177,11 +1294,11 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
         #print(nrow(Y))
         #print("predict")
         #print(predict)
-        Y1=Y[seqTaxa,]
+        Y1 = Y[seqTaxa,]
         #if(is.numeric(CV)){CV1=CV[seqTaxa]
         #}else{
         #    CV1=CV[seqTaxa,]}
-        CV1=CV[seqTaxa,]
+        CV1 = CV[seqTaxa,]
         
         #print(head(CV1))
         if(length(seqTaxa)<1) stop("FarmCPU stoped as no data in Y")
@@ -1196,41 +1313,41 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
         #GD based on big.matrix and orientation
         if(orientation=="col"){
             if(bigmemory::is.big.matrix(GD)){
-                GD1=bigmemory::deepcopy(GD,rows=seqTaxa,cols=index)
+                GD1 = bigmemory::deepcopy(GD,rows = seqTaxa,cols = index)
             }else{
-                GD1=GD[seqTaxa,index]
+                GD1 = GD[seqTaxa,index]
             }
         }else{
             if(bigmemory::is.big.matrix(GD)){
-                GD1=bigmemory::deepcopy(GD,rows=index,cols=seqTaxa)
+                GD1 = bigmemory::deepcopy(GD,rows = index,cols = seqTaxa)
             }else{
-                GD1=GD[index,seqTaxa]
+                GD1 = GD[index,seqTaxa]
             }
         }# end of if orientation
         
         #prepare the data for predict NA in phenotype
         if(predict){
-            seqTaxa2=which(is.na(Y[,trait]))
+            seqTaxa2 = which(is.na(Y[,trait]))
             
             #seqTaxa2=which(is.na(Yt[,trait]))
             #Y2=Yt[seqTaxa2,]
-            PredictYt=Yt[seqTaxa2,]
-            if(is.numeric(CV)){CV2=CV[seqTaxa2]
+            PredictYt = Yt[seqTaxa2,]
+            if(is.numeric(CV)){CV2 = CV[seqTaxa2]
             }else{
-                CV2=CV[seqTaxa2,]}
+                CV2 = CV[seqTaxa2,]}
             
             #GD based on big.matrix and orientation
             if(orientation=="col"){
                 if(bigmemory::is.big.matrix(GD)){
-                    GD2=bigmemory::deepcopy(GD,rows=seqTaxa2,cols=index)
+                    GD2 = bigmemory::deepcopy(GD,rows = seqTaxa2,cols = index)
                 }else{
-                    GD2=GD[seqTaxa2,index]
+                    GD2 = GD[seqTaxa2,index]
                 }
             }else{
                 if(bigmemory::is.big.matrix(GD)){
-                    GD2=bigmemory::deepcopy(GD,rows=index,cols=seqTaxa2)
+                    GD2 = bigmemory::deepcopy(GD,rows = index,cols = seqTaxa2)
                 }else{
-                    GD2=GD[index,seqTaxa2]
+                    GD2 = GD[index,seqTaxa2]
                 }
             }# end of if orientation
         }
@@ -1241,31 +1358,31 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
         #print("Memory used before 1st GLM")
         #print(memory.size())
         
-        theLoop=0
-        theConverge=0
-        seqQTN.save=c(0)
-        seqQTN.pre=c(-1)
+        theLoop = 0
+        theConverge = 0
+        seqQTN.save = c(0)
+        seqQTN.pre = c(-1)
         
-        isDone=FALSE
-        name.of.trait2=name.of.trait
+        isDone = FALSE
+        name.of.trait2 = name.of.trait
         
         
         #while(theLoop<maxLoop & !converge ) {
         while(!isDone) {
-            theLoop=theLoop+1
-            print(paste("Current loop: ",theLoop," out of maximum of ", maxLoop, sep=""))
+            theLoop = theLoop+1
+            print(paste("Current loop: ",theLoop," out of maximum of ", maxLoop, sep = ""))
             #print(date())
             
-            spacer="0"
-            if(theLoop>9)spacer=""
-            if(iteration.output) name.of.trait2=paste("Iteration_",spacer,theLoop,".",name.of.trait,sep="")
-            if(method.bin=="NONE")maxLoop=1 #force to exit for GLM model
+            spacer = "0"
+            if(theLoop>9)spacer = ""
+            if(iteration.output) name.of.trait2 = paste("Iteration_",spacer,theLoop,".",name.of.trait,sep = "")
+            if(method.bin=="NONE")maxLoop = 1 #force to exit for GLM model
             
             #Step 2a: Set prior
             #print("Memory used before Prior")
             #print(memory.size())
             
-            myPrior=FarmCPU.Prior(GM=GM,P=P,Prior=Prior,kinship.algorithm=kinship.algorithm)
+            myPrior = FarmCPU.Prior(GM = GM,P = P,Prior = Prior,kinship.algorithm = kinship.algorithm)
             #Step 2b: Set bins
             
             #print(myPrior[1:5])
@@ -1275,9 +1392,9 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
             #print(date())
             
             if(theLoop<=2){
-                myBin=FarmCPU.BIN(Y=Y1[,c(1,trait)],GDP=GD1,GM=GM,CV=CV1,orientation=orientation,P=myPrior,method=method.bin,b=bin.size,s=bin.selection,theLoop=theLoop,bound=bound)
+                myBin = FarmCPU.BIN(Y = Y1[,c(1,trait)],GDP = GD1,GM = GM,CV = CV1,orientation = orientation,P = myPrior,method = method.bin,b = bin.size,s = bin.selection,theLoop = theLoop,bound = bound)
             }else{
-                myBin=FarmCPU.BIN(Y=Y1[,c(1,trait)],GDP=GD1,GM=GM,CV=theCV,orientation=orientation,P=myPrior,method=method.bin,b=bin.size,s=bin.selection,theLoop=theLoop)
+                myBin = FarmCPU.BIN(Y = Y1[,c(1,trait)],GDP = GD1,GM = GM,CV = theCV,orientation = orientation,P = myPrior,method = method.bin,b = bin.size,s = bin.selection,theLoop = theLoop)
             }
             
             #Step 2c: Remove bin dependency
@@ -1286,23 +1403,23 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
             #print(memory.size())
             
             #Remove QTNs in LD
-            seqQTN=myBin$seqQTN
-            ve.save=myBin$ve.save
-            vg.save=myBin$vg.save
+            seqQTN = myBin$seqQTN
+            ve.save = myBin$ve.save
+            vg.save = myBin$vg.save
             #print(seqQTN)
             #if(theLoop==2&&is.null(seqQTN)){maxLoop=2}#force to exit for GLM model while seqQTN=NULL and h2=0
             if(theLoop==2){
                 #print(head(P))
                 #print(min(P,na.rm=TRUE))
                 if(!is.na(p.threshold)){
-                    if(min(myPrior,na.rm=TRUE)>p.threshold){
-                        seqQTN=NULL
+                    if(min(myPrior,na.rm = TRUE)>p.threshold){
+                        seqQTN = NULL
                         print("Top snps have little effect, set seqQTN to NULL!")
                         #print("**********FarmCPU ACCOMPLISHED**********")
                     }
                 }else{
-                    if(min(myPrior,na.rm=TRUE)>0.01/nm){
-                        seqQTN=NULL
+                    if(min(myPrior,na.rm = TRUE)>0.01/nm){
+                        seqQTN = NULL
                         print("Top snps have little effect, set seqQTN to NULL!")
                         #print("**********FarmCPU ACCOMPLISHED**********")
                     }
@@ -1312,36 +1429,36 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
             #when FARM-CPU can not work, make a new QQ plot and manhatthan plot
             if(theLoop==2&&is.null(seqQTN)){
                 #Report
-                GWAS=cbind(GM,P,MAF,myGLM$B)
+                GWAS = cbind(GM,P,MAF,myGLM$B)
                 #if(isDone | iteration.output){
                 gc()
-                pred=myGLM$Pred
+                pred = myGLM$Pred
                 #print(pred)
-                if(!is.null(pred)) pred=cbind(Y1,myGLM$Pred) #Need to be consistant to CMLM
+                if(!is.null(pred)) pred = cbind(Y1,myGLM$Pred) #Need to be consistant to CMLM
                 #print(pred)
-                p.GLM=GWAS[,4]
-                p.GLM.log=-log10(stats::quantile(p.GLM,na.rm=TRUE,0.05))
+                p.GLM = GWAS[,4]
+                p.GLM.log = -log10(stats::quantile(p.GLM,na.rm = TRUE,0.05))
                 #set.seed(666)
                 #bonf.log=-log10(quantile(runif(nm),0.05))
-                bonf.log=1.3
-                bonf.compare=p.GLM.log/bonf.log
-                p.FARMCPU.log=-log10(p.GLM)/bonf.compare
-                GWAS[,4]=10^(-p.FARMCPU.log)
-                GWAS[,4][which(GWAS[,4]>1)]=1
+                bonf.log = 1.3
+                bonf.compare = p.GLM.log/bonf.log
+                p.FARMCPU.log = -log10(p.GLM)/bonf.compare
+                GWAS[,4] = 10^(-p.FARMCPU.log)
+                GWAS[,4][which(GWAS[,4]>1)] = 1
                 #colnames(GWAS)=c(colnames(GM),"P.value","maf","nobs","Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP","FDR_Adjusted_P-values")
-                colnames(GWAS)=c(colnames(GM),"P.value","maf","effect")
+                colnames(GWAS) = c(colnames(GM),"P.value","maf","effect")
                 
-                Vp = stats::var(Y1[,2],na.rm=TRUE)
+                Vp = stats::var(Y1[,2],na.rm = TRUE)
                 
                 #print("Calling Report..")
                 if(file.output){
                     if(npc!=0){
-                        betapc=cbind(c(1:npc),myGLM$betapc)
-                        colnames(betapc)=c("CV","Effect")
-                        utils::write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep=""),quote=F,row.names=FALSE)
+                        betapc = cbind(c(1:npc),myGLM$betapc)
+                        colnames(betapc) = c("CV","Effect")
+                        utils::write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep = ""),quote = F,row.names = FALSE)
                     }
-                    GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=ypred,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
-                    myPower=GAPIT.Power(WS=WS, alpha=alpha, maxOut=maxOut,seqQTN=QTN.position,GM=GM,GWAS=GWAS,MaxBP=1e10)
+                    GAPIT.Report(name.of.trait = name.of.trait2,GWAS = GWAS,pred = NULL,ypred = ypred,tvalue = NULL,stderr = stderr,Vp = Vp,DPP = DPP,cutOff = cutOff,threshold.output = threshold.output,MAF = MAF,seqQTN = QTN.position,MAF.calculate = MAF.calculate,plot.style = plot.style)
+                    myPower = GAPIT.Power(WS = WS, alpha = alpha, maxOut = maxOut,seqQTN = QTN.position,GM = GM,GWAS = GWAS,MaxBP = 1e10)
                 }
                 #} #enf of is done
                 break
@@ -1351,8 +1468,10 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
             #print(seqQTN)
             #print(seqQTN.save)
             if(!is.null(seqQTN.save)&&theLoop>1){
-                if(seqQTN.save!=0 & seqQTN.save!=-1 & !is.null(seqQTN) ) seqQTN=union(seqQTN,seqQTN.save) #Force previous QTNs in the model
-                #print("**********POSSIBLE QTNs combined**********")
+              #browser()
+              # if(seqQTN.save!=0 & seqQTN.save!=-1 & !is.null(seqQTN) ) seqQTN = union(seqQTN,seqQTN.save) #Force previous QTNs in the model
+              if(all(seqQTN.save!=0 & seqQTN.save!=-1 & !is.null(seqQTN) ) ) seqQTN = union(seqQTN,seqQTN.save) #Force previous QTNs in the model
+                      #print("**********POSSIBLE QTNs combined**********")
             }
             #if(!is.null(seqQTN.save)){
             #if(theLoop>=4 && !is.null(seqQTN.save) && (length(intersect(seqQTN.pre,seqQTN))/length(union(seqQTN.pre,seqQTN)))==1){
@@ -1360,18 +1479,18 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
             #{seqQTN=union(seqQTN,seqQTN.save) #Force previous QTNs in the model
             #}
             if(theLoop!=1){
-                seqQTN.p=myPrior[seqQTN]
+                seqQTN.p = myPrior[seqQTN]
                 if(theLoop==2){
                     #index.p=seqQTN.p<0.01/nm
-                    index.p=seqQTN.p<QTN.threshold
+                    index.p = seqQTN.p<QTN.threshold
                     if(!is.na(p.threshold)){
                         #index.p=seqQTN.p<p.threshold
-                        index.p=seqQTN.p<QTN.threshold
+                        index.p = seqQTN.p<QTN.threshold
                     }
-                    seqQTN.p=seqQTN.p[index.p]
-                    seqQTN=seqQTN[index.p]
-                    seqQTN.p=seqQTN.p[!is.na(seqQTN)]
-                    seqQTN=seqQTN[!is.na(seqQTN)]
+                    seqQTN.p = seqQTN.p[index.p]
+                    seqQTN = seqQTN[index.p]
+                    seqQTN.p = seqQTN.p[!is.na(seqQTN)]
+                    seqQTN = seqQTN[!is.na(seqQTN)]
                 }else{
                     #print("seqQTN.save")
                     #print(seqQTN.save)
@@ -1382,10 +1501,10 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
                     #print(seqQTN.p[(length(seqQTN.save)+1):length(seqQTN)]<0.01/nm)
                     
                     #index.p=seqQTN.p<(0.01/nm)
-                    index.p=seqQTN.p<QTN.threshold
+                    index.p = seqQTN.p<QTN.threshold
                     if(!is.na(p.threshold)){
                         #index.p=seqQTN.p<p.threshold
-                        index.p=seqQTN.p<QTN.threshold
+                        index.p = seqQTN.p<QTN.threshold
                     }
                     index.p[seqQTN%in%seqQTN.save]=TRUE
                     #print(index.p)
@@ -1588,6 +1707,9 @@ converge=1,iteration.output=FALSE,acceleration=0,model="A",MAF.calculate=FALSE,p
     }
     
 }#The FarmCPU function ends here
+
+
+
 `FarmCPU.Remove` <-
 function(GDP=NULL,GM=NULL,seqQTN=NULL,seqQTN.p=NULL,orientation="col",threshold=.99){
     #Objective: Remove bins that are highly correlated

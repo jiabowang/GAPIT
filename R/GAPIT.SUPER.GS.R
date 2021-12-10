@@ -1,9 +1,82 @@
+#'
+#' GAPIT.SUPER.GS
+#'
+#' @description 
+#' Perform GPS with SUPER and Compress method.
+#'
+#' @param Y Phenotype data.frame,
+#' @param GD = NULL,
+#' @param GM = NULL,
+#' @param KI = NULL,
+#' @param Z = NULL,
+#' @param CV = NULL,
+#' @param GK = NULL,
+#' @param kinship.algorithm = NULL,
+#' @param bin.from = 10000,
+#' @param bin.to = 10000,
+#' @param bin.by = 1000,
+#' @param inclosure.from = 10,
+#' @param inclosure.to = 10,
+#' @param inclosure.by = 10,
+#' @param group.from = 1000000,
+#' @param group.to = 1000000,
+#' @param group.by = 10,
+#' @param kinship.cluster = "average", 
+#' @param kinship.group = 'Mean',
+#' @param PCA.total = 0,
+#' @param GT = NULL,
+#' @param PC = NULL,
+#' @param GI = NULL,
+#' @param Timmer  =  NULL, 
+#' @param Memory  =  NULL,
+#' @param model = "",
+#' @param sangwich.top = NULL,
+#' @param sangwich.bottom = NULL,
+#' @param QC = TRUE,
+#' @param GTindex = NULL,
+#' @param LD = 0.05,
+#' @param file.output = TRUE,
+#' @param cutOff = 0.01
+#'
+#'
+#' @author Zhiwu Zhang and Jiabo Wang
+#'
+#'
+#' @export
 `GAPIT.SUPER.GS`<-
-function(Y,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,GK=NULL,kinship.algorithm=NULL,
-                      bin.from=10000,bin.to=10000,bin.by=1000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
-				              group.from=1000000 ,group.to=1000000,group.by=10,kinship.cluster="average", kinship.group='Mean',PCA.total=0,
-                        GT=NULL,PC=NULL,GI=NULL,Timmer = NULL, Memory = NULL,model="",
-                        sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.05,file.output=TRUE,cutOff=0.01
+function(Y,
+         GD = NULL,
+         GM = NULL,
+         KI = NULL,
+         Z = NULL,
+         CV = NULL,
+         GK = NULL,
+         kinship.algorithm = NULL,
+         bin.from = 10000,
+         bin.to = 10000,
+         bin.by = 1000,
+         inclosure.from = 10,
+         inclosure.to = 10,
+         inclosure.by = 10,
+				 group.from = 1000000,
+				 group.to = 1000000,
+				 group.by = 10,
+				 kinship.cluster = "average", 
+				 kinship.group = 'Mean',
+				 PCA.total = 0,
+         GT = NULL,
+				 PC = NULL,
+				 GI = NULL,
+				 Timmer = NULL, 
+				 Memory = NULL,
+				 model = "",
+				 sangwich.top = NULL,
+				 sangwich.bottom = NULL,
+				 QC = TRUE,
+				 GTindex = NULL,
+				 LD = 0.05,
+				 file.output = TRUE,
+				 cutOff = 0.01
                         ){
  
 #Object: To perform GPS with SUPER and Compress method

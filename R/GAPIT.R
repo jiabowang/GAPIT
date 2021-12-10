@@ -363,7 +363,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              DP$bin.from= Para$bin.from
              DP$bin.to= Para$bin.to
              DP$bin.by= Para$bin.by
-             DP$inclosure.from= Para$inclosure.from
+             DP$inclosure.from = Para$inclosure.from
              DP$inclosure.to= Para$inclosure.toDP$inclosure.by= Para$inclosure.by
              DP$Multi_iter=Para$Multi_iter
           }
@@ -391,7 +391,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              DP$model=model
 # print(Para$SNP.test)
              IC=GAPIT.IC(DP=DP)
-             SS=GAPIT.SS(DP=DP,IC=IC,buspred=buspred,lmpred=lmpred)
+             SS=GAPIT.SS(DP=DP, IC=IC, buspred=buspred, lmpred=lmpred)
              if(Para$SNP.test&Para$file.output)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
           }#for loop trait
 #print(SNP.test)

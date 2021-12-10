@@ -225,7 +225,9 @@
               break
       }
       if(theLoop>1){
-        if(seqQTN.save!=0 & seqQTN.save!=-1 & !is.null(seqQTN)) seqQTN=union(seqQTN,seqQTN.save)
+        if(seqQTN.save!=0 & seqQTN.save!=-1 & !is.null(seqQTN)){
+          seqQTN=union(seqQTN,seqQTN.save)
+        }
       }
       if(theLoop>2 ){
         if( length(Porder)>1){
