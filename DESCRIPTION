@@ -12,9 +12,7 @@ Depends: R (>= 4.0.0)
 biocViews:
 Imports:
     ape,
-    biganalytics,
     bigmemory,
-    compiler,
     EMMREML,
     genetics,
     gplots,
@@ -30,11 +28,8 @@ Imports:
     plotly,
     RcppArmadillo,
     rgl,
-    rglwidget,
     scatterplot3d,
-    snowfall,
-    snpStats,
-    usethis
+    snowfall
 Encoding: UTF-8
 LazyData: true
 Suggests: 
