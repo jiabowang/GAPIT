@@ -1,9 +1,50 @@
-`GAPIT.EMMAxP3D` <-
-function(ys,xs,K=NULL,Z=NULL,X0=NULL,CVI=NULL,CV.Inheritance=NULL,GI=NULL,GP=NULL,
-		file.path=NULL,file.from=NULL,file.to=NULL,file.total=1, genoFormat="Hapmap", file.fragment=NULL,byFile=FALSE,fullGD=TRUE,SNP.fraction=1,
-    file.G=NULL,file.Ext.G=NULL,GTindex=NULL,file.GD=NULL, file.GM=NULL, file.Ext.GD=NULL,file.Ext.GM=NULL,
-    SNP.P3D=TRUE,Timmer,Memory,optOnly=TRUE,SNP.effect="Add",SNP.impute="Middle", SNP.permutation=FALSE,
-    ngrids=100,llim=-10,ulim=10,esp=1e-10,name.of.trait=NULL, Create.indicator = FALSE, Major.allele.zero = FALSE){
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+`GAPIT.EMMAxP3D` <-function(
+  ys,
+  xs,
+  K=NULL,
+  Z=NULL,
+  X0=NULL,
+  CVI=NULL,
+  CV.Inheritance=NULL,
+  GI=NULL,
+  GP=NULL,
+	file.path=NULL,
+  file.from=NULL,
+  file.to=NULL,
+  file.total=1, 
+  genoFormat="Hapmap", 
+  file.fragment=NULL,
+  byFile=FALSE,
+  fullGD=TRUE,
+  SNP.fraction=1,
+  file.G=NULL,
+  file.Ext.G=NULL,
+  GTindex=NULL,
+  file.GD=NULL, 
+  file.GM=NULL, 
+  file.Ext.GD=NULL,
+  file.Ext.GM=NULL,
+  SNP.P3D=TRUE,
+  Timmer,
+  Memory,
+  optOnly=TRUE,
+  SNP.effect="Add",
+  SNP.impute="Middle", 
+  SNP.permutation=FALSE,
+  ngrids=100,
+  llim=-10,
+  ulim=10,
+  esp=1e-10,
+  name.of.trait=NULL, 
+  Create.indicator = FALSE, 
+  Major.allele.zero = FALSE){
 #Object: To esimate variance component by using EMMA algorithm and perform GWAS with P3D/EMMAx
 #Output: ps, REMLs, stats, dfs, vgs, ves, BLUP,  BLUP_Plus_Mean, PEV
 #Authors: Feng Tian, Alex Lipka and Zhiwu Zhang
@@ -12,53 +53,53 @@ function(ys,xs,K=NULL,Z=NULL,X0=NULL,CVI=NULL,CV.Inheritance=NULL,GI=NULL,GP=NUL
 # Note: This function was modified from the function of emma.REML.t from the library
 ##############################################################################################
 #print("EMMAxP3D started...")
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="P3D Start")
-Memory=GAPIT.Memory(Memory=Memory,Infor="P3D Start")
+  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="P3D Start")
+  Memory=GAPIT.Memory(Memory=Memory,Infor="P3D Start")
 
 
-#When numeric genotypes are selected, impute the missing SNPs with the allele indicated by the "SNP.impute" value
-if(!optOnly){
- if(SNP.impute == "Major") xs[which(is.na(xs))] = 2
- if(SNP.impute == "Minor") xs[which(is.na(xs))] = 0
- if(SNP.impute == "Middle") xs[which(is.na(xs))] = 1
-}
+  #When numeric genotypes are selected, impute the missing SNPs with the allele indicated by the "SNP.impute" value
+  if(!optOnly){
+   if(SNP.impute == "Major") xs[which(is.na(xs))] = 2
+   if(SNP.impute == "Minor") xs[which(is.na(xs))] = 0
+   if(SNP.impute == "Middle") xs[which(is.na(xs))] = 1
+  }
 
 
 #--------------------------------------------------------------------------------------------------------------------<
-#Change data to matrix format if they are not
-if(is.null(dim(ys)) || ncol(ys) == 1)  ys <- matrix(ys, 1, length(ys))
-if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
+  #Change data to matrix format if they are not
+  if(is.null(dim(ys)) || ncol(ys) == 1)  ys <- matrix(ys, 1, length(ys))
+  if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
 
-#handler of special Z and K
-if(!is.null(Z)){ if(ncol(Z) == nrow(Z)) Z = NULL }
-if(!is.null(K)) {if(length(K)<= 1) K = NULL}
+  #handler of special Z and K
+  if(!is.null(Z)){ if(ncol(Z) == nrow(Z)) Z = NULL }
+  if(!is.null(K)) {if(length(K)<= 1) K = NULL}
 
-#Extract dimension information
-g <- nrow(ys) #number of traits
-n <- ncol(ys) #number of observation
+  #Extract dimension information
+  g <- nrow(ys) #number of traits
+  n <- ncol(ys) #number of observation
 
-q0 <- ncol(X0)#number of fixed effects
-q1 <- q0 + 1  #Nuber of fixed effect including SNP
+  q0 <- ncol(X0)#number of fixed effects
+  q1 <- q0 + 1  #Nuber of fixed effect including SNP
 
-nr=n
-if(!is.null(K)) tv=ncol(K)
+  nr=n
+  if(!is.null(K)) tv=ncol(K)
 
-#decomposation without fixed effect
-#print("Caling emma.eigen.L...")
-if(!is.null(K)) eig.L <- emma.eigen.L(Z, K) #this function handle both NULL Z and non-NULL Z matrix
+  #decomposation without fixed effect
+  #print("Caling emma.eigen.L...")
+  if(!is.null(K)) eig.L <- emma.eigen.L(Z, K) #this function handle both NULL Z and non-NULL Z matrix
 
-#eig.L$values[eig.L$values<0]=0
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.L")
-Memory=GAPIT.Memory(Memory=Memory,Infor="eig.L")
+  #eig.L$values[eig.L$values<0]=0
+  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.L")
+  Memory=GAPIT.Memory(Memory=Memory,Infor="eig.L")
 
-#decomposation with fixed effect (SNP not included)
-#print("Calling emma.eigen.R.w.Z...")
-X <-  X0 #covariate variables such as population structure
-if(!is.null(Z) & !is.null(K)) eig.R <- try(emma.eigen.R.w.Z(Z, K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
-if(is.null(Z)  & !is.null(K)) eig.R <- try(emma.eigen.R.wo.Z(   K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
+  #decomposation with fixed effect (SNP not included)
+  #print("Calling emma.eigen.R.w.Z...")
+  X <-  X0 #covariate variables such as population structure
+  if(!is.null(Z) & !is.null(K)) eig.R <- try(emma.eigen.R.w.Z(Z, K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
+  if(is.null(Z)  & !is.null(K)) eig.R <- try(emma.eigen.R.wo.Z(   K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
 
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.R")
-Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R")
+  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.R")
+  Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R")
 
 #eig.R$values[eig.R$values<0]=0
 #print(labels(eig.R))
@@ -67,21 +108,24 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R")
 #print("emma.eigen.R.w.Z called!!!")
 #Handler of error in emma
 #print("!!!!!!")
-if(!is.null(K)){
-if(inherits(eig.R, "try-error"))
-       return(list(ps = NULL, REMLs = NA, stats = NULL, effect.est = NULL, dfs = NULL,maf=NULL,nobs = NULL,Timmer=Timmer,Memory=Memory,
-        vgs = NA, ves = NA, BLUP = NULL, BLUP_Plus_Mean = NULL,
-        PEV = NULL, BLUE=NULL))
+  if(!is.null(K)){
+  if(inherits(eig.R, "try-error"))
+       return(list(ps = NULL, REMLs = NA, stats = NULL,
+                   effect.est = NULL, dfs = NULL, maf = NULL,
+                   nobs = NULL, Timmer = Timmer, Memory=Memory,
+                   vgs = NA, ves = NA, BLUP = NULL, BLUP_Plus_Mean = NULL,
+                   PEV = NULL, BLUE=NULL
+                   )
+              )
 
 #print("@@@@@")
- }
+   }
 #-------------------------------------------------------------------------------------------------------------------->
 #print("Looping through traits...")
 #Loop on Traits
-for (j in 1:g)
-{
+  for (j in 1:g){
 
-if(optOnly){
+  if(optOnly){
 
   #REMLE <- GAPIT.emma.REMLE(ys[j,], X, K, Z, ngrids, llim, ulim, esp, eig.R)
   #vgs <- REMLE$vg
@@ -89,29 +133,129 @@ if(optOnly){
   #REMLs <- REMLE$REML
   #REMLE_delta=REMLE$delta
 
- if(!is.null(K)){
-  REMLE <- GAPIT.emma.REMLE(ys[j,], X, K, Z, ngrids, llim, ulim, esp, eig.R)
+    if(!is.null(K)){
+      REMLE <- GAPIT.emma.REMLE(ys[j,], X, K, Z, ngrids, llim, ulim, esp, eig.R)
 
-  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="REML")
-  Memory=GAPIT.Memory(Memory=Memory,Infor="REML")
+      Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="REML")
+      Memory=GAPIT.Memory(Memory=Memory,Infor="REML")
 
-  rm(eig.R)
-  gc()
-  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.R removed")
-  Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R removed")
+      rm(eig.R)
+      gc()
+      Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.R removed")
+      Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R removed")
 
-  vgs <- REMLE$vg
-  ves <- REMLE$ve
-  REMLs <- REMLE$REML
-  REMLE_delta=REMLE$delta
+      vgs <- REMLE$vg
+      ves <- REMLE$ve
+      REMLs <- REMLE$REML
+      REMLE_delta=REMLE$delta
 
-  rm(REMLE)
-  gc()
+      rm(REMLE)
+      gc()
+    }
+
+
+    vids <- !is.na(ys[j,])
+    yv <- ys[j, vids]
+
+    if(!is.null(Z) & !is.null(K))  U <- eig.L$vectors * matrix(c(sqrt(1/(eig.L$values + REMLE_delta)),rep(sqrt(1/REMLE_delta),nr - tv)),nr,((nr-tv)+length(eig.L$values)),byrow=TRUE)
+    if( is.null(Z) & !is.null(K))  U <- eig.L$vectors * matrix(  sqrt(1/(eig.L$values + REMLE_delta)),nr,length(eig.L$values),byrow=TRUE)
+
+    if( !is.null(Z) & !is.null(K)) eig.full.plus.delta <- as.matrix(c((eig.L$values + REMLE_delta), rep(REMLE_delta,(nr - tv))))
+    if( is.null(Z) & !is.null(K))  eig.full.plus.delta <- as.matrix((eig.L$values + REMLE_delta))
+
+    if(!is.null(K)){
+      if(length(which(eig.L$values < 0)) > 0 ){
+      #print("---------------------------------------------------The group kinship matrix at this compression level is not positive semidefinite. Please select another compression level.---------------------------------------------------")
+             #return(list(ps = NULL, REMLs = 999999, stats = NULL, effect.est = NULL, dfs = NULL,maf=NULL,nobs = NULL,Timmer=Timmer,Memory=Memory,
+             #vgs = 1.000, ves = 1.000, BLUP = NULL, BLUP_Plus_Mean = NULL,
+             #PEV = NULL, BLUE=NULL))
+      }
+    }
+
+  #Calculate the log likelihood function for the intercept only model
+
+    X.int <- matrix(1,nrow(as.matrix(yv)),ncol(as.matrix(yv)))
+    iX.intX.int <- solve(crossprod(X.int, X.int))
+    iX.intY <- crossprod(X.int, as.matrix(as.matrix(yv)))
+    beta.int <- crossprod(iX.intX.int, iX.intY)  #Note: we can use crossprod here becase iXX is symmetric
+    X.int.beta.int <- X.int%*%beta.int
+
+
+    logL0 <- 0.5*((-length(yv))*log(((2*pi)/length(yv))
+                 *crossprod((yv-X.int.beta.int),(yv-X.int.beta.int)))
+                  -length(yv))
+
+    #print(paste("The value of logL0 inside of the optonly template is is",logL0, sep = ""))
+  #print(paste("The value of nrow(as.matrix(ys[!is.na(ys)])) is ",nrow(as.matrix(ys[!is.na(ys)])), sep = ""))
+
+    if(!is.null(K)){
+      yt <- yt <- crossprod(U, yv)
+      X0t <- crossprod(U, X0)
+
+      X0X0 <- crossprod(X0t, X0t)
+      X0Y <- crossprod(X0t,yt)
+      XY <- X0Y
+
+      iX0X0 <- try(solve(X0X0),silent=TRUE)
+      if(inherits(iX0X0, "try-error")){
+        iX0X0 <- MASS::ginv(X0X0)
+        print("At least two of your covariates are linearly dependent. Please reconsider the covariates you are using for GWAS and GPS")
+      }
+      iXX <- iX0X0
+    }
+
+    if(is.null(K)){
+      iXX <- try(solve(crossprod(X,X)),silent=TRUE)
+      if(inherits(iXX, "try-error"))iXX <- MASS::ginv(crossprod(X,X))
+      XY = crossprod(X,yv)
+    }
+    beta <- crossprod(iXX,XY) #Note: we can use crossprod here because iXX is symmetric
+    X.beta <- X%*%beta
+      
+    beta.cv=beta
+    BLUE=X.beta
+      
+    if(!is.null(K)){
+      U.times.yv.minus.X.beta <- crossprod(U,(yv-X.beta))
+      logLM <- 0.5*(-length(yv)*log(((2*pi)/length(yv))*crossprod(U.times.yv.minus.X.beta,U.times.yv.minus.X.beta))
+                    - sum(log(eig.full.plus.delta)) - length(yv))
+    }
+
+
+    if(is.null(K)){
+      U.times.yv.minus.X.beta <- yv-X.beta
+      logLM <- 0.5*(-length(yv)*log(((2*pi)/length(yv))*crossprod(U.times.yv.minus.X.beta,U.times.yv.minus.X.beta)) - length(yv))
+    }
+
+  }#End if(optOnly)
+
+
+
+#--------------------------------------------------------------------------------------------------------------------<
+  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Trait")
+  Memory=GAPIT.Memory(Memory=Memory,Infor="Trait")
+
+  if(!is.null(K)){
+    REMLE <- GAPIT.emma.REMLE(ys[j,], X, K, Z, ngrids, llim, ulim, esp, eig.R)
+
+    Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="REML")
+    Memory=GAPIT.Memory(Memory=Memory,Infor="REML")
+
+    rm(eig.R)
+    gc()
+    Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.R removed")
+    Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R removed")
+
+    vgs <- REMLE$vg
+    ves <- REMLE$ve
+    REMLs <- REMLE$REML
+    REMLE_delta=REMLE$delta
+
+    rm(REMLE)
+    gc()
   }
-
-
-  vids <- !is.na(ys[j,])
-  yv <- ys[j, vids]
+  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="REMLE removed")
+  Memory=GAPIT.Memory(Memory=Memory,Infor="REMLE removed")
 
   if(!is.null(Z) & !is.null(K))  U <- eig.L$vectors * matrix(c(sqrt(1/(eig.L$values + REMLE_delta)),rep(sqrt(1/REMLE_delta),nr - tv)),nr,((nr-tv)+length(eig.L$values)),byrow=TRUE)
   if( is.null(Z) & !is.null(K))  U <- eig.L$vectors * matrix(  sqrt(1/(eig.L$values + REMLE_delta)),nr,length(eig.L$values),byrow=TRUE)
@@ -119,185 +263,72 @@ if(optOnly){
   if( !is.null(Z) & !is.null(K)) eig.full.plus.delta <- as.matrix(c((eig.L$values + REMLE_delta), rep(REMLE_delta,(nr - tv))))
   if( is.null(Z) & !is.null(K))  eig.full.plus.delta <- as.matrix((eig.L$values + REMLE_delta))
 
+
+
   if(!is.null(K)){
-   if(length(which(eig.L$values < 0)) > 0 ){
-    #print("---------------------------------------------------The group kinship matrix at this compression level is not positive semidefinite. Please select another compression level.---------------------------------------------------")
-           #return(list(ps = NULL, REMLs = 999999, stats = NULL, effect.est = NULL, dfs = NULL,maf=NULL,nobs = NULL,Timmer=Timmer,Memory=Memory,
-           #vgs = 1.000, ves = 1.000, BLUP = NULL, BLUP_Plus_Mean = NULL,
-           #PEV = NULL, BLUE=NULL))
-    }
-  }
-  
-
-  #Calculate the log likelihood function for the intercept only model
-
-   X.int <- matrix(1,nrow(as.matrix(yv)),ncol(as.matrix(yv)))
-   iX.intX.int <- solve(crossprod(X.int, X.int))
-   iX.intY <- crossprod(X.int, as.matrix(as.matrix(yv)))
-   beta.int <- crossprod(iX.intX.int, iX.intY)  #Note: we can use crossprod here becase iXX is symmetric
-   X.int.beta.int <- X.int%*%beta.int
-
-
-   logL0 <- 0.5*((-length(yv))*log(((2*pi)/length(yv))
-                 *crossprod((yv-X.int.beta.int),(yv-X.int.beta.int)))
-                  -length(yv))
-
-    #print(paste("The value of logL0 inside of the optonly template is is",logL0, sep = ""))
-
-
-
-
-  #print(paste("The value of nrow(as.matrix(ys[!is.na(ys)])) is ",nrow(as.matrix(ys[!is.na(ys)])), sep = ""))
-
-
-
-     if(!is.null(K)){
-      yt <- yt <- crossprod(U, yv)
-      X0t <- crossprod(U, X0)
-
-     X0X0 <- crossprod(X0t, X0t)
-     X0Y <- crossprod(X0t,yt)
-     XY <- X0Y
-
-     iX0X0 <- try(solve(X0X0),silent=TRUE)
-     if(inherits(iX0X0, "try-error")){
-     iX0X0 <- MASS::ginv(X0X0)
-     print("At least two of your covariates are linearly dependent. Please reconsider the covariates you are using for GWAS and GPS")
-     }
-    iXX <- iX0X0
-    }
-
-      if(is.null(K)){
-        iXX <- try(solve(crossprod(X,X)),silent=TRUE)
-        if(inherits(iXX, "try-error"))iXX <- MASS::ginv(crossprod(X,X))
-        XY = crossprod(X,yv)
-      }
-      beta <- crossprod(iXX,XY) #Note: we can use crossprod here because iXX is symmetric
-      X.beta <- X%*%beta
-      
-      beta.cv=beta
-      BLUE=X.beta
-      
-      if(!is.null(K)){
-              U.times.yv.minus.X.beta <- crossprod(U,(yv-X.beta))
-              logLM <- 0.5*(-length(yv)*log(((2*pi)/length(yv))*crossprod(U.times.yv.minus.X.beta,U.times.yv.minus.X.beta))
-                    - sum(log(eig.full.plus.delta)) - length(yv))
-      }
-
-
-      if(is.null(K)){
-              U.times.yv.minus.X.beta <- yv-X.beta
-              logLM <- 0.5*(-length(yv)*log(((2*pi)/length(yv))*crossprod(U.times.yv.minus.X.beta,U.times.yv.minus.X.beta)) - length(yv))
-      }
-
- }#End if(optOnly)
-
-
-
-#--------------------------------------------------------------------------------------------------------------------<
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Trait")
-Memory=GAPIT.Memory(Memory=Memory,Infor="Trait")
-
-if(!is.null(K)){
-  REMLE <- GAPIT.emma.REMLE(ys[j,], X, K, Z, ngrids, llim, ulim, esp, eig.R)
-
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="REML")
-Memory=GAPIT.Memory(Memory=Memory,Infor="REML")
-
-rm(eig.R)
-gc()
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.R removed")
-Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R removed")
-
-  vgs <- REMLE$vg
-  ves <- REMLE$ve
-  REMLs <- REMLE$REML
-  REMLE_delta=REMLE$delta
-
-rm(REMLE)
-gc()
-}
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="REMLE removed")
-Memory=GAPIT.Memory(Memory=Memory,Infor="REMLE removed")
-
-if(!is.null(Z) & !is.null(K))  U <- eig.L$vectors * matrix(c(sqrt(1/(eig.L$values + REMLE_delta)),rep(sqrt(1/REMLE_delta),nr - tv)),nr,((nr-tv)+length(eig.L$values)),byrow=TRUE)
-if( is.null(Z) & !is.null(K))  U <- eig.L$vectors * matrix(  sqrt(1/(eig.L$values + REMLE_delta)),nr,length(eig.L$values),byrow=TRUE)
-
-if( !is.null(Z) & !is.null(K)) eig.full.plus.delta <- as.matrix(c((eig.L$values + REMLE_delta), rep(REMLE_delta,(nr - tv))))
-if( is.null(Z) & !is.null(K))  eig.full.plus.delta <- as.matrix((eig.L$values + REMLE_delta))
-
-
-
-if(!is.null(K)){
-if(length(which(eig.L$values < 0)) > 0 ){
+    if(length(which(eig.L$values < 0)) > 0 ){
  #print("---------------------------------------------------The group kinship matrix at this compression level is not positive semidefinite. Please select another compression level.---------------------------------------------------")
        #return(list(ps = NULL, REMLs = 999999, stats = NULL, effect.est = NULL, dfs = NULL,maf=NULL,nobs = NULL,Timmer=Timmer,Memory=Memory,
         #vgs = 1.000, ves = 1.000, BLUP = NULL, BLUP_Plus_Mean = NULL,
         #PEV = NULL, BLUE=NULL))
- }
-}
-
-
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="U Matrix")
-Memory=GAPIT.Memory(Memory=Memory,Infor="U Matrix")
-
-if(SNP.P3D == TRUE)rm(eig.L)
-gc()
-
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.L removed")
-Memory=GAPIT.Memory(Memory=Memory,Infor="eig.L removed")
-
-#-------------------------------------------------------------------------------------------------------------------->
-
-#The cases that go though multiple file once
-file.stop=file.to
-if(optOnly) file.stop=file.from
-if(fullGD)  file.stop=file.from
-if(!fullGD & !optOnly) {print("Screening SNPs from file...")}
-
-#Add loop for genotype data files
-for (file in file.from:file.stop)
-{
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="New Genotype file")
-Memory=GAPIT.Memory(Memory=Memory,Infor="New Genotype file")
-
-
-
-  frag=1
-  numSNP=file.fragment
-  myFRG=NULL
-while(numSNP==file.fragment) {     #this is problematic if the read end at the last line
-
-
-
-  #initial previous SNP storage
-  x.prev <- vector(length = 0)
-
-  #force to skip the while loop if optOnly
-  if(optOnly) numSNP=0
-
-  #Determine the case of first file and first fragment: skip read file
-  if(file==file.from & frag==1& SNP.fraction<1){
-    firstFileFirstFrag=TRUE
-  }else{
-    firstFileFirstFrag=FALSE
+    }
   }
 
-#In case of xs is not full GD, replace xs from file
-  if(!fullGD & !optOnly & !firstFileFirstFrag )
-  {
 
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Clean myFRG")
-Memory=GAPIT.Memory(Memory=Memory,Infor="Clean myFRG")
+  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="U Matrix")
+  Memory=GAPIT.Memory(Memory=Memory,Infor="U Matrix")
 
-#update xs for each file
-    rm(xs)
-    rm(myFRG)
-    gc()
-    print(paste("Current file: ",file," , Fragment: ",frag,sep=""))
+  if(SNP.P3D == TRUE)rm(eig.L)
+  gc()
 
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Read file fragment")
-Memory=GAPIT.Memory(Memory=Memory,Infor="Read file fragment")
+  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.L removed")
+  Memory=GAPIT.Memory(Memory=Memory,Infor="eig.L removed")
+
+  #-------------------------------------------------------------------------------------------------------------------->
+
+  #The cases that go though multiple file once
+  file.stop=file.to
+  if(optOnly) file.stop=file.from
+  if(fullGD)  file.stop=file.from
+  if(!fullGD & !optOnly) {print("Screening SNPs from file...")}
+
+  #Add loop for genotype data files
+  for (file in file.from:file.stop){
+    Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="New Genotype file")
+    Memory=GAPIT.Memory(Memory=Memory,Infor="New Genotype file")
+
+    frag=1
+    numSNP=file.fragment
+    myFRG=NULL
+    while(numSNP==file.fragment) {     #this is problematic if the read end at the last line
+
+      #initial previous SNP storage
+      x.prev <- vector(length = 0)
+
+      #force to skip the while loop if optOnly
+      if(optOnly) numSNP=0
+
+      #Determine the case of first file and first fragment: skip read file
+      if(file==file.from & frag==1& SNP.fraction<1){
+        firstFileFirstFrag=TRUE
+      }else{
+        firstFileFirstFrag=FALSE
+      }
+
+      #In case of xs is not full GD, replace xs from file
+      if(!fullGD & !optOnly & !firstFileFirstFrag ){
+
+        Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Clean myFRG")
+        Memory=GAPIT.Memory(Memory=Memory,Infor="Clean myFRG")
+
+        #update xs for each file
+        rm(xs)
+        rm(myFRG)
+        gc()
+        print(paste("Current file: ",file," , Fragment: ",frag,sep=""))
+
+        Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Read file fragment")
+        Memory=GAPIT.Memory(Memory=Memory,Infor="Read file fragment")
 
     myFRG=GAPIT.Fragment( file.path = file.path,  
                           file.total = file.total,
@@ -318,16 +349,16 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Read file fragment")
                           Create.indicator = Create.indicator, 
                           Major.allele.zero = Major.allele.zero)
 
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Genotype file converted")
-Memory=GAPIT.Memory(Memory=Memory,Infor="Genotype file converted")
+        Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Genotype file converted")
+        Memory=GAPIT.Memory(Memory=Memory,Infor="Genotype file converted")
 
-#print("-----------------------------------------------------------------")
+      #print("-----------------------------------------------------------------")
 
-      if(is.null(myFRG$GD)){
-        xs=NULL
-      }else{
-        xs=myFRG$GD[GTindex,]
-      }
+        if(is.null(myFRG$GD)){
+          xs=NULL
+        }else{
+          xs=myFRG$GD[GTindex,]
+        }
 
 
         if(!is.null(myFRG$GI))    {
@@ -336,12 +367,12 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Genotype file converted")
         }
         
 
-      if(!is.null(myFRG$GI))    {
-        numSNP=ncol(myFRG$GD)
-      }  else{
-       numSNP=0
-      }
-      if(is.null(myFRG))numSNP=0  #force to end the while loop
+        if(!is.null(myFRG$GI))    {
+          numSNP=ncol(myFRG$GD)
+        } else {
+          numSNP=0
+        }
+        if(is.null(myFRG))numSNP=0  #force to end the while loop
   } # end of if(!fullGD)
 
   if(fullGD)numSNP=0  #force to end the while loop
@@ -367,17 +398,17 @@ if(!is.null(xs))  {
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Before cleaning")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Before cleaning")
   #allocate spaces for SNPs
-  rm(dfs)
-  rm(stats)
-  rm(effect.est)
-  rm(ps)
-  rm(nobs)
-  rm(maf)
-  rm(rsquare_base)
-  rm(rsquare)
-            rm(df)
-            rm(tvalue)
-            rm(stderr)
+  #rm(dfs)
+  #rm(stats)
+  #rm(effect.est)
+  #rm(ps)
+  #rm(nobs)
+  #rm(maf)
+  #rm(rsquare_base)
+  #rm(rsquare)
+  #          rm(df)
+  #          rm(tvalue)
+  #          rm(stderr)
   gc()
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="After cleaning")
@@ -820,7 +851,7 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="ReducdModel")
       #Clean up the BLUP starf to save memory
       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="before Dt clean")
       Memory=GAPIT.Memory(Memory=Memory,Infor="before Dt clean")
-      rm(Dt)
+#      rm(Dt)
       gc()
       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Dt clean")
       Memory=GAPIT.Memory(Memory=Memory,Infor="Dt clean")
@@ -852,15 +883,17 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="ReducdModel")
         C22=(term.1-term.2 )
         PEV=as.matrix(diag(C22))
  #print(paste("The value of is.na(CVI) is", is.na(CVI),  sep = ""))
-if(!is.na(CVI)){
-		XCV=as.matrix(cbind(1,data.frame(CVI[,-1])))
+        # CVI may be > 1 element long
+        #if(!is.na(CVI)){
+        if(any(!is.na(CVI))){
+    		  XCV=as.matrix(cbind(1,data.frame(CVI[,-1])))
 	
-		#CV.Inheritance specified
-		beta.Inheritance=beta
-		if(!is.null(CV.Inheritance)){
-			XCV=XCV[,1:(1+CV.Inheritance)]
-			beta.Inheritance=beta[1:(1+CV.Inheritance)]
-		}
+      		#CV.Inheritance specified
+		      beta.Inheritance=beta
+		      if(!is.null(CV.Inheritance)){
+			      XCV=XCV[,1:(1+CV.Inheritance)]
+			      beta.Inheritance=beta[1:(1+CV.Inheritance)]
+		      }
 		#Interception only
 		if(length(beta)==1)XCV=X
 		
@@ -871,7 +904,10 @@ if(!is.na(CVI)){
         Memory=GAPIT.Memory(Memory=Memory,Infor="PEV")
 
       }#end of if(i ==0&file==file.from   & !is.null(K))
- if(is.na(CVI)) BLUE = NA
+
+        # CVI may be > 1 element long.
+        #if(is.na(CVI)) BLUE = NA
+        if(any(is.na(CVI))) BLUE = NA
 }#end if(!is.na(CVI))
 #-------------------------------------------------------------------------------------------------------------------->
 
@@ -913,7 +949,7 @@ if(i ==0 &file==file.from &frag==1 & !is.null(K))
      Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="K normal")
         Memory=GAPIT.Memory(Memory=Memory,Infor="K normal")
 if(SNP.P3D == TRUE) K=1  #NOTE: When SNP.P3D == FALSE, this line will mess up the spectral decomposition of the kinship matrix at each SNP.
-rm(Dt)
+#rm(Dt)
 rm(Zt)            
 rm(Kinv)
 rm(C11)
@@ -1035,11 +1071,11 @@ if(!fullGD)
 
 
 } # Ebd of loop on file
-} # End of loop on traits
+  } # End of loop on traits
 
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GWAS done for this Trait")
-Memory=GAPIT.Memory(Memory=Memory,Infor="GWAS done for this Trait")
-#print("GAPIT.EMMAxP3D accomplished successfully!")
+  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GWAS done for this Trait")
+  Memory=GAPIT.Memory(Memory=Memory,Infor="GWAS done for this Trait")
+  #print("GAPIT.EMMAxP3D accomplished successfully!")
 
     return(list(ps = ps, REMLs = -2*REMLs, stats = stats, effect.est = effect.est, rsquare_base = rsquare_base, rsquare = rsquare, dfs = dfs, df = df, tvalue = tvalue, stderr = stderr,maf=maf,nobs = nobs,Timmer=Timmer,Memory=Memory,
         vgs = vgs, ves = ves, BLUP = BLUP, BLUP_Plus_Mean = BLUP_Plus_Mean,

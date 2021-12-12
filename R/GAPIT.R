@@ -392,7 +392,6 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
 # print(Para$SNP.test)
              IC=GAPIT.IC(DP=DP)
              SS=GAPIT.SS(DP=DP, IC=IC, buspred=buspred, lmpred=lmpred)
-             browser()
              if(Para$SNP.test&Para$file.output)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
           }#for loop trait
 #print(SNP.test)

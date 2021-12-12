@@ -573,11 +573,15 @@ function(Y,
       if(group.to>nk) {
         #group.to=min(nrow(KI),length(GTindex)) #maximum of group is number of rows in KI
         group.to=nk #maximum of group is number of rows in KI
-        warning("The upper bound of groups is too high. It was set to the size of kinship!") 
+        #warning("The upper bound of groups is too high. It was set to the size of kinship!") 
+        # warnings = errors during testing, so this warning will cause a failure.
+        message("The upper bound of groups is too high. It was set to the size of kinship!") 
       }
       if(group.from>nk){ 
         group.from=nk
-        warning("The lower bound of groups is too high. It was set to the size of kinship!") 
+        #warning("The lower bound of groups is too high. It was set to the size of kinship!") 
+        # warnings = errors during testing, so this warning will cause a failure.
+        message("The lower bound of groups is too high. It was set to the size of kinship!")
       } 
     }
 
@@ -1460,7 +1464,8 @@ if((!byPass)&(!Model.selection)){
  if (is.null(my_allCV)){my_allX=matrix(1,length(my_taxa),1)
  }else{
      # my_allX=as.matrix(my_allCV[,-1])
-     my_allX=cbind(1,as.matrix(my_allCV[,-1]))
+     # my_allX=cbind(1,as.matrix(my_allCV[,-1]))
+     my_allX=cbind(rep(1, times = nrow(my_allCV)),as.matrix(my_allCV[,-1]))
 	}
 	
     #print(dim(my_allX))
