@@ -350,11 +350,13 @@ if(!is.null(KI))
   if(group.to>nk) {
     #group.to=min(nrow(KI),length(GTindex)) #maximum of group is number of rows in KI
     group.to=nk #maximum of group is number of rows in KI
-    warning("The upper bound of groups is too high. It was set to the size of kinship!") 
+    #warning("The upper bound of groups is too high. It was set to the size of kinship!") 
+    message("The upper bound of groups is too high. It was set to the size of kinship!") 
   }
 	if(group.from>nk){ 
     group.from=nk
-    warning("The lower bound of groups is too high. It was set to the size of kinship!") 
+    #warning("The lower bound of groups is too high. It was set to the size of kinship!") 
+    message("The lower bound of groups is too high. It was set to the size of kinship!") 
   } 
 }
 
@@ -363,7 +365,8 @@ if(!is.null(CV)){
 	#The minimum of group is number of columns in CV
 	  group.from=ncol(CV)+2
 	  group.to=ncol(CV)+2
-	  warning("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
+	  #warning("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
+	  message("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
 	}
 }
 

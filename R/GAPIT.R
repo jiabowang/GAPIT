@@ -396,7 +396,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
           }#for loop trait
 #print(SNP.test)
         print("GAPIT accomplished successfully for multiple traits. Result are saved")
-        print("It is OK to see this: 'There were 50 or more warnings (use warnings() to see the first 50)'")
+#        print("It is OK to see this: 'There were 50 or more warnings (use warnings() to see the first 50)'")
         out <- list()
         out$QTN<-QTN.position
         out$GWAS<-SS$GWAS

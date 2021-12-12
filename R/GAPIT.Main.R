@@ -557,12 +557,14 @@ function(Y,
       #The minimum of group is 1 + number of columns in CV
       group.from=1
       group.to=1
-      warning("The upper bound of groups (group.to) is not sufficient. both boundries were set to a and GLM is performed!")
+      #warning("The upper bound of groups (group.to) is not sufficient. both boundries were set to a and GLM is performed!")
+      message("The upper bound of groups (group.to) is not sufficient. both boundries were set to a and GLM is performed!")
     }
 
     if(!is.null(CV)& group.from<1) {
       group.from=1 #minimum of group is number of columns in CV
-      warning("The lower bound of groups should be 1 at least. It was set to 1!")
+      #warning("The lower bound of groups should be 1 at least. It was set to 1!")
+      message("The lower bound of groups should be 1 at least. It was set to 1!")
     }
  
     nk=1000000000
@@ -590,7 +592,8 @@ function(Y,
         #The minimum of group is number of columns in CV
         #group.from=ncol(CV)+2
         #group.to=ncol(CV)+2
-        warning("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
+        #warning("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
+        message("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
       }
     }
 
@@ -1350,7 +1353,7 @@ theFile=paste("GAPIT.TMP.",name.of.trait,".*")
 print("Generating summary" )
 GWAS=NULL
 GPS=NULL
-rm(zc)
+#rm(zc)
 gc()
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Final")
