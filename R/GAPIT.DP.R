@@ -1,3 +1,9 @@
+
+# ' GAPIT.DP
+# ' @description 
+# ' To Data and Parameters
+# ' @author Zhiwu Zhang and Jiabo Wang
+# ' @export
 `GAPIT.DP` <-
 function(G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NULL,GK=NULL,
                 group.from=30 ,group.to=1000000,group.by=10,DPP=100000, 

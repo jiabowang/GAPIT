@@ -132,19 +132,19 @@ GAPIT(
 )
 }
 \arguments{
-\item{Y}{= NULL,}
+\item{Y}{= NULL, data.frame of phenotype data, samples in rows, traits in column, first column is sample name}
 
-\item{G}{= NULL,}
+\item{G}{= NULL, data.frame of genotypic data, HAPMAP format}
 
-\item{GD}{= NULL,}
+\item{GD}{= NULL, data.frame of genetic data in 'numerical' format, samples in rows, variants in columns.}
 
-\item{GM}{= NULL,}
+\item{GM}{= NULL, Genetic Map data.frame to provide genomic coordinates for GD}
 
-\item{KI}{= NULL,}
+\item{KI}{= NULL, Kinship matrix}
 
 \item{Z}{= NULL,}
 
-\item{CV}{= NULL,}
+\item{CV}{= NULL, Covariate matrix}
 
 \item{CV.Inheritance}{= NULL,}
 
@@ -162,11 +162,11 @@ GAPIT(
 
 \item{DPP}{= 1e+05,}
 
-\item{kinship.cluster}{= "average",}
+\item{kinship.cluster}{= "average", options: complete, ward, single, mcquitty, median, and centroid}
 
-\item{kinship.group}{= "Mean",}
+\item{kinship.group}{= "Mean", options: Max, Min, and Median}
 
-\item{kinship.algorithm}{= "VanRaden",}
+\item{kinship.algorithm}{= "VanRaden", options: EMMA, Loiselle, VanRaden, Zhang}
 
 \item{buspred}{= FALSE,}
 
@@ -380,8 +380,16 @@ GAPIT(
 
 \item{Para}{= NULL}
 }
+\value{
+A list
+including some of the following elements:MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, cBLUP
+}
 \description{
 GAPIT analyzes phenotypic and genotypics data to infer association.
+}
+\details{
+Genome Association and Prediction Integrated Tools
+Available models: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, cBLUP
 }
 \examples{
 \dontrun{
@@ -404,6 +412,9 @@ myGAPIT <- GAPIT(
 }
 \seealso{
 GAPIT.DP(), GAPIT.Phenotype.View(), GAPIT.judge(), GAPIT.IC(), GAPIT.SS(), GAPIT.ID().
+
+
+library(help = "GAPIT3")
 }
 \author{
 Zhiwu Zhang and Jiabo Wang

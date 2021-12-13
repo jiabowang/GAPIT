@@ -22,11 +22,11 @@ GAPIT.ID(
 )
 }
 \arguments{
-\item{DP}{param}
+\item{DP}{param a list (118 elements?)}
 
-\item{IC}{param}
+\item{IC}{param a list (9 elements?)}
 
-\item{SS}{param}
+\item{SS}{param a list (17 elements?)}
 
 \item{RS}{param}
 
