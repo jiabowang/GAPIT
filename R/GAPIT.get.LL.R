@@ -1,5 +1,5 @@
 `GAPIT.get.LL` <-
-cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
+compiler::cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
     # evaluation of the maximum likelihood
     #Input: ys, xs, vg, delta, Z, X0, snp.pool
     #Output: LL
@@ -20,7 +20,7 @@ cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
     deltaExpStart = -5
     deltaExpEnd = 5
     snp.pool=snp.pool[,]
-    if(!is.null(snp.pool)&&var(snp.pool)==0){
+    if( !is.null(snp.pool) && any(stats::var(snp.pool) == 0) ){
         deltaExpStart = 100
         deltaExpEnd = deltaExpStart
         #print("deltaExp change here")
@@ -110,7 +110,7 @@ cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
         #zw1=solve(beta1+beta2)
         zw1 <- try(solve(beta1+beta2),silent=TRUE)
         if(inherits(zw1, "try-error")){
-            zw1 <- ginv(beta1+beta2)
+            zw1 <- MASS::ginv(beta1+beta2)
         }
         
         #zw1=ginv(beta1+beta2)

@@ -1,3 +1,9 @@
+
+# ' GAPIT.DP
+# ' @description 
+# ' To Data and Parameters
+# ' @author Zhiwu Zhang and Jiabo Wang
+# ' @export
 `GAPIT.DP` <-
 function(G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NULL,GK=NULL,
                 group.from=30 ,group.to=1000000,group.by=10,DPP=100000, 
@@ -52,9 +58,16 @@ chor_taxa=myGenotype$chor_taxa
 
 #if G exist turn to GD and GM
 
-if(output.numerical) write.table(GD,  "GAPIT.Genotype.Numerical.txt", quote = FALSE, sep = "\t", row.names = TRUE,col.names = NA)
-if(output.hapmap) write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt", quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+if(output.numerical){
+    utils::write.table(GD,  "GAPIT.Genotype.Numerical.txt",
+    quote = FALSE, sep = "\t", row.names = TRUE,col.names = NA)
+}
 
+if(output.hapmap){
+    utils::write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt",
+                       quote = FALSE, sep = "\t", row.names = FALSE,
+                       col.names = FALSE)
+}
 
 rownames(GD)=GT
 colnames(GD)=GI[,1]

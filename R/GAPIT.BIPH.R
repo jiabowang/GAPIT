@@ -10,7 +10,7 @@ function(x=0,h2=.5,r=.25){
     #To assign probability for given standard normal variable x and h2
     #Author: Zhiwu Zhang
     #Last update: Febuary 27, 2016
-    p=pnorm(x)
+    p = stats::pnorm(x)
     srp=1-p-r
     sh=1/(1-sqrt(h2))
     adj=(r-.5)*(1-sqrt(h2))

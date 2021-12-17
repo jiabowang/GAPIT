@@ -54,18 +54,18 @@ if(inherits(BLUP.max, "try-error"))  return()
   colnames(KG) <- round(as.numeric(colnames(KG)))
   #write.table(KG, "Input_Matrix_for_GS_Heat_Map.txt", quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
 
-  pdf(paste("GAPIT.", name.of.trait,".GPS.BLUPvsPEV", ".pdf", sep = ""),width = 9)
+  grDevices::pdf(paste("GAPIT.", name.of.trait,".GPS.BLUPvsPEV", ".pdf", sep = ""),width = 9)
   #par(mfrow = c(1,1), mar = c(1,1,5,5), lab = c(5,5,7))
-  par(mar = c(5,5,6,5))
+  graphics::par(mar = c(5,5,6,5))
   
-  nba_heatmap <- heatmap.2(KG, Rowv=NA, Colv=NA,  col =  rev(heat.colors(256)), #  scale="column", 
+  nba_heatmap <- gplots::heatmap.2(KG, Rowv=NA, Colv=NA,  col =  rev(grDevices::heat.colors(256)), #  scale="column", 
   xlab = "PEV", ylab = "BLUP", main = " ", scale="none", symkey=FALSE, trace="none")
 
   #nba_heatmap <- heatmap.2(KG,  cexRow =.2, cexCol = 0.2, scale="none", symkey=FALSE, trace="none" )
  
   
   #cexRow =0.9, cexCol = 0.9)
-  dev.off() 
+  grDevices::dev.off() 
 }
 #print("GAPIT.GS.Visualization accomplished successfully!")
 

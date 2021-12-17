@@ -1,9 +1,82 @@
+#'
+#' GAPIT.SUPER.GS
+#'
+#' @description 
+#' Perform GPS with SUPER and Compress method.
+#'
+#' @param Y Phenotype data.frame,
+#' @param GD = NULL,
+#' @param GM = NULL,
+#' @param KI = NULL,
+#' @param Z = NULL,
+#' @param CV = NULL,
+#' @param GK = NULL,
+#' @param kinship.algorithm = NULL,
+#' @param bin.from = 10000,
+#' @param bin.to = 10000,
+#' @param bin.by = 1000,
+#' @param inclosure.from = 10,
+#' @param inclosure.to = 10,
+#' @param inclosure.by = 10,
+#' @param group.from = 1000000,
+#' @param group.to = 1000000,
+#' @param group.by = 10,
+#' @param kinship.cluster = "average", 
+#' @param kinship.group = 'Mean',
+#' @param PCA.total = 0,
+#' @param GT = NULL,
+#' @param PC = NULL,
+#' @param GI = NULL,
+#' @param Timmer  =  NULL, 
+#' @param Memory  =  NULL,
+#' @param model = "",
+#' @param sangwich.top = NULL,
+#' @param sangwich.bottom = NULL,
+#' @param QC = TRUE,
+#' @param GTindex = NULL,
+#' @param LD = 0.05,
+#' @param file.output = TRUE,
+#' @param cutOff = 0.01
+#'
+#'
+#' @author Zhiwu Zhang and Jiabo Wang
+#'
+#'
+#' @export
 `GAPIT.SUPER.GS`<-
-function(Y,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,GK=NULL,kinship.algorithm=NULL,
-                      bin.from=10000,bin.to=10000,bin.by=1000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
-				              group.from=1000000 ,group.to=1000000,group.by=10,kinship.cluster="average", kinship.group='Mean',PCA.total=0,
-                        GT=NULL,PC=NULL,GI=NULL,Timmer = NULL, Memory = NULL,model="",
-                        sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.05,file.output=TRUE,cutOff=0.01
+function(Y,
+         GD = NULL,
+         GM = NULL,
+         KI = NULL,
+         Z = NULL,
+         CV = NULL,
+         GK = NULL,
+         kinship.algorithm = NULL,
+         bin.from = 10000,
+         bin.to = 10000,
+         bin.by = 1000,
+         inclosure.from = 10,
+         inclosure.to = 10,
+         inclosure.by = 10,
+				 group.from = 1000000,
+				 group.to = 1000000,
+				 group.by = 10,
+				 kinship.cluster = "average", 
+				 kinship.group = 'Mean',
+				 PCA.total = 0,
+         GT = NULL,
+				 PC = NULL,
+				 GI = NULL,
+				 Timmer = NULL, 
+				 Memory = NULL,
+				 model = "",
+				 sangwich.top = NULL,
+				 sangwich.bottom = NULL,
+				 QC = TRUE,
+				 GTindex = NULL,
+				 LD = 0.05,
+				 file.output = TRUE,
+				 cutOff = 0.01
                         ){
  
 #Object: To perform GPS with SUPER and Compress method
@@ -14,8 +87,8 @@ function(Y,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,GK=NULL,kinship.algorithm=NULL
 print("--------------------- Welcome to GAPIT SUPER GS----------------------------")
 Timmer=GAPIT.Timmer(Infor="GAPIT.SUPER.GS")
 Memory=GAPIT.Memory(Infor="GAPIT.SUPER.GS")
-  if(!require(EMMREML)) install.packages("EMMREML")
-  library(EMMREML)
+#  if(!require(EMMREML)) install.packages("EMMREML")
+#  library(EMMREML)
 
 shortcut=FALSE
 LL.save=1e10
@@ -27,7 +100,7 @@ name.of.trait=colnames(Y)[2]
 if(length(thisY) <3){
  shortcut=TRUE
  }else{
-  if(var(thisY) ==0) shortcut=TRUE
+  if(stats::var(thisY) ==0) shortcut=TRUE
 }
 if(shortcut){
 print(paste("Y is empty. No GWAS/GS performed for ",name.of.trait,sep=""))
@@ -120,7 +193,7 @@ print("-------------------start SUPER BREAD-----------------------------------")
     nG=ncol(GD)
     if(nG>nY){snpsam=sample(1:nG,nY)}else{snpsam=1:nG}
     GK=GD[GTindex,snpsam]
-    SNPVar=apply(as.matrix(GK),2,var)
+    SNPVar=apply(as.matrix(GK), 2, stats::var)
 	#print(snpsam)
 if (snpsam==1)stop ("GAPIT says: SUPER_GS must putin GD and GM.")
     GK=GK[,SNPVar>0]
@@ -169,7 +242,7 @@ count=count+1
 #print(paste("bin---",bin,"---inc---",inc,sep=""))
   GK=GD[GTindex,SNP.QTN]
   SUPER_GD=GD[,SNP.QTN]
-  SNPVar=apply(as.matrix(GK),2,var)
+  SNPVar=apply(as.matrix(GK), 2, stats::var)
   GK=GK[,SNPVar>0]
   SUPER_GD=SUPER_GD[,SNPVar>0]
   GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
@@ -277,11 +350,13 @@ if(!is.null(KI))
   if(group.to>nk) {
     #group.to=min(nrow(KI),length(GTindex)) #maximum of group is number of rows in KI
     group.to=nk #maximum of group is number of rows in KI
-    warning("The upper bound of groups is too high. It was set to the size of kinship!") 
+    #warning("The upper bound of groups is too high. It was set to the size of kinship!") 
+    message("The upper bound of groups is too high. It was set to the size of kinship!") 
   }
 	if(group.from>nk){ 
     group.from=nk
-    warning("The lower bound of groups is too high. It was set to the size of kinship!") 
+    #warning("The lower bound of groups is too high. It was set to the size of kinship!") 
+    message("The lower bound of groups is too high. It was set to the size of kinship!") 
   } 
 }
 
@@ -290,7 +365,8 @@ if(!is.null(CV)){
 	#The minimum of group is number of columns in CV
 	  group.from=ncol(CV)+2
 	  group.to=ncol(CV)+2
-	  warning("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
+	  #warning("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
+	  message("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
 	}
 }
 
@@ -372,7 +448,7 @@ j=1
      print("For tcrossprod(X %*% solve(crossprod(X)), X) reduce dim of X to :")
      print(dim(X))
   # aa=tcrossprod(X %*% solve(crossprod(X)), X)
-   emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
+   emma_test <- EMMREML::emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
 
    print(paste(order_count, "of",numSetting,"--","Vg=",round(emma_test$Vu,4), "VE=",round(emma_test$Ve,4),"-2LL=",round(-2*emma_test$loglik,2), "  Clustering=",ca,"  Group number=", group ,"  Group kinship=",kt,sep = " "))
   emma_test_reml=-2*emma_test$loglik
@@ -433,7 +509,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   
   # print(my_allCV)
   
-   emma_REMLE <- emmreml(y=as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
+   emma_REMLE <- EMMREML::emmreml(y=as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
   }else{
    emma_REMLE=emma_test
    print("gBLUP with only one time emma")
@@ -457,7 +533,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
    all_gs=cbind(BB,prediction)
    colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-  if(file.output) write.csv(all_gs,paste("GAPIT.",model,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
+  if(file.output) utils::write.csv(all_gs,paste("GAPIT.",model,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
 
   print("GAPIT SUPER GS completed successfully for multiple traits. Results are saved")
   return (list(GPS=BB,Pred=all_gs,Compression=Compression,kinship=my_allKI,SUPER_kinship=SUPER_myKI,SUPER_GD=SUPER_optimum_GD ,PC=my_allCV,Timmer=Timmer,Memory=Memory,GWAS=NULL,h2=optimum_h2 ))

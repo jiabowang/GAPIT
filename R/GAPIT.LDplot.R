@@ -41,38 +41,38 @@
     # LDsnpName=as.character(LDsnpName)
     print(LDsnpName)
     LDsnpName=gsub("SNP-","",LDsnpName)
-    color.rgb <- colorRampPalette(rev(c("snow","red")),space="rgb")
+    color.rgb <- grDevices::colorRampPalette(rev(c("snow","red")),space="rgb")
     
     # print(color.rgb)
     print("Getting genotype object")
     # print(hapmapgeno)
-    LDsnp=makeGenotypes(hapmapgeno,sep="",method=as.genotype)   #This need to be converted to genotype object
+    LDsnp=genetics::makeGenotypes(hapmapgeno,sep="",method=genetics::as.genotype)   #This need to be converted to genotype object
     # print(LDsnp)
     # print(LDdist)
     print("Calling LDheatmap...")
 #pdf(paste("GAPIT.LD.pdf",sep=""), width = 12, height = 12)
-    pdf(paste("GAPIT.LD.chromosom",LD.chromosome,"(",round(max(0,LD.location-LD.range2)/1000000),"_",round((LD.location+LD.range1)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
-    par(mar = c(25,25,25,25))
+    grDevices::pdf(paste("GAPIT.LD.chromosom",LD.chromosome,"(",round(max(0,LD.location-LD.range2)/1000000),"_",round((LD.location+LD.range1)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
+    graphics::par(mar = c(25,25,25,25))
 
     # MyHeatmap <- try(LDheatmap(LDsnp, LDdist, LDmeasure="r", add.map=TRUE,flip=TRUE,
     # color=color.rgb(20), name="myLDgrob", add.key=TRUE,geneMapLabelY=0.1) )  
-    MyHeatmap <- LDheatmap(LDsnp, LDdist, flip=TRUE,
+    MyHeatmap <- LDheatmap::LDheatmap(LDsnp, LDdist, flip=TRUE,
     color=color.rgb(20),SNP.name = LDsnpName, name="myLDgrob" ) 
     
     
   #Modify the plot
-      library(grid)
-      grid.edit(gPath("myLDgrob", "geneMap","SNPnames"), gp = gpar(cex=0.35,col="blue")) #Edit SNP name
+#      library(grid)
+      grid::grid.edit(grid::gPath("myLDgrob", "geneMap","SNPnames"), gp = grid::gpar(cex=0.35,col="blue")) #Edit SNP name
       
       if(!is.null(marker))
-      {LDheatmap.highlight(MyHeatmap, i = marker[1], j=marker[2], col = "blue",lwd=1.5)
+      {LDheatmap::LDheatmap.highlight(MyHeatmap, i = marker[1], j=marker[2], col = "blue",lwd=1.5)
       }
       # LDheatmap(MyHeatmap, SNP.name = LDsnpName)
       # grid.edit(gPath("myLDgrob","heatMap","heatmap"),gp=gpar(col="white",lwd=1))
       # grid.edit(gPath("myLDgrob", "Key", "title"), gp=gpar(cex=.5, col="blue"))  #edit key title size and color
       # grid.edit(gPath("myLDgrob", "heatMap", "title"), gp=gpar(just=c("center","bottom"), cex=0.8, col="black")) #Edit gene map title
       
-    dev.off()
+    grDevices::dev.off()
     print("LD heatmap crated")
     }else{ # alternative of if(nrow(GLD)>1)
     print("Warning: There are less than two SNPs on the region you sepcified. No LD plot!")

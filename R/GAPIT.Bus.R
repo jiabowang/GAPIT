@@ -117,10 +117,10 @@ GWAS=cbind(GM,mySUPERFaST$ps,mySUPERFaST$stats,mySUPERFaST$dfs,mySUPERFaST$effec
 
 if(method=="FarmCPU")
 {
-  if(!require(bigmemory)) install.packages("bigmemory")
-  if(!require(biganalytics)) install.packages("biganalytics")
-library(bigmemory)  #for FARM-CPU
-library(biganalytics) #for FARM-CPU
+#  if(!require(bigmemory)) install.packages("bigmemory")
+#  if(!require(biganalytics)) install.packages("biganalytics")
+#library(bigmemory)  #for FARM-CPU
+#library(biganalytics) #for FARM-CPU
 #if(!exists('FarmCPU', mode='function'))source("http://www.zzlab.net/FarmCPU/FarmCPU_functions.txt")#web source code
 
 colnames(GM)[1]="SNP"
@@ -323,12 +323,12 @@ blink_Y=Y
 blink_Y[is.na(blink_Y)]="NaN"
 colnames(blink_Y)=c("taxa","trait1")
 blink_CV=CV
-write.table(blink_GD,"myData.dat",quote=F,col.names=F,row.names=F)
-write.table(blink_GM,"myData.map",quote=F,col.names=T,row.names=F)
-write.table(blink_Y,"myData.txt",quote=F,col.names=T,row.names=F)
+utils::write.table(blink_GD,"myData.dat",quote=F,col.names=F,row.names=F)
+utils::write.table(blink_GM,"myData.map",quote=F,col.names=T,row.names=F)
+utils::write.table(blink_Y,"myData.txt",quote=F,col.names=T,row.names=F)
 if(!is.null(CV))
 {
-  write.table(blink_CV,"myData.cov",quote=F,col.names=T,row.names=F)
+  utils::write.table(blink_CV,"myData.cov",quote=F,col.names=T,row.names=F)
 }else{
   system("rm myData.cov")
 }
@@ -339,7 +339,7 @@ print("And put it into workplace and make it executable with 'chmod 777 blink_ve
 
 system("./blink --gwas --file myData --numeric")
 
-result=read.table("trait1_GWAS_result.txt",head=T)
+result = utils::read.table("trait1_GWAS_result.txt",head=T)
 result=result[,c(1,2,3,5,4)]
 xs=t(GD[,-1])
 #print(dim(xs))
@@ -378,10 +378,10 @@ if(method=="Blink")
   # if(!require(devtools))  install.packages("devtools")
   #if(!require(BLINK)) devtools::install_github("YaoZhou89/BLINK", host = "api.github.com")
   # if(!require(BLINK)) devtools::install_github("jiabowang/BLINK")
-  if(!require(bigmemory)) install.packages("bigmemory")
-  if(!require(biganalytics)) install.packages("biganalytics")
-library(bigmemory)  #for FARM-CPU
-library(biganalytics) #for FARM-CPU
+#  if(!require(bigmemory)) install.packages("bigmemory")
+#  if(!require(biganalytics)) install.packages("biganalytics")
+#library(bigmemory)  #for FARM-CPU
+#library(biganalytics) #for FARM-CPU
   #source("http://zzlab.net/GAPIT/gapit_functions.txt")
   #source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
   colnames(GD)[-1]=as.character(GM[,1])
