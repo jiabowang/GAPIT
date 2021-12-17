@@ -11,7 +11,7 @@ index=(final.table[,7]<=SNP.FDR)
 final.table=final.table[index,]
 
 #Export this summary table as an excel file
-write.table(final.table, paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+utils::write.table(final.table, paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
 
 #print("GAPIT.Table accomplished successfully!")

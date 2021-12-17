@@ -38,10 +38,10 @@ GAPIT.QQ(P.values = GWAS[,4], name.of.trait = name.of.trait,DPP=DPP,plot.style=p
 index=1:nrow(GWAS)
 if(threshold.output<1)index=which(GWAS[,4]<threshold.output)
 if(plot.style=="FarmCPU"){
-write.table(GWAS[index,], paste("FarmCPU.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+utils::write.table(GWAS[index,], paste("FarmCPU.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 }
 if(plot.style=="rainbow"){
-write.table(GWAS[index,], paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+utils::write.table(GWAS[index,], paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 }
 
 #Prediction

@@ -26,7 +26,7 @@ if(!is.null(PWI))
     if(dim(PWI)[1] > 1){ 
     #mt.rawp2adjp Performs the Simes procedure.  The output should be two columns, Left column: originial p-value
     #Right column: Simes corrected p-value
-    res <- mt.rawp2adjp(PWI[,4], FDR.Procedure)
+    res <- multtest::mt.rawp2adjp(PWI[,4], FDR.Procedure)
 
     #This command should order the p-values in the order of the SNPs in the data set
   adjp <- res$adjp[order(res$index), ]

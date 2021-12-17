@@ -1,24 +1,299 @@
-`GAPIT` <-
-function(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NULL,GK=NULL,testY=NULL,
- group.from=1000000 ,group.to=1000000,group.by=20,DPP=100000, 
- kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden", buspred=FALSE,lmpred=FALSE,FDRcut=FALSE,
- bin.from=10000,bin.to=10000,bin.by=10000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
- SNP.P3D=TRUE,SNP.effect="Add",SNP.impute="Middle",PCA.total=0, SNP.fraction = 1, seed = NULL, BINS = 20,SNP.test=TRUE,
- SNP.MAF=0,FDR.Rate = 1, SNP.FDR=1,SNP.permutation=FALSE,SNP.CV=NULL,SNP.robust="GLM",
- file.from=1, file.to=1, file.total=NULL, file.fragment = 99999,file.path=NULL, 
- file.G=NULL, file.Ext.G=NULL,file.GD=NULL, file.GM=NULL, file.Ext.GD=NULL,file.Ext.GM=NULL, 
- ngrid = 100, llim = -10, ulim = 10, esp = 1e-10,LD.chromosome=NULL,LD.location=NULL,LD.range=NULL,PCA.col=NULL,PCA.3d=FALSE,NJtree.group=NULL,NJtree.type=c("fan","unrooted"),
- sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.1,plot.bin=10^5,
- file.output=TRUE,cutOff=0.05, Model.selection = FALSE,output.numerical = FALSE,
- output.hapmap = FALSE, Create.indicator = FALSE,Multi_iter=FALSE,num_regwas=10,opt="extBIC",
-  QTN=NULL, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = FALSE,Random.model=FALSE,
-  method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",bin.size=c(1000000),bin.selection=c(10,20,50,100,200,500,1000),
-  memo=NULL,Prior=NULL,ncpus=1,maxLoop=3,threshold.output=.01,Inter.Plot=FALSE,Inter.type=c("m","q"),
-  WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),maxOut=100,QTN.position=NULL,CG=NULL,
-  converge=1,iteration.output=FALSE,acceleration=0,iteration.method="accum",PCA.View.output=TRUE,Geno.View.output=TRUE,plot.style="Oceanic",SUPER_GD=NULL,SUPER_GS=FALSE,
-		    h2=NULL,NQTN=NULL,QTNDist="normal",effectunit=1,category=1,r=0.25,cveff=NULL,a2=0,adim=2,Multiple_analysis=FALSE,
-  model="MLM",Para=NULL
-		){
+
+#' GAPIT Genome Association and Prediction Integrated Tools
+#' 
+#' @description 
+#' GAPIT analyzes phenotypic and genotypics data to infer association.
+#' 
+#' 
+#' @param Y = NULL, data.frame of phenotype data, samples in rows, traits in column, first column is sample name
+#' @param G = NULL, data.frame of genotypic data, HAPMAP format
+#' @param GD = NULL, data.frame of genetic data in 'numerical' format, samples in rows, variants in columns.
+#' @param GM = NULL, Genetic Map data.frame to provide genomic coordinates for GD
+#' @param KI = NULL, Kinship matrix
+#' @param Z = NULL,
+#' @param CV = NULL, Covariate matrix
+#' @param CV.Inheritance = NULL,
+#' @param GP = NULL,
+#' @param GK = NULL,
+#' @param testY = NULL,
+#' @param group.from = 1e+06,
+#' @param group.to = 1e+06,
+#' @param group.by = 20,
+#' @param DPP = 1e+05,
+#' @param kinship.cluster = "average", options: complete, ward, single, mcquitty, median, and centroid 
+#' @param kinship.group = "Mean", options: Max, Min, and Median
+#' @param kinship.algorithm = "VanRaden", options: EMMA, Loiselle, VanRaden, Zhang
+#' @param buspred = FALSE,
+#' @param lmpred = FALSE,
+#' @param FDRcut = FALSE,
+#' @param bin.from = 10000,
+#' @param bin.to = 10000,
+#' @param bin.by = 10000,
+#' @param inclosure.from = 10,
+#' @param inclosure.to = 10,
+#' @param inclosure.by = 10,
+#' @param SNP.P3D = TRUE,
+#' @param SNP.effect = "Add",
+#' @param SNP.impute = "Middle",
+#' @param PCA.total = 0,
+#' @param SNP.fraction = 1,
+#' @param seed = NULL,
+#' @param BINS = 20,
+#' @param SNP.test = TRUE,
+#' @param SNP.MAF = 0,
+#' @param FDR.Rate = 1,
+#' @param SNP.FDR = 1,
+#' @param SNP.permutation = FALSE,
+#' @param SNP.CV = NULL,
+#' @param SNP.robust = "GLM",
+#' @param file.from = 1,
+#' @param file.to = 1,
+#' @param file.total = NULL,
+#' @param file.fragment = 99999,
+#' @param file.path = NULL,
+#' @param file.G = NULL,
+#' @param file.Ext.G = NULL,
+#' @param file.GD = NULL,
+#' @param file.GM = NULL,
+#' @param file.Ext.GD = NULL,
+#' @param file.Ext.GM = NULL,
+#' @param ngrid = 100,
+#' @param llim = -10,
+#' @param ulim = 10,
+#' @param esp = 1e-10,
+#' @param LD.chromosome = NULL,
+#' @param LD.location = NULL,
+#' @param LD.range = NULL,
+#' @param PCA.col = NULL,
+#' @param PCA.3d = FALSE,
+#' @param NJtree.group = NULL,
+#' @param NJtree.type = c("fan", "unrooted"),
+#' @param sangwich.top = NULL,
+#' @param sangwich.bottom = NULL,
+#' @param QC = TRUE,
+#' @param GTindex = NULL,
+#' @param LD = 0.1,
+#' @param plot.bin = 10^5,
+#' @param file.output = TRUE,
+#' @param cutOff = 0.05,
+#' @param Model.selection = FALSE,
+#' @param output.numerical = FALSE,
+#' @param output.hapmap = FALSE,
+#' @param Create.indicator = FALSE,
+#' @param Multi_iter = FALSE,
+#' @param num_regwas = 10,
+#' @param opt = "extBIC",
+#' @param QTN = NULL,
+#' @param QTN.round = 1,
+#' @param QTN.limit = 0,
+#' @param QTN.update = TRUE,
+#' @param QTN.method = "Penalty",
+#' @param Major.allele.zero = FALSE,
+#' @param Random.model = FALSE,
+#' @param method.GLM = "FarmCPU.LM",
+#' @param method.sub = "reward",
+#' @param method.sub.final = "reward",
+#' @param method.bin = "static",
+#' @param bin.size = c(1e+06),
+#' @param bin.selection = c(10, 20, 50, 100, 200, 500, 1000),
+#' @param memo = NULL,
+#' @param Prior = NULL,
+#' @param ncpus = 1,
+#' @param maxLoop = 3,
+#' @param threshold.output = 0.01,
+#' @param Inter.Plot = FALSE,
+#' @param Inter.type = c("m", "q"),
+#' @param WS = c(1, 1000, 10000, 1e+05, 1e+06, 1e+07),
+#' @param alpha = c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
+#' @param maxOut = 100,
+#' @param QTN.position = NULL,
+#' @param CG = NULL,
+#' @param converge = 1,
+#' @param iteration.output = FALSE,
+#' @param acceleration = 0,
+#' @param iteration.method = "accum",
+#' @param PCA.View.output = TRUE,
+#' @param Geno.View.output = TRUE,
+#' @param plot.style = "Oceanic",
+#' @param SUPER_GD = NULL,
+#' @param SUPER_GS = FALSE,
+#' @param h2 = NULL,
+#' @param NQTN = NULL,
+#' @param QTNDist = "normal",
+#' @param effectunit = 1,
+#' @param category = 1,
+#' @param r = 0.25,
+#' @param cveff = NULL,
+#' @param a2 = 0,
+#' @param adim = 2,
+#' @param Multiple_analysis = FALSE,
+#' @param model = "MLM", options: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, or cBLUP
+#' @param Para = NULL
+#' 
+#' 
+#' @details 
+#' Genome Association and Prediction Integrated Tools
+#' Available models: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, cBLUP
+#' 
+#' 
+#' @return 
+#' A list
+#' including some of the following elements:MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, cBLUP
+#'
+#'
+#' @seealso 
+#' GAPIT.DP(), GAPIT.Phenotype.View(), GAPIT.judge(), GAPIT.IC(), GAPIT.SS(), GAPIT.ID().
+#' 
+#' 
+#' library(help = "GAPIT3")
+#' 
+#' @author Zhiwu Zhang and Jiabo Wang
+#' 
+#' @examples 
+#' \dontrun{
+#' 
+#' myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz", package = "GAPIT3")
+#' myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz", package = "GAPIT3")
+#' myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+#' myGenotypes  <- read.table(myGenoFile, header = FALSE)
+#' 
+#' myGAPIT <- GAPIT(
+#'   Y = myPhenotypes,
+#'   G = myGenotypes,
+#'   PCA.total = 3,
+#'   file.output = FALSE,
+#'   model = "MLM"
+#' )
+#' }
+#'
+#'
+#' @export
+`GAPIT` <- function(
+  Y = NULL,
+  G = NULL,
+  GD = NULL,
+  GM = NULL,
+  KI = NULL,
+  Z = NULL,
+  CV = NULL,
+  CV.Inheritance = NULL,
+  GP = NULL,
+  GK = NULL,
+  testY = NULL,
+  group.from = 1000000,
+  group.to = 1000000,
+  group.by = 20,
+  DPP = 100000, 
+  kinship.cluster = "average",
+  kinship.group = 'Mean',
+  kinship.algorithm = "VanRaden",
+  buspred = FALSE,
+  lmpred = FALSE,
+  FDRcut = FALSE,
+  bin.from = 10000,
+  bin.to = 10000,
+  bin.by = 10000,
+  inclosure.from = 10,
+  inclosure.to = 10,
+  inclosure.by = 10,
+  SNP.P3D = TRUE,
+  SNP.effect = "Add",
+  SNP.impute = "Middle",
+  PCA.total = 0, 
+  SNP.fraction = 1, 
+  seed = NULL, 
+  BINS = 20,
+  SNP.test = TRUE,
+  SNP.MAF = 0,
+  FDR.Rate = 1, 
+  SNP.FDR = 1,
+  SNP.permutation = FALSE,
+  SNP.CV = NULL,
+  SNP.robust = "GLM",
+  file.from = 1, 
+  file.to = 1, 
+  file.total = NULL, 
+  file.fragment = 99999,
+  file.path = NULL, 
+  file.G = NULL, 
+  file.Ext.G = NULL,
+  file.GD = NULL, 
+  file.GM = NULL, 
+  file.Ext.GD = NULL,
+  file.Ext.GM = NULL, 
+  ngrid = 100, 
+  llim = -10, 
+  ulim = 10, 
+  esp = 1e-10,
+  LD.chromosome = NULL,
+  LD.location = NULL,
+  LD.range = NULL,
+  PCA.col = NULL,
+  PCA.3d = FALSE,
+  NJtree.group = NULL,
+  NJtree.type = c("fan","unrooted"),
+  sangwich.top = NULL,
+  sangwich.bottom = NULL,
+  QC = TRUE,
+  GTindex = NULL,
+  LD = 0.1,
+  plot.bin = 10^5,
+  file.output = TRUE,
+  cutOff = 0.05, 
+  Model.selection = FALSE,
+  output.numerical = FALSE,
+  output.hapmap = FALSE, 
+  Create.indicator = FALSE,
+  Multi_iter = FALSE,
+  num_regwas = 10,
+  opt = "extBIC",
+  QTN = NULL, 
+  QTN.round = 1,
+  QTN.limit = 0, 
+  QTN.update = TRUE, 
+  QTN.method = "Penalty", 
+  Major.allele.zero = FALSE,
+  Random.model = FALSE,
+  method.GLM = "FarmCPU.LM",
+  method.sub = "reward",
+  method.sub.final = "reward",
+  method.bin = "static",
+  bin.size = c(1000000),
+  bin.selection = c(10,20,50,100,200,500,1000),
+  memo = NULL,
+  Prior = NULL,
+  ncpus = 1,
+  maxLoop = 3,
+  threshold.output = .01,
+  Inter.Plot = FALSE,
+  Inter.type = c("m","q"),
+  WS = c(1e0,1e3,1e4,1e5,1e6,1e7),
+  alpha = c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
+  maxOut = 100,
+  QTN.position = NULL,
+  CG = NULL,
+  converge = 1,
+  iteration.output = FALSE,
+  acceleration = 0,
+  iteration.method = "accum",
+  PCA.View.output = TRUE,
+  Geno.View.output = TRUE,
+  plot.style = "Oceanic",
+  SUPER_GD = NULL,
+  SUPER_GS = FALSE,
+	h2 = NULL,
+  NQTN = NULL,
+  QTNDist = "normal",
+  effectunit = 1,
+  category = 1,
+  r = 0.25,
+  cveff = NULL,
+  a2 = 0,
+  adim = 2,
+  Multiple_analysis = FALSE,
+  model = "MLM",
+  Para = NULL
+	){
 #Object: To perform GWAS and GPS (Genomic Prediction/Selection)
 #Designed by Zhiwu Zhang
 #Writen by Jiabo Wang
@@ -207,7 +482,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              DP$bin.from= Para$bin.from
              DP$bin.to= Para$bin.to
              DP$bin.by= Para$bin.by
-             DP$inclosure.from= Para$inclosure.from
+             DP$inclosure.from = Para$inclosure.from
              DP$inclosure.to= Para$inclosure.toDP$inclosure.by= Para$inclosure.by
              DP$Multi_iter=Para$Multi_iter
           }
@@ -235,12 +510,12 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              DP$model=model
 # print(Para$SNP.test)
              IC=GAPIT.IC(DP=DP)
-             SS=GAPIT.SS(DP=DP,IC=IC,buspred=buspred,lmpred=lmpred)
+             SS=GAPIT.SS(DP=DP, IC=IC, buspred=buspred, lmpred=lmpred)
              if(Para$SNP.test&Para$file.output)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
           }#for loop trait
 #print(SNP.test)
         print("GAPIT accomplished successfully for multiple traits. Result are saved")
-        print("It is OK to see this: 'There were 50 or more warnings (use warnings() to see the first 50)'")
+#        print("It is OK to see this: 'There were 50 or more warnings (use warnings() to see the first 50)'")
         out <- list()
         out$QTN<-QTN.position
         out$GWAS<-SS$GWAS
@@ -320,10 +595,10 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
 #print(GD[1:5,1:5])
         if(output.numerical) 
           {
-            write.table(cbind(taxa,GD),  "GAPIT.Genotype.Numerical.txt", quote = FALSE, sep = "\t", row.names = F,col.names = T)
-            write.table(GI,  "GAPIT.Genotype.map.txt", quote = FALSE, sep = "\t", row.names = F,col.names = T)
+            utils::write.table(cbind(taxa,GD),  "GAPIT.Genotype.Numerical.txt", quote = FALSE, sep = "\t", row.names = F,col.names = T)
+            utils::write.table(GI,  "GAPIT.Genotype.map.txt", quote = FALSE, sep = "\t", row.names = F,col.names = T)
           }
-        if(output.hapmap) write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt", quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
+        if(output.hapmap) utils::write.table(myGenotype$G,  "GAPIT.Genotype.hmp.txt", quote = FALSE, sep = "\t", row.names = FALSE,col.names = FALSE)
 #GD=cbind(as.data.frame(GT),GD)
         if(!is.null(seed))set.seed(seed)
 #print(Para$NQTN)

@@ -1,8 +1,45 @@
-`GAPIT.ID` <-
-function(DP=NULL,IC=NULL,SS=NULL,RS=NULL,cutOff=0.01,
-DPP=100000,Create.indicator=FALSE,
-FDR.Rate = 1,QTN.position=NULL,plot.style="Oceanic",
-file.output=TRUE,SNP.MAF=0,CG=NULL,plot.bin=10^9 ){
+#' GAPIT.ID
+#'
+#' @description 
+#' GAPIT.ID
+#'
+#' @param DP param a list (118 elements?)
+#' @param IC param a list (9 elements?)
+#' @param SS param a list (17 elements?)
+#' @param RS param
+#' @param cutOff param
+#' @param DPP param
+#' @param Create.indicator param
+#' @param FDR.Rate param
+#' @param QTN.position param
+#' @param plot.style param
+#' @param file.output param
+#' @param SNP.MAF param
+#' @param CG param
+#' @param plot.bin param
+#'
+#'
+#' @return 
+#' An invisible NULL.
+#'
+#' @author Zhiwu Zhang and Jiabo Wang
+#'
+#' @export
+`GAPIT.ID` <- function(
+  DP=NULL,
+  IC=NULL,
+  SS=NULL,
+  RS=NULL,
+  cutOff=0.01,
+  DPP=100000,
+  Create.indicator=FALSE,
+  FDR.Rate = 1,
+  QTN.position=NULL,
+  plot.style="Oceanic",
+  file.output=TRUE,
+  SNP.MAF=0,
+  CG=NULL,
+  plot.bin=10^9 ){
 #Object: To Interpretation and Diagnoses 
 #Designed by Zhiwu Zhang
 #Writen by Jiabo Wang
@@ -68,13 +105,19 @@ GWAS=RS
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")	
 
   print("Creating ROC table and plot" )
-if(file.output) myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=var(ys),trait=name.of.trait)
+
+if(file.output){
+  if( !is.null(DP) ){
+    ys <- nrow(DP$G)
+  }
+  myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=stats::var(ys),trait=name.of.trait)
+}
   print("ROC table and plot created" )
   print("MAF plot..." )
 if(file.output&maf_pass) myMAF1=GAPIT.MAF(MAF=maf,P=ps,E=NULL,trait=name.of.trait)
   if(file.output){
-   write.table(GWAS, paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-   write.table(DTS, paste("GAPIT.", name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(GWAS, paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(DTS, paste("GAPIT.", name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
    #if(!byPass) write.table(GWAS.2, paste("GAPIT.", name.of.trait, ".Allelic_Effect_Estimates.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
   }#end file.output
   }#end DP
@@ -118,7 +161,11 @@ Pred=SS$Pred
       effect=SS$mc
       #GI=cbind(GI,effect)
      
-   if(DP$file.output&!is.null(SS$Compression)&!is.na(SS$Compression[1,6])) GAPIT.Compression.Visualization(Compression = SS$Compression, name.of.trait = DP$name.of.trait)
+   if(DP$file.output & !is.null(SS$Compression) & !is.na(SS$Compression[1,6])){
+     GAPIT.Compression.Visualization(Compression = SS$Compression, 
+                                     name.of.trait = DP$name.of.trait,
+                                     file.output = file.output)
+   }
   
 }else{
   maf=GI$maf
@@ -191,7 +238,7 @@ if(!is.null(IC$GD)&DP$SNP.test)
   # print(head(tvalue))
   # print(head(stderr))
   # print(head(var(as.matrix(IC$Y[,2]))))
-if(DP$file.output) myROC=GAPIT.ROC(t=as.numeric(tvalue),se=as.numeric(stderr),Vp=var(as.matrix(IC$Y[,2])),trait=DP$name.of.trait)
+if(DP$file.output) myROC=GAPIT.ROC(t=as.numeric(tvalue),se=as.numeric(stderr),Vp=stats::var(as.matrix(IC$Y[,2])),trait=DP$name.of.trait)
   print("ROC table and plot created" )
 
   print("MAF plot..." )
@@ -234,15 +281,15 @@ if(DP$Inter.Plot)
      new_GI[,2]=chro
    }
 
-   write.table(new_GI, paste("GAPIT.", DP$name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-   write.table(DTS, paste("GAPIT.", DP$name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(new_GI, paste("GAPIT.", DP$name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(DTS, paste("GAPIT.", DP$name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
    #print(head(GWAS.2))
    #if(byPass) write.table(GWAS.2[,1:4], paste("GAPIT.", DP$name.of.trait, ".Allelic_Effect_Estimates.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
      }#end file.output
   # }#PWI.Filtered
 }#end IC$GD)
   print("GAPIT.ID accomplished successfully for multiple traits. Results are saved")
-  return ()
+  return(invisible(NULL))
 }#is.null(DP)&is.null(IC)
 
 }  #end of GAPIT.ID function

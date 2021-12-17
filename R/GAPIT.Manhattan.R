@@ -88,9 +88,9 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     {
         #print("Manhattan ploting Chromosomewise")
         GI.MP=cbind(GI.MP,bin.mp)
-        pdf(paste("GAPIT.", name.of.trait,".Manhattan.Plot.Chromosomewise.pdf" ,sep = ""), width = 10)
+        grDevices::pdf(paste("GAPIT.", name.of.trait,".Manhattan.Plot.Chromosomewise.pdf" ,sep = ""), width = 10)
             #par(mar = c(5,5,4,3), lab = c(8,5,7))
-        layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
+        graphics::layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
         for(i in 1:numCHR)
         {
             #Extract SBP on this chromosome
@@ -128,7 +128,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
                     
                     for (k in 1:ncol(subGD))
                     {
-                        r2=cor(X[,candidata],subGD[,k])^2
+                        r2=stats::cor(X[,candidata],subGD[,k])^2
                         #print(r2)
                         bin.store[k,8]=r2
                         
@@ -151,7 +151,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             ##print(paste("befor prune: chr: ",i, "length: ",length(x),"max p",max(y), "min p",min(y), "max x",max(x), "Min x",min(x)))
             n_col=10
             r2_color[,2]=subset[,8]
-            do_color=colorRampPalette(c("orangeRed", "blue"))(n_col)
+            do_color = grDevices::colorRampPalette(c("orangeRed", "blue"))(n_col)
             #Prune most non important SNPs off the plots
             order=order(y,decreasing = TRUE)
             y=y[order]
@@ -166,24 +166,24 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             r2_color[which(r2_color[,2]<=0.6&r2_color[,2]>0.4),2]=do_color[n_col*0.6]
             r2_color[which(r2_color[,2]<=0.8&r2_color[,2]>0.6),2]=do_color[n_col*0.4]
             r2_color[which(r2_color[,2]<=1&r2_color[,2]>0.8),2]=do_color[n_col/n_col]
-            par(mar=c(0,0,0,0))
-            par(mar=c(5,5,2,1),cex=0.8)
+            graphics::par(mar=c(0,0,0,0))
+            graphics::par(mar=c(5,5,2,1),cex=0.8)
 
             plot(y~x,type="p", ylim=c(0,y.lim), xlim = c(min(x), max(x)),
 			col = r2_color[,2], xlab = expression(Base~Pairs~(x10^-6)),
 			ylab = "-Log Base 10 p-value", main = 			paste("Chromosome",chm.to.analyze[i],sep=" "),
 			cex.lab=1.6,pch=21,bg=r2_color[,2])
             
-            abline(h=bonferroniCutOff,col="forestgreen")
-            abline(h=FDRcutoff,col="forestgreen",lty=2)
-            par(mar=c(15,5,6,5),cex=0.5)
+            graphics::abline(h=bonferroniCutOff,col="forestgreen")
+            graphics::abline(h=FDRcutoff,col="forestgreen",lty=2)
+            graphics::par(mar=c(15,5,6,5),cex=0.5)
             
-            barplot(matrix(rep(1,times=n_col),n_col,1),beside=T,col=do_color,border=do_color,axes=FALSE,)
+            graphics::barplot(matrix(rep(1,times=n_col),n_col,1),beside=T,col=do_color,border=do_color,axes=FALSE,)
         #legend(x=10,y=2,legend=expression(R^"2"),,lty=0,cex=1.3,bty="n",bg=par("bg"))
-            axis(3,seq(11,1,by=-2),seq(0,1,by=0.2),las=1)
+            graphics::axis(3,seq(11,1,by=-2),seq(0,1,by=0.2),las=1)
 
         }# end plot.type == "Chromosomewise"&!is.null(GD)
-        dev.off()
+        grDevices::dev.off()
 		
         print("manhattan plot on chromosome finished")
     } #Chromosomewise plot
@@ -204,7 +204,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         cycle1=seq(1,nchr,by= ncycle)
         thecolor=cycle1
         for(i in 2:ncycle){thecolor=c(thecolor,cycle1+(i-1))}
-      	col.Rainbow=rainbow(ncolor+1)[thecolor]     	
+      	col.Rainbow = grDevices::rainbow(ncolor+1)[thecolor]     	
      	  col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
     	  col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))   	
 		    col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
@@ -280,31 +280,31 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         #print("Manhattan XY created")
        ####xiaolei update on 2016/01/09 
         if(plot.style =="FarmCPU"){
-	    pdf(paste("FarmCPU.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = width0,height=height0)
+	    grDevices::pdf(paste("FarmCPU.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = width0,height=height0)
         }else{
-	    pdf(paste("GAPIT.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = width0,height=height0)
+	    grDevices::pdf(paste("GAPIT.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = width0,height=height0)
         }
-            par(mar = c(3,6,5,1))
+            graphics::par(mar = c(3,6,5,1))
         	plot(y~x,xlab="",ylab=expression(-log[10](italic(p))) ,
         	cex.axis=1.5, cex.lab=2, ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=wd,cex=s+.3,main = paste(name.of.trait,sep=" 			"),cex.main=2.5)
         
         #Label QTN positions
         if(is.vector(QTN)){
-          if(position.only){abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[2], QTN[3], type="p",pch=21, cex=2,lwd=1.5,col="dimgrey")
-          points(QTN[2], QTN[3], type="p",pch=20, cex=1,lwd=1.5,col="dimgrey")
+          if(position.only){graphics::abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
+          graphics::points(QTN[2], QTN[3], type="p",pch=21, cex=2,lwd=1.5,col="dimgrey")
+          graphics::points(QTN[2], QTN[3], type="p",pch=20, cex=1,lwd=1.5,col="dimgrey")
           }
         }else{
-          if(position.only){abline(v=QTN[,2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[,2], QTN[,3], type="p",pch=21, cex=2,lwd=1.5,col="dimgrey")
-          points(QTN[,2], QTN[,3], type="p",pch=20, cex=1,lwd=1.5,col="dimgrey")
+          if(position.only){graphics::abline(v=QTN[,2], lty = 2, lwd=1.5, col = "grey")}else{
+          graphics::points(QTN[,2], QTN[,3], type="p",pch=21, cex=2,lwd=1.5,col="dimgrey")
+          graphics::points(QTN[,2], QTN[,3], type="p",pch=20, cex=1,lwd=1.5,col="dimgrey")
           }
         }
         
         #Add a horizontal line for bonferroniCutOff
-        abline(h=bonferroniCutOff,col="forestgreen")
+        graphics::abline(h=bonferroniCutOff,col="forestgreen")
         #Add FDR line
-        abline(h=FDRcutoff,col="forestgreen",lty=2)
+        graphics::abline(h=FDRcutoff,col="forestgreen",lty=2)
         #print(bonferroniCutOff)
         #Set axises
         # jiabo creat chor_taxa
@@ -312,13 +312,13 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         if(length(chor_taxa)!=length(ticks))chor_taxa=NULL
         #print(unique(GI.MP[,1]))
         if(!is.null(chor_taxa))
-        {axis(1, at=ticks,cex.axis=1.5,labels=chor_taxa,tick=F)
-        }else{axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)}
-        axis(2, at=1:themax,cex.axis=1.5,labels=1:themax,tick=F)
+        {graphics::axis(1, at=ticks,cex.axis=1.5,labels=chor_taxa,tick=F)
+        }else{graphics::axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)}
+        graphics::axis(2, at=1:themax,cex.axis=1.5,labels=1:themax,tick=F)
 
-        box()
-        palette("default")
-        dev.off()
+        graphics::box()
+        grDevices::palette("default")
+        grDevices::dev.off()
         #print("Manhattan done Genomewise")
         
     } #Genomewise plot

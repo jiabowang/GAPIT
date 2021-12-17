@@ -5,8 +5,8 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=500){
     #Authors: Jiabo Wang and Zhiwu Zhang
     # Last update: Nov 6, 2019
     ##############################################################################################
-    if(!require(lme4))  install.packages("lme4")
-    library("lme4")
+#    if(!require(lme4))  install.packages("lme4")
+#    library("lme4")
     # GWAS=myGAPIT_SUPER$GWAS
     # CV=myGAPIT_SUPER$PCA
     # cut.set=0.01
@@ -161,7 +161,7 @@ if(!is.null(CV))
 
 }
 #command3=paste(command2,"+(1|gene_",j,")",sep="")
-    dflme <- lmer(command2, data=tree2,control=lmerControl(check.nobs.vs.nlev = "ignore",
+    dflme <- lme4::lmer(command2, data=tree2, control = lme4::lmerControl(check.nobs.vs.nlev = "ignore",
      check.nobs.vs.rankZ = "ignore",
      check.nobs.vs.nRE="ignore"))
 
@@ -175,42 +175,42 @@ if(!is.null(CV))
     gene_list=cbind(geneGWAS,v_rat)
     colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
 
-    write.csv(gene_list,paste("GAPIT.", name.of.trait,".Phenotype_Variance_Explained_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+    utils::write.csv(gene_list,paste("GAPIT.", name.of.trait,".Phenotype_Variance_Explained_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 #gene_list=read.csv("GAPIT.Weight.GrowthIntercept.Phenotype_Variance_Explained_by_Association_Markers.csv",head=T)
 if(!is.na(sum(gene_list[1,c(4:8)])))
 {
-         pdf(paste("GAPIT.", name.of.trait,".Effect_VP.pdf" ,sep = ""), width = 7,height=5.75)
-        par(mar=c(4,5,4,4))
+         grDevices::pdf(paste("GAPIT.", name.of.trait,".Effect_VP.pdf" ,sep = ""), width = 7,height=5.75)
+        graphics::par(mar=c(4,5,4,4))
 
         gene_list=gene_list[order(gene_list$effect),]
         plot(gene_list$effect,gene_list$Variance_Explained,cex=1.2,
             xlab="Estimated Effect",
             ylab="Phenotypic Variance Explained (%)"
             )
-        dev.off()
+        grDevices::dev.off()
 
-        pdf(paste("GAPIT.", name.of.trait,".MAF_VP.pdf" ,sep = ""), width = 7,height=5.75)
-        par(mar=c(4,5,4,4))
+        grDevices::pdf(paste("GAPIT.", name.of.trait,".MAF_VP.pdf" ,sep = ""), width = 7,height=5.75)
+        graphics::par(mar=c(4,5,4,4))
         gene_list=gene_list[order(gene_list$maf),]
         plot(gene_list$maf,gene_list$Variance_Explained,xlab="MAF",cex=1.2,
             ylab="Phenotypic Variance Explained (%)")
-        dev.off()
+        grDevices::dev.off()
 
     if(n_gd>=5)
         {
-        pdf(paste("GAPIT.", name.of.trait,".MAF_Effect_VP.pdf" ,sep = ""), width = 9,height=5.75)
+        grDevices::pdf(paste("GAPIT.", name.of.trait,".MAF_Effect_VP.pdf" ,sep = ""), width = 9,height=5.75)
         
         n=10
-        layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
-        do_color=colorRampPalette(c("green", "red"))(n)
+        graphics::layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
+        do_color = grDevices::colorRampPalette(c("green", "red"))(n)
 
-            par(mar=c(4,5,2,8),cex=1)
+            graphics::par(mar=c(4,5,2,8),cex=1)
             y=gene_list$maf
             x=gene_list$effect
             x.lim=max(x)+max(x)/10
             y.lim=max(y)+max(y)/10
             z=gene_list$Variance_Explained
-            quantile_cut=quantile(z)
+            quantile_cut = stats::quantile(z)
             r2_color=rep("black",n_gd)
         for(i in 1:(n/2))
         {
@@ -219,22 +219,22 @@ if(!is.na(sum(gene_list[1,c(4:8)])))
             plot(y~x,type="p", ylim=c(0,y.lim), 
                 xlim = c(min(x), max(x)),col = r2_color,cex=1.2,
                  xlab = "",ylab = "", cex.lab=1.2,pch=21,bg=r2_color)
-            mtext("Estimated Effect",side=1,line=2.5)
-            mtext("MAF",side=2,line=2.5)
+            graphics::mtext("Estimated Effect",side=1,line=2.5)
+            graphics::mtext("MAF",side=2,line=2.5)
 
 
-            par(mar=c(2,6,3,3))
+            graphics::par(mar=c(2,6,3,3))
             
-            barplot(matrix(rep(0.4,times=n),n,1),beside=T,col=do_color,border=do_color,axes=FALSE,horiz =T)
+            graphics::barplot(matrix(rep(0.4,times=n),n,1),beside=T,col=do_color,border=do_color,axes=FALSE,horiz =T)
         #legend(x=10,y=2,legend=expression(R^"2"),,lty=0,cex=1.3,bty="n",bg=par("bg"))
             step=length(seq(0,round(max(z),3),by=0.01))
             small_bar=round(seq(0,round(max(z),3),by=(max(z)-min(z))/10),2)
             #main()
-            mtext("Phenotypic Variance Explained (%)",side=2,line=0.4,col="black",cex=0.7)
+            graphics::mtext("Phenotypic Variance Explained (%)",side=2,line=0.4,col="black",cex=0.7)
 
-            axis(4,c(1,6,11),c(min(small_bar),median(small_bar),max(small_bar)),las=2,cex.axis = 0.7,tick=F,line=0)
+            graphics::axis(4,c(1,6,11),c(min(small_bar),stats::median(small_bar),max(small_bar)),las=2,cex.axis = 0.7,tick=F,line=0)
         
-        dev.off()
+        grDevices::dev.off()
         }
 }
 

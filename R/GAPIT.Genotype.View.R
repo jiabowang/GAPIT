@@ -32,11 +32,11 @@ if(is.null(chr)){chr=1}
   het.snp=apply(H,2,mean)
   ylab.ind=paste("Frequency (out of ",length(het.ind)," individuals)",sep="")
   ylab.snp=paste("Frequency (out of ",length(het.snp)," markers)",sep="")
-  pdf("GAPIT.Heterozygosity.pdf", width =10, height = 6)
-  par(mfrow=c(1,2),mar=c(5,5,1,1)+0.1)
-  hist(het.ind,col="gray", main="",ylab=ylab.ind, xlab="Heterozygosity of individuals")
-  hist(het.snp,col="gray", main="",ylab=ylab.snp, xlab="Heterozygosity of markers")
-  dev.off()
+  grDevices::pdf("GAPIT.Heterozygosity.pdf", width =10, height = 6)
+  graphics::par(mfrow=c(1,2),mar=c(5,5,1,1)+0.1)
+  graphics::hist(het.ind,col="gray", main="",ylab=ylab.ind, xlab="Heterozygosity of individuals")
+  graphics::hist(het.snp,col="gray", main="",ylab=ylab.snp, xlab="Heterozygosity of markers")
+  grDevices::dev.off()
   rm(X, H, het.ind, het.snp) #Feree memory
   
 myFig21<-myGI
@@ -102,18 +102,23 @@ results2<-cbind(myFig22,kk1)
 max2<-max(myFig22[,4])
 
 
-pdf("GAPIT.Marker.Density.pdf", width =10, height = 6)
-par(mar=c(5,5,4,5)+0.1)
-hist(as.numeric(as.matrix(results[,4])),xlab="Density",main="Distribution of SNP",breaks=12, cex.axis=0.9,col = "dimgray",cex.lab=1.3)###,xlim=c(0,25040359))
+grDevices::pdf("GAPIT.Marker.Density.pdf", width =10, height = 6)
+graphics::par(mar=c(5,5,4,5)+0.1)
+graphics::hist(as.numeric(as.matrix(results[,4])),
+               xlab="Density",
+               main="Distribution of SNP",
+               breaks=12, cex.axis=0.9,
+               col = "dimgray",
+               cex.lab=1.3)###,xlim=c(0,25040359))
 
-par(new=T)
+graphics::par(new=T)
 plot(results2[,4],results2[,5]/m,xaxt="n", yaxt="n",bg="lightgray",xlab="",ylab="",type="l",pch=20,col="#990000",cex=1.0,cex.lab=1.3, cex.axis=0.9, lwd=3,las=1,xlim=c(0,max2))
-axis(4,col="#990000",col.ticks="#990000",col.axis="#990000")
-mtext("Accumulation Frequency",side=4,line=3,font=2,font.axis=1.3,col="#990000")
-abline(h=0,col="forestgreen",lty=2)
-abline(h=1,col="forestgreen",lty=2)
+graphics::axis(4,col="#990000",col.ticks="#990000",col.axis="#990000")
+graphics::mtext("Accumulation Frequency",side=4,line=3,font=2,font.axis=1.3,col="#990000")
+graphics::abline(h=0,col="forestgreen",lty=2)
+graphics::abline(h=1,col="forestgreen",lty=2)
 
-dev.off()
+grDevices::dev.off()
 
 
 
@@ -186,7 +191,7 @@ for(k in (j+1):km)
 {
 
 save_Density_Cor[countSDC,1]<-abs(as.numeric(as.matrix(results3_100[k,3]))-as.numeric(as.matrix(results3_100[j,3])))
-save_Density_Cor[countSDC,2]<-cor(myGD3_100[,j],myGD3_100[,k])
+save_Density_Cor[countSDC,2]<-stats::cor(myGD3_100[,j],myGD3_100[,k])
 #options(digits=8)
 #save_Density_Cor[countSDC,3]<-as.numeric(as.matrix(format(cor(myGD3_100[,j],myGD3_100[,k])%*% cor(myGD3_100[,j],myGD3_100[,k]),digits=8)))
 save_Density_Cor[countSDC,3]<-save_Density_Cor[countSDC,2]^2
@@ -223,15 +228,15 @@ result_mav2[g]<-sum/mav1
 }
 result_mav<-cbind(result_mav1,result_mav2)
 
-pdf("GAPIT.Marker.LD.pdf", width =10, height = 6)
-par(mar = c(5,5,5,5))
+grDevices::pdf("GAPIT.Marker.LD.pdf", width =10, height = 6)
+graphics::par(mar = c(5,5,5,5))
 
 plot(as.matrix(result3_3[,1]),as.matrix(result3_3[,3]),bg="dimgray",xlab="Distance",ylab="R Square",pch=1,cex=0.9,cex.lab=1.2, lwd=0.75,las=1)
 #,ylim=c(0,round(max(result3_3[,3]))))
 
- lines(result_mav[,2]~result_mav[,1], lwd=6,type="l",pch=20,col="#990000")
+ graphics::lines(result_mav[,2]~result_mav[,1], lwd=6,type="l",pch=20,col="#990000")
 
-dev.off()
+grDevices::dev.off()
 
 
 

@@ -101,13 +101,13 @@ if(buspred)
     print(dim(CV1))
     print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
-    mylm = lm(ic_Y[,2] ~cbind(CV1, GD1))
-    print(cor(ic_Y[,2],as.numeric(predict(mylm,as.data.frame(cbind(CV1,GD1))))))
+    mylm = stats::lm(ic_Y[,2] ~cbind(CV1, GD1))
+    print(stats::cor(ic_Y[,2],as.numeric(stats::predict(mylm,as.data.frame(cbind(CV1,GD1))))))
     # Pred = cbind(as.data.frame(DP$GD[index,1]),as.data.frame(predict(mylm,as.data.frame(cbind(CV1,GD1)))))
     # colnames(Pred)=c("Taxa","Prediction")
     # print(mylm$coefficients)
     # print(head(cbind(IC$myallCV,GD2))
-    if(var(IC$myallCV[,2])==0)
+    if(stats::var(IC$myallCV[,2])==0)
       {kk=1:2
         }else{
           kk=1
@@ -133,10 +133,10 @@ if(buspred)
     print(dim(GD1))
     # print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
-    mylm = lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
+    mylm = stats::lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
     # print("!!")
-    print(predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
-    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
+    print(stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
+    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
     colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
     
    }
@@ -185,7 +185,7 @@ if(buspred)
    # print(cor(busCV[,-1]))
    busGAPIT=GAPIT(
      Y=ic_Y,
-     K=busKI,
+     KI=busKI,
      CV=busCV,
      model="gBLUP",
      file.output=F)
@@ -195,7 +195,7 @@ if(buspred)
    }#lmpred
 }#buspred
  
- if(DP$file.output) write.csv(Pred,paste("GAPIT.",DP$kinship.algorithm,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
+ if(DP$file.output) utils::write.csv(Pred,paste("GAPIT.",DP$kinship.algorithm,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
 
 
  va=myBus$vg
@@ -226,18 +226,88 @@ if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC"))
  if(DP$PCA.total==0) ic_PCA=NULL
 # print(ic_Y)
 #print(dim(ic_PCA))
- gapitMain <- GAPIT.Main(Y=ic_Y,GD=IC$GD[,-1],GM=DP$GM,KI=ic_KI,CV=DP$CV,CV.Inheritance=DP$CV.Inheritance,GP=DP$GP,GK=DP$GK,SNP.P3D=DP$SNP.P3D,kinship.algorithm=DP$kinship.algorithm,
-						bin.from=DP$bin.from,bin.to=DP$bin.to,bin.by=DP$bin.by,inclosure.from=DP$inclosure.from,inclosure.to=DP$inclosure.to,inclosure.by=DP$inclosure.by,
-				        group.from=DP$group.from,group.to=DP$group.to,group.by=DP$group.by,kinship.cluster=DP$kinship.cluster,kinship.group=DP$kinship.group,name.of.trait=DP$name.of.trait,
-                        file.path=DP$file.path,file.from=DP$file.from, file.to=DP$file.to, file.total=DP$file.total, file.fragment = DP$file.fragment, file.G=DP$file.G,file.Ext.G=DP$file.Ext.G,file.GD=DP$file.GD, file.GM=DP$file.GM, file.Ext.GD=DP$file.Ext.GD,file.Ext.GM=DP$file.Ext.GM, 
-                        SNP.MAF= DP$SNP.MAF,FDR.Rate = DP$FDR.Rate,SNP.FDR=DP$SNP.FDR,SNP.effect=DP$SNP.effect,SNP.impute=DP$SNP.impute,PCA.total=DP$PCA.total,GAPIT.Version=GAPIT.Version,
-                        GT=DP$GT, SNP.fraction = DP$SNP.fraction, seed =DP$ seed, BINS = DP$BINS,SNP.test=DP$SNP.test,DPP=DP$DPP, SNP.permutation=DP$SNP.permutation,
-                        LD.chromosome=DP$LD.chromosome,LD.location=LD.location,LD.range=LD.range,SNP.CV=SNP.CV,SNP.robust=DP$SNP.robust,model=DP$model,
-                        genoFormat="EMMA",hasGenotype=TRUE,byFile=FALSE,fullGD=TRUE,PC=DP$PC,GI=ic_GM,Timmer = DP$Timmer, Memory = DP$Memory,
-                        sangwich.top=DP$sangwich.top,sangwich.bottom=DP$sangwich.bottom,QC=DP$QC,GTindex=DP$GTindex,LD=DP$LD,file.output=FALSE,cutOff=DP$cutOff, GAPIT3.output=DP$file.output,
-                        Model.selection = DP$Model.selection, Create.indicator = DP$Create.indicator,
-						QTN=DP$QTN, QTN.round=DP$QTN.round,QTN.limit=DP$QTN.limit, QTN.update=QTN.update, QTN.method=DP$QTN.method, Major.allele.zero=DP$Major.allele.zero,NJtree.group=DP$NJtree.group,NJtree.type=DP$NJtree.type,plot.bin=DP$plot.bin, 
-                        QTN.position=DP$QTN.position,plot.style=DP$plot.style,SUPER_GS=DP$SUPER_GS)  
+ gapitMain <- GAPIT.Main(Y=ic_Y,
+                         GD=IC$GD[,-1],
+                         GM=DP$GM,
+                         KI=ic_KI,
+                         CV=DP$CV,
+                         CV.Inheritance=DP$CV.Inheritance,
+                         GP=DP$GP,
+                         GK=DP$GK,
+                         SNP.P3D=DP$SNP.P3D,
+                         kinship.algorithm=DP$kinship.algorithm,
+						             bin.from=DP$bin.from,
+						             bin.to=DP$bin.to,
+						             bin.by=DP$bin.by,
+						             inclosure.from=DP$inclosure.from,
+						             inclosure.to=DP$inclosure.to,
+						             inclosure.by=DP$inclosure.by,
+				                 group.from=DP$group.from,
+						             group.to=DP$group.to,
+						             group.by=DP$group.by,
+						             kinship.cluster=DP$kinship.cluster,
+						             kinship.group=DP$kinship.group,
+						             name.of.trait=DP$name.of.trait,
+                         file.path=DP$file.path,
+						             file.from=DP$file.from, 
+						             file.to=DP$file.to, 
+						             file.total=DP$file.total, 
+						             file.fragment = DP$file.fragment, 
+						             file.G=DP$file.G,
+						             file.Ext.G=DP$file.Ext.G,
+						             file.GD=DP$file.GD, 
+						             file.GM=DP$file.GM, 
+						             file.Ext.GD=DP$file.Ext.GD,
+						             file.Ext.GM=DP$file.Ext.GM, 
+                         SNP.MAF= DP$SNP.MAF,
+						             FDR.Rate = DP$FDR.Rate,
+						             SNP.FDR=DP$SNP.FDR,
+						             SNP.effect=DP$SNP.effect,
+						             SNP.impute=DP$SNP.impute,
+						             PCA.total=DP$PCA.total,
+						             #GAPIT.Version=GAPIT.Version,
+                         GT=DP$GT, 
+						             SNP.fraction = DP$SNP.fraction, 
+						             seed =DP$seed, 
+						             BINS = DP$BINS,
+						             SNP.test=DP$SNP.test,DPP=DP$DPP, 
+						             SNP.permutation=DP$SNP.permutation,
+                         LD.chromosome=DP$LD.chromosome,
+#						             LD.location=LD.location,
+#						             LD.range=LD.range,
+#						             SNP.CV=SNP.CV,
+						             SNP.robust=DP$SNP.robust,
+						             model=DP$model,
+                         genoFormat="EMMA",
+						             hasGenotype=TRUE,
+						             byFile=FALSE,
+						             fullGD=TRUE,
+						             PC=DP$PC,
+						             GI=ic_GM,
+						             Timmer = DP$Timmer, 
+						             Memory = DP$Memory,
+                         sangwich.top=DP$sangwich.top,
+						             sangwich.bottom=DP$sangwich.bottom,
+						             QC=DP$QC,
+						             GTindex=DP$GTindex,
+						             LD=DP$LD,
+						             file.output=FALSE,
+						             cutOff=DP$cutOff, 
+						             GAPIT3.output=DP$file.output,
+                         Model.selection = DP$Model.selection, 
+						             Create.indicator = DP$Create.indicator,
+						             QTN=DP$QTN, 
+						             QTN.round=DP$QTN.round,
+						             QTN.limit=DP$QTN.limit,
+						             #QTN.update=QTN.update, 
+						             QTN.method=DP$QTN.method,
+						             Major.allele.zero=DP$Major.allele.zero,
+						             NJtree.group=DP$NJtree.group,
+						             NJtree.type=DP$NJtree.type,
+						             plot.bin=DP$plot.bin, 
+                         QTN.position=DP$QTN.position,
+						             plot.style=DP$plot.style,
+						             SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
  GWAS=gapitMain$GWAS
  if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=DP$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,GT=IC$GT)
@@ -268,18 +338,89 @@ if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut
 }else{
 # Here is Genomic Prediction function
 
-gapitMain <- GAPIT.Main(Y=IC$Y,GD=DP$GD[,-1],GM=DP$GM,KI=DP$KI,Z=DP$Z,CV=DP$CV,CV.Inheritance=DP$CV.Inheritance,GP=DP$GP,GK=DP$GK,SNP.P3D=DP$SNP.P3D,kinship.algorithm=DP$kinship.algorithm,
-            bin.from=DP$bin.from,bin.to=DP$bin.to,bin.by=DP$bin.by,inclosure.from=DP$inclosure.from,inclosure.to=DP$inclosure.to,inclosure.by=DP$inclosure.by,
-                group.from=DP$group.from,group.to=DP$group.to,group.by=DP$group.by,kinship.cluster=DP$kinship.cluster,kinship.group=DP$kinship.group,name.of.trait=DP$name.of.trait,
-                        file.path=DP$file.path,file.from=DP$file.from, file.to=DP$file.to, file.total=DP$file.total, file.fragment = DP$file.fragment, file.G=DP$file.G,file.Ext.G=DP$file.Ext.G,file.GD=DP$file.GD, file.GM=DP$file.GM, file.Ext.GD=DP$file.Ext.GD,file.Ext.GM=DP$file.Ext.GM, 
-                        SNP.MAF= DP$SNP.MAF,FDR.Rate = DP$FDR.Rate,SNP.FDR=DP$SNP.FDR,SNP.effect=DP$SNP.effect,SNP.impute=DP$SNP.impute,PCA.total=DP$PCA.total,GAPIT.Version=GAPIT.Version,
-                        GT=DP$GT, SNP.fraction = DP$SNP.fraction, seed =DP$ seed, BINS = DP$BINS,SNP.test=DP$SNP.test,DPP=DP$DPP, SNP.permutation=DP$SNP.permutation,
-                        LD.chromosome=DP$LD.chromosome,LD.location=LD.location,LD.range=LD.range,SNP.CV=SNP.CV,SNP.robust=DP$SNP.robust,model=DP$model,
-                        genoFormat="EMMA",hasGenotype=TRUE,byFile=FALSE,fullGD=TRUE,PC=DP$PC,GI=DP$GI,Timmer = DP$Timmer, Memory = DP$Memory,GAPIT3.output=DP$file.output,
-                        sangwich.top=DP$sangwich.top,sangwich.bottom=DP$sangwich.bottom,QC=DP$QC,GTindex=DP$GTindex,LD=DP$LD,file.output=FALSE,cutOff=DP$cutOff, 
-                        Model.selection = DP$Model.selection, Create.indicator = DP$Create.indicator,
-            QTN=DP$QTN, QTN.round=DP$QTN.round,QTN.limit=DP$QTN.limit, QTN.update=QTN.update, QTN.method=DP$QTN.method, Major.allele.zero=DP$Major.allele.zero,NJtree.group=DP$NJtree.group,NJtree.type=DP$NJtree.type,plot.bin=DP$plot.bin, 
-                        QTN.position=DP$QTN.position,plot.style=DP$plot.style,SUPER_GS=DP$SUPER_GS)  
+gapitMain <- GAPIT.Main(Y=IC$Y,
+                        GD=DP$GD[,-1],
+                        GM=DP$GM,
+                        KI=DP$KI,
+                        Z=DP$Z,
+                        CV=DP$CV,
+                        CV.Inheritance=DP$CV.Inheritance,
+                        GP=DP$GP,
+                        GK=DP$GK,
+                        SNP.P3D=DP$SNP.P3D,
+                        kinship.algorithm=DP$kinship.algorithm,
+                        bin.from=DP$bin.from,
+                        bin.to=DP$bin.to,
+                        bin.by=DP$bin.by,
+                        inclosure.from=DP$inclosure.from,
+                        inclosure.to=DP$inclosure.to,
+                        inclosure.by=DP$inclosure.by,
+                        group.from=DP$group.from,
+                        group.to=DP$group.to,
+                        group.by=DP$group.by,
+                        kinship.cluster=DP$kinship.cluster,
+                        kinship.group=DP$kinship.group,
+                        name.of.trait=DP$name.of.trait,
+                        file.path=DP$file.path,
+                        file.from=DP$file.from,
+                        file.to=DP$file.to,
+                        file.total=DP$file.total,
+                        file.fragment = DP$file.fragment,
+                        file.G=DP$file.G,
+                        file.Ext.G=DP$file.Ext.G,
+                        file.GD=DP$file.GD,
+                        file.GM=DP$file.GM, 
+                        file.Ext.GD=DP$file.Ext.GD,
+                        file.Ext.GM=DP$file.Ext.GM, 
+                        SNP.MAF= DP$SNP.MAF,
+                        FDR.Rate = DP$FDR.Rate,
+                        SNP.FDR=DP$SNP.FDR,
+                        SNP.effect=DP$SNP.effect,
+                        SNP.impute=DP$SNP.impute,
+                        PCA.total=DP$PCA.total,
+                        #GAPIT.Version=GAPIT.Version,
+                        GT=DP$GT, 
+                        SNP.fraction = DP$SNP.fraction,
+                        seed =DP$ seed,
+                        BINS = DP$BINS,
+                        SNP.test=DP$SNP.test,
+                        DPP=DP$DPP,
+                        SNP.permutation=DP$SNP.permutation,
+                        LD.chromosome=DP$LD.chromosome,
+                        #LD.location=LD.location,
+                        #LD.range=LD.range,
+                        #SNP.CV=SNP.CV,
+                        SNP.robust=DP$SNP.robust,
+                        model=DP$model,
+                        genoFormat="EMMA",
+                        hasGenotype=TRUE,
+                        byFile=FALSE,
+                        fullGD=TRUE,
+                        PC=DP$PC,
+                        GI=DP$GI,
+                        Timmer = DP$Timmer, 
+                        Memory = DP$Memory,
+                        GAPIT3.output=DP$file.output,
+                        sangwich.top=DP$sangwich.top,
+                        sangwich.bottom=DP$sangwich.bottom,
+                        QC=DP$QC,GTindex=DP$GTindex,
+                        LD=DP$LD,file.output=FALSE,
+                        cutOff=DP$cutOff, 
+                        Model.selection = DP$Model.selection, 
+                        Create.indicator = DP$Create.indicator,
+                        QTN=DP$QTN,
+                        QTN.round=DP$QTN.round,
+                        QTN.limit=DP$QTN.limit, 
+                        #QTN.update=QTN.update, 
+                        QTN.method=DP$QTN.method, 
+                        Major.allele.zero=DP$Major.allele.zero,
+                        NJtree.group=DP$NJtree.group,
+                        NJtree.type=DP$NJtree.type,
+                        plot.bin=DP$plot.bin, 
+                        QTN.position=DP$QTN.position,
+                        plot.style=DP$plot.style,
+                        SUPER_GS=DP$SUPER_GS
+                        )  
 #print(str(gapitMain))
 GWAS=gapitMain$GWAS
 Pred=gapitMain$Pred

@@ -30,17 +30,17 @@ print("There are no significant gene by this method(<0.1)")
 #palette(rainbow(ncolors))
 #palette(gray(seq(.9,0,len = ncolors)))
 #print("MAF plot started 0001b")
-pdf(paste("GAPIT.", trait,".MAF.pdf" ,sep = ""), width = 5,height=5) 
-par(mar = c(5,6,5,3))
-theColor=heat.colors(ncolors, alpha = 1)
-palette(rev(theColor))
+grDevices::pdf(paste("GAPIT.", trait,".MAF.pdf" ,sep = ""), width = 5,height=5) 
+graphics::par(mar = c(5,6,5,3))
+theColor = grDevices::heat.colors(ncolors, alpha = 1)
+grDevices::palette(rev(theColor))
 plot(MAF,LP,type="p",lty = 1,lwd=2,col=LPC,xlab="MAF",ylab =expression(Probability~~-log[10](italic(p))),main = trait, cex.axis=1.1, cex.lab=1.3)
 #for(i in 2:nc){
 #lines(power[,i]~FDR, lwd=2,type="o",pch=i,col=i)
 #}
 #legend("bottomright", colnames(power), pch = c(1:nc), lty = c(1,2),col=c(1:nc))
-palette("default")      # reset back to the default
-dev.off()
+grDevices::palette("default")      # reset back to the default
+grDevices::dev.off()
 }
 }   #GAPIT.MAF ends here
 #=============================================================================================

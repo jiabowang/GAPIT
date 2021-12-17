@@ -223,7 +223,7 @@ emma.MLE <- function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
       {
         if ( ( dLL[i]*dLL[i+1] < 0 ) && ( dLL[i] > 0 ) && ( dLL[i+1] < 0 ) ) 
         {
-          r <- uniroot(emma.delta.ML.dLL.wo.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas=etas, xi=eig.L$values)
+          r <- stats::uniroot(emma.delta.ML.dLL.wo.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas=etas, xi=eig.L$values)
           optlogdelta <- append(optlogdelta, r$root)
           optLL <- append(optLL, emma.delta.ML.LL.wo.Z(r$root,eig.R$values, etas, eig.L$values))
         }
@@ -267,7 +267,7 @@ emma.MLE <- function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
       {
         if ( ( dLL[i]*dLL[i+1] < 0 ) && ( dLL[i] > 0 ) && ( dLL[i+1] < 0 ) ) 
         {
-          r <- uniroot(emma.delta.ML.dLL.w.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas.1=etas.1, xi.1=eig.L$values, n=n, etas.2.sq = etas.2.sq )
+          r <- stats::uniroot(emma.delta.ML.dLL.w.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas.1=etas.1, xi.1=eig.L$values, n=n, etas.2.sq = etas.2.sq )
           optlogdelta <- append(optlogdelta, r$root)
           optLL <- append(optLL, emma.delta.ML.LL.w.Z(r$root,eig.R$values, etas.1, eig.L$values, n, etas.2.sq ))
         }
@@ -332,7 +332,7 @@ emma.REMLE <- function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
       {
         if ( ( dLL[i]*dLL[i+1] < 0 ) && ( dLL[i] > 0 ) && ( dLL[i+1] < 0 ) ) 
         {
-          r <- uniroot(emma.delta.REML.dLL.wo.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas=etas)
+          r <- stats::uniroot(emma.delta.REML.dLL.wo.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas=etas)
           optlogdelta <- append(optlogdelta, r$root)
           optLL <- append(optLL, emma.delta.REML.LL.wo.Z(r$root,eig.R$values, etas))
         }
@@ -370,7 +370,7 @@ emma.REMLE <- function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
       {
         if ( ( dLL[i]*dLL[i+1] < 0 ) && ( dLL[i] > 0 ) && ( dLL[i+1] < 0 ) ) 
         {
-          r <- uniroot(emma.delta.REML.dLL.w.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas.1=etas.1, n=n, t1=t, etas.2.sq = etas.2.sq )
+          r <- stats::uniroot(emma.delta.REML.dLL.w.Z, lower=logdelta[i], upper=logdelta[i+1], lambda=eig.R$values, etas.1=etas.1, n=n, t1=t, etas.2.sq = etas.2.sq )
           optlogdelta <- append(optlogdelta, r$root)
           optLL <- append(optLL, emma.delta.REML.LL.w.Z(r$root,eig.R$values, etas.1, n, t, etas.2.sq ))
         }
@@ -510,7 +510,7 @@ emma.ML.LRT <- function(ys, xs, K, Z=NULL, X0 = NULL, ngrids=100, llim=-10, ulim
         if ( ( nv == t ) && ( !ponly ) ) {
           ML0s[i,] <- ML0
         }
-        ps[i,] <- pchisq(stats[i,],1,lower.tail=FALSE)
+        ps[i,] <- stats::pchisq(stats[i,],1,lower.tail=FALSE)
       }
     }
   }
@@ -627,7 +627,7 @@ emma.ML.LRT <- function(ys, xs, K, Z=NULL, X0 = NULL, ngrids=100, llim=-10, ulim
         if ( ( nv == t ) && ( !ponly ) ) {
           ML0s[i,] <- ML0
         }
-        ps[i,] <- pchisq(stats[i,],1,lower.tail=FALSE)
+        ps[i,] <- stats::pchisq(stats[i,],1,lower.tail=FALSE)
       }
     }    
   }
@@ -765,7 +765,7 @@ emma.REML.t <- function(ys, xs, K, Z=NULL, X0 = NULL, ngrids=100, llim=-10, ulim
             stats[i,j] <- beta[q1]/sqrt(iXX[q1,q1]*REMLE$vg)
           }
         }
-        ps[i,] <- 2*pt(abs(stats[i,]),dfs[i,],lower.tail=FALSE)
+        ps[i,] <- 2 * stats::pt(abs(stats[i,]),dfs[i,],lower.tail=FALSE)
       }
     }
   }
@@ -890,7 +890,7 @@ emma.REML.t <- function(ys, xs, K, Z=NULL, X0 = NULL, ngrids=100, llim=-10, ulim
             
           }
         }
-        ps[i,] <- 2*pt(abs(stats[i,]),dfs[i,],lower.tail=FALSE)        
+        ps[i,] <- 2 * stats::pt(abs(stats[i,]),dfs[i,],lower.tail=FALSE)        
       }
     }    
   }

@@ -34,12 +34,12 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
         log.Quantiles=log.Quantiles[index]
         
         if(plot.style=="FarmCPU"){
-        pdf(paste("FarmCPU.", name.of.trait,".QQ-Plot.pdf" ,sep = ""),width = 5,height=5)
-        par(mar = c(5,6,5,3))
+        grDevices::pdf(paste("FarmCPU.", name.of.trait,".QQ-Plot.pdf" ,sep = ""),width = 5,height=5)
+        graphics::par(mar = c(5,6,5,3))
         }
         if(plot.style=="rainbow"){
-            pdf(paste("GAPIT.", name.of.trait,".QQ-Plot.pdf" ,sep = ""),width = 5,height=5)
-            par(mar = c(5,6,5,3))
+            grDevices::pdf(paste("GAPIT.", name.of.trait,".QQ-Plot.pdf" ,sep = ""),width = 5,height=5)
+            graphics::par(mar = c(5,6,5,3))
         }
         #Add conficence interval
         N1=length(log.Quantiles)
@@ -49,8 +49,8 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
         for(j in 1:N1){
             i=ceiling((10^-log.Quantiles[j])*N)
             if(i==0)i=1
-            c95[j] <- qbeta(0.95,i,N-i+1)
-            c05[j] <- qbeta(0.05,i,N-i+1)
+            c95[j] <- stats::qbeta(0.95,i,N-i+1)
+            c05[j] <- stats::qbeta(0.05,i,N-i+1)
             #print(c(j,i,c95[j],c05[j]))
         }
         
@@ -62,13 +62,13 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
         #CI shade
         plot(NULL, xlim = c(0,max(log.Quantiles)), ylim = c(0,max(log.P.values)), type="l",lty=5, lwd = 2, axes=FALSE, xlab="", ylab="",col="gray")
         index=length(c95):1
-        polygon(c(log.Quantiles[index],log.Quantiles),c(-log10(c05)[index],-log10(c95)),col='gray',border=NA)
+        graphics::polygon(c(log.Quantiles[index],log.Quantiles),c(-log10(c05)[index],-log10(c95)),col='gray',border=NA)
         
         #Diagonal line
-        abline(a = 0, b = 1, col = "red",lwd=2)
+        graphics::abline(a = 0, b = 1, col = "red",lwd=2)
         
         #data
-        par(new=T)
+        graphics::par(new=T)
         if(plot.style=="FarmCPU"){
             plot(log.Quantiles, log.P.values, cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Black" ,bty='l', xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = paste(name.of.trait,sep=""),pch=20)
         }
@@ -76,20 +76,20 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
             plot(log.Quantiles, log.P.values, xlim = c(0,max(log.Quantiles)), ylim = c(0,max(log.P.values)), cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Blue" ,xlab =expression(Expected~~-log[10](italic(p))),ylab = expression(Observed~~-log[10](italic(p))), main = paste(name.of.trait,sep=""))
         }
         
-        dev.off()
+        grDevices::dev.off()
     }
     
     
     if(plot.type == "P_values")
     {
-        pdf(paste("QQ-Plot_", name.of.trait,".pdf" ,sep = ""))
-        par(mar = c(5,5,5,5))
-        qqplot(p_value_quantiles, P.values, xlim = c(0,1),
+        grDevices::pdf(paste("QQ-Plot_", name.of.trait,".pdf" ,sep = ""))
+        graphics::par(mar = c(5,5,5,5))
+        stats::qqplot(p_value_quantiles, P.values, xlim = c(0,1),
         ylim = c(0,1), type = "l" , xlab = "Uniform[0,1] Theoretical Quantiles", 
         lty = 1, lwd = 1, ylab = "Quantiles of P-values from GWAS", col = "Blue",
         main = paste(name.of.trait,sep=" "))
-        abline(a = 0, b = 1, col = "red")
-        dev.off()   
+        graphics::abline(a = 0, b = 1, col = "red")
+        grDevices::dev.off()   
     }
     #print("GAPIT.QQ  accomplished successfully!")
 }

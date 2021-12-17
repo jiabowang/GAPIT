@@ -75,11 +75,11 @@ if(c("m")%in%plot.type)
   z[z<10]=paste("0",z[z<10],sep="")
   zz=paste("Chr_",z,sep="")
   #print(zz)
-  if(!require(plotly)) install.packages("plotly")
+#  if(!require(plotly)) install.packages("plotly")
   #print("!!!!!")
   #print(head(Position))
-  library(plotly)
-  p <- plot_ly(
+#  library(plotly)
+  p <- plotly::plot_ly(
     type = 'scatter',
     x = ~Position,
     y = ~P_value,
@@ -96,6 +96,13 @@ if(c("m")%in%plot.type)
                   #legend = list(orientation = 'h'),
                   xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
                   yaxis = list (title = "-Log10(p)"))
+   plotly::add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
+   plotly::add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
+   graphics::layout(title = "Interactive.Manhattan.Plot",
+         #showticklabels = FALSE,
+         #legend = list(orientation = 'h'),
+         xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
+         yaxis = list (title = "-Log10(p)"))
 
     htmltools::save_html(p, paste("Interactive.Manhattan.",name.of.trait,".html",sep=""))
 }
@@ -120,8 +127,8 @@ if(c("q")%in%plot.type)
         for(j in 1:N1){
             i=ceiling((10^-log.Quantiles[j])*N)
             if(i==0)i=1
-            c95[j] <- qbeta(0.95,i,N-i+1)
-            c05[j] <- qbeta(0.05,i,N-i+1)
+            c95[j] <- stats::qbeta(0.95,i,N-i+1)
+            c05[j] <- stats::qbeta(0.05,i,N-i+1)
             #print(c(j,i,c95[j],c05[j]))
         }
         
@@ -132,7 +139,7 @@ if(c("q")%in%plot.type)
         Expected=log.Quantiles
         Observed=log.P.values
         #abline(a = 0, b = 1, col = "red",lwd=2)
-        qp <- plot_ly(
+        qp <- plotly::plot_ly(
     type = 'scatter',
     x = ~Expected,
     y = ~Observed,
@@ -140,7 +147,7 @@ if(c("q")%in%plot.type)
     #size=2*y/max(y),
     name = "SNP",
     opacity=0.5,
-    )%>%add_lines(x=log.Quantiles,y=log.Quantiles,color=I("red"), 
+    ) %>% plotly::add_lines(x=log.Quantiles,y=log.Quantiles,color=I("red"), 
     mode = 'lines',name="Diag",text="")%>%
           plotly::layout(title = "Interactive.QQ.Plot",
                          xaxis = list(title = "Expected -Log10(p)"),
@@ -148,6 +155,13 @@ if(c("q")%in%plot.type)
                          #showticklabels = FALSE,
                          showlegend = FALSE)
     htmltools::save_html(qp, paste("Interactive.QQ ",name.of.trait,".html",sep=""))
+
+    graphics::layout(title = "Interactive.QQ.Plot",
+        xaxis = list(title = "Expected -Log10(p)"),
+         yaxis = list (title = "Observed -Log10(p)"),
+         #showticklabels = FALSE,
+         showlegend = FALSE)
+        htmltools::save_html(qp, paste("Interactive.QQ ",name.of.trait,".html",sep=""))
 
 
 }   
