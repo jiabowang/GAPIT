@@ -426,10 +426,15 @@
           GDpred = bigmemory::deepcopy(GD,rows=seqQTN)
         }
       }
-      PEV = Blink.Pred(Y = YP,
-                       GD = GDpred,
-                       CV = CV,
-                       orientation = orientation
+# <<<<<<< unused_args
+#       PEV = Blink.Pred(Y = YP,GD = GDpred, CV = CV
+#                        #,orientation = orientation
+# =======
+#       PEV = Blink.Pred(Y = YP,
+#                        GD = GDpred,
+#                        CV = CV,
+#                        orientation = orientation
+# >>>>>>> master
                        )
     }
     if(time.cal){
@@ -900,18 +905,30 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
 }#The function FarmCPU.SUB ends here
 
 
-`Blink.cor`<-function(Y,
-                      GD,
-                      w = NULL,
-                      orientation = "row",
-                      ms = ms,
-#                      n = ny,
-#                      m = nm
-                      n = nrow(Y),
-                      m = nrow(GD)
-                      ){
+# <<<<<<< unused_args
+# `Blink.cor` <- function(Y, # Phenotype
+#                         GD, # Hapmap genetic data
+#                         w = NULL, 
+#                         orientation = "row",
+#                         ms = ms, # Marker size for slicing
+#                         n = ny, # Individual number
+#                         m = nm # Marker number
+#                         ){
+# =======
+# `Blink.cor`<-function(Y,
+#                       GD,
+#                       w = NULL,
+#                       orientation = "row",
+#                       ms = ms,
+# #                      n = ny,
+# #                      m = nm
+#                       n = nrow(Y),
+#                       m = nrow(GD)
+#                       ){
+# >>>>>>> master
   #Objects: calculate R value with covariates
-  #Input: pheontype(nx1), ms is marker size for slicing the genotype, genotype(orientation="row", mxn or orientation="col", nxm,) and covariates(nxp)
+  #Input: pheontype(nx1), ms is marker size for slicing the genotype, 
+  #genotype(orientation="row", mxn or orientation="col", nxm,) and covariates(nxp)
   #   n is individual number, m is marker number, p is covariate number
   #Output: abs(r)
   #Author: Yao Zhou
@@ -1017,7 +1034,7 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
   pvalue <- 2 * stats::pt(abs(tvalue), df-1,lower.tail = FALSE)
   return(pvalue)
 }
-
+# <<<<<<< unused_args
 # `BlinkR.SUB` <-function(CV,seqQTN,Y,r,ny,ms,m){
 # #Objects: subsitution of r value for covariates
 # #Input: Y, nx1 vector, phenotype
@@ -1034,9 +1051,40 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
 #     w=GDP[,-i]
 #     if(nsnp==1) w=NULL
 #     GD=as.matrix(GDP[,i])
-#     rsnp[i,1]=Blink.cor(Y=Y,w=w,GD=GD,orientation=orientation,ms=ms,n=ny,m=nm)
+#     rsnp[i,1]=Blink.cor(Y = Y,
+#                         w = w,
+#                         GD = GD,
+#                         orientation = orientation,
+#                         #,,
+#                         ms = ms, 
+#                         n = ny, m = nm
+#                         )
 #   }
 #   rm(GDP, GD, w, ncov, nf)
 #     return(rsnp)
 # }
+# =======
+
+# # `BlinkR.SUB` <-function(CV,seqQTN,Y,r,ny,ms,m){
+# # #Objects: subsitution of r value for covariates
+# # #Input: Y, nx1 vector, phenotype
+# # #   w, all covariates without 1 
+# # #   seq = length(seqQTN), number of SNPs added as covariate
+# # #Output：r, r value for SNPs added as covariates
+# # #Author:Yao Zhou
+# # #Last update: 08/15/2016
+# #   rsnp=matrix(NA,nsnp,1)
+# #   ncov=ncol(CV)
+# #   nf=ncov-nsnp
+# #   GDP=CV[,(nf+1):ncov]
+# #   for(i in 1:nsnp){
+# #     w=GDP[,-i]
+# #     if(nsnp==1) w=NULL
+# #     GD=as.matrix(GDP[,i])
+# #     rsnp[i,1]=Blink.cor(Y=Y,w=w,GD=GD,orientation=orientation,ms=ms,n=ny,m=nm)
+# #   }
+# #   rm(GDP, GD, w, ncov, nf)
+# #     return(rsnp)
+# # }
+# >>>>>>> master
 

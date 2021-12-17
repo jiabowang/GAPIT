@@ -89,6 +89,13 @@ if(c("m")%in%plot.type)
     text = ~paste("SNP: ", taxa, "<br>Posi: ", posi,"<br>MAF: ", round(maf,2),"<br>Effect: ",round(effect,2)),
     color = ~as.character(zz)
     )%>%
+   add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
+   add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
+   plotly::layout(title = "Interactive.Manhattan.Plot",
+                  #showticklabels = FALSE,
+                  #legend = list(orientation = 'h'),
+                  xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
+                  yaxis = list (title = "-Log10(p)"))
    plotly::add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
    plotly::add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
    graphics::layout(title = "Interactive.Manhattan.Plot",
@@ -142,6 +149,13 @@ if(c("q")%in%plot.type)
     opacity=0.5,
     ) %>% plotly::add_lines(x=log.Quantiles,y=log.Quantiles,color=I("red"), 
     mode = 'lines',name="Diag",text="")%>%
+          plotly::layout(title = "Interactive.QQ.Plot",
+                         xaxis = list(title = "Expected -Log10(p)"),
+                         yaxis = list (title = "Observed -Log10(p)"),
+                         #showticklabels = FALSE,
+                         showlegend = FALSE)
+    htmltools::save_html(qp, paste("Interactive.QQ ",name.of.trait,".html",sep=""))
+
     graphics::layout(title = "Interactive.QQ.Plot",
         xaxis = list(title = "Expected -Log10(p)"),
          yaxis = list (title = "Observed -Log10(p)"),
