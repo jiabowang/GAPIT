@@ -1,6 +1,3 @@
-#'
-#'
-#'
 
 `FarmCPU.0000` <-
 function(){
@@ -367,38 +364,16 @@ function(Y=NULL,GDP=NULL,GM=NULL,CV=NULL,orientation="row",package="FarmCPU.LM",
         }
         #print("theCV")
         #print(head(theCV))
-# <<<<<<< unused_args
-#         if(ncpus==1)myLM=FarmCPU.LM(y=Y[,2],w=theCV,GDP=GDP,orientation=orientation,model=model,ncpus=ncpus,myModel=myModel,seqQTN=seqQTN,npc=npc)
-#         if(ncpus>1)myLM=FarmCPU.LM.Parallel(y = Y[,2],
-#                                             w = theCV,
-#                                             x = GDP,
-#                                             orientation = orientation,
-#                                             model = model,
-#                                             ncpus = ncpus
-#                                             #, npc=npc
-#                                             )
-# =======
-#         if(ncpus == 1){
-#           myLM = FarmCPU.LM(y = Y[,2],
-#                             w = theCV,
-#                             GDP = GDP, 
-#                             orientation = orientation,
-#                             model = model,
-#                             ncpus = ncpus,
-#                             myModel = myModel,
-#                             seqQTN = seqQTN,
-#                             npc = npc)
-#         }
-#         if(ncpus>1){myLM = FarmCPU.LM.Parallel(y=Y[,2],
-#                     w = theCV,
-#                     x = GDP,
-#                     orientation = orientation,
-#                     model = model,
-#                     ncpus = ncpus#,
-#                     #npc=npc
-#                     )
-#         }
-# >>>>>>> master
+        if(ncpus==1)myLM=FarmCPU.LM(y=Y[,2],w=theCV,GDP=GDP,orientation=orientation,model=model,ncpus=ncpus,myModel=myModel,seqQTN=seqQTN,npc=npc)
+        if(ncpus>1)myLM=FarmCPU.LM.Parallel(y = Y[,2],
+                                            w = theCV,
+                                            x = GDP,
+                                            orientation = orientation,
+                                            model = model,
+                                            ncpus = ncpus
+                                            #, npc=npc
+                                            )
+
         #print("Memory used after calling LM")
         #print(memory.size())
         gc()
