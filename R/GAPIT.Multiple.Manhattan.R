@@ -5,7 +5,7 @@ function(model_store,DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,Y=NULL,GM=NULL,int
     #Output: A pdf of the Manhattan Plot
     #Authors: Alex Lipka, Zhiwu Zhang, Meng Li and Jiabo Wang
     # Last update: Oct 10, 2016
-	#Add r2 between candidata SNP and other markers in on choromosome
+    #Add r2 between candidata SNP and other markers in on choromosome
     ##############################################################################################
   Nenviron=length(model_store)*(ncol(Y)-1)
   environ_name=NULL
@@ -27,6 +27,8 @@ for(i in 1:length(environ_name))
 {
   print(paste("Reading GWAS result with ",environ_name[i],sep=""))
   environ_result=utils::read.csv(paste("GAPIT.",environ_name[i],".GWAS.Results.csv",sep=""),head=T)
+  environ_result=environ_result[order(environ_result[,3]),]
+  environ_result=environ_result[order(environ_result[,2]),]
   environ_filter=environ_result[!is.na(environ_result[,4]),]
   y_filter=environ_filter[environ_filter[,4]<(cutOff/(nrow(environ_filter))),]
   utils::write.table(y_filter,paste("Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
@@ -156,6 +158,13 @@ for(k in 1:Nenviron)
         x0 <- as.numeric(MP_store[,2])
         y0 <- as.numeric(MP_store[,3])
         z0 <- as.numeric(MP_store[,1])
+        max.x=NULL
+        for (i in chm.to.analyze)
+        {
+            index=(MP_store[,1]==i)
+            max.x=c(max.x,max(x0[index]))
+        }
+        max.x=c(min(x0),max.x)
         x1=sort(x0)
 
         position=order(y0,decreasing = TRUE)
@@ -232,8 +241,9 @@ for(k in 1:Nenviron)
     
         #plot.color=rep(c( '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(ncolor/5))
 
-            plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),
-            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=wd,cex=s+2.5,cex.main=4)
+            plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),xlim=c(min(x),max(x)),
+            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
+            pch=mypch,lwd=wd,cex=s+2.5,cex.main=4)
             graphics::mtext(side=2,expression(-log[10](italic(p))),line=3, cex=2.5)
         #Label QTN positions
         #print(head(QTN))
@@ -255,17 +265,19 @@ for(k in 1:Nenviron)
         }
         #Add a horizontal line for bonferroniCutOff
         graphics::abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
-        graphics::axis(2, xaxp=c(1,themax,5),cex.axis=1,tick=F)
+        graphics::axis(2, xaxp=c(1,themax,5),cex.axis=3.3,tick=T,las=1,lwd=2.5)
         if(k==Nenviron)
         {
-          if(length(chor_taxa)!=length(ticks))chor_taxa=NULL
+          graphics::axis(1, at=max.x,cex.axis=3,labels=rep("",length(max.x)),tick=T,lwd=2.5)
         #print(unique(GI.MP[,1]))
         if(!is.null(chor_taxa))
-        {graphics::axis(1, at=ticks,cex.axis=1,labels=chor_taxa,tick=F)
-        }else{graphics::axis(1, at=ticks,cex.axis=1,labels=chm.to.analyze,tick=F)}
-
+          {
+            graphics::axis(1, at=ticks,cex.axis=3.3,labels=chor_taxa,tick=F,line=1.2)
+          }else{
+        graphics::axis(1, at=ticks,cex.axis=3.3,labels=chm.to.analyze,tick=F,line=1.2)
           }
-        graphics::mtext(side=4,paste(environ_name[k],sep=""),line=3,cex=1)
+        }
+        graphics::mtext(side=4,paste(environ_name[k],sep=""),line=3.2,cex=2)
 graphics::box()
 }#end of environ_name
 grDevices::dev.off()
@@ -430,16 +442,12 @@ for(k in 1:Nenviron)
         #Add a horizontal line for bonferroniCutOff
         graphics::abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
         graphics::axis(2, xaxp=c(1,themax,5),cex.axis=1,tick=F)
-        if(k==Nenviron)
-        {
-          if(length(chor_taxa)!=length(ticks))chor_taxa=NULL
-        #print(unique(GI.MP[,1]))
         if(!is.null(chor_taxa))
-        {graphics::axis(1, at=ticks,cex.axis=1,labels=chor_taxa,tick=F)
-        }else{graphics::axis(1, at=ticks,cex.axis=1,labels=chm.to.analyze,tick=F)}
-
-          
-        }
+          {
+            graphics::axis(1, at=ticks,cex.axis=3.3,labels=chor_taxa,tick=F,line=1.2)
+          }else{
+        graphics::axis(1, at=ticks,cex.axis=3.3,labels=chm.to.analyze,tick=F,line=1.2)
+          }
         graphics::mtext(side=4,paste(environ_name[k],sep=""),line=3,cex=1)
 graphics::box()
 }#end of environ_name

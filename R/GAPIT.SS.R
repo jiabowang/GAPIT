@@ -310,7 +310,7 @@ if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC"))
 						             SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
  GWAS=gapitMain$GWAS
- if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=DP$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,GT=IC$GT)
+ if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,GT=IC$GT)
  Pred=gapitMain$Pred
 #print(head(Pred))
  va=NA#gapitMain$vg
