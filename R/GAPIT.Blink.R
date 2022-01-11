@@ -937,7 +937,5 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
   pvalue <- 2 * stats::pt(abs(tvalue), df-1,lower.tail = FALSE)
   return(pvalue)
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> 667615d2176d06448d18eefcb3fbb9648e3ad288
+
