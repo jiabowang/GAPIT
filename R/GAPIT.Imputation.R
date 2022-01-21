@@ -36,7 +36,7 @@ if(byRow) {
 
 
 return(result)
-}#end of GAPIT.Numericalization function
+}#end of GAPIT.Imputation function
 #=============================================================================================
 
 

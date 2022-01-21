@@ -1,12 +1,12 @@
 ########## These three functions come from MVP package, Jiabo did some modifications
 ########## Following Apache License, we thank MVP developper to build these functions.
     ########## 1 creat P value scale in addtitional chromsome
-    ########## 2 set col is same as GAPIT
+    ########## 2 set col  same as GAPIT
     ########## 3 
 circle.plot <- function(myr,type="l",x=NULL,lty=1,lwd=1,col="black",add=TRUE,n.point=1000)
 	{
-		curve(sqrt(myr^2-x^2),xlim=c(-myr,myr),n=n.point,ylim=c(-myr,myr),type=type,lty=lty,col=col,lwd=lwd,add=add)
-		curve(-sqrt(myr^2-x^2),xlim=c(-myr,myr),n=n.point,ylim=c(-myr,myr),type=type,lty=lty,col=col,lwd=lwd,add=TRUE)
+		graphics::curve(sqrt(myr^2-x^2),xlim=c(-myr,myr),n=n.point,ylim=c(-myr,myr),type=type,lty=lty,col=col,lwd=lwd,add=add)
+		graphics::curve(-sqrt(myr^2-x^2),xlim=c(-myr,myr),n=n.point,ylim=c(-myr,myr),type=type,lty=lty,col=col,lwd=lwd,add=TRUE)
 	}
 Densitplot <- function(
 		map,
@@ -72,10 +72,10 @@ Densitplot <- function(
 		}
 		#print(col)
 		#print(maxbin.num)
-		col=colorRampPalette(col)(maxbin.num)
+		col = grDevices::colorRampPalette(col)(maxbin.num)
 		col.seg=NULL
 		for(i in 1 : length(chr.num)){
-			if(plot)	polygon(c(0, 0, max(pos.x[[i]]), max(pos.x[[i]])), 
+			if(plot)	graphics::polygon(c(0, 0, max(pos.x[[i]]), max(pos.x[[i]])), 
 				c(-width/5 - band * (i - length(chr.num) - 1), width/5 - band * (i - length(chr.num) - 1), 
 				width/5 - band * (i - length(chr.num) - 1), -width/5 - band * (i - length(chr.num) - 1)), col="grey", border="grey")
 			if(!is.null(legend.max)){
@@ -84,7 +84,7 @@ Densitplot <- function(
 				}
 			}
 			col.seg <- c(col.seg, col[round(col.index[[i]] * length(col) / maxbin.num)])
-			if(plot)	segments(pos.x[[i]], -width/5 - band * (i - length(chr.num) - 1), pos.x[[i]], width/5 - band * (i - length(chr.num) - 1), 
+			if(plot)	graphics::segments(pos.x[[i]], -width/5 - band * (i - length(chr.num) - 1), pos.x[[i]], width/5 - band * (i - length(chr.num) - 1), 
 			col=col[round(col.index[[i]] * length(col) / maxbin.num)], lwd=1)
 		}
 		if(length(map.xy.index) != 0){
@@ -93,8 +93,8 @@ Densitplot <- function(
 			}
 		}
 		chr.num <- rev(chr.num)
-		if(plot)	mtext(at=seq(band, length(chr.num) * band, band),text=paste("Chr", chr.num, sep=""), side=2, las=2, font=1, cex=0.6, line=0.2)
-		if(plot)	axis(3, at=seq(0, chorm.maxlen, length=10), labels=c(NA, paste(round((seq(0, chorm.maxlen, length=10))[-1] / 1e6, 0), "Mb", sep="")),
+		if(plot)	graphics::mtext(at=seq(band, length(chr.num) * band, band),text=paste("Chr", chr.num, sep=""), side=2, las=2, font=1, cex=0.6, line=0.2)
+		if(plot)	graphics::axis(3, at=seq(0, chorm.maxlen, length=10), labels=c(NA, paste(round((seq(0, chorm.maxlen, length=10))[-1] / 1e6, 0), "Mb", sep="")),
 			font=1, cex.axis=0.8, tck=0.01, lwd=2, padj=1.2)
 		# image(c(chorm.maxlen-chorm.maxlen * legend.width / 20 , chorm.maxlen), 
 		# round(seq(band - width/5, (length(chr.num) * band + band) * legend.height / 2 , length=maxbin.num+1), 2), 
@@ -127,12 +127,12 @@ Densitplot <- function(
 		}
 		legend.y.col <- as.numeric(legend.y.col)
 		legend.col <- c("grey", col[round(legend.y.col * length(col) / maxbin.num)])
-		if(plot)	legend(x=(chorm.maxlen + chorm.maxlen/100), y=( -width/2.5 - band * (length(chr.num) - length(chr.num) - 1)), title="", legend=legend.y, pch=15, pt.cex = legend.pt.cex, col=legend.col,
+		if(plot)	graphics::legend(x=(chorm.maxlen + chorm.maxlen/100), y=( -width/2.5 - band * (length(chr.num) - length(chr.num) - 1)), title="", legend=legend.y, pch=15, pt.cex = legend.pt.cex, col=legend.col,
 			cex=legend.cex, bty="n", y.intersp=legend.y.intersp, x.intersp=legend.x.intersp, yjust=0, xjust=0, xpd=TRUE)
 		if(!plot)	return(list(den.col=col.seg, legend.col=legend.col, legend.y=legend.y))
 	}
 
-GAPIT.Circle.Manhattan.Plot <- function(
+GAPIT.Circle.Manhatton.Plot <- function(
 	Pmap,
 	col=c("#377EB8", "#4DAF4A", "#984EA3", "#FF7F00"),
 	#col=c("darkgreen", "darkblue", "darkyellow", "darkred"),
@@ -202,17 +202,17 @@ GAPIT.Circle.Manhattan.Plot <- function(
 	if("d" %in% plot.type){
 		print("SNP_Density Plotting...")
 		if(file.output){
-			if(file=="jpg")	jpeg(paste("SNP_Density.",paste(taxa,collapse="."),".jpg",sep=""), width = 9*dpi,height=7*dpi,res=dpi,quality = 100)
-			if(file=="pdf")	pdf(paste("GAPIT.", taxa,".SNP_Density.Plot.pdf" ,sep=""), width = 9,height=7)
-			if(file=="tiff")	tiff(paste("SNP_Density.",paste(taxa,collapse="."),".tiff",sep=""), width = 9*dpi,height=7*dpi,res=dpi)
-			par(xpd=TRUE)
+			if(file=="jpg")	grDevices::jpeg(paste("SNP_Density.",paste(taxa,collapse="."),".jpg",sep=""), width = 9*dpi,height=7*dpi,res=dpi,quality = 100)
+			if(file=="pdf")	grDevices::pdf(paste("GAPIT.", taxa,".SNP_Density.Plot.pdf" ,sep=""), width = 9,height=7)
+			if(file=="tiff")	grDevices::tiff(paste("SNP_Density.",paste(taxa,collapse="."),".tiff",sep=""), width = 9*dpi,height=7*dpi,res=dpi)
+			graphics::par(xpd=TRUE)
 		}else{
-			if(is.null(dev.list()))	dev.new(width = 9,height=7)
-			par(xpd=TRUE)
+			if(is.null(grDevices::dev.list()))	grDevices::dev.new(width = 9,height=7)
+			graphics::par(xpd=TRUE)
 		}
 
 		Densitplot(map=Pmap[,c(1:3)], col=col, bin=bin.size, legend.max=bin.max, main=paste("The number of SNPs within ", bin.size/1e6, "Mb window size", sep=""))
-		if(file.output)	dev.off()
+		if(file.output)	grDevices::dev.off()
 	}
 
 	if(length(plot.type) !=1 | (!"d" %in% plot.type)){
@@ -403,15 +403,15 @@ GAPIT.Circle.Manhattan.Plot <- function(
     if("c" %in% plot.type)
     {
 		if(file.output){
-			if(file=="jpg")	jpeg(paste("Circular-Manhattan.",paste(taxa,collapse="."),".jpg",sep=""), width = 8*dpi,height=8*dpi,res=dpi,quality = 100)
-			if(file=="pdf")	pdf(paste("GAPIT.", taxa,".Circular.Manhattan.Plot.pdf" ,sep=""), width = 10,height=10)
-			if(file=="tiff")	tiff(paste("Circular-Manhattan.",paste(taxa,collapse="."),".tiff",sep=""), width = 8*dpi,height=8*dpi,res=dpi)
+			if(file=="jpg")	grDevices::jpeg(paste("Circular-Manhattan.",paste(taxa,collapse="."),".jpg",sep=""), width = 8*dpi,height=8*dpi,res=dpi,quality = 100)
+			if(file=="pdf")	grDevices::pdf(paste("GAPIT.", taxa,".Circular.Manhattan.Plot.pdf" ,sep=""), width = 10,height=10)
+			if(file=="tiff")	grDevices::tiff(paste("Circular-Manhattan.",paste(taxa,collapse="."),".tiff",sep=""), width = 8*dpi,height=8*dpi,res=dpi)
 		}
 		if(!file.output){
-			if(!is.null(dev.list()))	dev.new(width=8, height=8)
-			par(pty="s", xpd=TRUE, mar=c(1,1,1,1))
+			if(!is.null(grDevices::dev.list()))	grDevices::dev.new(width=8, height=8)
+			graphics::par(pty="s", xpd=TRUE, mar=c(1,1,1,1))
 		}
-		par(pty="s", xpd=TRUE, mar=c(1,1,1,1))
+		graphics::par(pty="s", xpd=TRUE, mar=c(1,1,1,1))
 		RR <- r+H*R+cir.band*R
 		if(cir.density){
 			plot(NULL,xlim=c(1.05*(-RR-4*cir.chr.h),1.1*(RR+4*cir.chr.h)),ylim=c(1.05*(-RR-4*cir.chr.h),1.1*(RR+4*cir.chr.h)),axes=FALSE,xlab="",ylab="")
@@ -431,7 +431,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				#print(dim(xz))
 				#print(xz)
 				#print(head(pvalue.posN))
-				segments(X1chr,Y1chr,X2chr,Y2chr,lty=signal.lty,lwd=signal.line,col="grey")
+				graphics::segments(X1chr,Y1chr,X2chr,Y2chr,lty=signal.lty,lwd=signal.line,col="grey")
 			}
 		}
 		for(i in 1:R){
@@ -476,12 +476,12 @@ GAPIT.Circle.Manhattan.Plot <- function(
 
 							#print(length(X1chr))
 							if(is.null(chr.den.col)){
-								polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=rep(colx,ceiling(length(chr)/length(colx)))[k],border=rep(colx,ceiling(length(chr)/length(colx)))[k])	
+								graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=rep(colx,ceiling(length(chr)/length(colx)))[k],border=rep(colx,ceiling(length(chr)/length(colx)))[k])	
 							}else{
 								if(cir.density){
-										polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col="grey",border="grey")
+										graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col="grey",border="grey")
 								}else{
-										polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=chr.den.col,border=chr.den.col)
+										graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=chr.den.col,border=chr.den.col)
 								}
 							}
 						}else{
@@ -491,12 +491,12 @@ GAPIT.Circle.Manhattan.Plot <- function(
 							X2chr=(RR+cir.chr.h)*sin(2*pi*(polygon.index)/TotalN)
 							Y2chr=(RR+cir.chr.h)*cos(2*pi*(polygon.index)/TotalN)
 							if(is.null(chr.den.col)){
-								polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=rep(colx,ceiling(length(chr)/length(colx)))[k],border=rep(colx,ceiling(length(chr)/length(colx)))[k])
+								graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=rep(colx,ceiling(length(chr)/length(colx)))[k],border=rep(colx,ceiling(length(chr)/length(colx)))[k])
 							}else{
 								if(cir.density){
-										polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col="grey",border="grey")
+										graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col="grey",border="grey")
 								}else{
-										polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=chr.den.col,border=chr.den.col)
+										graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=chr.den.col,border=chr.den.col)
 								}
 							}		
 						}
@@ -504,14 +504,14 @@ GAPIT.Circle.Manhattan.Plot <- function(
 					
 					if(cir.density){
 
-						segments(
+						graphics::segments(
 							(RR)*sin(2*pi*(pvalue.posN-round(band/2))/TotalN),
 							(RR)*cos(2*pi*(pvalue.posN-round(band/2))/TotalN),
 							(RR+cir.chr.h)*sin(2*pi*(pvalue.posN-round(band/2))/TotalN),
 							(RR+cir.chr.h)*cos(2*pi*(pvalue.posN-round(band/2))/TotalN),
 							col=density.list$den.col, lwd=0.1
 						)
-						legend(
+						graphics::legend(
 							x=RR+4*cir.chr.h,
 							y=(RR+4*cir.chr.h)/2,
 							horiz=F,
@@ -545,20 +545,20 @@ GAPIT.Circle.Manhattan.Plot <- function(
 					}else{
 						round.n=1
 					}
-					segments(0,r+H*(i-1)+cir.band*(i-1),0,r+H*i+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
-					segments(0,r+H*(i-1)+cir.band*(i-1),H/20,r+H*(i-1)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-1)+cir.band*(i-1),0,r+H*i+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-1)+cir.band*(i-1),H/20,r+H*(i-1)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
 					circle.plot(myr=r+H*(i-1)+cir.band*(i-1),lwd=0.5,add=TRUE,col='grey')
-					segments(0,r+H*(i-0.75)+cir.band*(i-1),H/20,r+H*(i-0.75)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-0.75)+cir.band*(i-1),H/20,r+H*(i-0.75)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
 					circle.plot(myr=r+H*(i-0.75)+cir.band*(i-1),lwd=0.5,add=TRUE,col='grey')
-					segments(0,r+H*(i-0.5)+cir.band*(i-1),H/20,r+H*(i-0.5)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-0.5)+cir.band*(i-1),H/20,r+H*(i-0.5)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
 					circle.plot(myr=r+H*(i-0.5)+cir.band*(i-1),lwd=0.5,add=TRUE,col='grey')
-					segments(0,r+H*(i-0.25)+cir.band*(i-1),H/20,r+H*(i-0.25)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-0.25)+cir.band*(i-1),H/20,r+H*(i-0.25)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
 					circle.plot(myr=r+H*(i-0.25)+cir.band*(i-1),lwd=0.5,add=TRUE,col='grey')
-					segments(0,r+H*(i-0)+cir.band*(i-1),H/20,r+H*(i-0)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-0)+cir.band*(i-1),H/20,r+H*(i-0)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
 					circle.plot(myr=r+H*(i-0)+cir.band*(i-1),lwd=0.5,add=TRUE,col='grey')
 					#text(-r/15,r+H*(i-0.75)+cir.band*(i-1),round(Max*0.25,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
-					text(-r/15,r+H*(i-0.5)+cir.band*(i-1),round(Max*0.5,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
-					text(-r/15,r+H*(i-0.25)+cir.band*(i-1),round(Max*0.75,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
+					graphics::text(-r/15,r+H*(i-0.5)+cir.band*(i-1),round(Max*0.5,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
+					graphics::text(-r/15,r+H*(i-0.25)+cir.band*(i-1),round(Max*0.75,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
 					#text(-r/15,r+H*(i-0)+cir.band*(i-1),round(Max*1,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
 					#text(r/5,0.4*(i-1),taxa[i],adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
 				    
@@ -566,7 +566,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				X=(Cpvalue+r+H*(i-1)+cir.band*(i-1))*sin(2*pi*(pvalue.posN-round(band/2))/TotalN)
 				Y=(Cpvalue+r+H*(i-1)+cir.band*(i-1))*cos(2*pi*(pvalue.posN-round(band/2))/TotalN)
 				# plot point in figure
-				points(X[1:(length(X)-legend.bit)],Y[1:(length(Y)-legend.bit)],pch=19,cex=cex[1],col=rep(rep(colx,N[i]),add[[i]]))
+				graphics::points(X[1:(length(X)-legend.bit)],Y[1:(length(Y)-legend.bit)],pch=19,cex=cex[1],col=rep(rep(colx,N[i]),add[[i]]))
 				
 				# plot significant line
 				if(!is.null(threshold)){
@@ -605,7 +605,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 							HY1=(Cpvalue[p_amp.index]+r+H*(i-1)+cir.band*(i-1))*cos(2*pi*(pvalue.posN[p_amp.index]-round(band/2))/TotalN)
 							
 							#cover the points that exceed the threshold with the color "white"
-							points(HX1,HY1,pch=19,cex=cex[1],col="white")
+							graphics::points(HX1,HY1,pch=19,cex=cex[1],col="white")
 							
 								for(ll in 1:length(threshold)){
 									if(ll == 1){
@@ -632,10 +632,10 @@ GAPIT.Circle.Manhattan.Plot <- function(
 								
 									if(is.null(signal.col)){
 										# print(signal.pch)
-										points(HX1,HY1,pch=signal.pch,cex=signal.cex[ll]*cex[1],col=rep(rep(colx,N[i]),add[[i]])[p_amp.index])
+										graphics::points(HX1,HY1,pch=signal.pch,cex=signal.cex[ll]*cex[1],col=rep(rep(colx,N[i]),add[[i]])[p_amp.index])
 									}else{
 										# print(signal.pch)
-										points(HX1,HY1,pch=signal.pch,cex=signal.cex[ll]*cex[1],col=signal.col[ll])
+										graphics::points(HX1,HY1,pch=signal.pch,cex=signal.cex[ll]*cex[1],col=signal.col[ll])
 									}
 								}
 						}
@@ -648,12 +648,12 @@ GAPIT.Circle.Manhattan.Plot <- function(
 						#print(length(ticks))
 						for(i in 1:(length(ticks)-1)){
 							angle=360*(1-(ticks-round(band/2))[i]/TotalN)
-							text(ticks1[i],ticks2[i],chr.ori[i],srt=angle,font=2,cex=cex.axis)
+							graphics::text(ticks1[i],ticks2[i],chr.ori[i],srt=angle,font=2,cex=cex.axis)
 						}
 					}else{
 						for(i in 1:length(ticks)){
 							angle=360*(1-(ticks-round(band/2))[i]/TotalN)
-							text(ticks1[i],ticks2[i],chr.labels[i],srt=angle,font=2,cex=cex.axis)
+							graphics::text(ticks1[i],ticks2[i],chr.labels[i],srt=angle,font=2,cex=cex.axis)
 						}
 					}
 				}else{
@@ -662,12 +662,12 @@ GAPIT.Circle.Manhattan.Plot <- function(
 					if(is.null(chr.labels)){
 						for(i in 1:length(ticks)){
 						angle=360*(1-(ticks-round(band/2))[i]/TotalN)
-						text(ticks1[i],ticks2[i],chr.ori[i],srt=angle,font=2,cex=cex.axis)
+						graphics::text(ticks1[i],ticks2[i],chr.ori[i],srt=angle,font=2,cex=cex.axis)
 						}
 					}else{
 						for(i in 1:length(ticks)){
 							angle=360*(1-(ticks-round(band/2))[i]/TotalN)
-							text(ticks1[i],ticks2[i],chr.labels[i],srt=angle,font=2,cex=cex.axis)
+							graphics::text(ticks1[i],ticks2[i],chr.labels[i],srt=angle,font=2,cex=cex.axis)
 						}
 					}
 				}
@@ -687,12 +687,12 @@ GAPIT.Circle.Manhattan.Plot <- function(
 							X2chr=(2*cir.band+RR+cir.chr.h)*sin(2*pi*(polygon.index)/TotalN)
 							Y2chr=(2*cir.band+RR+cir.chr.h)*cos(2*pi*(polygon.index)/TotalN)
 								if(is.null(chr.den.col)){
-									polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=rep(colx,ceiling(length(chr)/length(colx)))[k],border=rep(colx,ceiling(length(chr)/length(colx)))[k])	
+									graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=rep(colx,ceiling(length(chr)/length(colx)))[k],border=rep(colx,ceiling(length(chr)/length(colx)))[k])	
 								}else{
 									if(cir.density){
-										polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col="grey",border="grey")
+										graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col="grey",border="grey")
 									}else{
-										polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=chr.den.col,border=chr.den.col)
+										graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=chr.den.col,border=chr.den.col)
 									}
 								}
 						}else{
@@ -702,26 +702,26 @@ GAPIT.Circle.Manhattan.Plot <- function(
 							X2chr=(2*cir.band+RR+cir.chr.h)*sin(2*pi*(polygon.index)/TotalN)
 							Y2chr=(2*cir.band+RR+cir.chr.h)*cos(2*pi*(polygon.index)/TotalN)
 							if(is.null(chr.den.col)){
-								polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=rep(colx,ceiling(length(chr)/length(colx)))[k],border=rep(colx,ceiling(length(chr)/length(colx)))[k])	
+								graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=rep(colx,ceiling(length(chr)/length(colx)))[k],border=rep(colx,ceiling(length(chr)/length(colx)))[k])	
 							}else{
 									if(cir.density){
-										polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col="grey",border="grey")
+										graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col="grey",border="grey")
 									}else{
-										polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=chr.den.col,border=chr.den.col)
+										graphics::polygon(c(rev(X1chr),X2chr),c(rev(Y1chr),Y2chr),col=chr.den.col,border=chr.den.col)
 									}
 							}	
 						}
 					}
 					if(cir.density){
 
-						segments(
+						graphics::segments(
 							(2*cir.band+RR)*sin(2*pi*(pvalue.posN-round(band/2))/TotalN),
 							(2*cir.band+RR)*cos(2*pi*(pvalue.posN-round(band/2))/TotalN),
 							(2*cir.band+RR+cir.chr.h)*sin(2*pi*(pvalue.posN-round(band/2))/TotalN),
 							(2*cir.band+RR+cir.chr.h)*cos(2*pi*(pvalue.posN-round(band/2))/TotalN),
 							col=density.list$den.col, lwd=0.1
 						)
-						legend(
+						graphics::legend(
 							x=RR+4*cir.chr.h,
 							y=(RR+4*cir.chr.h)/2,
 							title="Density", legend=density.list$legend.y, pch=15, pt.cex = 3, col=density.list$legend.col,
@@ -752,20 +752,20 @@ GAPIT.Circle.Manhattan.Plot <- function(
 					}else{
 						round.n=2
 					}
-					segments(0,r+H*(i-1)+cir.band*(i-1),0,r+H*i+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
-					segments(0,r+H*(i-1)+cir.band*(i-1),H/20,r+H*(i-1)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-1)+cir.band*(i-1),0,r+H*i+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-1)+cir.band*(i-1),H/20,r+H*(i-1)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
 					circle.plot(myr=r+H*(i-1)+cir.band*(i-1),lwd=0.5,add=TRUE,col='grey')
-					segments(0,r+H*(i-0.75)+cir.band*(i-1),H/20,r+H*(i-0.75)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-0.75)+cir.band*(i-1),H/20,r+H*(i-0.75)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
 					circle.plot(myr=r+H*(i-0.75)+cir.band*(i-1),lwd=0.5,add=TRUE,col='grey')
-					segments(0,r+H*(i-0.5)+cir.band*(i-1),H/20,r+H*(i-0.5)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-0.5)+cir.band*(i-1),H/20,r+H*(i-0.5)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
 					circle.plot(myr=r+H*(i-0.5)+cir.band*(i-1),lwd=0.5,add=TRUE,col='grey')
-					segments(0,r+H*(i-0.25)+cir.band*(i-1),H/20,r+H*(i-0.25)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-0.25)+cir.band*(i-1),H/20,r+H*(i-0.25)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
 					circle.plot(myr=r+H*(i-0.25)+cir.band*(i-1),lwd=0.5,add=TRUE,col='grey')
-					segments(0,r+H*(i-0)+cir.band*(i-1),H/20,r+H*(i-0)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
+					graphics::segments(0,r+H*(i-0)+cir.band*(i-1),H/20,r+H*(i-0)+cir.band*(i-1),col=cir.legend.col,lwd=1.5)
 					circle.plot(myr=r+H*(i-0)+cir.band*(i-1),lwd=0.5,add=TRUE,col='grey')
-					text(-r/15,r+H*(i-0.25)+cir.band*(i-1),round(Max*0.25,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
+					graphics::text(-r/15,r+H*(i-0.25)+cir.band*(i-1),round(Max*0.25,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
 					#text(-r/15,r+H*(i-0.5)+cir.band*(i-1),round(Max*0.5,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
-					text(-r/15,r+H*(i-0.75)+cir.band*(i-1),round(Max*0.75,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
+					graphics::text(-r/15,r+H*(i-0.75)+cir.band*(i-1),round(Max*0.75,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
 					#text(-r/15,r+H*(i-1)+cir.band*(i-1),round(Max*1,round.n),adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
 				    #text(r,0.4*(i-1),taxa[i],adj=1,col=cir.legend.col,cex=cir.legend.cex,font=2)
 
@@ -774,7 +774,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				X=(-Cpvalue+r+H*i+cir.band*(i-1))*sin(2*pi*(pvalue.posN-round(band/2))/TotalN)
 				Y=(-Cpvalue+r+H*i+cir.band*(i-1))*cos(2*pi*(pvalue.posN-round(band/2))/TotalN)
 				#points(X,Y,pch=19,cex=cex[1],col=rep(rep(colx,N[i]),add[[i]]))
-				points(X[1:(length(X)-legend.bit)],Y[1:(length(Y)-legend.bit)],pch=19,cex=cex[1],col=rep(rep(colx,N[i]),add[[i]]))
+				graphics::points(X[1:(length(X)-legend.bit)],Y[1:(length(Y)-legend.bit)],pch=19,cex=cex[1],col=rep(rep(colx,N[i]),add[[i]]))
 				
 				if(!is.null(threshold)){
 					if(sum(threshold!=0)==length(threshold)){
@@ -803,7 +803,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 							HY1=(-Cpvalue[p_amp.index]+r+H*i+cir.band*(i-1))*cos(2*pi*(pvalue.posN[p_amp.index]-round(band/2))/TotalN)
 							
 							#cover the points that exceed the threshold with the color "white"
-							points(HX1,HY1,pch=19,cex=cex[1],col="white")
+							graphics::points(HX1,HY1,pch=19,cex=cex[1],col="white")
 							
 								for(ll in 1:length(threshold)){
 									if(ll == 1){
@@ -830,9 +830,9 @@ GAPIT.Circle.Manhattan.Plot <- function(
 									}
 								
 									if(is.null(signal.col)){
-										points(HX1,HY1,pch=signal.pch,cex=signal.cex[ll]*cex[1],col=rep(rep(colx,N[i]),add[[i]])[p_amp.index])
+										graphics::points(HX1,HY1,pch=signal.pch,cex=signal.cex[ll]*cex[1],col=rep(rep(colx,N[i]),add[[i]])[p_amp.index])
 									}else{
-										points(HX1,HY1,pch=signal.pch,cex=signal.cex[ll]*cex[1],col=signal.col[ll])
+										graphics::points(HX1,HY1,pch=signal.pch,cex=signal.cex[ll]*cex[1],col=signal.col[ll])
 									}
 								}
 						}
@@ -845,12 +845,12 @@ GAPIT.Circle.Manhattan.Plot <- function(
 					if(is.null(chr.labels)){
 						for(i in 1:(length(ticks)-1)){
 						  angle=360*(1-(ticks-round(band/2))[i]/TotalN)
-						  text(ticks1[i],ticks2[i],chr.ori[i],srt=angle,font=2,cex=cex.axis)
+						  graphics::text(ticks1[i],ticks2[i],chr.ori[i],srt=angle,font=2,cex=cex.axis)
 						}
 					}else{
 						for(i in 1:length(ticks)){
 							angle=360*(1-(ticks-round(band/2))[i]/TotalN)
-							text(ticks1[i],ticks2[i],chr.labels[i],srt=angle,font=2,cex=cex.axis)
+							graphics::text(ticks1[i],ticks2[i],chr.labels[i],srt=angle,font=2,cex=cex.axis)
 						}
 					}
 				}else{
@@ -861,33 +861,26 @@ GAPIT.Circle.Manhattan.Plot <- function(
 						
 							#adjust the angle of labels of circle plot
 							angle=360*(1-(ticks-round(band/2))[i]/TotalN)
-							text(ticks1[i],ticks2[i],chr.ori[i],srt=angle,font=2,cex=cex.axis)
+							graphics::text(ticks1[i],ticks2[i],chr.ori[i],srt=angle,font=2,cex=cex.axis)
 						}
 					}else{
 						for(i in 1:length(ticks)){
 							angle=360*(1-(ticks-round(band/2))[i]/TotalN)
-							text(ticks1[i],ticks2[i],chr.labels[i],srt=angle,font=2,cex=cex.axis)
+							graphics::text(ticks1[i],ticks2[i],chr.labels[i],srt=angle,font=2,cex=cex.axis)
 						}
 					}	
 				}
 			}
 		}
-		# taxa=append("Centre",taxa,)
-		taxa2=append("Centre",letters[1:length(taxa)]) # modified by jiabo 20211125
+		taxa=append("Centre",taxa,)
 		taxa_col=rep("black",R)
 		taxa_col=append("red",taxa_col)
-		# print(taxa2)
 		for(j in 1:(R+1)){
-            text((r/5)-0.5,0.4*(j-1)-0.2,taxa2[j],adj=0.5,col=taxa_col[j],cex=cir.legend.cex,font=2)	    
-            # text((r/5),0.4*(j-1),taxa2[j],adj=0.5,col=taxa_col[j],cex=cir.legend.cex,font=2)	    
+            graphics::text(r/5,0.4*(j-1),taxa[j],adj=1,col=taxa_col[j],cex=cir.legend.cex,font=2)
+				    
 		}
-		taxa2=taxa2[-1]
-		for(j in 1:R){
-            text(RR+4*cir.chr.h-2,((-2*RR)/2)+0.6*(j-1),taxa2[j],adj=0.5,col="black",cex=cir.legend.cex,font=2)	    
-            text(RR+4*cir.chr.h+0.5,((-2*RR)/2)+0.6*(j-1),taxa[j],adj=0.5,col="black",cex=cir.legend.cex,font=2)	    
-		}
-		# taxa=taxa[-1]
-		if(file.output) dev.off()
+		taxa=taxa[-1]
+		if(file.output) grDevices::dev.off()
 	}
 
 	if("q" %in% plot.type){
@@ -895,13 +888,13 @@ GAPIT.Circle.Manhattan.Plot <- function(
 		amplify=FALSE
 		if(multracks){
 			if(file.output){
-				if(file=="jpg")	jpeg(paste("Multracks.QQ_plot.",paste(taxa,collapse="."),".jpg",sep=""), width = R*2.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
-				if(file=="pdf")	pdf(paste("Multracks.QQ_plot.",paste(taxa,collapse="."),".pdf",sep=""), width = R*2.5,height=5.5)
-				if(file=="tiff")	tiff(paste("Multracks.QQ_plot.",paste(taxa,collapse="."),".tiff",sep=""), width = R*2.5*dpi,height=5.5*dpi,res=dpi)
-				par(mfcol=c(1,R),mar = c(0,1,4,1.5),oma=c(3,5,0,0),xpd=TRUE)
+				if(file=="jpg")	grDevices::jpeg(paste("Multracks.QQ_plot.",paste(taxa,collapse="."),".jpg",sep=""), width = R*2.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
+				if(file=="pdf")	grDevices::pdf(paste("Multracks.QQ_plot.",paste(taxa,collapse="."),".pdf",sep=""), width = R*2.5,height=5.5)
+				if(file=="tiff")	grDevices::tiff(paste("Multracks.QQ_plot.",paste(taxa,collapse="."),".tiff",sep=""), width = R*2.5*dpi,height=5.5*dpi,res=dpi)
+				graphics::par(mfcol=c(1,R),mar = c(0,1,4,1.5),oma=c(3,5,0,0),xpd=TRUE)
 			}else{
-				if(is.null(dev.list()))	dev.new(width = 2.5*R, height = 5.5)
-				par(xpd=TRUE)
+				if(is.null(grDevices::dev.list()))	grDevices::dev.new(width = 2.5*R, height = 5.5)
+				graphics::par(xpd=TRUE)
 			}
 			for(i in 1:R){
 				print(paste("Multracks_QQ Plotting ",taxa[i],"...",sep=""))		
@@ -932,8 +925,8 @@ GAPIT.Circle.Manhattan.Plot <- function(
 					for(j in 1:N1){
 						xi=ceiling((10^-log.Quantiles[j])*N)
 						if(xi==0)xi=1
-						c95[j] <- qbeta(0.95,xi,N-xi+1)
-						c05[j] <- qbeta(0.05,xi,N-xi+1)
+						c95[j] <- stats::qbeta(0.95,xi,N-xi+1)
+						c05[j] <- stats::qbeta(0.05,xi,N-xi+1)
 					}
 					index=length(c95):1
 				}else{
@@ -943,15 +936,19 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				
 				YlimMax <- max(floor(max(max(-log10(c05)), max(-log10(c95)))+1), floor(max(log.P.values)+1))
 				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0,YlimMax),xlab ="", ylab="", main = taxa[i])
-				axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
-				axis(2, at=seq(0,YlimMax,ceiling(YlimMax/10)), labels=seq(0,YlimMax,ceiling(YlimMax/10)), cex.axis=cex.axis)
+				graphics::axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
+				graphics::axis(2, at=seq(0,YlimMax,ceiling(YlimMax/10)), labels=seq(0,YlimMax,ceiling(YlimMax/10)), cex.axis=cex.axis)
 				
 				#plot the confidence interval of QQ-plot
 				
-				if(conf.int)	polygon(c(log.Quantiles[index],log.Quantiles),c(-log10(c05)[index],-log10(c95)),col=conf.int.col,border=conf.int.col)
+				if(conf.int)	graphics::polygon(c(log.Quantiles[index],log.Quantiles),c(-log10(c05)[index],-log10(c95)),col=conf.int.col,border=conf.int.col)
 				
-				if(!is.null(threshold.col)){par(xpd=FALSE); abline(a = 0, b = 1, col = threshold.col[1],lwd=2); par(xpd=TRUE)}
-				points(log.Quantiles, log.P.values, col = col[1],pch=1,cex=cex[3])
+				if(!is.null(threshold.col)){
+				    graphics::par(xpd=FALSE);
+				    graphics::abline(a = 0, b = 1, col = threshold.col[1],lwd=2);
+				    graphics::par(xpd=TRUE)
+				}
+				graphics::points(log.Quantiles, log.P.values, col = col[1],pch=1,cex=cex[3])
 				#print(max(log.Quantiles))
 				#	print(length(log.Quantiles))
 				#	print(length(log.P.values))
@@ -963,11 +960,11 @@ GAPIT.Circle.Manhattan.Plot <- function(
 							if(length(thre.index)!=0){
 							
 								#cover the points that exceed the threshold with the color "white"
-								points(log.Quantiles[thre.index],log.P.values[thre.index], col = "white",pch=19,cex=cex[3])
+								graphics::points(log.Quantiles[thre.index],log.P.values[thre.index], col = "white",pch=19,cex=cex[3])
 								if(is.null(signal.col)){
-									points(log.Quantiles[thre.index],log.P.values[thre.index],col = col[1],pch=signal.pch[1],cex=signal.cex[1])
+									graphics::points(log.Quantiles[thre.index],log.P.values[thre.index],col = col[1],pch=signal.pch[1],cex=signal.cex[1])
 								}else{
-									points(log.Quantiles[thre.index],log.P.values[thre.index],col = signal.col[1],pch=signal.pch[1],cex=signal.cex[1])
+									graphics::points(log.Quantiles[thre.index],log.P.values[thre.index],col = signal.col[1],pch=signal.pch[1],cex=signal.cex[1])
 								}
 							}
 						}
@@ -975,20 +972,20 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				}
 			}
 			if(box)	box()
-			if(file.output) dev.off()
+			if(file.output) grDevices::dev.off()
 			if(R > 1){
 				#qq_col=rainbow(R)
                 qq_col=rep(c( '#FF6A6A',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(R/5))
 
 				signal.col <- NULL
 				if(file.output){
-					if(file=="jpg")	jpeg(paste("Multiple.QQ_plot.",paste(taxa,collapse="."),".jpg",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
-					if(file=="pdf")	pdf(paste("Multiple.QQ_plot.",paste(taxa,collapse="."),".pdf",sep=""), width = 5.5,height=5.5)
-					if(file=="tiff")	tiff(paste("Multiple.QQ_plot.",paste(taxa,collapse="."),".tiff",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi)
-					par(mar = c(5,5,4,2),xpd=TRUE)
+					if(file=="jpg")	grDevices::jpeg(paste("Multiple.QQ_plot.",paste(taxa,collapse="."),".jpg",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
+					if(file=="pdf")	grDevices::pdf(paste("Multiple.QQ_plot.",paste(taxa,collapse="."),".pdf",sep=""), width = 5.5,height=5.5)
+					if(file=="tiff")	grDevices::tiff(paste("Multiple.QQ_plot.",paste(taxa,collapse="."),".tiff",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi)
+					graphics::par(mar = c(5,5,4,2),xpd=TRUE)
 				}else{
-					dev.new(width = 5.5, height = 5.5)
-					par(xpd=TRUE)
+					grDevices::dev.new(width = 5.5, height = 5.5)
+					graphics::par(xpd=TRUE)
 				}
 				P.values=as.numeric(Pmap[,i+2])
 				P.values=P.values[!is.na(P.values)]
@@ -1012,8 +1009,8 @@ GAPIT.Circle.Manhattan.Plot <- function(
 					for(j in 1:N1){
 						xi=ceiling((10^-log.Quantiles[j])*N)
 						if(xi==0)xi=1
-						c95[j] <- qbeta(0.95,xi,N-xi+1)
-						c05[j] <- qbeta(0.05,xi,N-xi+1)
+						c95[j] <- stats::qbeta(0.95,xi,N-xi+1)
+						c05[j] <- stats::qbeta(0.05,xi,N-xi+1)
 					}
 					index=length(c95):1
 				}
@@ -1025,15 +1022,15 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				YlimMax <- max(floor(max(max(-log10(c05)), max(-log10(c95)))+1), -log10(min(Pmap.min[Pmap.min > 0])))
 				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0, floor(YlimMax+1)),xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = "QQ plot")
 				#legend("topleft",taxa,col=t(col)[1:R],pch=1,pt.lwd=2,text.font=6,box.col=NA)			
-				legend("topleft",taxa,col=qq_col[1:R],pch=1,pt.lwd=3,text.font=6,box.col=NA)
-				axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
-				axis(2, at=seq(0,floor(YlimMax+1),ceiling((YlimMax+1)/10)), labels=seq(0,floor((YlimMax+1)),ceiling((YlimMax+1)/10)), cex.axis=cex.axis)
+				graphics::legend("topleft",taxa,col=qq_col[1:R],pch=1,pt.lwd=3,text.font=6,box.col=NA)
+				graphics::axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
+				graphics::axis(2, at=seq(0,floor(YlimMax+1),ceiling((YlimMax+1)/10)), labels=seq(0,floor((YlimMax+1)),ceiling((YlimMax+1)/10)), cex.axis=cex.axis)
 				#print(log.Quantiles[index])
 				#print(index)
 				#print(length(log.Quantiles))
 
 				# plot the confidence interval of QQ-plot
-				if(conf.int)	polygon(c(log.Quantiles[index],log.Quantiles),c(-log10(c05)[index],-log10(c95)),col=conf.int.col,border=conf.int.col)
+				if(conf.int)	graphics::polygon(c(log.Quantiles[index],log.Quantiles),c(-log10(c05)[index],-log10(c95)),col=conf.int.col,border=conf.int.col)
 				
 				for(i in 1:R){
 					#print(paste("Multraits_QQ Plotting ",taxa[i],"...",sep=""))
@@ -1057,11 +1054,14 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				    }
 				
 						
-					if((i == 1) & !is.null(threshold.col)){par(xpd=FALSE); abline(a = 0, b = 1, col = threshold.col[1],lwd=2); par(xpd=TRUE)}
+					if((i == 1) & !is.null(threshold.col)){
+					    graphics::par(xpd=FALSE);
+					    graphics::abline(a = 0, b = 1, col = threshold.col[1],lwd=2);
+					    graphics::par(xpd=TRUE)}
 					#print(length(log.Quantiles))
 				    #print("!!!!!") 
 					#points(log.Quantiles, log.P.values, col = t(col)[i],pch=1,lwd=3,cex=cex[3])
-					points(log.Quantiles, log.P.values, col = qq_col[i],pch=1,lwd=3,cex=cex[3])
+					graphics::points(log.Quantiles, log.P.values, col = qq_col[i],pch=1,lwd=3,cex=cex[3])
 					
 					#print(max(log.Quantiles))
 					#
@@ -1074,11 +1074,11 @@ GAPIT.Circle.Manhattan.Plot <- function(
 								if(length(thre.index)!=0){
 								
 									# cover the points that exceed the threshold with the color "white"
-									points(log.Quantiles[thre.index],log.P.values[thre.index], col = "white",pch=19,lwd=3,cex=cex[3])
+									graphics::points(log.Quantiles[thre.index],log.P.values[thre.index], col = "white",pch=19,lwd=3,cex=cex[3])
 									if(is.null(signal.col)){
-										points(log.Quantiles[thre.index],log.P.values[thre.index],col = t(col)[i],pch=signal.pch[1],cex=signal.cex[1])
+										graphics::points(log.Quantiles[thre.index],log.P.values[thre.index],col = t(col)[i],pch=signal.pch[1],cex=signal.cex[1])
 									}else{
-										points(log.Quantiles[thre.index],log.P.values[thre.index],col = signal.col[1],pch=signal.pch[1],cex=signal.cex[1])
+										graphics::points(log.Quantiles[thre.index],log.P.values[thre.index],col = signal.col[1],pch=signal.pch[1],cex=signal.cex[1])
 									}
 								}
 							}
@@ -1086,19 +1086,19 @@ GAPIT.Circle.Manhattan.Plot <- function(
 					}
 				}
 					box()
-				if(file.output) dev.off()
+				if(file.output) grDevices::dev.off()
 			}
 		}else{
 			for(i in 1:R){
 				print(paste("Q_Q Plotting ",taxa[i],"...",sep=""))
 				if(file.output){
-					if(file=="jpg")	jpeg(paste("QQplot.",taxa[i],".jpg",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
-					if(file=="pdf")	pdf(paste("QQplot.",taxa[i],".pdf",sep=""), width = 5.5,height=5.5)
-					if(file=="tiff")	tiff(paste("QQplot.",taxa[i],".tiff",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi)
-					par(mar = c(5,5,4,2),xpd=TRUE)
+					if(file=="jpg")	grDevices::jpeg(paste("QQplot.",taxa[i],".jpg",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
+					if(file=="pdf")	grDevices::pdf(paste("QQplot.",taxa[i],".pdf",sep=""), width = 5.5,height=5.5)
+					if(file=="tiff")	grDevices::tiff(paste("QQplot.",taxa[i],".tiff",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi)
+					graphics::par(mar = c(5,5,4,2),xpd=TRUE)
 				}else{
-					if(is.null(dev.list()))	dev.new(width = 5.5, height = 5.5)
-					par(xpd=TRUE)
+					if(is.null(grDevices::dev.list()))	grDevices::dev.new(width = 5.5, height = 5.5)
+					graphics::par(xpd=TRUE)
 				}
 				P.values=as.numeric(Pmap[,i+2])
 				P.values=P.values[!is.na(P.values)]
@@ -1127,8 +1127,8 @@ GAPIT.Circle.Manhattan.Plot <- function(
 					for(j in 1:N1){
 						xi=ceiling((10^-log.Quantiles[j])*N)
 						if(xi==0)xi=1
-						c95[j] <- qbeta(0.95,xi,N-xi+1)
-						c05[j] <- qbeta(0.05,xi,N-xi+1)
+						c95[j] <- stats::qbeta(0.95,xi,N-xi+1)
+						c05[j] <- stats::qbeta(0.05,xi,N-xi+1)
 					}
 					index=length(c95):1
 				}else{
@@ -1139,18 +1139,22 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				#print("@@@@@")
 				YlimMax <- max(floor(max(max(-log10(c05)), max(-log10(c95)))+1), floor(max(log.P.values)+1))
 				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0,YlimMax),xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = paste("QQplot of",taxa[i]))
-				axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
-				axis(2, at=seq(0,YlimMax,ceiling(YlimMax/10)), labels=seq(0,YlimMax,ceiling(YlimMax/10)), cex.axis=cex.axis)
+				graphics::axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
+				graphics::axis(2, at=seq(0,YlimMax,ceiling(YlimMax/10)), labels=seq(0,YlimMax,ceiling(YlimMax/10)), cex.axis=cex.axis)
 				
 				#plot the confidence interval of QQ-plot
 				#print(log.Quantiles[index])
-				qq_col=rainbow(R)
+				qq_col = grDevices::rainbow(R)
 				#if(conf.int)	polygon(c(log.Quantiles[index],log.Quantiles),c(-log10(c05)[index],-log10(c95)),col=conf.int.col,border=conf.int.col)
-				if(conf.int)	polygon(c(log.Quantiles[index],log.Quantiles),c(-log10(c05)[index],-log10(c95)),col=qq_col[i],border=conf.int.col)
+				if(conf.int)	graphics::polygon(c(log.Quantiles[index],log.Quantiles),c(-log10(c05)[index],-log10(c95)),col=qq_col[i],border=conf.int.col)
 				
-				if(!is.null(threshold.col)){par(xpd=FALSE); abline(a = 0, b = 1, col = threshold.col[1],lwd=2); par(xpd=TRUE)}
+				if(!is.null(threshold.col)){
+				    graphics::par(xpd=FALSE);
+				    graphics::abline(a = 0, b = 1, col = threshold.col[1],lwd=2);
+				    graphics::par(xpd=TRUE)
+				    }
 				 
-				points(log.Quantiles, log.P.values, col = col[1],pch=19,cex=2)
+				graphics::points(log.Quantiles, log.P.values, col = col[1],pch=19,cex=2)
 				
 				if(!is.null(threshold)){
 					if(sum(threshold!=0)==length(threshold)){
@@ -1160,18 +1164,18 @@ GAPIT.Circle.Manhattan.Plot <- function(
 							if(length(thre.index)!=0){
 							    #print("!!!!")
 								#cover the points that exceed the threshold with the color "white"
-								points(log.Quantiles[thre.index],log.P.values[thre.index], col = "white",pch=19,lwd=3,cex=cex[3])
+								graphics::points(log.Quantiles[thre.index],log.P.values[thre.index], col = "white",pch=19,lwd=3,cex=cex[3])
 								if(is.null(signal.col)){
-									points(log.Quantiles[thre.index],log.P.values[thre.index],col = col[1],pch=signal.pch[1],cex=signal.cex[1])
+									graphics::points(log.Quantiles[thre.index],log.P.values[thre.index],col = col[1],pch=signal.pch[1],cex=signal.cex[1])
 								}else{
-									points(log.Quantiles[thre.index],log.P.values[thre.index],col = signal.col[1],pch=signal.pch[1],cex=signal.cex[1])
+									graphics::points(log.Quantiles[thre.index],log.P.values[thre.index],col = signal.col[1],pch=signal.pch[1],cex=signal.cex[1])
 								}
 							}
 						}
 					}
 				}
 				box()
-				if(file.output) dev.off()
+				if(file.output) grDevices::dev.off()
 			}
 		}
 		print("Multiple QQ plot has been finished!",quote=F)

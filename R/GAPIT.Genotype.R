@@ -1,6 +1,6 @@
 `GAPIT.Genotype` <-
 function(G=NULL,GD=NULL,GM=NULL,KI=NULL,
-  kinship.algorithm="Zhang",SNP.effect="Add",SNP.impute="Middle",PCA.total=0,PCA.col=NULL,PCA.3d=PCA.3d,seed=123, SNP.fraction =1,
+  kinship.algorithm="Zhang",SNP.effect="Add",SNP.impute="Middle",PCA.total=0,PCA.col=NULL,PCA.3d=FALSE,seed=123, SNP.fraction =1,
   file.path=NULL,file.from=NULL, file.to=NULL, file.total=NULL, file.fragment = 1000,SNP.test=TRUE,
   file.G =NULL,file.Ext.G =NULL,
   file.GD=NULL,file.Ext.GD=NULL,
