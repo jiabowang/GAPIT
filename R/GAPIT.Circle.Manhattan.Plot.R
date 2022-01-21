@@ -132,7 +132,7 @@ Densitplot <- function(
 		if(!plot)	return(list(den.col=col.seg, legend.col=legend.col, legend.y=legend.y))
 	}
 
-GAPIT.Circle.Manhatton.Plot <- function(
+GAPIT.Circle.Manhattan.Plot <- function(
 	Pmap,
 	col=c("#377EB8", "#4DAF4A", "#984EA3", "#FF7F00"),
 	#col=c("darkgreen", "darkblue", "darkyellow", "darkred"),
