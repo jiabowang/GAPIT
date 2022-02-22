@@ -36,17 +36,12 @@ for(i in 1:length(environ_name))
   write.table(y_filter,paste("Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
 
   result=environ_result[,1:4]
-
   result=result[match(as.character(GM[,1]),as.character(result[,1])),]
-  # result=result[order(result[,2]),]
-  # result=result[order(result[,1]),]
-  #print(head(result))
   rownames(result)=1:nrow(result)
   #print(i)
   if(i==1){
     result0=result
     colnames(result0)[4]=environ_name[i]
-
     }
   if(i!=1){
     result0=merge(result0,result[,c(1,4)],by.x=colnames(result0)[1],by.y=colnames(result)[1])
@@ -55,7 +50,6 @@ for(i in 1:length(environ_name))
   rownames(result)=1:nrow(result)
   result[is.na(result[,4]),4]=1
   sig_pos=append(sig_pos,as.numeric(rownames(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),])))
-
 }
 #if(length(sig_pos)!=0)sig_pos=sig_pos[!duplicated(sig_pos)]
  if(length(sig_pos[!is.na(sig_pos)])!=0)
@@ -86,11 +80,40 @@ for(i in 1:length(environ_name))
        new_xz=new_xz[new_xz[,2]!="0",]
        new_xz=matrix(new_xz,length(as.vector(new_xz))/4,4)
 }
+# setup colors
+chm.to.analyze <- unique(result[,1])
+nchr=length(chm.to.analyze)
+size=1 #1
+ratio=10 #5
+base=1 #1
+numCHR=nchr
+ncycle=ceiling(nchr/5)
+ncolor=band*ncycle
+thecolor=seq(1,nchr,by= ncycle)
+col.Rainbow=rainbow(ncolor+1)     
+col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
+col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
+col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
+col.Ocean=rep(c("steelblue4","cyan3"),ceiling(numCHR/2))    
+col.PLINK=rep(c("gray10","gray70"),ceiling(numCHR/2))     
+col.Beach=rep(c("turquoise4","indianred3","darkolivegreen3","red","aquamarine3","darkgoldenrod"),ceiling(numCHR/5))
+col.Oceanic=rep(c(  '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(numCHR/5))
+col.cougars=rep(c(  '#990000',    'dimgray'),ceiling(numCHR/2))  
+if(plot.style=="Rainbow")plot.color= col.Rainbow
+if(plot.style =="FarmCPU")plot.color= col.Rainbow
+if(plot.style =="Rushville")plot.color= col.Rushville
+if(plot.style =="Congress")plot.color= col.Congress
+if(plot.style =="Ocean")plot.color= col.Ocean
+if(plot.style =="PLINK")plot.color= col.PLINK
+if(plot.style =="Beach")plot.color= col.Beach
+if(plot.style =="Oceanic")plot.color= col.Oceanic
+if(plot.style =="cougars")plot.color= col.cougars  
 
 if("h"%in%plot.type)
 {
     pdf(paste("GAPIT.Manhattan.Mutiple.Plot.high",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
     par(mfrow=c(Nenviron,1))
+    mypch=1
     for(k in 1:Nenviron)
     { 
        if(k==Nenviron)
@@ -176,37 +199,11 @@ if("h"%in%plot.type)
         #Extract QTN
        QTN=MP_store[which(MP_store[,borrowSlot]==1),]
         #Draw circles with same size and different thikness
-       size=1 #1
-       ratio=10 #5
-       base=1 #1
-       numCHR=nchr
+       
        themax=ceiling(max(y))
        themin=floor(min(y))
        wd=((y-themin+base)/(themax-themin+base))*size*ratio
        s=size-wd/ratio/2
-       ncycle=ceiling(nchr/5)
-       ncolor=5*ncycle
-       ncolor=band*ncycle
-       thecolor=seq(1,nchr,by= ncycle)
-       mypch=1
-       col.Rainbow=rainbow(ncolor+1)     
-       col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
-       col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
-       col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
-       col.Ocean=rep(c("steelblue4","cyan3"),ceiling(numCHR/2))    
-       col.PLINK=rep(c("gray10","gray70"),ceiling(numCHR/2))     
-       col.Beach=rep(c("turquoise4","indianred3","darkolivegreen3","red","aquamarine3","darkgoldenrod"),ceiling(numCHR/5))
-       col.Oceanic=rep(c(  '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(numCHR/5))
-       col.cougars=rep(c(  '#990000',    'dimgray'),ceiling(numCHR/2))  
-       if(plot.style=="Rainbow")plot.color= col.Rainbow
-       if(plot.style =="FarmCPU")plot.color= col.Rainbow
-       if(plot.style =="Rushville")plot.color= col.Rushville
-       if(plot.style =="Congress")plot.color= col.Congress
-       if(plot.style =="Ocean")plot.color= col.Ocean
-       if(plot.style =="PLINK")plot.color= col.PLINK
-       if(plot.style =="Beach")plot.color= col.Beach
-       if(plot.style =="Oceanic")plot.color= col.Oceanic
-       if(plot.style =="cougars")plot.color= col.cougars  
        plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),xlim=c(min(x),max(x)),
            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
            pch=mypch,lwd=wd,cex=s+2.5,cex.main=4)
@@ -227,13 +224,14 @@ if("h"%in%plot.type)
          }
         #Add a horizontal line for bonferroniCutOff
        abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
-       axis(2, yaxp=c(0,themax,5),cex.axis=1.5,tick=T,las=1,lwd=2.5)
+       axis(2, yaxp=c(0,themax,5),cex.axis=1.3,tick=T,las=1,lwd=2.5)
        if(k==Nenviron)axis(1, at=max.x,cex.axis=1.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
        if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F,line=1)
        mtext(side=4,paste(environ_name[k],sep=""),line=3.2,cex=2)
     }#end of environ_name
        dev.off()
 }#end of plot.type
+
 if("w"%in%plot.type)
 {
  pdf(paste("GAPIT.Manhattan.Mutiple.Plot.wide",".pdf" ,sep = ""), width = 16,height=8.5)
@@ -334,62 +332,24 @@ if("w"%in%plot.type)
         #if(!is.null(interQTN))MP_store[interQTN,borrowSlot]=2
         QTN=MP_store[which(MP_store[,borrowSlot]==1),]
         #Draw circles with same size and different thikness
-        size=1 #1
-        ratio=10 #5
-        base=1 #1
-        numCHR=nchr
         themax=ceiling(max(y))
         themin=floor(min(y))
         wd=((y-themin+base)/(themax-themin+base))*size*ratio
         s=size-wd/ratio/2
-        ncycle=ceiling(nchr/5)
-        ncolor=5*ncycle
-        ncolor=band*ncycle
-
-        thecolor=seq(1,nchr,by= ncycle)
         mypch=1
-        #plot.color= rainbow(ncolor+1)
-        col.Rainbow=rainbow(ncolor+1)     
-        col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
-        col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
-        col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
-        col.Ocean=rep(c("steelblue4","cyan3"),ceiling(numCHR/2))    
-        col.PLINK=rep(c("gray10","gray70"),ceiling(numCHR/2))     
-        col.Beach=rep(c("turquoise4","indianred3","darkolivegreen3","red","aquamarine3","darkgoldenrod"),ceiling(numCHR/5))
-        #col.Oceanic=rep(c( '#EC5f67',  '#F99157',  '#FAC863',  '#99C794',  '#5FB3B3',  '#6699CC',  '#C594C5',  '#AB7967'),ceiling(numCHR/8))
-        #col.Oceanic=rep(c( '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5',  '#AB7967'),ceiling(numCHR/6))
-        col.Oceanic=rep(c(  '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(numCHR/5))
-        col.cougars=rep(c(  '#990000',    'dimgray'),ceiling(numCHR/2))
-    
-        if(plot.style=="Rainbow")plot.color= col.Rainbow
-        if(plot.style =="FarmCPU")plot.color= col.Rainbow
-        if(plot.style =="Rushville")plot.color= col.Rushville
-        if(plot.style =="Congress")plot.color= col.Congress
-        if(plot.style =="Ocean")plot.color= col.Ocean
-        if(plot.style =="PLINK")plot.color= col.PLINK
-        if(plot.style =="Beach")plot.color= col.Beach
-        if(plot.style =="Oceanic")plot.color= col.Oceanic
-        if(plot.style =="cougars")plot.color= col.cougars
-    
-        #plot.color=rep(c( '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(ncolor/5))
-
-            plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),
+        
+        plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),
             cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=0.5,cex=0.7,cex.main=2)
-            mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
-        if(plot.line){
-          #print(x)
-          #print(as.numeric(new_xz[,2]))
-          # if(!is.null(nrow(new_xz)))  {abline(v=as.numeric(new_xz[,4]),col=plot.color[as.numeric(new_xz[,3])],lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
+        mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
+        if(plot.line)
+        {
           if(!is.null(nrow(new_xz)))  {abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=2)
              }else{abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=2)
              }
         }
         if(!simulation){abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-            #print("$$$$$$")
-          # points(QTN[,2], QTN[,3], pch=20, cex=2.5,lwd=2.5,col="black")
           points(QTN[,2], QTN[,3], type="p",pch=21, cex=2.8,lwd=1.5,col="dimgrey")
           points(QTN[,2], QTN[,3], type="p",pch=20, cex=2.8,lwd=1.5,col="dimgrey")
-          #points(interQTN[,2], interQTN[,3], type="p",pch=8, cex=1,lwd=1.5,col="dimgrey")
           }
         #Add a horizontal line for bonferroniCutOff
         abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
@@ -403,9 +363,49 @@ if("w"%in%plot.type)
 
 if("s"%in%plot.type)
 {
+    size=1 #1
+    ratio=10 #5
+    base=1 #1
+    # wd=((y-themin+base)/(themax-themin+base))*size*ratio
+    wd=2
+    s=size-wd/ratio/2
+    # setup colors
+    if(plot.style=="Rainbow")plot.color= col.Rainbow
+    if(plot.style =="FarmCPU")plot.color= col.Rainbow
+    if(plot.style =="Rushville")plot.color= col.Rushville
+    if(plot.style =="Congress")plot.color= col.Congress
+    if(plot.style =="Ocean")plot.color= col.Ocean
+    if(plot.style =="PLINK")plot.color= col.PLINK
+    if(plot.style =="Beach")plot.color= col.Beach
+    if(plot.style =="Oceanic")plot.color= col.Oceanic
+    if(plot.style =="cougars")plot.color= col.cougars
+    
  pdf(paste("GAPIT.Manhattan.Mutiple.Plot.symphysic",".pdf" ,sep = ""), width = 30,height=18)
  par(mfrow=c(1,1))
  par(mar = c(5,8,5,1))
+ 
+ plot(1~1,col="white",xlab="",ylab="" ,ylim=c(0,themax.y0),xlim=c(min(x),max(x)),yaxp=c(0,themax.y,5),
+    cex.axis=4, cex.lab=4,,axes=FALSE,
+    pch=mypch,lwd=wd,cex=s+1.3,cex.main=4)
+    
+        #Add a horizontal line for bonferroniCutOff
+ axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
+ axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
+ axis(2, yaxp=c(0,themax.y,5),cex.axis=2,tick=T,las=1,lwd=2.5)
+ abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
+ if(plot.line)
+    {
+    if(!is.null(nrow(new_xz)))  
+        {
+        abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
+        }else{
+        abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
+        }
+    }
+ mtext(side=2,expression(-log[10](italic(p))),line=3, cex=2.5)
+ legend("top",legend=paste(environ_name,sep=""),ncol=length(environ_name),
+col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
+ bty = "o", bg = "white",box.col="white")
 
  for(k in 1:Nenviron)
   { 
@@ -499,79 +499,25 @@ if("s"%in%plot.type)
         #if(!is.null(interQTN))MP_store[interQTN,borrowSlot]=2
     QTN=MP_store[which(MP_store[,borrowSlot]==1),]
         #Draw circles with same size and different thikness
-    size=1 #1
-    ratio=10 #5
-    base=1 #1
-    numCHR=nchr
     themax=ceiling(max(y))
     themin=floor(min(y))
-    # wd=((y-themin+base)/(themax-themin+base))*size*ratio
-    wd=2
-    s=size-wd/ratio/2
-    ncycle=ceiling(nchr/5)
-    ncolor=5*ncycle
-    ncolor=band*ncycle
-
-    thecolor=seq(1,nchr,by= ncycle)
     if(is.null(allpch)) allpch=c(0,1,2,5,6,22,21,24,23,25)
     mypch=allpch[k]
-    col.Rainbow=rainbow(ncolor+1)     
-    col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
-    col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
-    col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
-    col.Ocean=rep(c("steelblue4","cyan3"),ceiling(numCHR/2))    
-    col.PLINK=rep(c("gray10","gray70"),ceiling(numCHR/2))     
-    col.Beach=rep(c("turquoise4","indianred3","darkolivegreen3","red","aquamarine3","darkgoldenrod"),ceiling(numCHR/5))
-        #col.Oceanic=rep(c( '#EC5f67',  '#F99157',  '#FAC863',  '#99C794',  '#5FB3B3',  '#6699CC',  '#C594C5',  '#AB7967'),ceiling(numCHR/8))
-        #col.Oceanic=rep(c( '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5',  '#AB7967'),ceiling(numCHR/6))
-    col.Oceanic=rep(c(  '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(numCHR/5))
-    col.cougars=rep(c(  '#990000',    'dimgray'),ceiling(numCHR/2))
     
-    if(plot.style=="Rainbow")plot.color= col.Rainbow
-    if(plot.style =="FarmCPU")plot.color= col.Rainbow
-    if(plot.style =="Rushville")plot.color= col.Rushville
-    if(plot.style =="Congress")plot.color= col.Congress
-    if(plot.style =="Ocean")plot.color= col.Ocean
-    if(plot.style =="PLINK")plot.color= col.PLINK
-    if(plot.style =="Beach")plot.color= col.Beach
-    if(plot.style =="Oceanic")plot.color= col.Oceanic
-    if(plot.style =="cougars")plot.color= col.cougars
-    
-    #plot.color=rep(c( '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(ncolor/5))
    if(k!=1) par(new=T)
+    
+    par(new=T)
     plot(y~x,xlab="",ylab="" ,ylim=c(0,themax.y0),xlim=c(min(x),max(x)),yaxp=c(0,themax.y,5),
     cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,
     pch=mypch,lwd=wd,cex=s+1.3,cex.main=4)
     
     if(!simulation)
        {
-        abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-        points(QTN[,2], QTN[,3], pch=20, cex=2.5,lwd=2.5,col="black")
+        abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")
+        }else{
+        points(QTN[,2], QTN[,3], pch=20, cex=2,lwd=2.5,col="black")
        }        
     
-        #Add a horizontal line for bonferroniCutOff
-        # if(k==Nenviron)axis(1, at=ticks,cex.axis=2.5,labels=chm.to.analyze,tick=F)
-    if(k==Nenviron)
-    {
-        axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
-        axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
-        axis(2, yaxp=c(0,themax.y,5),cex.axis=2,tick=T,las=1,lwd=2.5)
-        abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
-       if(plot.line)
-       {
-          if(!is.null(nrow(new_xz)))  
-          {
-            abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
-          }else{
-            abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
-          }
-       }
-       mtext(side=2,expression(-log[10](italic(p))),line=3, cex=2.5)
-       legend("top",legend=paste(environ_name,sep=""),ncol=length(environ_name),
-col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
- bty = "n", bg = "white")
-
-    }# box()
  }#end of environ_name
  dev.off()
 }#end of plot.type
