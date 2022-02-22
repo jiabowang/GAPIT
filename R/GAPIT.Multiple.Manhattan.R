@@ -363,29 +363,16 @@ if("w"%in%plot.type)
 
 if("s"%in%plot.type)
 {
-    size=1 #1
-    ratio=10 #5
-    base=1 #1
     # wd=((y-themin+base)/(themax-themin+base))*size*ratio
-    wd=2
-    s=size-wd/ratio/2
-    # setup colors
-    if(plot.style=="Rainbow")plot.color= col.Rainbow
-    if(plot.style =="FarmCPU")plot.color= col.Rainbow
-    if(plot.style =="Rushville")plot.color= col.Rushville
-    if(plot.style =="Congress")plot.color= col.Congress
-    if(plot.style =="Ocean")plot.color= col.Ocean
-    if(plot.style =="PLINK")plot.color= col.PLINK
-    if(plot.style =="Beach")plot.color= col.Beach
-    if(plot.style =="Oceanic")plot.color= col.Oceanic
-    if(plot.style =="cougars")plot.color= col.cougars
-    
+ wd=2
+ if(is.null(allpch)) allpch=c(0,1,2,5,6,22,21,24,23,25)
+  
  pdf(paste("GAPIT.Manhattan.Mutiple.Plot.symphysic",".pdf" ,sep = ""), width = 30,height=18)
  par(mfrow=c(1,1))
  par(mar = c(5,8,5,1))
  
  plot(1~1,col="white",xlab="",ylab="" ,ylim=c(0,themax.y0),xlim=c(min(x),max(x)),yaxp=c(0,themax.y,5),
-    cex.axis=4, cex.lab=4,,axes=FALSE,
+    cex.axis=4, cex.lab=4,axes=FALSE,
     pch=mypch,lwd=wd,cex=s+1.3,cex.main=4)
     
         #Add a horizontal line for bonferroniCutOff
@@ -404,8 +391,8 @@ if("s"%in%plot.type)
     }
  mtext(side=2,expression(-log[10](italic(p))),line=3, cex=2.5)
  legend("top",legend=paste(environ_name,sep=""),ncol=length(environ_name),
-col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
- bty = "o", bg = "white",box.col="white")
+       col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
+       bty = "o", bg = "white",box.col="white")
 
  for(k in 1:Nenviron)
   { 
@@ -501,7 +488,6 @@ col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
         #Draw circles with same size and different thikness
     themax=ceiling(max(y))
     themin=floor(min(y))
-    if(is.null(allpch)) allpch=c(0,1,2,5,6,22,21,24,23,25)
     mypch=allpch[k]
     
    if(k!=1) par(new=T)
@@ -509,7 +495,7 @@ col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
     par(new=T)
     plot(y~x,xlab="",ylab="" ,ylim=c(0,themax.y0),xlim=c(min(x),max(x)),yaxp=c(0,themax.y,5),
     cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,
-    pch=mypch,lwd=wd,cex=s+1.3,cex.main=4)
+    pch=mypch,lwd=wd,cex=s+1.5,cex.main=4)
     
     if(!simulation)
        {
