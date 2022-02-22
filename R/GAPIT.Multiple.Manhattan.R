@@ -1,11 +1,10 @@
 `GAPIT.Multiple.Manhattan` <-
-function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y=NULL,GM=NULL,interQTN=NULL,plot.style="Oceanic",plot.line=TRUE){
+function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y=NULL,GM=NULL,interQTN=NULL,
+    plot.style="Oceanic",plot.line=TRUE,allpch=NULL,plot.type=c("h","s")){
     #Object: Make a Manhattan Plot
-    #Options for plot.type = "Separate_Graph_for_Each_Chromosome" and "Same_Graph_for_Each_Chromosome"
-    #Output: A pdf of the Manhattan Plot
-    #Authors: Alex Lipka, Zhiwu Zhang, Meng Li and Jiabo Wang
-    # Last update: Oct 10, 2016
-  #Add r2 between candidata SNP and other markers in on choromosome
+    #Output: pdfs of the Multiple Manhattan Plot
+    #Authors: Zhiwu Zhang and Jiabo Wang
+    # Last update: Feb 22, 2022
     ##############################################################################################
   Nenviron=length(model_store)*(ncol(Y)-1)
   environ_name=NULL
@@ -23,6 +22,7 @@ simulation=FALSE
         #seqQTN=-seqQTN
         simulation=TRUE    
     }
+themax.y0=NULL
 for(i in 1:length(environ_name))
 {
   print(paste("Reading GWAS result with ",environ_name[i],sep=""))
@@ -30,7 +30,8 @@ for(i in 1:length(environ_name))
   environ_result=environ_result[order(environ_result[,3]),]
   environ_result=environ_result[order(environ_result[,2]),]
   environ_filter=environ_result[!is.na(environ_result[,4]),]
-
+  themax.y=round(max(-log10(environ_filter[,4])),0)+round(max(-log10(environ_filter[,4])),0)/5
+  themax.y0=round(max(c(themax.y,themax.y0)),0)
   y_filter=environ_filter[environ_filter[,4]<(cutOff/(nrow(environ_filter))),]
   write.table(y_filter,paste("Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
 
@@ -73,11 +74,9 @@ for(i in 1:length(environ_name))
             lastbase=max(as.numeric(map_store[index,2]))
             #print(lastbase)
         }
-       
        colnames(x_matrix)=c("pos","times")
        new_xz=cbind(x_matrix,map_store[as.numeric(as.character(x_matrix[,1])),,drop=FALSE])
        colnames(new_xz)=c("pos","times","chro","xlab")
-       
        new_xz=new_xz[!duplicated(new_xz),]
        new_xz[new_xz[,2]>=3,2]=3
        new_xz[,2]=4-new_xz[,2]
@@ -88,81 +87,75 @@ for(i in 1:length(environ_name))
        new_xz=matrix(new_xz,length(as.vector(new_xz))/4,4)
 }
 
-pdf(paste("GAPIT.Manhattan.Mutiple.Plot.high",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
-# pdf(paste("GAPIT.Manhattan.Mutiple.Plot",colnames(result0)[-c(1:3)],".pdf" ,sep = ""), width = 16,height=8.5)
-par(mfrow=c(Nenviron,1))
-for(k in 1:Nenviron)
-{ if(k==Nenviron){#par(mfrow=c(Nenviron,1))
-        par(mar = c(3,8,1,8))
+if("h"%in%plot.type)
+{
+    pdf(paste("GAPIT.Manhattan.Mutiple.Plot.high",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
+    par(mfrow=c(Nenviron,1))
+    for(k in 1:Nenviron)
+    { 
+       if(k==Nenviron)
+        {
+         par(mar = c(3,8,1,8))
         }else{
-            #par(mfrow=c(Nenviron,1))
-        par(mar = c(0,8,1,8))
-        
+         par(mar = c(0,8,1,8))    
         }
-    environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
-    result=environ_result[,1:4]
-    result=result[match(as.character(GM[,1]),as.character(result[,1])),]
-    rownames(result)=1:nrow(result)
-    GI.MP=result[,c(2:4)]
-    borrowSlot=4
-    GI.MP[,borrowSlot]=0 #Inicial as 0
-    GI.MP[,5]=1:(nrow(GI.MP))
-    GI.MP[,6]=1:(nrow(GI.MP)) 
-    GI.MP <- GI.MP[!is.na(GI.MP[,1]),]
-    GI.MP <- GI.MP[!is.na(GI.MP[,2]),]
-    GI.MP[is.na(GI.MP[,3]),3]=1
-    
+       environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
+       result=environ_result[,1:4]
+       result=result[match(as.character(GM[,1]),as.character(result[,1])),]
+       rownames(result)=1:nrow(result)
+       GI.MP=result[,c(2:4)]
+       borrowSlot=4
+       GI.MP[,borrowSlot]=0 #Inicial as 0
+       GI.MP[,5]=1:(nrow(GI.MP))
+       GI.MP[,6]=1:(nrow(GI.MP)) 
+       GI.MP <- GI.MP[!is.na(GI.MP[,1]),]
+       GI.MP <- GI.MP[!is.na(GI.MP[,2]),]
+       GI.MP[is.na(GI.MP[,3]),3]=1
     #Retain SNPs that have P values between 0 and 1 (not na etc)
-    GI.MP <- GI.MP[GI.MP[,3]>0,]
-    GI.MP <- GI.MP[GI.MP[,3]<=1,]
+       GI.MP <- GI.MP[GI.MP[,3]>0,]
+       GI.MP <- GI.MP[GI.MP[,3]<=1,]
     #Remove chr 0 and 99
-    GI.MP <- GI.MP[GI.MP[,1]!=0,]
-    total_chromo=length(unique(GI.MP[,1]))
+       GI.MP <- GI.MP[GI.MP[,1]!=0,]
+       total_chromo=length(unique(GI.MP[,1]))
     # print(dim(GI.MP))
-    if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1
-    numMarker=nrow(GI.MP)
-    bonferroniCutOff=-log10(cutOff/numMarker)
-    GI.MP[,3] <-  -log10(GI.MP[,3])
-    GI.MP[,5]=1:numMarker
-    y.lim <- ceiling(max(GI.MP[,3]))
-    
-    chm.to.analyze <- unique(GI.MP[,1])
-    # print(chm.to.analyze)
-    # chm.to.analyze=chm.to.analyze[order(chm.to.analyze)]
-    nchr=length(chm.to.analyze)
-    # print(chm.to.analyze)
-    GI.MP[,6]=1:(nrow(GI.MP))
-    MP_store=GI.MP
-    index_GI=MP_store[,3]>=0
-    MP_store <- MP_store[index_GI,]
-    ticks=NULL
-    lastbase=0
-    for (i in chm.to.analyze)
-        {
-            index=(MP_store[,1]==i)
-            ticks <- c(ticks, lastbase+mean(MP_store[index,2]))
-            MP_store[index,2]=MP_store[index,2]+lastbase
-            lastbase=max(MP_store[index,2])
-        }
-        
-    x0 <- as.numeric(MP_store[,2])
-    y0 <- as.numeric(MP_store[,3])
-    z0 <- as.numeric(MP_store[,1])
-    max.x=NULL
-    for (i in chm.to.analyze)
-        {
-            index=(MP_store[,1]==i)
-            max.x=c(max.x,max(x0[index]))
-        }
-    max.x=c(min(x0),max.x)
-    x1=sort(x0)
-
-    position=order(y0,decreasing = TRUE)
-    values=y0[position]
-    if(length(values)<=DPP)
-        {
+       if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1
+       numMarker=nrow(GI.MP)
+       bonferroniCutOff=-log10(cutOff/numMarker)
+       GI.MP[,3] <-  -log10(GI.MP[,3])
+       GI.MP[,5]=1:numMarker
+       y.lim <- ceiling(max(GI.MP[,3]))  
+       chm.to.analyze <- unique(GI.MP[,1])
+       nchr=length(chm.to.analyze)
+       GI.MP[,6]=1:(nrow(GI.MP))
+       MP_store=GI.MP
+       index_GI=MP_store[,3]>=0
+       MP_store <- MP_store[index_GI,]
+       ticks=NULL
+       lastbase=0
+       for(i in chm.to.analyze)
+          {
+           index=(MP_store[,1]==i)
+           ticks <- c(ticks, lastbase+mean(MP_store[index,2]))
+           MP_store[index,2]=MP_store[index,2]+lastbase
+           lastbase=max(MP_store[index,2])
+          }
+       x0 <- as.numeric(MP_store[,2])
+       y0 <- as.numeric(MP_store[,3])
+       z0 <- as.numeric(MP_store[,1])
+       max.x=NULL
+       for(i in chm.to.analyze)
+          {
+           index=(MP_store[,1]==i)
+           max.x=c(max.x,max(x0[index]))
+          }
+       max.x=c(min(x0),max.x)
+       x1=sort(x0)
+       position=order(y0,decreasing = TRUE)
+       values=y0[position]
+       if(length(values)<=DPP)
+         {
          index=position[c(1:length(values))]
-        }else{       
+         }else{       
          values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
          rv=runif(length(values))
@@ -172,104 +165,87 @@ for(k in 1:Nenviron)
          theMax=max(values)
          range=theMax-theMin
          interval=range/DPP
-
          ladder=round(values/interval)
          ladder2=c(ladder[-1],0)
          keep=ladder-ladder2
          index=position[which(keep>=0)]
-        }        
-    x=x0[index]
-    y=y0[index]
-    z=z0[index]
-        # print(length(x))
-
+         }        
+       x=x0[index]
+       y=y0[index]
+       z=z0[index]
         #Extract QTN
-        #if(!is.null(seqQTN))MP_store[seqQTN,borrowSlot]=1
-        #if(!is.null(interQTN))MP_store[interQTN,borrowSlot]=2
-    QTN=MP_store[which(MP_store[,borrowSlot]==1),]
+       QTN=MP_store[which(MP_store[,borrowSlot]==1),]
         #Draw circles with same size and different thikness
-    size=1 #1
-    ratio=10 #5
-    base=1 #1
-    numCHR=nchr
-    themax=ceiling(max(y))
-    themin=floor(min(y))
-    wd=((y-themin+base)/(themax-themin+base))*size*ratio
-    s=size-wd/ratio/2
-    ncycle=ceiling(nchr/5)
-    ncolor=5*ncycle
-    ncolor=band*ncycle
-
-    thecolor=seq(1,nchr,by= ncycle)
-    mypch=1
-        #plot.color= rainbow(ncolor+1)
-    col.Rainbow=rainbow(ncolor+1)     
-    col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
-    col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
-    col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
-    col.Ocean=rep(c("steelblue4","cyan3"),ceiling(numCHR/2))    
-    col.PLINK=rep(c("gray10","gray70"),ceiling(numCHR/2))     
-    col.Beach=rep(c("turquoise4","indianred3","darkolivegreen3","red","aquamarine3","darkgoldenrod"),ceiling(numCHR/5))
-        #col.Oceanic=rep(c( '#EC5f67',  '#F99157',  '#FAC863',  '#99C794',  '#5FB3B3',  '#6699CC',  '#C594C5',  '#AB7967'),ceiling(numCHR/8))
-        #col.Oceanic=rep(c( '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5',  '#AB7967'),ceiling(numCHR/6))
-    col.Oceanic=rep(c(  '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(numCHR/5))
-    col.cougars=rep(c(  '#990000',    'dimgray'),ceiling(numCHR/2))
-    
-    if(plot.style=="Rainbow")plot.color= col.Rainbow
-    if(plot.style =="FarmCPU")plot.color= col.Rainbow
-    if(plot.style =="Rushville")plot.color= col.Rushville
-    if(plot.style =="Congress")plot.color= col.Congress
-    if(plot.style =="Ocean")plot.color= col.Ocean
-    if(plot.style =="PLINK")plot.color= col.PLINK
-    if(plot.style =="Beach")plot.color= col.Beach
-    if(plot.style =="Oceanic")plot.color= col.Oceanic
-    if(plot.style =="cougars")plot.color= col.cougars
-    
-    #plot.color=rep(c( '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(ncolor/5))
-
-    plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),xlim=c(min(x),max(x)),
-    cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
-    pch=mypch,lwd=wd,cex=s+2.5,cex.main=4)
-    mtext(side=2,expression(-log[10](italic(p))),line=3, cex=2.5)
-    if(!simulation)
-       {
-        abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-        points(QTN[,2], QTN[,3], pch=20, cex=2.5,lwd=2.5,col="black")
-       }        
-    if(plot.line)
-       {
-        if(!is.null(nrow(new_xz)))  
-          {
-            abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
-          }else{
-            abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
-          }
-       }
+       size=1 #1
+       ratio=10 #5
+       base=1 #1
+       numCHR=nchr
+       themax=ceiling(max(y))
+       themin=floor(min(y))
+       wd=((y-themin+base)/(themax-themin+base))*size*ratio
+       s=size-wd/ratio/2
+       ncycle=ceiling(nchr/5)
+       ncolor=5*ncycle
+       ncolor=band*ncycle
+       thecolor=seq(1,nchr,by= ncycle)
+       mypch=1
+       col.Rainbow=rainbow(ncolor+1)     
+       col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
+       col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
+       col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
+       col.Ocean=rep(c("steelblue4","cyan3"),ceiling(numCHR/2))    
+       col.PLINK=rep(c("gray10","gray70"),ceiling(numCHR/2))     
+       col.Beach=rep(c("turquoise4","indianred3","darkolivegreen3","red","aquamarine3","darkgoldenrod"),ceiling(numCHR/5))
+       col.Oceanic=rep(c(  '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(numCHR/5))
+       col.cougars=rep(c(  '#990000',    'dimgray'),ceiling(numCHR/2))  
+       if(plot.style=="Rainbow")plot.color= col.Rainbow
+       if(plot.style =="FarmCPU")plot.color= col.Rainbow
+       if(plot.style =="Rushville")plot.color= col.Rushville
+       if(plot.style =="Congress")plot.color= col.Congress
+       if(plot.style =="Ocean")plot.color= col.Ocean
+       if(plot.style =="PLINK")plot.color= col.PLINK
+       if(plot.style =="Beach")plot.color= col.Beach
+       if(plot.style =="Oceanic")plot.color= col.Oceanic
+       if(plot.style =="cougars")plot.color= col.cougars  
+       plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),xlim=c(min(x),max(x)),
+           cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
+           pch=mypch,lwd=wd,cex=s+2.5,cex.main=4)
+       mtext(side=2,expression(-log[10](italic(p))),line=3.5, cex=2.5)
+       if(!simulation)
+         {
+          abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
+          points(QTN[,2], QTN[,3], pch=20, cex=2.5,lwd=2.5,col="black")
+         }        
+       if(plot.line)
+         {
+          if(!is.null(nrow(new_xz)))  
+            {
+             abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
+            }else{
+             abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
+            }
+         }
         #Add a horizontal line for bonferroniCutOff
-    abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
-        # if(k==Nenviron)axis(1, at=ticks,cex.axis=2.5,labels=chm.to.analyze,tick=F)
-    axis(2, xaxp=c(1,themax,5),cex.axis=3.3,tick=T,las=1,lwd=2.5)
-    if(k==Nenviron)axis(1, at=max.x,cex.axis=3,labels=rep("",length(max.x)),tick=T,lwd=2.5)
-    if(k==Nenviron)axis(1, at=ticks,cex.axis=3.3,labels=chm.to.analyze,tick=F,line=1.2)
-        # environ_name2=gsub("Trait3","GD",environ_name)
-        # print(environ_name2)
-    mtext(side=4,paste(environ_name[k],sep=""),line=3.2,cex=2)
-# box()
-}#end of environ_name
-dev.off()
-
-
-# print("!!!!")
-# print(result0)
-pdf(paste("GAPIT.Manhattan.Mutiple.Plot.wide",".pdf" ,sep = ""), width = 16,height=8.5)
-par(mfrow=c(Nenviron,1))
-for(k in 1:Nenviron)
-{ if(k==Nenviron){#par(mfrow=c(Nenviron,1))
+       abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
+       axis(2, yaxp=c(0,themax,5),cex.axis=1.5,tick=T,las=1,lwd=2.5)
+       if(k==Nenviron)axis(1, at=max.x,cex.axis=1.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
+       if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F,line=1)
+       mtext(side=4,paste(environ_name[k],sep=""),line=3.2,cex=2)
+    }#end of environ_name
+       dev.off()
+}#end of plot.type
+if("w"%in%plot.type)
+{
+ pdf(paste("GAPIT.Manhattan.Mutiple.Plot.wide",".pdf" ,sep = ""), width = 16,height=8.5)
+ par(mfrow=c(Nenviron,1))
+ for(k in 1:Nenviron)
+ { 
+  if(k==Nenviron)
+        {#par(mfrow=c(Nenviron,1))
         par(mar = c(3,8,1,8))
         }else{
             #par(mfrow=c(Nenviron,1))
-        par(mar = c(0,8,1,8))
-        
+        par(mar = c(0,8,1,8))    
         }
   environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
   #print(environ_result[as.numeric(new_xz[,1]),])
@@ -417,12 +393,188 @@ for(k in 1:Nenviron)
           }
         #Add a horizontal line for bonferroniCutOff
         abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
-        axis(2, xaxp=c(1,themax,5),cex.axis=1,tick=F)
+        axis(2, yaxp=c(0,themax,5),cex.axis=1,las=1,tick=F)
         if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)
         mtext(side=4,paste(environ_name[k],sep=""),line=3,cex=1)
-box()
-}#end of environ_name
-dev.off()
+ box()
+ }#end of environ_name
+ dev.off()
+}#end of plot.type
+
+if("s"%in%plot.type)
+{
+ pdf(paste("GAPIT.Manhattan.Mutiple.Plot.symphysic",".pdf" ,sep = ""), width = 30,height=18)
+ par(mfrow=c(1,1))
+ par(mar = c(5,8,5,1))
+
+ for(k in 1:Nenviron)
+  { 
+
+    environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
+    result=environ_result[,1:4]
+    result=result[match(as.character(GM[,1]),as.character(result[,1])),]
+    rownames(result)=1:nrow(result)
+    GI.MP=result[,c(2:4)]
+    borrowSlot=4
+    GI.MP[,borrowSlot]=0 #Inicial as 0
+    GI.MP[,5]=1:(nrow(GI.MP))
+    GI.MP[,6]=1:(nrow(GI.MP)) 
+    GI.MP <- GI.MP[!is.na(GI.MP[,1]),]
+    GI.MP <- GI.MP[!is.na(GI.MP[,2]),]
+    GI.MP[is.na(GI.MP[,3]),3]=1
+    
+    #Retain SNPs that have P values between 0 and 1 (not na etc)
+    GI.MP <- GI.MP[GI.MP[,3]>0,]
+    GI.MP <- GI.MP[GI.MP[,3]<=1,]
+    #Remove chr 0 and 99
+    GI.MP <- GI.MP[GI.MP[,1]!=0,]
+    total_chromo=length(unique(GI.MP[,1]))
+    # print(dim(GI.MP))
+    if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1
+    numMarker=nrow(GI.MP)
+    bonferroniCutOff=-log10(cutOff/numMarker)
+    GI.MP[,3] <-  -log10(GI.MP[,3])
+    GI.MP[,5]=1:numMarker
+    y.lim <- ceiling(max(GI.MP[,3]))
+    
+    chm.to.analyze <- unique(GI.MP[,1])
+    # print(chm.to.analyze)
+    # chm.to.analyze=chm.to.analyze[order(chm.to.analyze)]
+    nchr=length(chm.to.analyze)
+    # print(chm.to.analyze)
+    GI.MP[,6]=1:(nrow(GI.MP))
+    MP_store=GI.MP
+    index_GI=MP_store[,3]>=0
+    MP_store <- MP_store[index_GI,]
+    ticks=NULL
+    lastbase=0
+    for (i in chm.to.analyze)
+        {
+            index=(MP_store[,1]==i)
+            ticks <- c(ticks, lastbase+mean(MP_store[index,2]))
+            MP_store[index,2]=MP_store[index,2]+lastbase
+            lastbase=max(MP_store[index,2])
+        }
+        
+    x0 <- as.numeric(MP_store[,2])
+    y0 <- as.numeric(MP_store[,3])
+    z0 <- as.numeric(MP_store[,1])
+    max.x=NULL
+    for (i in chm.to.analyze)
+        {
+            index=(MP_store[,1]==i)
+            max.x=c(max.x,max(x0[index]))
+        }
+    max.x=c(min(x0),max.x)
+    x1=sort(x0)
+
+    position=order(y0,decreasing = TRUE)
+    values=y0[position]
+    if(length(values)<=DPP)
+        {
+         index=position[c(1:length(values))]
+        }else{       
+         values=sqrt(values)  #This shift the weight a little bit to the low building.
+        #Handler of bias plot
+         rv=runif(length(values))
+         values=values+rv
+         values=values[order(values,decreasing = T)]         
+         theMin=min(values)
+         theMax=max(values)
+         range=theMax-theMin
+         interval=range/DPP
+
+         ladder=round(values/interval)
+         ladder2=c(ladder[-1],0)
+         keep=ladder-ladder2
+         index=position[which(keep>=0)]
+        }        
+    x=x0[index]
+    y=y0[index]
+    z=z0[index]
+        # print(length(x))
+
+        #Extract QTN
+        #if(!is.null(seqQTN))MP_store[seqQTN,borrowSlot]=1
+        #if(!is.null(interQTN))MP_store[interQTN,borrowSlot]=2
+    QTN=MP_store[which(MP_store[,borrowSlot]==1),]
+        #Draw circles with same size and different thikness
+    size=1 #1
+    ratio=10 #5
+    base=1 #1
+    numCHR=nchr
+    themax=ceiling(max(y))
+    themin=floor(min(y))
+    # wd=((y-themin+base)/(themax-themin+base))*size*ratio
+    wd=2
+    s=size-wd/ratio/2
+    ncycle=ceiling(nchr/5)
+    ncolor=5*ncycle
+    ncolor=band*ncycle
+
+    thecolor=seq(1,nchr,by= ncycle)
+    if(is.null(allpch)) allpch=c(0,1,2,5,6,22,21,24,23,25)
+    mypch=allpch[k]
+    col.Rainbow=rainbow(ncolor+1)     
+    col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
+    col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
+    col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
+    col.Ocean=rep(c("steelblue4","cyan3"),ceiling(numCHR/2))    
+    col.PLINK=rep(c("gray10","gray70"),ceiling(numCHR/2))     
+    col.Beach=rep(c("turquoise4","indianred3","darkolivegreen3","red","aquamarine3","darkgoldenrod"),ceiling(numCHR/5))
+        #col.Oceanic=rep(c( '#EC5f67',  '#F99157',  '#FAC863',  '#99C794',  '#5FB3B3',  '#6699CC',  '#C594C5',  '#AB7967'),ceiling(numCHR/8))
+        #col.Oceanic=rep(c( '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5',  '#AB7967'),ceiling(numCHR/6))
+    col.Oceanic=rep(c(  '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(numCHR/5))
+    col.cougars=rep(c(  '#990000',    'dimgray'),ceiling(numCHR/2))
+    
+    if(plot.style=="Rainbow")plot.color= col.Rainbow
+    if(plot.style =="FarmCPU")plot.color= col.Rainbow
+    if(plot.style =="Rushville")plot.color= col.Rushville
+    if(plot.style =="Congress")plot.color= col.Congress
+    if(plot.style =="Ocean")plot.color= col.Ocean
+    if(plot.style =="PLINK")plot.color= col.PLINK
+    if(plot.style =="Beach")plot.color= col.Beach
+    if(plot.style =="Oceanic")plot.color= col.Oceanic
+    if(plot.style =="cougars")plot.color= col.cougars
+    
+    #plot.color=rep(c( '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(ncolor/5))
+   if(k!=1) par(new=T)
+    plot(y~x,xlab="",ylab="" ,ylim=c(0,themax.y0),xlim=c(min(x),max(x)),yaxp=c(0,themax.y,5),
+    cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,
+    pch=mypch,lwd=wd,cex=s+1.3,cex.main=4)
+    
+    if(!simulation)
+       {
+        abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
+        points(QTN[,2], QTN[,3], pch=20, cex=2.5,lwd=2.5,col="black")
+       }        
+    
+        #Add a horizontal line for bonferroniCutOff
+        # if(k==Nenviron)axis(1, at=ticks,cex.axis=2.5,labels=chm.to.analyze,tick=F)
+    if(k==Nenviron)
+    {
+        axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
+        axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
+        axis(2, yaxp=c(0,themax.y,5),cex.axis=2,tick=T,las=1,lwd=2.5)
+        abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
+       if(plot.line)
+       {
+          if(!is.null(nrow(new_xz)))  
+          {
+            abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
+          }else{
+            abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
+          }
+       }
+       mtext(side=2,expression(-log[10](italic(p))),line=3, cex=2.5)
+       legend("top",legend=paste(environ_name,sep=""),ncol=length(environ_name),
+col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
+ bty = "n", bg = "white")
+
+    }# box()
+ }#end of environ_name
+ dev.off()
+}#end of plot.type
 
 print("GAPIT.Manhattan.Mutiple.Plot has done !!!")
 return(list(multip_mapP=result0,xz=new_xz))
