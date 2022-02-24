@@ -404,7 +404,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
     {
 		if(file.output){
 			if(file=="jpg")	grDevices::jpeg(paste("Circular-Manhattan.",paste(taxa,collapse="."),".jpg",sep=""), width = 8*dpi,height=8*dpi,res=dpi,quality = 100)
-			if(file=="pdf")	grDevices::pdf(paste("GAPIT.Circular.Manhattan.Plot.pdf" ,sep=""), width = 10,height=10)
+			if(file=="pdf")	grDevices::pdf(paste("GAPIT.Manhattan.Multiple.Plot.circular.pdf" ,sep=""), width = 10,height=10)
 			if(file=="tiff")	grDevices::tiff(paste("Circular-Manhattan.",paste(taxa,collapse="."),".tiff",sep=""), width = 8*dpi,height=8*dpi,res=dpi)
 		}
 		if(!file.output){
