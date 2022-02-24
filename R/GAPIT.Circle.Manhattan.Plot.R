@@ -403,9 +403,9 @@ GAPIT.Circle.Manhattan.Plot <- function(
     if("c" %in% plot.type)
     {
 		if(file.output){
-			if(file=="jpg")	grDevices::jpeg(paste("Circular-Manhattan.",paste(taxa,collapse="."),".jpg",sep=""), width = 8*dpi,height=8*dpi,res=dpi,quality = 100)
+			if(file=="jpg")	grDevices::jpeg(paste("GAPIT.Manhattan.Multiple.Plot.circular.jpg",sep=""), width = 8*dpi,height=8*dpi,res=dpi,quality = 100)
 			if(file=="pdf")	grDevices::pdf(paste("GAPIT.Manhattan.Multiple.Plot.circular.pdf" ,sep=""), width = 10,height=10)
-			if(file=="tiff")	grDevices::tiff(paste("Circular-Manhattan.",paste(taxa,collapse="."),".tiff",sep=""), width = 8*dpi,height=8*dpi,res=dpi)
+			if(file=="tiff")	grDevices::tiff(paste("GAPIT.Manhattan.Multiple.Plot.circular.tiff",sep=""), width = 8*dpi,height=8*dpi,res=dpi)
 		}
 		if(!file.output){
 			if(!is.null(grDevices::dev.list()))	grDevices::dev.new(width=8, height=8)
@@ -888,9 +888,9 @@ GAPIT.Circle.Manhattan.Plot <- function(
 		amplify=FALSE
 		if(multracks){
 			if(file.output){
-				if(file=="jpg")	grDevices::jpeg(paste("Multracks.QQ_plot.",paste(taxa,collapse="."),".jpg",sep=""), width = R*2.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
-				if(file=="pdf")	grDevices::pdf(paste("Multracks.QQ_plot.",paste(taxa,collapse="."),".pdf",sep=""), width = R*2.5,height=5.5)
-				if(file=="tiff")	grDevices::tiff(paste("Multracks.QQ_plot.",paste(taxa,collapse="."),".tiff",sep=""), width = R*2.5*dpi,height=5.5*dpi,res=dpi)
+				if(file=="jpg")	grDevices::jpeg(paste("GAPIT.Multracks.QQ.plot.jpg",sep=""), width = R*2.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
+				if(file=="pdf")	grDevices::pdf(paste("GAPIT.Multracks.QQ.plot.pdf",sep=""), width = R*2.5,height=5.5)
+				if(file=="tiff")	grDevices::tiff(paste("GAPIT.Multracks.QQ.plot.tiff",sep=""), width = R*2.5*dpi,height=5.5*dpi,res=dpi)
 				graphics::par(mfcol=c(1,R),mar = c(0,1,4,1.5),oma=c(3,5,0,0),xpd=TRUE)
 			}else{
 				if(is.null(grDevices::dev.list()))	grDevices::dev.new(width = 2.5*R, height = 5.5)
@@ -979,9 +979,9 @@ GAPIT.Circle.Manhattan.Plot <- function(
 
 				signal.col <- NULL
 				if(file.output){
-					if(file=="jpg")	grDevices::jpeg(paste("Multiple.QQ_plot.",paste(taxa,collapse="."),".jpg",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
-					if(file=="pdf")	grDevices::pdf(paste("Multiple.QQ_plot.",paste(taxa,collapse="."),".pdf",sep=""), width = 5.5,height=5.5)
-					if(file=="tiff")	grDevices::tiff(paste("Multiple.QQ_plot.",paste(taxa,collapse="."),".tiff",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi)
+					if(file=="jpg")	grDevices::jpeg(paste("GAPIT.Multiple.QQ.plot.symphysic .jpg",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
+					if(file=="pdf")	grDevices::pdf(paste("GAPIT.Multiple.QQ.plot.symphysic .pdf",sep=""), width = 5.5,height=5.5)
+					if(file=="tiff")	grDevices::tiff(paste("GAPIT.Multiple.QQ.plot.symphysic .tiff",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi)
 					graphics::par(mar = c(5,5,4,2),xpd=TRUE)
 				}else{
 					grDevices::dev.new(width = 5.5, height = 5.5)
