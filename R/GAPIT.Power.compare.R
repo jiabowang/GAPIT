@@ -47,9 +47,9 @@ myY=mysimulation$Y
        rep.FDR.store[[j]]<-rep.FDR.store[[j]]+power_store$FDR
        rep.Power.Alpha.store[[j]]<-rep.Power.Alpha.store[[j]]+power_store$Power.Alpha
     }
-rep.power.store<-rbind(rep.power.store,power.store)
-rep.FDR.store<-rbind(rep.FDR.store,FDR.store)
-rep.Power.Alpha.store<-rbind(rep.Power.Alpha.store,Power.Alpha.store)
+# rep.power.store<-rbind(rep.power.store,power.store)
+# rep.FDR.store<-rbind(rep.FDR.store,FDR.store)
+# rep.Power.Alpha.store<-rbind(rep.Power.Alpha.store,Power.Alpha.store)
 gc()
 }
 
