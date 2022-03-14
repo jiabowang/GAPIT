@@ -17,7 +17,9 @@ if(is.null(GD) & !is.null(GM) & (is.null(G)) &SNP.test) stop("GAPIT Says: Genoty
 
 if(!is.null(GD)&!is.null(Y))
 {
-if (is.null(GD[,1]%in%Y[,1]))stop("GAPIT Says: There are no common taxa between genotype and phenotype")
+  if(nrow(GD)>1){
+    if (is.null(GD[,1]%in%Y[,1]))stop("GAPIT Says: There are no common taxa between genotype and phenotype")
+     }
 }
 if(!is.null(G)&!is.null(Y))
 {

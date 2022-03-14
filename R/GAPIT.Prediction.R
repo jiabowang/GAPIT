@@ -91,10 +91,8 @@ for(j in 2:num)
 	blup_prediction.inf<-blup_prediction[match(commonGeno_v,blup_prediction$Taxa),]
 	inf_BLUP<-blup_prediction.inf$BLUP
 	ref_BLUP<-blup_prediction.ref$BLUP
-
-	inf_pred<-inf_BLUP+mean_blue
-	ref_pred<-ref_BLUP+mean_blue
-
+	inf_pred<-blup_prediction.inf$Prediction
+	ref_pred<-blup_prediction.ref$Prediction
 
 	inf_all<-cbind(blup_prediction.inf,inf_pred)
 	ref_all<-cbind(blup_prediction.ref,ref_pred)
@@ -104,11 +102,11 @@ for(j in 2:num)
 
 	name.of.trait=noquote(names(Y.raw)[2])
 
-
+# print(inf_Y_all)
 grDevices::pdf(paste("GAPIT.Prediction ", name.of.trait,".Predict reference.pdf", sep = ""), width =6, height = 6)
 graphics::par(mar = c(5,5,5,5))
-plot(ref_Y_all[,2],ref_Y_all[,8],pch=1,xlab="Observed(Ref)",ylab="Predicted(Ref)",cex.lab=1.3,cex.axis=1.2,lwd=2)   #xlim=c(50,110),ylim=c(50,110),
-kr <- stats::lm(ref_Y_all[,8]~ref_Y_all[,2])
+plot(ref_Y_all[,2],ref_Y_all[,9],pch=1,xlab="Observed(Ref)",ylab="Predicted(Ref)",cex.lab=1.3,cex.axis=1.2,lwd=2)   #xlim=c(50,110),ylim=c(50,110),
+kr <- stats::lm(ref_Y_all[,9]~ref_Y_all[,2])
 graphics::abline(a = kr$coefficients[1], b = kr$coefficients[2], col = "red",lwd=4,lty=1)
 #v1<-max(ref_Y_all[,2]])*10/10
 #text(v1,kr$coefficients[1]+kr$coefficients[2]*v1,paste("R^2=",format(kr$coefficients[2], digits = 3),seq=""), col = "blue", adj = c(0, -.1))
@@ -117,8 +115,8 @@ graphics::legend("bottomright",paste("R^2=",format(kr$coefficients[2], digits = 
 grDevices::dev.off()
 grDevices::pdf(paste("GAPIT.Prediction ", name.of.trait,".Predict inference.pdf", sep = ""), width = 6, height = 6)
 graphics::par(mar = c(5,5,5,5))
-plot(inf_Y_all[,2],inf_Y_all[,8],pch=1,xlab="Observed(Inf)",ylab="Predicted(Inf)",cex.lab=1.5,lwd=2,,cex.axis=1.2)#xlim=c(50,110),ylim=c(45,100),
-ki <- stats::lm(inf_Y_all[,8]~inf_Y_all[,2])
+plot(inf_Y_all[,2],inf_Y_all[,9],pch=1,xlab="Observed(Inf)",ylab="Predicted(Inf)",cex.lab=1.5,lwd=2,,cex.axis=1.2)#xlim=c(50,110),ylim=c(45,100),
+ki <- stats::lm(inf_Y_all[,9]~inf_Y_all[,2])
 graphics::abline(a = ki$coefficients[1], b = ki$coefficients[2], col = "red",lwd=3,lty=1)
 #v0<-max(inf_Y_all[,2])
 #text(v0,ki$coefficients[1]+ki$coefficients[2]*v0,paste("R^2=",format(ki$coefficients[2], digits = 4),seq=""), col = "blue", adj = c(0, -.1))

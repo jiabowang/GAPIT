@@ -69,10 +69,12 @@ if(output.hapmap){
                        col.names = FALSE)
 }
 
+if(is.null(GD))
+{
 rownames(GD)=GT
 colnames(GD)=GI[,1]
 GD=cbind(as.data.frame(GT),GD)
-
+}
   print("GAPIT.DP accomplished successfully for multiple traits. Results are saved")
   return (list(Y=NULL,G=G,GD=GD,GM=GI,KI=KI,Z=Z,CV=CV,CV.Inheritance= CV.Inheritance,GP=GP,GK=GK,PC=PC,GI=GI,
                 group.from= group.from ,group.to= group.to,group.by= group.by,DPP= DPP, name.of.trait=NULL,

@@ -9,8 +9,8 @@
   r=0.25,
   CV,
   cveff=NULL,
-  a2=0
-  ,adim=2
+  a2=0,
+  adim=2
   ){
     #Object: To simulate phenotype from genotye
     #Input: GD - n by m +1 dataframe or n by m big.matrix
