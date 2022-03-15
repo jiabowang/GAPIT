@@ -69,7 +69,7 @@ if(output.hapmap){
                        col.names = FALSE)
 }
 
-if(is.null(GD))
+if(!is.null(GD))
 {
 rownames(GD)=GT
 colnames(GD)=GI[,1]

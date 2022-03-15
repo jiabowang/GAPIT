@@ -1,4 +1,4 @@
-`GAPIT.Prediction` <-function(myK=NULL,y=NULL, num=NULL){
+`GAPIT.Validation` <-function(K=NULL,Y=NULL, G=NULL,GD=NULL,GM=NULL,PCA.total=3,KI=NULL,CV=NULL,nfold=NULL,nrep=30){
 # Object: Genetic Prediction one time by cross validation and cMLM,result:a pdf of the scree plot
 # myK:Kinship
 # Y: phenotype with columns of taxa,Y1,Y2...
