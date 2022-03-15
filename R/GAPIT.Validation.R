@@ -12,9 +12,13 @@ all.method=model
 File.out=file.output
 print("Remove NA individuals in the phenotype file !!!")
 Y=Y[!is.na(Y[,2]),]
+taxa.y=as.character(Y[,1])
+taxa.g=as.character(GD[,1])
+Y=Y[taxa.y%in%taxa.g,]
+
 sets=sample(cut(1:nrow(Y),nfold,labels=FALSE),nrow(Y))
 colnames(Y)[1]=c("Taxa")
-
+# print(Y)
 for(i in 1:length(all.method))
 {
 	ref_Y_all=NULL
@@ -34,11 +38,13 @@ for(i in 1:length(all.method))
 	        model=all.method[i],
 	        file.output=FALSE)
         pridiction0=merge(Y,myBLUP$Pred[,c(1,3,5,8)],by.x="Taxa",by.y="Taxa")
-        index=pridiction0[,3]!=1
-        ref_Y_all=rbind(ref_Y_all,pridiction0[!index,])
-        inf_Y_all=rbind(inf_Y_all,pridiction0[index,])
+        # index=pridiction0[,3]!=2
+        ref_Y_all=rbind(ref_Y_all,pridiction0[!training_index,])
+        inf_Y_all=rbind(inf_Y_all,pridiction0[training_index,])
         # gblup.r=cor(as.numeric(gapit[index,2]),as.numeric(gapit[index,5]))
     }#end of nfold
+    # print(round(min(ref_Y_all[,2]),0))
+    # print(round(min(ref_Y_all[,5]),0))
     if(File.out){
     grDevices::pdf(paste("GAPIT.Prediction.", all.method[i],".Ref.pdf", sep = ""), width =6, height = 6)
     graphics::par(mar = c(5,5,5,5))
@@ -64,8 +70,8 @@ for(i in 1:length(all.method))
     graphics::legend("bottomright",paste("R^2=",format(ki$coefficients[2], digits = 4),seq=""), col="white",text.col="blue",lwd=2,cex=1.2,bty="n")
     grDevices::dev.off()
 
-    utils::write.csv(inf_Y_all,paste("GAPIT.Inf.Prediction.",all.method[j],".nfold",nfold,".csv",sep=""),row.names=F)
-    utils::write.csv(ref_Y_all,paste("GAPIT.Ref.Prediction.",all.method[j],".nfold",nfold,".csv",sep=""),row.names=F)
+    utils::write.csv(inf_Y_all,paste("GAPIT.Inf.Prediction.",all.method[i],".nfold",nfold,".csv",sep=""),row.names=F)
+    utils::write.csv(ref_Y_all,paste("GAPIT.Ref.Prediction.",all.method[i],".nfold",nfold,".csv",sep=""),row.names=F)
 
     }#end of output
 }#end of all.method
