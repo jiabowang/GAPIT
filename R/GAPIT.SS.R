@@ -43,8 +43,9 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
  {
  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.FarmCPU")
  Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.FarmCPU")
+
  myBus=GAPIT.Bus(Y=ic_Y,CV=ic_PCA,Z=NULL,GK=NULL,KI=ic_KI,GD=ic_GD,GM=ic_GM,GT=IC$GT,
-                method=DP$kinship.algorithm,GTindex=DP$GTindex,LD=DP$LD,opt=DP$opt,
+                method=DP$kinship.algorithm,GTindex=DP$GTindex,LD=DP$LD,opt=DP$opt,N.sig=DP$N.sig,
                 bin.size=DP$bin.size,bin.selection=DP$bin.selection,alpha=DP$alpha,WS=DP$WS,
                 cutOff=DP$cutOff,p.threshold=DP$p.threshold,QTN.threshold=DP$QTN.threshold,FDRcut=DP$FDRcut,
                 maf.threshold=DP$maf.threshold,method.GLM=DP$method.GLM,method.sub=DP$method.sub,
@@ -310,7 +311,7 @@ if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC"))
 						             SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
  GWAS=gapitMain$GWAS
- if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,GT=IC$GT)
+ if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,N.sig=DP$N.sig,GT=IC$GT)
  Pred=gapitMain$Pred
 #print(head(Pred))
  va=NA#gapitMain$vg

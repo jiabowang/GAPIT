@@ -1,5 +1,5 @@
 `GAPIT.RandomModel` <-
-function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=500){
+function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,N.sig=NULL,n_ran=500){
     #Object: To calculate the genetics variance ratio of Candidate Genes
     #Output: The genetics variance raito between CG and total
     #Authors: Jiabo Wang and Zhiwu Zhang
@@ -14,23 +14,26 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,n_ran=500){
     print("GAPIT.RandomModel beginning...")
     if(is.null(GT))GT=as.character(Y[,1])
     name.of.trait=colnames(Y)[2]
-    cutoff=cutOff/nrow(GWAS)
     P.value=as.numeric(GWAS[,4])
     P.value[is.na(P.value)]=1
-    index=P.value<cutoff
-    #index[c(1:2)]=TRUE
-    
-    geneGD=X[,index]
+    if(is.null(N.sig))
+    {
+    cutoff=cutOff/nrow(GWAS)
+    index=P.value<cutoff    
+    }else{
+    sort.p=sort(P.value)
+    print("GAPIT setup Number of significant markers into Random model:")
+    print(N.sig)
+    cutoff=max(sort.p[1:N.sig])
+    index=P.value<cutoff 
+    }
+    geneGD=X[,index,drop=FALSE]
 
-    geneGWAS=GWAS[index,]
-    # print(table(index))
-    # print(head(geneGD))
-    # print(dim(geneGD))
+    geneGWAS=GWAS[index,,drop=FALSE]
     if(length(unique(index))==1)
     {
     	print("There is no significant marker for VE !!")
     	return(list(GVs=NULL))
-
     }
     index_T=as.matrix(table(index))
     # print(index_T)
@@ -169,13 +172,13 @@ if(!is.null(CV))
     var_gene=as.numeric(carcor_matrix[1:(nrow(carcor_matrix)-1),4])
     var_res=carcor_matrix[nrow(carcor_matrix),4]
 
-    print(paste("Candidate Genes could explain genetics variance :",sep=""))
+    print(paste("Candidate Genes could Phenotype_Variance_Explained(%) :",sep=""))
     print(100*var_gene/sum(var_gene+var_res))
     v_rat=100*var_gene/sum(var_gene+var_res)
     gene_list=cbind(geneGWAS,v_rat)
-    colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
-
-    utils::write.csv(gene_list,paste("GAPIT.", name.of.trait,".Phenotype_Variance_Explained_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+    colnames(gene_list)[ncol(gene_list)]="Phenotype_Variance_Explained(%)"
+    utils::write.csv(var_gene,paste("GAPIT.", name.of.trait,".V_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+    utils::write.csv(gene_list,paste("GAPIT.", name.of.trait,".PVE_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 #gene_list=read.csv("GAPIT.Weight.GrowthIntercept.Phenotype_Variance_Explained_by_Association_Markers.csv",head=T)
 if(!is.na(sum(gene_list[1,c(4:8)])))
 {
