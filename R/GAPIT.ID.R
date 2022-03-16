@@ -245,7 +245,7 @@ if(DP$file.output) myROC=GAPIT.ROC(t=as.numeric(tvalue),se=as.numeric(stderr),Vp
 if(DP$file.output) myMAF1=GAPIT.MAF(MAF=maf,P=ps,E=NULL,trait=DP$name.of.trait)
 
 print("GAPIT.Interactive.Manhattan")
-print(DP$Inter.type)
+# print(DP$Inter.type)
 #GI=GI[order(GI[,4]),]
 #print(head(GI))
 if(DP$file.output){
@@ -261,7 +261,7 @@ if(DP$file.output){
 # print("@@@@@@")
 if(DP$Inter.Plot) 
   {
-  print(DP$Inter.type)
+  # print(DP$Inter.type)
   GAPIT.Interactive.Manhattan(GWAS=new_GI,X_fre=maf,plot.type=DP$Inter.type,name.of.trait = DP$name.of.trait)
    } 
 # if(DP$file.output){
