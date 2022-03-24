@@ -14,7 +14,7 @@ print("GAPIT.IC in process...")
      noCV=FALSE
      if(is.null(CV)){
      noCV=TRUE
-     if(ncol(GD)==0)
+     if(is.null(GD))
      {
        CV=Y[,1:2]
           }else{
@@ -29,7 +29,7 @@ print("GAPIT.IC in process...")
      # print(head(Y))
      if(DP$PCA.total>0&!is.null(DP$CV))CV=GAPIT.CVMergePC(DP$CV,PC)
      if(DP$PCA.total>0&is.null(DP$CV))CV=PC
-     if(ncol(GD)==0&!is.null(DP$KI))
+     if(is.null(GD)&!is.null(DP$KI))
      {
      taxa_KI=as.character(DP$KI[,1])
      taxa_CV=as.character(CV[,1])

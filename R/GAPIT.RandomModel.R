@@ -180,6 +180,8 @@ if(!is.null(CV))
     utils::write.csv(var_gene,paste("GAPIT.", name.of.trait,".V_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
     utils::write.csv(gene_list,paste("GAPIT.", name.of.trait,".PVE_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 #gene_list=read.csv("GAPIT.Weight.GrowthIntercept.Phenotype_Variance_Explained_by_Association_Markers.csv",head=T)
+    colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
+# print(gene_list)
 if(!is.na(sum(gene_list[1,c(4:8)])))
 {
          grDevices::pdf(paste("GAPIT.", name.of.trait,".Effect_VP.pdf" ,sep = ""), width = 7,height=5.75)
@@ -230,6 +232,7 @@ if(!is.na(sum(gene_list[1,c(4:8)])))
             
             graphics::barplot(matrix(rep(0.4,times=n),n,1),beside=T,col=do_color,border=do_color,axes=FALSE,horiz =T)
         #legend(x=10,y=2,legend=expression(R^"2"),,lty=0,cex=1.3,bty="n",bg=par("bg"))
+            # print(z)
             step=length(seq(0,round(max(z),3),by=0.01))
             small_bar=round(seq(0,round(max(z),3),by=(max(z)-min(z))/10),2)
             #main()

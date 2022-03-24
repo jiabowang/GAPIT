@@ -56,7 +56,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
 
  # BUS Prediction with gBLUP
 # lmpred=TRUE
-if(!is.null(Pred))buspred=FALSE
+# if(!is.null(Pred))buspred=FALSE
 print(myBus$seqQTN)
 if(buspred)
 {  
