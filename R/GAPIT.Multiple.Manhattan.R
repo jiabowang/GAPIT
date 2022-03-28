@@ -33,7 +33,7 @@ for(i in 1:length(environ_name))
   themax.y=round(max(-log10(environ_filter[,4])),0)+round(max(-log10(environ_filter[,4])),0)/5
   themax.y0=round(max(c(themax.y,themax.y0)),0)
   y_filter=environ_filter[environ_filter[,4]<(cutOff/(nrow(environ_filter))),]
-  write.table(y_filter,paste("Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
+  write.table(y_filter,paste("GAPIT.Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
 
   result=environ_result[,1:4]
   result=result[match(as.character(GM[,1]),as.character(result[,1])),]
@@ -164,7 +164,21 @@ if("h"%in%plot.type)
           }
        x0 <- as.numeric(MP_store[,2])
        y0 <- as.numeric(MP_store[,3])
-       z0 <- as.numeric(MP_store[,1])
+       z0 <- as.character(MP_store[,1])
+       # convert chromosome character to number
+       chor_taxa=as.character(unique(MP_store[,1]))
+       chor_taxa=chor_taxa[order(as.numeric(as.character(chor_taxa)))]
+       chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
+       if(!setequal(integer(0),chr_letter))
+         {     
+           z0=as.character(MP_store[,1])
+           for(i in 1:(length(chor_taxa)))
+              {
+                index=z0==chor_taxa[i]
+                z0[index]=i    
+              }
+          }
+       z0=as.numeric(z0)
        max.x=NULL
        for(i in chm.to.analyze)
           {
@@ -294,7 +308,21 @@ if("w"%in%plot.type)
         
         x0 <- as.numeric(MP_store[,2])
         y0 <- as.numeric(MP_store[,3])
-        z0 <- as.numeric(MP_store[,1])
+        z0 <- as.character(MP_store[,1])
+       # convert chromosome character to number
+       chor_taxa=as.character(unique(MP_store[,1]))
+       chor_taxa=chor_taxa[order(as.numeric(as.character(chor_taxa)))]
+       chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
+       if(!setequal(integer(0),chr_letter))
+         {     
+           z0=as.character(MP_store[,1])
+           for(i in 1:(length(chor_taxa)))
+              {
+                index=z0==chor_taxa[i]
+                z0[index]=i    
+              }
+          }
+       z0=as.numeric(z0)
         x1=sort(x0)
 
         position=order(y0,decreasing = TRUE)
@@ -445,8 +473,22 @@ if("s"%in%plot.type)
         
     x0 <- as.numeric(MP_store[,2])
     y0 <- as.numeric(MP_store[,3])
-    z0 <- as.numeric(MP_store[,1])
-    max.x=NULL
+    z0 <- as.character(MP_store[,1])
+       # convert chromosome character to number
+       chor_taxa=as.character(unique(MP_store[,1]))
+       chor_taxa=chor_taxa[order(as.numeric(as.character(chor_taxa)))]
+       chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
+       if(!setequal(integer(0),chr_letter))
+         {     
+           z0=as.character(MP_store[,1])
+           for(i in 1:(length(chor_taxa)))
+              {
+                index=z0==chor_taxa[i]
+                z0[index]=i    
+              }
+          }
+       z0=as.numeric(z0)
+       max.x=NULL
     for (i in chm.to.analyze)
         {
             index=(MP_store[,1]==i)
