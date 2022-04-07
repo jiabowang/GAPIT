@@ -481,6 +481,7 @@ Compression[order_count,6]=emma_test$Ve
   } # group end
   Compression=Compression[order(as.numeric(Compression[,4]),decreasing = FALSE),]
   Compression=matrix(Compression,ncol=6,byrow=F)
+  colnames(Compression)=c("Type","Cluster","Group","REML","VA","VE")
   print(Compression)
 
   # write.csv(Compression,paste("GAPIT.",Compression,".csv",sep=""), row.names = FALSE,col.names = TRUE)
