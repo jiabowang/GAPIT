@@ -1,6 +1,6 @@
 `GAPIT.Multiple.Manhattan` <-
 function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y=NULL,GM=NULL,interQTN=NULL,
-    plot.style="Oceanic",plot.line=TRUE,allpch=NULL,plot.type=c("h","s")){
+    plot.style="Oceanic",plot.line=TRUE,allpch=NULL,plot.type=c("h","s","w")){
     #Object: Make a Manhattan Plot
     #Output: pdfs of the Multiple Manhattan Plot
     #Authors: Zhiwu Zhang and Jiabo Wang
@@ -225,7 +225,7 @@ if("h"%in%plot.type)
        if(!simulation)
          {
           abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[,2], QTN[,3], pch=20, cex=2.5,lwd=2.5,col="black")
+          points(QTN[,2], QTN[,3], pch=20, cex=2.5,lwd=2.5,col="dimgrey")
          }        
        if(plot.line)
          {
@@ -362,12 +362,17 @@ if("w"%in%plot.type)
         #Draw circles with same size and different thikness
         themax=ceiling(max(y))
         themin=floor(min(y))
+        # ratio=5
         wd=((y-themin+base)/(themax-themin+base))*size*ratio
         s=size-wd/ratio/2
         mypch=1
-        
-        plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),
-            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=0.5,cex=0.7,cex.main=2)
+        bamboo=ifelse(themax%%10==0,themax/10,ifelse(themax%%9==0,themax/9,ifelse(themax%%8==0,themax/8,ifelse(themax%%7==0,themax/7,ifelse(themax%%6==0,themax/6,5)))))
+        # bamboo=5
+        # plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),
+        #     cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=0.5,cex=0.7,cex.main=2)
+        plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),xlim=c(min(x),max(x)),
+           cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
+           pch=mypch,lwd=wd,cex=s+2.5,cex.main=4)
         mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
         if(plot.line)
         {
@@ -376,12 +381,12 @@ if("w"%in%plot.type)
              }
         }
         if(!simulation){abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[,2], QTN[,3], type="p",pch=21, cex=2.8,lwd=1.5,col="dimgrey")
-          points(QTN[,2], QTN[,3], type="p",pch=20, cex=2.8,lwd=1.5,col="dimgrey")
+          points(QTN[,2], QTN[,3], type="p",pch=21, cex=2.5,lwd=1.5,col="dimgrey")
+          points(QTN[,2], QTN[,3], type="p",pch=20, cex=2.5,lwd=1.5,col="dimgrey")
           }
         #Add a horizontal line for bonferroniCutOff
         abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
-        axis(2, yaxp=c(0,themax,5),cex.axis=1,las=1,tick=F)
+        axis(2, yaxp=c(0,themax,bamboo),cex.axis=1,las=1,tick=F)
         if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)
         mtext(side=4,paste(environ_name[k],sep=""),line=3,cex=1)
  box()
@@ -543,7 +548,7 @@ if("s"%in%plot.type)
        {
         abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")
         }else{
-        points(QTN[,2], QTN[,3], pch=20, cex=2,lwd=2.5,col="black")
+        points(QTN[,2], QTN[,3], pch=20, cex=2,lwd=2.5,col="dimgrey")
        }        
     
  }#end of environ_name
