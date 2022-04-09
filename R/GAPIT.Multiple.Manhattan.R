@@ -215,10 +215,12 @@ if("h"%in%plot.type)
         #Draw circles with same size and different thikness
        
        themax=ceiling(max(y))
+       themax2=ceiling((ceiling(themax/4)+1)*4)
+
        themin=floor(min(y))
        wd=((y-themin+base)/(themax-themin+base))*size*ratio
        s=size-wd/ratio/2
-       plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),xlim=c(min(x),max(x)),
+       plot(y~x,xlab="",ylab="" ,ylim=c(0,themax2),xlim=c(min(x),max(x)),
            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
            pch=mypch,lwd=wd,cex=s+2.5,cex.main=4)
        mtext(side=2,expression(-log[10](italic(p))),line=3.5, cex=2.5)
@@ -238,9 +240,9 @@ if("h"%in%plot.type)
          }
         #Add a horizontal line for bonferroniCutOff
        abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
-       axis(2, yaxp=c(0,themax,5),cex.axis=1.3,tick=T,las=1,lwd=2.5)
-       if(k==Nenviron)axis(1, at=max.x,cex.axis=1.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
-       if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F,line=1)
+       axis(2, yaxp=c(0,themax2,4),cex.axis=2.3,tick=T,las=1,lwd=2.5)
+       if(k==Nenviron)axis(1, at=max.x,cex.axis=2.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
+       if(k==Nenviron)axis(1, at=ticks,cex.axis=2.5,labels=chm.to.analyze,tick=F,line=1)
        mtext(side=4,paste(environ_name[k],sep=""),line=3.2,cex=2)
     }#end of environ_name
        dev.off()
@@ -250,14 +252,20 @@ if("w"%in%plot.type)
 {
  pdf(paste("GAPIT.Manhattan.Mutiple.Plot.wide",".pdf" ,sep = ""), width = 16,height=8.5)
  par(mfrow=c(Nenviron,1))
+ mtext.h=0.5
  for(k in 1:Nenviron)
  { 
   if(k==Nenviron)
         {#par(mfrow=c(Nenviron,1))
-        par(mar = c(3,8,1,8))
+          # print(par())
+        par(mar = c(2,8,0,8))
+         # par(pin=c(10,((8-mtext.h)/Nenviron)+mtext.h))
+
         }else{
             #par(mfrow=c(Nenviron,1))
-        par(mar = c(0,8,1,8))    
+        par(mar = c(1.5,8,0.5,8))    
+         # par(pin=c(10,(8-mtext.h)/Nenviron))
+
         }
   environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
   #print(environ_result[as.numeric(new_xz[,1]),])
@@ -361,16 +369,16 @@ if("w"%in%plot.type)
         QTN=MP_store[which(MP_store[,borrowSlot]==1),]
         #Draw circles with same size and different thikness
         themax=ceiling(max(y))
+        themax2=ceiling((ceiling(themax/4)+1)*4)
         themin=floor(min(y))
         # ratio=5
         wd=((y-themin+base)/(themax-themin+base))*size*ratio
         s=size-wd/ratio/2
         mypch=1
-        bamboo=ifelse(themax%%10==0,themax/10,ifelse(themax%%9==0,themax/9,ifelse(themax%%8==0,themax/8,ifelse(themax%%7==0,themax/7,ifelse(themax%%6==0,themax/6,5)))))
-        # bamboo=5
+        bamboo=4
         # plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),
         #     cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=0.5,cex=0.7,cex.main=2)
-        plot(y~x,xlab="",ylab="" ,ylim=c(0,themax),xlim=c(min(x),max(x)),
+        plot(y~x,xlab="",ylab="" ,ylim=c(0,themax2),xlim=c(min(x),max(x)),
            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
            pch=mypch,lwd=wd,cex=s+2.5,cex.main=4)
         mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
@@ -381,14 +389,14 @@ if("w"%in%plot.type)
              }
         }
         if(!simulation){abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[,2], QTN[,3], type="p",pch=21, cex=2.5,lwd=1.5,col="dimgrey")
-          points(QTN[,2], QTN[,3], type="p",pch=20, cex=2.5,lwd=1.5,col="dimgrey")
+          points(QTN[,2], QTN[,3], type="p",pch=21, cex=1.5,lwd=1.5,col="dimgrey")
+          points(QTN[,2], QTN[,3], type="p",pch=20, cex=1.5,lwd=1.5,col="dimgrey")
           }
         #Add a horizontal line for bonferroniCutOff
         abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
-        axis(2, yaxp=c(0,themax,bamboo),cex.axis=1,las=1,tick=F)
+        axis(2, yaxp=c(0,themax2,bamboo),cex.axis=1.5,las=1,tick=F)
         if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)
-        mtext(side=4,paste(environ_name[k],sep=""),line=3,cex=1)
+        mtext(side=4,paste(environ_name[k],sep=""),line=2,cex=1,base_family="Arial")
  box()
  }#end of environ_name
  dev.off()
@@ -403,15 +411,16 @@ if("s"%in%plot.type)
  pdf(paste("GAPIT.Manhattan.Mutiple.Plot.symphysic",".pdf" ,sep = ""), width = 30,height=18)
  par(mfrow=c(1,1))
  par(mar = c(5,8,5,1))
- 
- plot(1~1,col="white",xlab="",ylab="" ,ylim=c(0,themax.y0),xlim=c(min(x),max(x)),yaxp=c(0,themax.y,5),
+ themax.y02=ceiling((ceiling(themax.y0/4)+1)*4)
+
+ plot(1~1,col="white",xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(x),max(x)),yaxp=c(0,themax.y02,4),
     cex.axis=4, cex.lab=4,axes=FALSE,
     pch=mypch,lwd=wd,cex=s+1.3,cex.main=4)
     
         #Add a horizontal line for bonferroniCutOff
  axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
  axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
- axis(2, yaxp=c(0,themax.y,5),cex.axis=2,tick=T,las=1,lwd=2.5)
+ axis(2, yaxp=c(0,themax.y02,4),cex.axis=2,tick=T,las=1,lwd=2.5)
  abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
  if(plot.line)
     {
@@ -422,7 +431,7 @@ if("s"%in%plot.type)
         abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
         }
     }
- mtext(side=2,expression(-log[10](italic(p))),line=3, cex=2.5)
+ mtext(side=2,expression(-log[10](italic(p))),line=4, cex=2.5)
  legend("top",legend=paste(environ_name,sep=""),ncol=length(environ_name),
        col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
        bty = "o", bg = "white",box.col="white")
@@ -534,13 +543,15 @@ if("s"%in%plot.type)
     QTN=MP_store[which(MP_store[,borrowSlot]==1),]
         #Draw circles with same size and different thikness
     themax=ceiling(max(y))
+    # themax.y02=ceiling((ceiling(themax.y0/4)+1)*4)
+    # print(themax.y02)
     themin=floor(min(y))
     mypch=allpch[k]
     
    if(k!=1) par(new=T)
     
     par(new=T)
-    plot(y~x,xlab="",ylab="" ,ylim=c(0,themax.y0),xlim=c(min(x),max(x)),yaxp=c(0,themax.y,5),
+    plot(y~x,xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(x),max(x)),yaxp=c(0,themax.y02,4),
     cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,
     pch=mypch,lwd=wd,cex=s+1.5,cex.main=4)
     
