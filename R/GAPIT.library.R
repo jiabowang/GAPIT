@@ -4,7 +4,7 @@ if(!require(genetics)) install.packages("genetics")
 if(!require(ape)) install.packages("ape")
 if(!require(compiler)) install.packages("compiler")
 if(!require(grid)) install.packages("grid")
-if(!require(grid)) install.packages("bigmemory")
+if(!require(bigmemory)) install.packages("bigmemory")
 if(!require(EMMREML)) install.packages("EMMREML")
 if(!require(scatterplot3d)) install.packages("scatterplot3d")
 
