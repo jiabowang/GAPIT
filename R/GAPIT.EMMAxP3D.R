@@ -205,6 +205,8 @@
     }
 
     if(is.null(K)){
+      print("!!!!!")
+      print(head(X))
       iXX <- try(solve(crossprod(X,X)),silent=TRUE)
       if(inherits(iXX, "try-error"))iXX <- MASS::ginv(crossprod(X,X))
       XY = crossprod(X,yv)

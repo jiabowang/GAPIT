@@ -30,7 +30,7 @@ for(i in 1:length(environ_name))
   environ_result=environ_result[order(environ_result[,3]),]
   environ_result=environ_result[order(environ_result[,2]),]
   environ_filter=environ_result[!is.na(environ_result[,4]),]
-  themax.y=round(max(-log10(environ_filter[,4])),0)+round(max(-log10(environ_filter[,4])),0)/5
+  themax.y=round(max(-log10(environ_filter[,4])),0)
   themax.y0=round(max(c(themax.y,themax.y0)),0)
   y_filter=environ_filter[environ_filter[,4]<(cutOff/(nrow(environ_filter))),]
   write.table(y_filter,paste("GAPIT.Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
@@ -118,9 +118,12 @@ if("h"%in%plot.type)
     { 
        if(k==Nenviron)
         {
-         par(mar = c(3,8,1,8))
+        par(mar = c(3.5,8,0,8))
+         # par(pin=c(10,((8-mtext.h)/Nenviron)+mtext.h))
+
         }else{
-         par(mar = c(0,8,1,8))    
+            #par(mfrow=c(Nenviron,1))
+        par(mar = c(1.5,8,0.5,8))    
         }
        environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
        result=environ_result[,1:4]
@@ -215,7 +218,7 @@ if("h"%in%plot.type)
         #Draw circles with same size and different thikness
        
        themax=ceiling(max(y))
-       themax2=ceiling((ceiling(themax/4)+1)*4)
+       themax2=ceiling((ceiling(themax/4))*4)
 
        themin=floor(min(y))
        wd=((y-themin+base)/(themax-themin+base))*size*ratio
@@ -369,7 +372,7 @@ if("w"%in%plot.type)
         QTN=MP_store[which(MP_store[,borrowSlot]==1),]
         #Draw circles with same size and different thikness
         themax=ceiling(max(y))
-        themax2=ceiling((ceiling(themax/4)+1)*4)
+        themax2=ceiling((ceiling(themax/4))*4)
         themin=floor(min(y))
         # ratio=5
         wd=((y-themin+base)/(themax-themin+base))*size*ratio
@@ -411,7 +414,7 @@ if("s"%in%plot.type)
  pdf(paste("GAPIT.Manhattan.Mutiple.Plot.symphysic",".pdf" ,sep = ""), width = 30,height=18)
  par(mfrow=c(1,1))
  par(mar = c(5,8,5,1))
- themax.y02=ceiling((ceiling(themax.y0/4)+1)*4)
+ themax.y02=ceiling((ceiling(themax.y0/4))*4)
 
  plot(1~1,col="white",xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(x),max(x)),yaxp=c(0,themax.y02,4),
     cex.axis=4, cex.lab=4,axes=FALSE,

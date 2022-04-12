@@ -97,9 +97,7 @@ emma.eigen.R.w.Z <- function(Z, K, X, complete = TRUE) {
   n <- nrow(Z)
   t <- ncol(Z)
   q <- ncol(X)
- 
 
-  
   SZ <- Z - X%*%solve(crossprod(X,X))%*%crossprod(X,Z)
   eig <- eigen(K%*%crossprod(Z,SZ),symmetric=FALSE,EISPACK=TRUE)
   if ( is.complex(eig$values) ) {
