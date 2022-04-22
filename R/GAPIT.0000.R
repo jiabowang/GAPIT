@@ -49,8 +49,15 @@ function(){
 #}
 
 
-GAPIT.Version="2020.10.24, GAPIT 3.0"
-print(paste("All packages are loaded already !  ","GAPIT.Version is ",GAPIT.Version,sep=""))
+GAPIT.Version="2022.4.16, GAPIT 3.0"
+# print(paste("All packages are loaded already !  ","GAPIT.Version is ",GAPIT.Version,sep=""))
+# cat("If you use GAPIT and publish your analysis, please report the program version and cite the appropriate article:\n
+# The citation for GAPIT3 is:\n
+# Wang J., Zhang Z., GAPIT Version 3: Boosting Power and Accuracy for Genomic Association and Prediction, Genomics, Proteomics & Bioinformatics (2021), doi: https://doi.org/10.1016/j.gpb.2021.08.005.\n
+# The citation for GAPIT2 is:\n
+# Tang Y., Liu X., Wang J., Li M., Wang Q., et al., 2016 GAPIT Version 2: An Enhanced Integrated Tool for Genomic Association and Prediction. Plant J. 9, https://10.3835/plantgenome2015.11.0120.\n
+# The citation for GAPIT is:\n
+# Lipka A. E., Tian F., Wang Q., Peiffer J., Li M., et al., 2012 GAPIT: genome association and prediction integrated tool. Bioinformatics 28: 2397–2399, https://doi.org/10.1093/bioinformatics/bts444.\n")
 return(GAPIT.Version)
 }
 #=============================================================================================
