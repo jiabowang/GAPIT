@@ -127,6 +127,8 @@ if("h"%in%plot.type)
         }
        environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
        result=environ_result[,1:4]
+       result=result[order(result[,3]),]
+       result=result[order(result[,2]),]
        result=result[match(as.character(GM[,1]),as.character(result[,1])),]
        rownames(result)=1:nrow(result)
        GI.MP=result[,c(2:4)]
@@ -273,6 +275,8 @@ if("w"%in%plot.type)
   environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
   #print(environ_result[as.numeric(new_xz[,1]),])
   result=environ_result[,1:4]
+    result=result[order(result[,3]),]
+    result=result[order(result[,2]),]
     result=result[match(as.character(GM[,1]),as.character(result[,1])),]
     rownames(result)=1:nrow(result)
     GI.MP=result[,c(2:4)]
@@ -444,6 +448,8 @@ if("s"%in%plot.type)
 
     environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
     result=environ_result[,1:4]
+    result=result[order(result[,3]),]
+    result=result[order(result[,2]),]
     result=result[match(as.character(GM[,1]),as.character(result[,1])),]
     rownames(result)=1:nrow(result)
     GI.MP=result[,c(2:4)]
