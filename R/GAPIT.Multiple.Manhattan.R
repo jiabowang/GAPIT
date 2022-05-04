@@ -371,7 +371,7 @@ if("w"%in%plot.type)
         x=x0[index]
         y=y0[index]
         z=z0[index]
-        # print(length(x))
+        print(length(x))
         #Extract QTN
         #if(!is.null(seqQTN))MP_store[seqQTN,borrowSlot]=1
         #if(!is.null(interQTN))MP_store[interQTN,borrowSlot]=2
@@ -380,7 +380,7 @@ if("w"%in%plot.type)
         themax=ceiling(max(y))
         themax2=ceiling((ceiling(themax/4))*4)
         themin=floor(min(y))
-        # ratio=5
+        # size=5
         wd=((y-themin+base)/(themax-themin+base))*size*ratio
         # wd=0.5
         s=size-wd/ratio/2
@@ -390,7 +390,7 @@ if("w"%in%plot.type)
         #     cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=0.5,cex=0.7,cex.main=2)
         plot(y~x,xlab="",ylab="" ,ylim=c(0,themax2),xlim=c(min(x),max(x)),
            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
-           pch=mypch,lwd=wd,cex=s+2.5,cex.main=2)
+           pch=mypch,lwd=wd,cex=s,cex.main=2)
         mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
         if(plot.line)
         {
@@ -579,6 +579,9 @@ if("s"%in%plot.type)
        }        
     
  }#end of environ_name
+
+
+
  dev.off()
 }#end of plot.type
 
