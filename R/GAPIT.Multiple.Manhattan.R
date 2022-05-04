@@ -198,19 +198,23 @@ if("h"%in%plot.type)
          {
          index=position[c(1:length(values))]
          }else{       
-         values=sqrt(values)  #This shift the weight a little bit to the low building.
+          # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
-         rv=runif(length(values))
-         values=values+rv
-         values=values[order(values,decreasing = T)]         
-         theMin=min(values)
-         theMax=max(values)
-         range=theMax-theMin
-         interval=range/DPP
-         ladder=round(values/interval)
-         ladder2=c(ladder[-1],0)
-         keep=ladder-ladder2
-         index=position[which(keep>=0)]
+        cut0=ceiling(-log10(0.01/length(values))/2)
+        rv=runif(length(values))
+        values=values+rv*(values+cut0)
+        # values=values[order(values,decreasing = T)]
+
+        # theMin=min(values)
+        # theMax=max(values)
+        # range=theMax-theMin
+        # interval=range/DPP
+
+        # ladder=round(values/interval)
+        # ladder2=c(ladder[-1],0)
+        # keep=ladder-ladder2
+        # print(keep)
+        index=position[which(values>cut0)]
          }        
        x=x0[index]
        y=y0[index]
@@ -337,7 +341,7 @@ if("w"%in%plot.type)
                 z0[index]=i    
               }
           }
-       z0=as.numeric(z0)
+        z0=as.numeric(z0)
         x1=sort(x0)
 
         position=order(y0,decreasing = TRUE)
@@ -345,31 +349,29 @@ if("w"%in%plot.type)
         if(length(values)<=DPP)
         {
          index=position[c(1:length(values))]
-            }else{
-         
-        values=sqrt(values)  #This shift the weight a little bit to the low building.
+            }else{      
+        # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
+        cut0=ceiling(-log10(0.01/length(values))/2)
         rv=runif(length(values))
-        values=values+rv
-        values=values[order(values,decreasing = T)]
+        values=values+rv*(values+cut0)
+        # values=values[order(values,decreasing = T)]
 
-        theMin=min(values)
-        theMax=max(values)
-        range=theMax-theMin
-        interval=range/DPP
+        # theMin=min(values)
+        # theMax=max(values)
+        # range=theMax-theMin
+        # interval=range/DPP
 
-        ladder=round(values/interval)
-        ladder2=c(ladder[-1],0)
-        keep=ladder-ladder2
-        index=position[which(keep>=0)]
-        }
-        
-        
+        # ladder=round(values/interval)
+        # ladder2=c(ladder[-1],0)
+        # keep=ladder-ladder2
+        # print(keep)
+        index=position[which(values>cut0)]
+        }     
         x=x0[index]
         y=y0[index]
         z=z0[index]
         # print(length(x))
-
         #Extract QTN
         #if(!is.null(seqQTN))MP_store[seqQTN,borrowSlot]=1
         #if(!is.null(interQTN))MP_store[interQTN,borrowSlot]=2
@@ -380,6 +382,7 @@ if("w"%in%plot.type)
         themin=floor(min(y))
         # ratio=5
         wd=((y-themin+base)/(themax-themin+base))*size*ratio
+        # wd=0.5
         s=size-wd/ratio/2
         mypch=1
         bamboo=4
@@ -387,7 +390,7 @@ if("w"%in%plot.type)
         #     cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=0.5,cex=0.7,cex.main=2)
         plot(y~x,xlab="",ylab="" ,ylim=c(0,themax2),xlim=c(min(x),max(x)),
            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
-           pch=mypch,lwd=wd,cex=s+2.5,cex.main=4)
+           pch=mypch,lwd=wd,cex=s+2.5,cex.main=2)
         mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
         if(plot.line)
         {
@@ -396,7 +399,8 @@ if("w"%in%plot.type)
              }
         }
         if(!simulation){abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[,2], QTN[,3], type="p",pch=21, cex=1.5,lwd=1.5,col="dimgrey")
+          # print("$$$")
+          points(QTN[,2], QTN[,3], type="p",pch=21, cex=2.8,lwd=1.5,col="dimgrey")
           points(QTN[,2], QTN[,3], type="p",pch=20, cex=1.5,lwd=1.5,col="dimgrey")
           }
         #Add a horizontal line for bonferroniCutOff
@@ -526,20 +530,23 @@ if("s"%in%plot.type)
         {
          index=position[c(1:length(values))]
         }else{       
-         values=sqrt(values)  #This shift the weight a little bit to the low building.
+          # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
-         rv=runif(length(values))
-         values=values+rv
-         values=values[order(values,decreasing = T)]         
-         theMin=min(values)
-         theMax=max(values)
-         range=theMax-theMin
-         interval=range/DPP
+        cut0=ceiling(-log10(0.01/length(values))/2)
+        rv=runif(length(values))
+        values=values+rv*(values+cut0)
+        # values=values[order(values,decreasing = T)]
 
-         ladder=round(values/interval)
-         ladder2=c(ladder[-1],0)
-         keep=ladder-ladder2
-         index=position[which(keep>=0)]
+        # theMin=min(values)
+        # theMax=max(values)
+        # range=theMax-theMin
+        # interval=range/DPP
+
+        # ladder=round(values/interval)
+        # ladder2=c(ladder[-1],0)
+        # keep=ladder-ladder2
+        # print(keep)
+        index=position[which(values>cut0)]
         }        
     x=x0[index]
     y=y0[index]
