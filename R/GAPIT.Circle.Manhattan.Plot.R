@@ -979,9 +979,9 @@ GAPIT.Circle.Manhattan.Plot <- function(
 
 				signal.col <- NULL
 				if(file.output){
-					if(file=="jpg")	grDevices::jpeg(paste("GAPIT.Multiple.QQ.plot.symphysic .jpg",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
-					if(file=="pdf")	grDevices::pdf(paste("GAPIT.Multiple.QQ.plot.symphysic .pdf",sep=""), width = 5.5,height=5.5)
-					if(file=="tiff")	grDevices::tiff(paste("GAPIT.Multiple.QQ.plot.symphysic .tiff",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi)
+					if(file=="jpg")	grDevices::jpeg(paste("GAPIT.Multiple.QQ.plot.symphysic.jpg",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
+					if(file=="pdf")	grDevices::pdf(paste("GAPIT.Multiple.QQ.plot.symphysic.pdf",sep=""), width = 5.5,height=5.5)
+					if(file=="tiff")	grDevices::tiff(paste("GAPIT.Multiple.QQ.plot.symphysic.tiff",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi)
 					graphics::par(mar = c(5,5,4,2),xpd=TRUE)
 				}else{
 					grDevices::dev.new(width = 5.5, height = 5.5)

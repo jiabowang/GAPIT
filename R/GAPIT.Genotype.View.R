@@ -101,10 +101,11 @@ kk1<-matrix(1:m,m,1)
 results2<-cbind(myFig22,kk1)
 max2<-max(myFig22[,4])
 
-
+# print(results[,4])
+index.density=as.numeric(as.matrix(results[,4]))<1e6
 grDevices::pdf("GAPIT.Marker.Density.pdf", width =10, height = 6)
 graphics::par(mar=c(5,5,4,5)+0.1)
-graphics::hist(as.numeric(as.matrix(results[,4])),
+graphics::hist(as.numeric(as.matrix(results[index.density,4])),
                xlab="Density",
                main="Distribution of SNP",
                breaks=12, cex.axis=0.9,
@@ -230,8 +231,8 @@ result_mav<-cbind(result_mav1,result_mav2)
 
 grDevices::pdf("GAPIT.Marker.LD.pdf", width =10, height = 6)
 graphics::par(mar = c(5,5,5,5))
-
-plot(as.matrix(result3_3[,1]),as.matrix(result3_3[,3]),bg="dimgray",xlab="Distance",ylab="R Square",pch=1,cex=0.9,cex.lab=1.2, lwd=0.75,las=1)
+index.ld=as.numeric(as.matrix(result3_3[,1]))<1e6
+plot(as.matrix(result3_3[index.ld,1]),as.matrix(result3_3[index.ld,3]),bg="dimgray",xlab="Distance",ylab="R Square",pch=1,cex=0.9,cex.lab=1.2, lwd=0.75,las=1)
 #,ylim=c(0,round(max(result3_3[,3]))))
 
  graphics::lines(result_mav[,2]~result_mav[,1], lwd=6,type="l",pch=20,col="#990000")

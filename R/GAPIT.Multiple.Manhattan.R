@@ -231,12 +231,13 @@ if("h"%in%plot.type)
        s=size-wd/ratio/2
        plot(y~x,xlab="",ylab="" ,ylim=c(0,themax2),xlim=c(min(x),max(x)),
            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
-           pch=mypch,lwd=wd,cex=s+2.5,cex.main=4)
+           pch=mypch,lwd=wd,cex=s+2.5,cex.main=2)
        mtext(side=2,expression(-log[10](italic(p))),line=3.5, cex=2.5)
        if(!simulation)
          {
           abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[,2], QTN[,3], pch=20, cex=2.5,lwd=2.5,col="dimgrey")
+          points(QTN[,2], QTN[,3], pch=21, cex=2.8,lwd=1.5,col="dimgrey")
+          points(QTN[,2], QTN[,3], pch=20, cex=1.8,lwd=1.5,col="dimgrey")
          }        
        if(plot.line)
          {
@@ -267,12 +268,12 @@ if("w"%in%plot.type)
   if(k==Nenviron)
         {#par(mfrow=c(Nenviron,1))
           # print(par())
-        par(mar = c(2,8,0,8))
+        par(mar = c(2.5,8,0,8))
          # par(pin=c(10,((8-mtext.h)/Nenviron)+mtext.h))
 
         }else{
             #par(mfrow=c(Nenviron,1))
-        par(mar = c(1.5,8,0.5,8))    
+        par(mar = c(2,8,0.5,8))    
          # par(pin=c(10,(8-mtext.h)/Nenviron))
 
         }
@@ -406,7 +407,7 @@ if("w"%in%plot.type)
         #Add a horizontal line for bonferroniCutOff
         abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
         axis(2, yaxp=c(0,themax2,bamboo),cex.axis=1.5,las=1,tick=F)
-        if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,labels=chm.to.analyze,tick=F)
+        if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,line=0.001,labels=chm.to.analyze,tick=F)
         mtext(side=4,paste(environ_name[k],sep=""),line=2,cex=1,base_family="Arial")
  box()
  }#end of environ_name
