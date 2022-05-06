@@ -49,7 +49,7 @@ function(){
 #}
 
 
-GAPIT.Version="2022.4.16, GAPIT 3.0"
+GAPIT.Version="2022.4.16, GAPIT 3.1"
 # print(paste("All packages are loaded already !  ","GAPIT.Version is ",GAPIT.Version,sep=""))
 # cat("If you use GAPIT and publish your analysis, please report the program version and cite the appropriate article:\n
 # The citation for GAPIT3 is:\n
