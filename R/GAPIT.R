@@ -624,8 +624,12 @@ if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store
    GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y=Y,GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff)
 #print(str(GMM$multip_mapP))
    GAPIT.Circle.Manhattan.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
-  }# end of mutiple manhantton plot
+   GAPIT.Multiple_Synthesis(model_store=model_store,Y.names=colnames(Y)[-1),cutOff=DP$cutOff,GM=IC$GM)
 
+  }else{# end of mutiple manhantton plot
+   GAPIT.Multiple_Synthesis(model_store=model_store,Y.names=colnames(Y)[-1),cutOff=DP$cutOff,GM=IC$GM)
+  
+  }
 if(file.output&!SNP.test&model_store%in%c("gBLUP","cBLUP","sBLUP")&Inter.Plot)
   { 
   print("here will start interactive for GS !!!")

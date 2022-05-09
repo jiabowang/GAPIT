@@ -1,10 +1,10 @@
 `GAPIT.Multiple_Synthesis` <-
 function(model_store,DPP=500,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y.names=NULL,GM=NULL,interQTN=NULL,
     plot.style="Oceanic",plot.line=TRUE,allpch=NULL,plot.type=c("s")){
-    #Object: Make a Manhattan Plot
+    #Object: Make a Manhattan Plot with mulitple traits
     #Output: pdfs of the Multiple Manhattan Plot
     #Authors: Zhiwu Zhang and Jiabo Wang
-    # Last update: Feb 22, 2022
+    # Last update: MAY 9, 2022
     ##############################################################################################
   Nenviron=length(model_store)*length(Y.names)
   environ_name=NULL
@@ -82,36 +82,6 @@ for(i in 1:length(environ_name))
        new_xz=matrix(new_xz,length(as.vector(new_xz))/4,4)
 }
 
-# # setup colors
-# chm.to.analyze <- unique(result[,1])
-# nchr=length(chm.to.analyze)
-# size=1 #1
-# ratio=10 #5
-# base=1 #1
-# numCHR=nchr
-# ncycle=ceiling(nchr/5)
-# ncolor=band*ncycle
-# thecolor=seq(1,nchr,by= ncycle)
-# col.Rainbow=rainbow(ncolor+1)     
-# col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
-# col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
-# col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
-# col.Ocean=rep(c("steelblue4","cyan3"),ceiling(numCHR/2))    
-# col.PLINK=rep(c("gray10","gray70"),ceiling(numCHR/2))     
-# col.Beach=rep(c("turquoise4","indianred3","darkolivegreen3","red","aquamarine3","darkgoldenrod"),ceiling(numCHR/5))
-# col.Oceanic=rep(c(  '#EC5f67',    '#FAC863',  '#99C794',    '#6699CC',  '#C594C5'),ceiling(numCHR/5))
-# col.cougars=rep(c(  '#990000',    'dimgray'),ceiling(numCHR/2))  
-# if(plot.style=="Rainbow")plot.color= col.Rainbow
-# if(plot.style =="FarmCPU")plot.color= col.Rainbow
-# if(plot.style =="Rushville")plot.color= col.Rushville
-# if(plot.style =="Congress")plot.color= col.Congress
-# if(plot.style =="Ocean")plot.color= col.Ocean
-# if(plot.style =="PLINK")plot.color= col.PLINK
-# if(plot.style =="Beach")plot.color= col.Beach
-# if(plot.style =="Oceanic")plot.color= col.Oceanic
-# if(plot.style =="cougars")plot.color= col.cougars  
-
-
 if("s"%in%plot.type)
 {
   # setup vals
@@ -122,20 +92,19 @@ vals0=c("circl","square","diamond","cross","x",
       "hexagon2","octagon","star","hexagram","star-triangle-up",
       "star-triangle-down","star-square","star-diamond","diamond-tall","diamond-wide")
 n.vals=ceiling(Nenviron/length(vals0))-1
-# print(n.vals)
-# print(length(vals0))
-# vals=ifelse(n.vals==0,vals0[1:Nenviron],
-#      ifelse(n.vals==1,append(vals0,paste(vals0,"-open",sep="")[1:Nenviron]),
-#       ifelse(n.vals==2,append(vals0,paste(vals0,"-open",sep=""),paste(vals0,"-dot",sep="")[1:Nenviron]),
-#         append(vals0,paste(vals0,"-open",sep=""),paste(vals0,"-dot",sep=""),paste(vals0,"-open-dot",sep=""))[1:Nenviron])))
-vals=vals0[1:Nenviron]
+if(n.vals==0) vals=vals0
+if(n.vals==1) vals=c(vals0,paste(vals0,"-open",sep=""))
+if(n.vals==2) vals=c(vals0,paste(vals0,"-open",sep=""),paste(vals0,"-dot",sep=""))
+if(n.vals>2) vals=c(vals0,paste(vals0,"-open",sep=""),paste(vals0,"-dot",sep=""),paste(vals0,"-open-dot",sep=""))
+
+# vals=vals0[1:Nenviron]
 # print(length(vals))
-# if(Nenviron<=length(vals))
-# {
-#   vals=vals[1:Nenviron]
-# }else{
-#   vals=append(rep(vals,floor(Nenviron/length(vals))),vals[1:(Nenviron-length(vals))])
-# }
+if(Nenviron<=length(vals))
+{
+  vals=vals[1:Nenviron]
+}else{
+  vals=append(rep(vals,floor(Nenviron/length(vals))),vals[1:(Nenviron-length(vals))])
+}
 
  x.all=NULL
  y.all=NULL
@@ -231,17 +200,7 @@ vals=vals0[1:Nenviron]
         cut0=ceiling(-log10(0.01/length(values))/2)
         rv=runif(length(values))
         values=values+rv*(values+cut0)
-        # values=values[order(values,decreasing = T)]
-
-        # theMin=min(values)
-        # theMax=max(values)
-        # range=theMax-theMin
-        # interval=range/DPP
-
-        # ladder=round(values/interval)
-        # ladder2=c(ladder[-1],0)
-        # keep=ladder-ladder2
-        # print(keep)
+        
         index=position[which(values>cut0)]
         }        
     x=x0[index]
@@ -256,43 +215,18 @@ vals=vals0[1:Nenviron]
     taxa.all=append(taxa.all,taxa)
  }
 
- # dev.off()
- # n.p=10
- # x=sample(1:1000,n.p)
- # y=runif(n.p)*10
- # z=sample(1:2,n.p,replace=T)
- # taxa=1:n.p
- # posi=1:n.p
- print(head(s.all))
- print(environ_name)
- print(vals)
   S.index=s.all
   for(s in 1:Nenviron)
   {
     S.index[S.index==environ_name[s]]=vals[s]
   
   }
-  # S.index[S.index=="T2"]="circle-open"
-
-  # S.index=vals0=c("circl","square","diamond","cross","x",
-  #     "triangle-up","triangle-down","triangle-left","triangle-right","triangle-ne",
-  #     "triangle-se","triangle-sw","triangle-nw","pentagon","hexagon",
-  #     "hexagon2","octagon","star","hexagram","star-triangle-up",
-  #     "star-triangle-down","star-square","star-diamond","diamond-tall","diamond-wide")
   col.PLINK=rep(c("gray10","gray70"),ceiling(nchr/2))       
   bonferroniCutOff01=-log10(0.01/numMarker)
  c.s=z.all
  c.s[z.all%%2==0]=col.PLINK[1]
  c.s[!z.all%%2==0]=col.PLINK[2]
- # k=1
- # print(length(x.all))
- # print(length(y.all))
- # print(length(z.all))
- # print(length(S.index))
- # print(length(s.all))
- # print(length(col.PLINK))
- # print(vals)
- print(head(S.index))
+ 
   Position=x.all
   P_value=y.all
   z.all[z.all<10]=paste("0",z.all[z.all<10],sep="")
@@ -311,7 +245,7 @@ vals=vals0[1:Nenviron]
     # reversescale =T,
     hoverinfo = "text",
     marker=list(
-    # symbol = S.index,
+    symbol = S.index,
     # symbol="circl-open",
       size = 10,
       line = list(
@@ -319,8 +253,8 @@ vals=vals0[1:Nenviron]
         # color=c("black","red"),
         width = 2)),
     # symbol=vals[k],
-    text = ~paste("SNP: ", taxa.all, "<br>Chro: ", zz,"<br>Trait: ", s.all),
-    color = ~as.character(zz)#,
+    text = ~paste("SNP: ", taxa.all, "<br>Chro: ", zz,"<br>Trait: ", s.all)#,
+    # color = ~as.character(zz)#,
     # colors=col.PLINK
     )%>%
 
