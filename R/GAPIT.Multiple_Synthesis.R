@@ -13,7 +13,7 @@ function(model_store,DPP=500,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y.nam
   {
     for(j in 1:length(Y.names))
     {
-      environ_name=c(environ_name,paste(model_store[i],Y.names[j],sep=""))
+      environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],sep=""))
     }
   }
 sig_pos=NULL
@@ -86,25 +86,26 @@ if("s"%in%plot.type)
 {
   # setup vals
 library("plotly")
-vals0=c("circl","square","diamond","cross","x",
+vals0=c("square","diamond","cross","x","star",
       "triangle-up","triangle-down","triangle-left","triangle-right","triangle-ne",
       "triangle-se","triangle-sw","triangle-nw","pentagon","hexagon",
-      "hexagon2","octagon","star","hexagram","star-triangle-up",
+      "hexagon2","octagon","circl","hexagram","star-triangle-up",
       "star-triangle-down","star-square","star-diamond","diamond-tall","diamond-wide")
 n.vals=ceiling(Nenviron/length(vals0))-1
-if(n.vals==0) vals=vals0
-if(n.vals==1) vals=c(vals0,paste(vals0,"-open",sep=""))
-if(n.vals==2) vals=c(vals0,paste(vals0,"-open",sep=""),paste(vals0,"-dot",sep=""))
-if(n.vals>2) vals=c(vals0,paste(vals0,"-open",sep=""),paste(vals0,"-dot",sep=""),paste(vals0,"-open-dot",sep=""))
+if(n.vals==0) vals=paste(vals0,"-open",sep="")
+if(n.vals==1) vals=c(paste(vals0,"-open",sep=""),paste(vals0,"-dot",sep=""))
+if(n.vals==2) vals=c(paste(vals0,"-open",sep=""),paste(vals0,"-dot",sep=""),vals0)
+if(n.vals>2) vals=c(paste(vals0,"-open",sep=""),paste(vals0,"-dot",sep=""),vals0,paste(vals0,"-open-dot",sep=""))
 
 # vals=vals0[1:Nenviron]
-# print(length(vals))
+# print(vals)
 if(Nenviron<=length(vals))
 {
   vals=vals[1:Nenviron]
 }else{
   vals=append(rep(vals,floor(Nenviron/length(vals))),vals[1:(Nenviron-length(vals))])
 }
+print(vals)
 
  x.all=NULL
  y.all=NULL
@@ -249,6 +250,39 @@ if(Nenviron<=length(vals))
     # symbol="circl-open",
       size = 10,
       line = list(
+        # color = c.s,
+        color=c("steelblue"),
+        width = 2)),
+    # symbol=vals[k],
+    text = ~paste("SNP: ", taxa.all, "<br>Chro: ", zz,"<br>Trait: ", s.all)#,
+    # color = ~as.character(zz)#,
+    # colors=col.PLINK
+    )%>%
+
+   # plotly::add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
+   # plotly::add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
+   layout(title = "Interactive.Multiple_Synthesis.Manhattan.Plot",
+                  xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
+                  yaxis = list (title = "-Log10(p)"))
+  
+    htmltools::save_html(p, paste("GAPIT.Interactive.Multiple_Synthesis.Manhattan.Plot.html",sep=""))
+   
+   S.uni=unique(S.index)
+   T.uni=unique(s.all)
+   
+   q <- plotly::plot_ly()%>%
+   add_markers(
+    # type = 'scatter',
+    x = 1,
+    y = 1:length(S.uni),
+    # colorscale='Viridis',
+    # reversescale =T,
+    hoverinfo = "text",
+    marker=list(
+    symbol = S.index,
+    # symbol="circl-open",
+      size = 10,
+      line = list(
         color = c.s,
         # color=c("black","red"),
         width = 2)),
@@ -263,24 +297,7 @@ if(Nenviron<=length(vals))
    layout(title = "Interactive.Multiple_Synthesis.Manhattan.Plot",
                   xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
                   yaxis = list (title = "-Log10(p)"))
-   # }else{
-   #  p <- p%>%
-   #  add_markers(
-   #  x = ~Position,
-   #  y = ~P_value,
-   #  text = vals,
-   #  hoverinfo = "text",
-   #  marker = list(
-   #    symbol = vals,
-   #    size = 20,
-   #    line = list(
-   #      color = "black",
-   #      width = 2
-   #    )
-   #  )
-
-   #  )
-   # }
+  
     htmltools::save_html(p, paste("GAPIT.Interactive.Multiple_Synthesis.Manhattan.Plot.html",sep=""))
    
 }#end of plot.type

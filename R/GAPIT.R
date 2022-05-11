@@ -195,6 +195,7 @@
   CG = NULL, #candidate gene matrix for relationship
   CV.Inheritance = NULL,
   DPP = 100000, #content points in Manhattan Plot
+  DP=NULL,
   esp = 1e-10,
   effectunit = 1, #Simulation phenotype
   file.from = 1,  #read seqarated data files
@@ -542,6 +543,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
         }#end of model loop
   }else{# is.null(Y)
   #print(Para$SNP.MAF)
+        SNP.test=FALSE
         out <- list()
         GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=DPP,kinship.cluster=kinship.cluster, kinship.group=kinship.group,kinship.algorithm=kinship.algorithm, 
          bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction = SNP.fraction, seed = seed, BINS = 20,SNP.test=SNP.test,
@@ -621,15 +623,15 @@ model_store=all.memo
 if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store)*(ncol(Y)-1)>1&length(model_store)*(ncol(Y)-1)<9)
   { 
   #print(DP$QTN.position)
-   GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y=Y,GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff)
+   GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff,plot.type=c("w","h"))
 #print(str(GMM$multip_mapP))
    GAPIT.Circle.Manhattan.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
-   GAPIT.Multiple_Synthesis(model_store=model_store,Y.names=colnames(Y)[-1),cutOff=DP$cutOff,GM=IC$GM)
+   # GAPIT.Multiple_Synthesis(model_store=model_store,Y.names=colnames(Y)[-1],cutOff=DP$cutOff,GM=IC$GM)
 
-  }else{# end of mutiple manhantton plot
-   GAPIT.Multiple_Synthesis(model_store=model_store,Y.names=colnames(Y)[-1),cutOff=DP$cutOff,GM=IC$GM)
+  }#else{# end of mutiple manhantton plot
+if(SNP.test&Multiple_analysis&Para$file.output) GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff,plot.type=c("s"))
   
-  }
+  
 if(file.output&!SNP.test&model_store%in%c("gBLUP","cBLUP","sBLUP")&Inter.Plot)
   { 
   print("here will start interactive for GS !!!")

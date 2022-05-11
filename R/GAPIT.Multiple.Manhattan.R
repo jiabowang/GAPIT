@@ -1,19 +1,20 @@
 `GAPIT.Multiple.Manhattan` <-
-function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y=NULL,GM=NULL,interQTN=NULL,
+function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y.names=NULL,GM=NULL,interQTN=NULL,WS=10e5,
     plot.style="Oceanic",plot.line=TRUE,allpch=NULL,plot.type=c("h","s","w")){
     #Object: Make a Manhattan Plot
     #Output: pdfs of the Multiple Manhattan Plot
     #Authors: Zhiwu Zhang and Jiabo Wang
     # Last update: Feb 22, 2022
     ##############################################################################################
-  Nenviron=length(model_store)*(ncol(Y)-1)
+  Nenviron=length(model_store)*length(Y.names)
   environ_name=NULL
   new_xz=NULL
   for(i in 1:length(model_store))
   {
-    for(j in 1:(ncol(Y)-1))
+    for(j in 1:length(Y.names))
     {
-      environ_name=c(environ_name,paste(model_store[i],".",colnames(Y)[-1][j],sep=""))
+      # environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],sep=""))
+      environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],sep=""))
     }
   }
 sig_pos=NULL
@@ -23,6 +24,7 @@ simulation=FALSE
         simulation=TRUE    
     }
 themax.y0=NULL
+store.x=NULL
 for(i in 1:length(environ_name))
 {
   print(paste("Reading GWAS result with ",environ_name[i],sep=""))
@@ -32,8 +34,25 @@ for(i in 1:length(environ_name))
   environ_filter=environ_result[!is.na(environ_result[,4]),]
   themax.y=round(max(-log10(environ_filter[,4])),0)
   themax.y0=round(max(c(themax.y,themax.y0)),0)
+  chm.to.analyze <- unique(environ_result[,2])
+  nchr=length(chm.to.analyze)
+  # xx=environ_result[,-1]
+  # ticks=NULL
+  # lastbase=0
+  # max.x=NULL
+
+  # for(ii in chm.to.analyze)
+  #   {
+  #   index=(xx[,1]==ii)
+  #   ticks <- c(ticks, lastbase+mean(xx[index,2]))
+  #   xx[index,2]=xx[index,2]+lastbase
+  #   lastbase=max(xx[index,2])
+  #   max.x=c(max.x,max(as.numeric(xx[index,2])))
+  #   }
+  # max.x=c(min(as.numeric(xx[,2])),max.x)
+  # store.x=c(store.x,as.numeric(xx[,2]))
   y_filter=environ_filter[environ_filter[,4]<(cutOff/(nrow(environ_filter))),]
-  write.table(y_filter,paste("GAPIT.Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
+  # write.table(y_filter,paste("GAPIT.Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
 
   result=environ_result[,1:4]
   result=result[match(as.character(GM[,1]),as.character(result[,1])),]
@@ -49,44 +68,85 @@ for(i in 1:length(environ_name))
     }
   rownames(result)=1:nrow(result)
   result[is.na(result[,4]),4]=1
+  # map_store=max.x
   sig_pos=append(sig_pos,as.numeric(rownames(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),])))
 }
+# print(sig_pos)
 #if(length(sig_pos)!=0)sig_pos=sig_pos[!duplicated(sig_pos)]
  if(length(sig_pos[!is.na(sig_pos)])!=0)
- {     x_matrix=as.matrix(table(sig_pos))
-       x_matrix=cbind(as.data.frame(rownames(x_matrix)),x_matrix)
+ {
+ # {     x_matrix=as.matrix(table(sig_pos))
+ #       x_matrix=cbind(as.data.frame(rownames(x_matrix)),x_matrix)
        #print(x_matrix)
-       lastbase=0
-       map_store=as.matrix(cbind(as.character(GM[,2]),as.numeric(as.vector(GM[,3]))))
-       #print(head(map_store))
-       #print(as.numeric(map_store[,3]))
+        lastbase=0
+        map_store=as.matrix(cbind(as.numeric(GM[,2]),as.numeric(as.vector(GM[,3]))))
+        ticks=NULL
+        max.x=NULL
         for (j in unique(map_store[,1]))
         {
             index=map_store[,1]==j
-            # print(as.numeric(map_store[index,2]))
+            ticks <- c(ticks, lastbase+mean(map_store[index,2]))
             map_store[index,2]=as.numeric(map_store[index,2])+lastbase
             lastbase=max(as.numeric(map_store[index,2]))
-            #print(lastbase)
+            max.x=c(max.x,max(as.numeric(map_store[index,2])))
         }
-       colnames(x_matrix)=c("pos","times")
-       new_xz=cbind(x_matrix,map_store[as.numeric(as.character(x_matrix[,1])),,drop=FALSE])
+        # print(ticks)
+       max.x=c(min(as.numeric(map_store[,2])),max.x)
+       store.x=c(store.x,as.numeric(map_store[,2]))
+       # colnames(x_matrix)=c("pos","times")
+       new_xz0=cbind(sig_pos,map_store[as.numeric(as.character(sig_pos)),,drop=FALSE])
+       common=as.numeric(new_xz0[,3])
+       scom=sort(common)
+       de.sc=scom[-1]-scom[-length(scom)]
+       dayu1.index=duplicated(scom)|c(de.sc<WS,FALSE)
+
+       # print(table(dayu1.index))
+       scom2=scom[dayu1.index]
+       # scom2=scom2[!duplicated(scom2)]
+       # print(scom2)
+       sc.index=as.character(new_xz0[,3])%in%scom2
+       # print(table(sc.index))
+       new_xz=new_xz0[sc.index,,drop=FALSE]
+       new_xz=cbind(new_xz[,1],2,new_xz[,-1])
+       new_xz[duplicated(new_xz[,4]),2]=1
        colnames(new_xz)=c("pos","times","chro","xlab")
        new_xz=new_xz[!duplicated(new_xz),]
-       new_xz[new_xz[,2]>=3,2]=3
-       new_xz[,2]=4-new_xz[,2]
-       new_xz[new_xz[,2]==3,2]=0
-
+       # new_xz[new_xz[,2]>=3,2]=3
+       # new_xz[,2]=4-new_xz[,2]
+       # print(dim(new_xz0))
+       # print(head(new_xz))
        new_xz=as.matrix(new_xz)
        new_xz=new_xz[new_xz[,2]!="0",]
-       new_xz=matrix(new_xz,length(as.vector(new_xz))/4,4)
+       new_xz=matrix(as.numeric(new_xz),length(as.vector(new_xz))/4,4)
+       # print(head(new_xz))
+}else{
+        lastbase=0
+        map_store=as.matrix(cbind(as.character(GM[,2]),as.numeric(as.vector(GM[,3]))))
+        ticks=NULL
+        max.x=NULL
+        for (j in unique(map_store[,1]))
+        {
+            index=map_store[,1]==j
+            ticks <- c(ticks, lastbase+mean(map_store[index,2]))
+            map_store[index,2]=as.numeric(map_store[index,2])+lastbase
+            lastbase=max(as.numeric(map_store[index,2]))
+            max.x=c(max.x,max(as.numeric(map_store[index,2])))
+        }
+       max.x=c(min(as.numeric(xx[,2])),max.x)
+       store.x=c(store.x,as.numeric(xx[,2]))
 }
+# print(new_xz)
 # setup colors
-chm.to.analyze <- unique(result[,1])
+# print(head(result))
+# chm.to.analyze <- unique(result[,2])
 nchr=length(chm.to.analyze)
 size=1 #1
 ratio=10 #5
 base=1 #1
 numCHR=nchr
+numMarker=nrow(GM)
+bonferroniCutOff=-log10(cutOff/numMarker)
+
 ncycle=ceiling(nchr/5)
 ncolor=band*ncycle
 thecolor=seq(1,nchr,by= ncycle)
@@ -111,6 +171,8 @@ if(plot.style =="cougars")plot.color= col.cougars
 
 if("h"%in%plot.type)
 {
+    Max.high=6*Nenviron
+    if(Max.high>8)Max.high=40
     pdf(paste("GAPIT.Manhattan.Mutiple.Plot.high",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
     par(mfrow=c(Nenviron,1))
     mypch=1
@@ -148,7 +210,6 @@ if("h"%in%plot.type)
     # print(dim(GI.MP))
        if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1
        numMarker=nrow(GI.MP)
-       bonferroniCutOff=-log10(cutOff/numMarker)
        GI.MP[,3] <-  -log10(GI.MP[,3])
        GI.MP[,5]=1:numMarker
        y.lim <- ceiling(max(GI.MP[,3]))  
@@ -184,13 +245,7 @@ if("h"%in%plot.type)
               }
           }
        z0=as.numeric(z0)
-       max.x=NULL
-       for(i in chm.to.analyze)
-          {
-           index=(MP_store[,1]==i)
-           max.x=c(max.x,max(x0[index]))
-          }
-       max.x=c(min(x0),max.x)
+       
        x1=sort(x0)
        position=order(y0,decreasing = TRUE)
        values=y0[position]
@@ -200,20 +255,9 @@ if("h"%in%plot.type)
          }else{       
           # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
-        cut0=ceiling(-log10(0.01/length(values))/2)
+        cut0=ceiling(-log10(cutOff/length(values))/2)
         rv=runif(length(values))
         values=values+rv*(values+cut0)
-        # values=values[order(values,decreasing = T)]
-
-        # theMin=min(values)
-        # theMax=max(values)
-        # range=theMax-theMin
-        # interval=range/DPP
-
-        # ladder=round(values/interval)
-        # ladder2=c(ladder[-1],0)
-        # keep=ladder-ladder2
-        # print(keep)
         index=position[which(values>cut0)]
          }        
        x=x0[index]
@@ -263,6 +307,7 @@ if("w"%in%plot.type)
  pdf(paste("GAPIT.Manhattan.Mutiple.Plot.wide",".pdf" ,sep = ""), width = 16,height=8.5)
  par(mfrow=c(Nenviron,1))
  mtext.h=0.5
+ size=2
  for(k in 1:Nenviron)
  { 
   if(k==Nenviron)
@@ -353,7 +398,7 @@ if("w"%in%plot.type)
             }else{      
         # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
-        cut0=ceiling(-log10(0.01/length(values))/2)
+        cut0=ceiling(-log10(cutOff/length(values))/2)
         rv=runif(length(values))
         values=values+rv*(values+cut0)
         # values=values[order(values,decreasing = T)]
@@ -418,16 +463,22 @@ if("s"%in%plot.type)
 {
     # wd=((y-themin+base)/(themax-themin+base))*size*ratio
  wd=2
- if(is.null(allpch)) allpch=c(0,1,2,5,6,22,21,24,23,25)
-  
+ allpch0=c(0,1,2,5,6)
+ add.pch=c("+","*","-","#","<",">","^","$","=","|","?",as.character(1:9),letters[1:26],LETTERS[1:26]) 
+ n.vals=ceiling(Nenviron/length(allpch0))-1
+ s=size-wd/ratio/2
+ DPP=500
+ 
+
+
  pdf(paste("GAPIT.Manhattan.Mutiple.Plot.symphysic",".pdf" ,sep = ""), width = 30,height=18)
  par(mfrow=c(1,1))
  par(mar = c(5,8,5,1))
  themax.y02=ceiling((ceiling(themax.y0/4))*4)
 
- plot(1~1,col="white",xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(x),max(x)),yaxp=c(0,themax.y02,4),
+ plot(1~1,col="white",xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(store.x,na.rm=TRUE),max(store.x,na.rm=TRUE)),yaxp=c(0,themax.y02,4),
     cex.axis=4, cex.lab=4,axes=FALSE,
-    pch=mypch,lwd=wd,cex=s+1.3,cex.main=4)
+    pch=1,cex.main=4)
     
         #Add a horizontal line for bonferroniCutOff
  axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
@@ -444,12 +495,13 @@ if("s"%in%plot.type)
         }
     }
  mtext(side=2,expression(-log[10](italic(p))),line=4, cex=2.5)
- legend("top",legend=paste(environ_name,sep=""),ncol=length(environ_name),
-       col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
-       bty = "o", bg = "white",box.col="white")
-
+ # legend("top",legend=paste(environ_name,sep=""),ncol=length(environ_name),
+ #       col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
+ #       bty = "o", bg = "white",box.col="white")
+ # step.vals=0
  for(k in 1:Nenviron)
   { 
+    step.vals=ceiling(k/length(allpch0))-1
 
     environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
     result=environ_result[,1:4]
@@ -533,20 +585,10 @@ if("s"%in%plot.type)
         }else{       
           # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
-        cut0=ceiling(-log10(0.01/length(values))/2)
+        cut0=ceiling(-log10(cutOff/length(values))/2)
         rv=runif(length(values))
         values=values+rv*(values+cut0)
-        # values=values[order(values,decreasing = T)]
 
-        # theMin=min(values)
-        # theMax=max(values)
-        # range=theMax-theMin
-        # interval=range/DPP
-
-        # ladder=round(values/interval)
-        # ladder2=c(ladder[-1],0)
-        # keep=ladder-ladder2
-        # print(keep)
         index=position[which(values>cut0)]
         }        
     x=x0[index]
@@ -563,15 +605,18 @@ if("s"%in%plot.type)
     # themax.y02=ceiling((ceiling(themax.y0/4)+1)*4)
     # print(themax.y02)
     themin=floor(min(y))
-    mypch=allpch[k]
+    mypch=allpch0[k-step.vals*length(allpch0)]
     
-   if(k!=1) par(new=T)
+   # if(k!=1) par(new=T)
     
     par(new=T)
     plot(y~x,xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(x),max(x)),yaxp=c(0,themax.y02,4),
-    cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,
-    pch=mypch,lwd=wd,cex=s+1.5,cex.main=4)
-    
+    cex.axis=4, cex.lab=4,col=plot.color[z],axes=FALSE,
+    pch=mypch,lwd=1,cex=s+2.5,cex.main=4)
+    if(step.vals!=0)
+    {
+      points(y~x,pch=add.pch[step.vals],col=plot.color[z],cex=s+0.5,cex.main=4)
+    }
     if(!simulation)
        {
         abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")
@@ -580,12 +625,129 @@ if("s"%in%plot.type)
        }        
     
  }#end of environ_name
-
-
-
  dev.off()
-}#end of plot.type
 
+ ## Plot legend
+ nchar.traits=1.5
+ # environ_name=paste(environ_name,"1234560420423423420",sep="")
+ nchar0=max(nchar(environ_name))
+ if(Nenviron>5)
+ {
+  yourpch=c(rep(allpch0,n.vals),allpch0[1:(Nenviron-length(allpch0)*n.vals)])
+ }else{
+  yourpch=allpch0[1:Nenviron]
+ }
+  yourpch2=NULL
+  for(pp in 1:n.vals)
+  {
+    yourpch2=c(yourpch2,rep(add.pch[pp],length(allpch0)))
+  }
+  # yourpch2=c(rep(allpch0,n.vals),allpch0[Nenviron-length(allpch0)*n.vals])
+  if(Nenviron>5){
+  yourpch2=yourpch2[1:(Nenviron-length(allpch0))]
+  yourpch2=c(rep(NA,length(allpch0)),yourpch2)
+  }
+ 
+ max.row=25
+ max.pch=ifelse(Nenviron<max.row,Nenviron,max.row)
+ n.col.pch=ceiling(Nenviron/max.row)
+ ratio.cex=ceiling(Nenviron/5)
+  if(ratio.cex>5)ratio.cex=5
+  cex.Ne=ratio.cex*(0.05*ratio.cex+0.35) #the size of cex
+  if(ratio.cex<3)cex.Ne=1
+  c.t.d=c(0.5,1,1,1,1.5)[ratio.cex] # the different between size of cex and text
+  cex.di=0.3*ratio.cex # the different size between cex and signal
+  text.di=c(.02,0.01,0.01,0.02,0.02)[ratio.cex] #the different distance between cex and text
+
+  high.Ne=2*ratio.cex # the total highth of figure
+  cex.betw=c(.38,.5,.7,0.9,1.1)[ratio.cex] # distance between cexes
+  x.di=c(1.12,1.09,0.5,0.8,1.3)[ratio.cex]/2 # distance between markers in x axis
+  # print(nchar0)
+  if(n.col.pch>1){
+    text.di=(0.01*nchar0)/3+0.02
+    # x.di=0.52*n.col.pch
+    x.di=0.28*ceiling(nchar0/10)*n.col.pch
+  }
+  # print(x.di)
+ # if(Nenviron>5){
+ #  cex.Ne=3
+ #  cex.di=1.5
+ #  text.di=.02
+ #  high.Ne=10
+ #  cex.betw=0.9
+ #  }else{
+ #  cex.Ne=1
+ #  cex.di=0.3
+ #  high.Ne=Nenviron/2 
+ #  text.di=.02
+ #  cex.betw=0.9
+ #  }
+ pdf(paste("GAPIT.Manhattan.Mutiple.Plot.symphysic.legend",".pdf" ,sep = ""), width = 4+(x.di*(n.col.pch+1)),height=high.Ne)
+ par(mfrow=c(1,1))
+ par(mar = c(cex.Ne+1,2,cex.Ne+1,2))
+ # print(length(yourpch))
+ # print(length(yourpch2))
+ plot(0,0,xlab="",ylab="" ,axes=FALSE,
+  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),col="white")
+ for(kk in 1:n.col.pch)
+ {
+ par(new=T)
+
+ if(kk==n.col.pch)
+ {
+  if(n.col.pch==1)
+  {
+  print(kk)
+  max.pch2=Nenviron-(n.col.pch-1)*max.row
+  
+  plot(rep(0,max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,xlab="",ylab="" ,axes=FALSE,col="black",
+  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
+  pch=yourpch[((kk-1)*max.row+1):Nenviron])
+  if(Nenviron>5) points(rep(0,max.pch2),((max.pch):(max.pch-max.pch2+1))*cex.betw,
+  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
+  pch=yourpch2[((kk-1)*max.row+1):Nenviron])
+  text(rep((0+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=environ_name[((kk-1)*max.row+1):Nenviron],pos=4,cex=cex.Ne-c.t.d)
+  }else{
+  print(kk)
+  max.pch2=Nenviron-(n.col.pch-1)*max.row
+  
+  plot(rep((kk-1)*x.di,max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,xlab="",ylab="" ,axes=FALSE,col="black",
+  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
+  pch=yourpch[((kk-1)*max.row+1):Nenviron])
+  if(Nenviron>5) points(rep((kk-1)*x.di,max.pch2),((max.pch):(max.pch-max.pch2+1))*cex.betw,
+  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
+  pch=yourpch2[((kk-1)*max.row+1):Nenviron])
+  text(rep(((kk-1)*x.di+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=environ_name[((kk-1)*max.row+1):Nenviron],pos=4,cex=cex.Ne-c.t.d)
+    
+  }
+ }else{
+  if(kk==1)
+  {
+  print(kk)
+  plot(rep(0,max.pch),(max.pch:1)*cex.betw,xlab="",ylab="" ,axes=FALSE,
+  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
+  pch=yourpch[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
+  if(Nenviron>5) points(rep(0,max.pch),((max.pch):1)*cex.betw,
+  xlim=c(1,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
+  pch=yourpch2[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
+  text(rep((0+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
+  }else{
+  print(kk)
+  plot(rep((kk-1)*x.di,max.pch),(max.pch:1)*cex.betw,xlab="",ylab="" ,axes=FALSE,
+  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
+  pch=yourpch[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
+  if(Nenviron>5) points(rep((kk-1)*x.di,max.pch),((max.pch):1)*cex.betw,
+  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
+  pch=yourpch2[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
+  text(rep(((kk-1)*x.di+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
+   
+  }
+
+ }
+}#end of plot.type
+ dev.off()
+
+}
 print("GAPIT.Manhattan.Mutiple.Plot has done !!!")
 return(list(multip_mapP=result0,xz=new_xz))
 } #end of GAPIT.Manhattan
