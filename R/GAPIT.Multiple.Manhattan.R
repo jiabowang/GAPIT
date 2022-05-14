@@ -638,7 +638,7 @@ if("s"%in%plot.type)
 
  ## Plot legend
  nchar.traits=1.5
- environ_name=paste(environ_name,"1234560420423423420",sep="")
+ # environ_name=paste(environ_name,"1234560420423423420",sep="")
  nchar0=max(nchar(environ_name))
  if(Nenviron>5)
  {
@@ -669,7 +669,7 @@ if("s"%in%plot.type)
   text.di=c(.02,0.01,0.01,0.02,0.02)[ratio.cex] #the different distance between cex and text
 
   high.Ne=2*ratio.cex # the total highth of figure
-  cex.betw=c(.38,.5,.7,0.9,1.1)[ratio.cex] # distance between cexes
+  cex.betw=c(.38,.5,.7,0.9,1)[ratio.cex] # distance between cexes
   x.di=c(1.12,1.09,0.5,0.8,1.3)[ratio.cex]/2 # distance between markers in x axis
   # print(nchar0)
   if(n.col.pch>1){
@@ -697,7 +697,7 @@ if("s"%in%plot.type)
  par(mar = c(cex.Ne+1,2,cex.Ne+1,2))
  # print(length(yourpch))
  # print(length(yourpch2))
- plot(0,0,xlab="",ylab="" ,axes=FALSE,
+ plot(0,0,xlab="",ylab="" ,#axes=FALSE,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),col="white")
  for(kk in 1:n.col.pch)
  {
