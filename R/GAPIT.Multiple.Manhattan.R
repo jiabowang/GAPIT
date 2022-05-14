@@ -109,24 +109,25 @@ for(i in 1:length(environ_name))
        de.sc=scom[-1]-scom[-length(scom)]
        dayu1.index=duplicated(scom)|c(de.sc<WS,FALSE)
 
-       # print(table(dayu1.index))
+       print(table(dayu1.index))
+       if(sum(dayu1.index)>0)
+       {
        scom2=scom[dayu1.index]
        # scom2=scom2[!duplicated(scom2)]
+       # print(new_xz0)
        # print(scom2)
        sc.index=as.character(new_xz0[,3])%in%scom2
        # print(table(sc.index))
        new_xz=new_xz0[sc.index,,drop=FALSE]
+       # print(new_xz)
        new_xz=cbind(new_xz[,1],2,new_xz[,-1])
        new_xz[duplicated(new_xz[,4]),2]=1
        colnames(new_xz)=c("pos","times","chro","xlab")
        new_xz=new_xz[!duplicated(new_xz),]
-       # new_xz[new_xz[,2]>=3,2]=3
-       # new_xz[,2]=4-new_xz[,2]
-       # print(dim(new_xz0))
-       # print(head(new_xz))
        new_xz=as.matrix(new_xz)
        new_xz=new_xz[new_xz[,2]!="0",]
        new_xz=matrix(as.numeric(new_xz),length(as.vector(new_xz))/4,4)
+       }
        # print(head(new_xz))
 }else{
         lastbase=0
