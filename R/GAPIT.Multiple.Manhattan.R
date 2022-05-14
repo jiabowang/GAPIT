@@ -232,7 +232,7 @@ if("h"%in%plot.type)
        MP_store <- MP_store[index_GI,]
        ticks=NULL
        lastbase=0
-       print(head(MP_store))
+       # print(head(MP_store))
        for(i in chm.to.analyze)
           {
            index=(MP_store[,1]==i)
@@ -421,7 +421,7 @@ if("w"%in%plot.type)
         x=x0[index]
         y=y0[index]
         z=z0[index]
-        print(length(x))
+        # print(length(x))
         #Extract QTN
         #if(!is.null(seqQTN))MP_store[seqQTN,borrowSlot]=1
         #if(!is.null(interQTN))MP_store[interQTN,borrowSlot]=2
