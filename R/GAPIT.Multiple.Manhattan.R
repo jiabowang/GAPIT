@@ -87,8 +87,9 @@ for(i in 1:length(environ_name))
  #       x_matrix=cbind(as.data.frame(rownames(x_matrix)),x_matrix)
        #print(x_matrix)
         lastbase=0
-        map_store=as.matrix(cbind(as.numeric(GM[,2]),as.numeric(as.vector(GM[,3]))))
+        map_store=cbind(as.data.frame(GM[,2]),as.numeric(GM[,3]))
         ticks=NULL
+        # print(head(map_store))
         max.x=NULL
         for (j in unique(map_store[,1]))
         {
@@ -129,9 +130,10 @@ for(i in 1:length(environ_name))
        # print(head(new_xz))
 }else{
         lastbase=0
-        map_store=as.matrix(cbind(as.character(GM[,2]),as.numeric(as.vector(GM[,3]))))
+        map_store=cbind(as.data.frame(GM[,2]),as.numeric(GM[,3]))
         ticks=NULL
         max.x=NULL
+        # print(head(map_store))
         for (j in unique(map_store[,1]))
         {
             index=map_store[,1]==j
@@ -230,6 +232,7 @@ if("h"%in%plot.type)
        MP_store <- MP_store[index_GI,]
        ticks=NULL
        lastbase=0
+       print(head(MP_store))
        for(i in chm.to.analyze)
           {
            index=(MP_store[,1]==i)
@@ -254,7 +257,7 @@ if("h"%in%plot.type)
               }
           }
        z0=as.numeric(z0)
-       
+       # print(ticks)
        x1=sort(x0)
        position=order(y0,decreasing = TRUE)
        values=y0[position]
@@ -302,6 +305,7 @@ if("h"%in%plot.type)
             }
          }
         #Add a horizontal line for bonferroniCutOff
+       # print(ticks)
        abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
        axis(2, yaxp=c(0,themax2,4),cex.axis=2.3,tick=T,las=1,lwd=2.5)
        if(k==Nenviron)axis(1, at=max.x,cex.axis=2.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
@@ -317,6 +321,7 @@ if("w"%in%plot.type)
  par(mfrow=c(Nenviron,1))
  mtext.h=0.5
  size=2
+ ratio=5
  for(k in 1:Nenviron)
  { 
   if(k==Nenviron)
@@ -410,17 +415,7 @@ if("w"%in%plot.type)
         cut0=ceiling(-log10(cutOff/length(values))/2)
         rv=runif(length(values))
         values=values+rv*(values+cut0)
-        # values=values[order(values,decreasing = T)]
-
-        # theMin=min(values)
-        # theMax=max(values)
-        # range=theMax-theMin
-        # interval=range/DPP
-
-        # ladder=round(values/interval)
-        # ladder2=c(ladder[-1],0)
-        # keep=ladder-ladder2
-        # print(keep)
+      
         index=position[which(values>cut0)]
         }     
         x=x0[index]
@@ -488,7 +483,7 @@ if("s"%in%plot.type)
  plot(1~1,col="white",xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(store.x,na.rm=TRUE),max(store.x,na.rm=TRUE)),yaxp=c(0,themax.y02,4),
     cex.axis=4, cex.lab=4,axes=FALSE,
     pch=1,cex.main=4)
-    
+ # print(ticks)   
         #Add a horizontal line for bonferroniCutOff
  axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
  axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
@@ -697,7 +692,7 @@ if("s"%in%plot.type)
  par(mar = c(cex.Ne+1,2,cex.Ne+1,2))
  # print(length(yourpch))
  # print(length(yourpch2))
- plot(0,0,xlab="",ylab="" ,#axes=FALSE,
+ plot(0,0,xlab="",ylab="" ,axes=FALSE,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),col="white")
  for(kk in 1:n.col.pch)
  {
