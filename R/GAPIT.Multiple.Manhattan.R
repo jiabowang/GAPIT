@@ -25,6 +25,7 @@ simulation=FALSE
     }
 themax.y0=NULL
 store.x=NULL
+y_filter0=NULL
 for(i in 1:length(environ_name))
 {
   print(paste("Reading GWAS result with ",environ_name[i],sep=""))
@@ -51,7 +52,12 @@ for(i in 1:length(environ_name))
   #   }
   # max.x=c(min(as.numeric(xx[,2])),max.x)
   # store.x=c(store.x,as.numeric(xx[,2]))
-  y_filter=environ_filter[environ_filter[,4]<(cutOff/(nrow(environ_filter))),]
+  y_filter=environ_filter[environ_filter[,4]<(cutOff/(nrow(environ_filter))),,drop=FALSE]
+  traits=environ_name[i]
+  # print(head(y_filter))
+  # print(traits)
+  if(nrow(y_filter)>0)y_filter=cbind(y_filter[,1:5],traits)
+  y_filter0=rbind(y_filter0,y_filter)
   # write.table(y_filter,paste("GAPIT.Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
 
   result=environ_result[,1:4]
@@ -69,8 +75,10 @@ for(i in 1:length(environ_name))
   rownames(result)=1:nrow(result)
   result[is.na(result[,4]),4]=1
   # map_store=max.x
-  sig_pos=append(sig_pos,as.numeric(rownames(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),])))
+  sig_pos=append(sig_pos,as.numeric(rownames(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),,drop=FALSE])))
 }
+  write.table(y_filter0,paste("GAPIT.Filter_GWAS_results.txt",sep=""))
+
 # print(sig_pos)
 #if(length(sig_pos)!=0)sig_pos=sig_pos[!duplicated(sig_pos)]
  if(length(sig_pos[!is.na(sig_pos)])!=0)
@@ -132,9 +140,10 @@ for(i in 1:length(environ_name))
             lastbase=max(as.numeric(map_store[index,2]))
             max.x=c(max.x,max(as.numeric(map_store[index,2])))
         }
-       max.x=c(min(as.numeric(xx[,2])),max.x)
-       store.x=c(store.x,as.numeric(xx[,2]))
+       max.x=c(min(as.numeric(map_store[,2])),max.x)
+       store.x=c(store.x,as.numeric(map_store[,2]))
 }
+
 # print(new_xz)
 # setup colors
 # print(head(result))
@@ -484,7 +493,7 @@ if("s"%in%plot.type)
  axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
  axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
  axis(2, yaxp=c(0,themax.y02,4),cex.axis=2,tick=T,las=1,lwd=2.5)
- abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
+ if(!is.null(cutOff))abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
  if(plot.line)
     {
     if(!is.null(nrow(new_xz)))  
@@ -629,7 +638,7 @@ if("s"%in%plot.type)
 
  ## Plot legend
  nchar.traits=1.5
- # environ_name=paste(environ_name,"1234560420423423420",sep="")
+ environ_name=paste(environ_name,"1234560420423423420",sep="")
  nchar0=max(nchar(environ_name))
  if(Nenviron>5)
  {
@@ -682,6 +691,7 @@ if("s"%in%plot.type)
  #  text.di=.02
  #  cex.betw=0.9
  #  }
+ write.csv(environ_name,"GAPIT.traits.names.csv",quote=FALSE)
  pdf(paste("GAPIT.Manhattan.Mutiple.Plot.symphysic.legend",".pdf" ,sep = ""), width = 4+(x.di*(n.col.pch+1)),height=high.Ne)
  par(mfrow=c(1,1))
  par(mar = c(cex.Ne+1,2,cex.Ne+1,2))

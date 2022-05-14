@@ -627,7 +627,6 @@ if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store
 #print(str(GMM$multip_mapP))
    GAPIT.Circle.Manhattan.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
    # GAPIT.Multiple_Synthesis(model_store=model_store,Y.names=colnames(Y)[-1],cutOff=DP$cutOff,GM=IC$GM)
-
   }#else{# end of mutiple manhantton plot
 if(SNP.test&Multiple_analysis&Para$file.output) GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff,plot.type=c("s"))
   
