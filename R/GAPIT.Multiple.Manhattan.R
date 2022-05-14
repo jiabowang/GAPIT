@@ -81,7 +81,7 @@ for(i in 1:length(environ_name))
 
 # print(sig_pos)
 #if(length(sig_pos)!=0)sig_pos=sig_pos[!duplicated(sig_pos)]
- if(length(sig_pos[!is.na(sig_pos)])!=0)
+ if(length(sig_pos[!is.na(sig_pos)])>1)
  {
  # {     x_matrix=as.matrix(table(sig_pos))
  #       x_matrix=cbind(as.data.frame(rownames(x_matrix)),x_matrix)
