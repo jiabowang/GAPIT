@@ -6,7 +6,7 @@ function(G=NULL,GD=NULL,GM=NULL,KI=NULL,
   file.GD=NULL,file.Ext.GD=NULL,
   file.GM=NULL,file.Ext.GM=NULL,
   SNP.MAF=0.05,FDR.Rate = 0.05,SNP.FDR=1,
-  Timmer=NULL,Memory=NULL,WS=1e6,ws=200,Aver.Dis=1000,
+  Timmer=NULL,Memory=NULL,WS0=1e6,ws=200,Aver.Dis=1000,
   LD.chromosome=NULL,LD.location=NULL,LD.range=NULL, SNP.CV=NULL,
   GP = NULL,GK = NULL,GTindex=NULL,  
   bin.size = 1000,inclosure.size = 100,
@@ -617,7 +617,7 @@ if(!is.null(GI) & !is.null(GD) & file.output & Geno.View.output)
 ViewGenotype<-GAPIT.Genotype.View(
 myGI=GI,
 myGD=GD,
-WS=WS,
+WS0=WS0,
 ws=ws,
 Aver.Dis=Aver.Dis
 )

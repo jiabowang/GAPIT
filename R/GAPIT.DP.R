@@ -15,7 +15,7 @@ function(G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NU
                 file.G=NULL, file.Ext.G=NULL,file.GD=NULL, file.GM=NULL, file.Ext.GD=NULL,file.Ext.GM=NULL, 
                 ngrid = 100, llim = -10, ulim = 10, esp = 1e-10, Multi_iter=FALSE,num_regwas=10,FDRcut=FALSE,
                 LD.chromosome=NULL,LD.location=NULL,LD.range=NULL, p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,
-                sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.1,opt="extBIC",N.sig=NULL,
+                sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.1,opt="extBIC",N.sig=NULL,WS0=1e6,ws=200,Aver.Dis=1000,
                 file.output=FALSE,cutOff=0.01, Model.selection = FALSE,output.numerical = FALSE,Random.model=FALSE,
                 output.hapmap = FALSE, Create.indicator = FALSE,QTN=NULL, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = FALSE,
         method.GLM="fast.lm",method.sub="reward",method.sub.final="reward",method.bin="static",bin.size=c(1000000),bin.selection=c(10,20,50,100,200,500,1000),
@@ -36,7 +36,7 @@ myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,PCA.total=PCA.total,kinship.alg
                 file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
                 SNP.MAF=SNP.MAF,FDR.Rate = FDR.Rate,SNP.FDR=SNP.FDR,SNP.effect=SNP.effect,SNP.impute=SNP.impute,NJtree.group=NJtree.group,NJtree.type=NJtree.type,
                 LD.chromosome=LD.chromosome,LD.location=LD.location,LD.range=LD.range,
-                GP=GP,GK=GK,bin.size=NULL,inclosure.size=NULL, WS=WS,ws=ws,Aver.Dis=Aver.Dis,
+                GP=GP,GK=GK,bin.size=NULL,inclosure.size=NULL, WS0=WS0,ws=ws,Aver.Dis=Aver.Dis,
                 sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,GTindex=NULL,file.output=file.output, Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero,Geno.View.output=Geno.View.output,PCA.col=PCA.col,PCA.3d=PCA.3d)
 
 # }
