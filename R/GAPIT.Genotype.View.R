@@ -149,14 +149,14 @@ grDevices::pdf("GAPIT.Marker.Density.R.sqaure.pdf", width =10, height = 6)
 # hist(dist/Aver.Dis, xlab="Distance (Kb)", ylab="Frequency", main="e",cex=.5)
 # plot(dist/Aver.Dis,r^2, xlab="Distance (Kb)", ylab="R sqaure", main="f",cex=.5,col="gray60")
 par(mfrow=c(2,3),mar = c(5,5,2,2))
-plot(r, xlab="Marker", ylab="R", main="a",cex=.5,col="gray60")
-plot(dist/Aver.Dis, xlab="Marker", ylab="Distance (Kb)", main="b",cex=.5,col="gray60")
-plot(dist/Aver.Dis,r, xlab="Distance (Kb)", ylab="r", main="c",cex=.5,col="gray60")
+plot(r, xlab="Marker",las=1, ylab="R", main="a",cex=.5,col="gray60")
+plot(dist/Aver.Dis,las=1, xlab="Marker", ylab="Distance (Kb)", main="b",cex=.5,col="gray60")
+plot(dist/Aver.Dis,r, las=1,xlab="Distance (Kb)", ylab="R", main="c",cex=.5,col="gray60")
 abline(h=0,col="darkred")
 
-hist(r, xlab="r", ylab="Frequency", main="d")
-hist(dist/Aver.Dis, xlab="Distance (Kb)", ylab="Frequency", main="e",cex=.5)
-plot(dist/Aver.Dis,r^2, xlab="Distance (Kb)", ylab="R sqaure", main="f",cex=.5,col="gray60")
+hist(r, xlab="R", las=1,ylab="Frequency", main="d")
+hist(dist/Aver.Dis, las=1,xlab="Distance (Kb)", ylab="Frequency", main="e",cex=.5)
+plot(dist/Aver.Dis,r^2, las=1,xlab="Distance (Kb)", ylab="R sqaure", main="f",cex=.5,col="gray60")
 
 #Moving average
 indOrder=order(dist)
@@ -320,26 +320,26 @@ layout(mat = layout.matrix,
        heights = c(100,80,120), # Heights of the two rows
        widths = c(2, 3)) # Widths of the two columns
 par(mar = c(1, 5, 1, 1))
-plot(het.snp,  ylab="Heterozygosity", cex=.5,col=colDisp,xaxt='n')
+plot(het.snp,  las=1,ylab="Heterozygosity", cex=.5,col=colDisp,xaxt='n')
 par(mar = c(1, 5, 0, 1))
-plot(maf, xlab="Marker", ylab="MAF",cex=.5,col=colDisp,xaxt='n')
+plot(maf, las=1,xlab="Marker", ylab="MAF",cex=.5,col=colDisp,xaxt='n')
 par(mar = c(5, 5, 0, 1))
-plot(r^2,  ylab="R Sqaure", xlab="Marker", cex=.5,col=colDisp)
+plot(r^2,  las=1,ylab="R Sqaure", xlab="Marker", cex=.5,col=colDisp)
 grDevices::dev.off()
 
 
 #Display Het and MAF distribution
-grDevices::pdf("GAPIT.Marker.MAF.Heterozosity.distribution.pdf", width =10, height = 6)
+grDevices::pdf("GAPIT.Marker.MAF.Heterozosity.distribution.pdf", width =10, height = 3.5)
 layout.matrix <- matrix(c(1,2,3), nrow = 1, ncol = 3)
 layout(mat = layout.matrix,
        heights = c(100,80,120), # Heights of the two rows
        widths = c(2, 2,2)) # Widths of the two columns
 par(mar = c(5, 5, 2, 0))
-hist(het.ind,  xlab="Individual heterozygosity",ylab="Frequency", cex=.5,,main="a")
+hist(het.ind, las=1,xlab="Individual heterozygosity",ylab="Frequency", cex=.5,,main="a")
 par(mar = c(5, 4, 2, 1))
-hist(het.snp, xlab="Marker heterozygosity", ylab="Frequency",cex=.5,main="b")
+hist(het.snp, las=1,xlab="Marker heterozygosity", ylab="Frequency",cex=.5,main="b")
 par(mar = c(5, 4, 2, 1))
-hist(maf,  ylab="Frequency", xlab="MAF", cex=.5,main="c")
+hist(maf,  las=1,ylab="Frequency", xlab="MAF", cex=.5,main="c")
 
 grDevices::dev.off()
 
