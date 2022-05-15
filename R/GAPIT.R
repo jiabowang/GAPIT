@@ -441,7 +441,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
          sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,QC=QC,GTindex=GTindex,LD=LD,plot.bin=plot.bin,file.output=file.output,cutOff=cutOff, Model.selection = Model.selection,output.numerical = output.numerical,
          output.hapmap = output.hapmap, Create.indicator = Create.indicator,QTN=QTN, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = Major.allele.zero,
          method.GLM=method.GLM,method.sub=method.sub,method.sub.final="reward",method.bin="static",bin.size=bin.size,bin.selection=bin.selection,model=model,Random.model=Random.model,
-         h2=h2,NQTN=NQTN,QTNDist="normal",effectunit=effectunit,category=category,r=r,cveff=NULL,a2=0,adim=2,Multi_iter=Multi_iter,num_regwas=num_regwas,N.sig=N.sig,WS0=WS0,ws=ws,Aver.Dis=Aver.Dis,
+         h2=h2,NQTN=NQTN,QTNDist="normal",effectunit=effectunit,category=category,r=r,cveff=NULL,a2=0,adim=2,Multi_iter=Multi_iter,num_regwas=num_regwas,N.sig=N.sig,WS0=1e6,ws=200,Aver.Dis=1000,
          memo="",Prior=NULL,ncpus=1,maxLoop=maxLoop,threshold.output=threshold.output,WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=alpha,maxOut=100,QTN.position=QTN.position,CG=CG,
          converge=converge,iteration.output=iteration.output,acceleration=0,iteration.method="accum",PCA.View.output=PCA.View.output,Geno.View.output=Geno.View.output,plot.style="Oceanic",SUPER_GD=NULL,SUPER_GS=SUPER_GS,Multiple_analysis=Multiple_analysis)
         
@@ -559,7 +559,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
          sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,QC=QC,GTindex=GTindex,LD=LD,plot.bin=plot.bin,file.output=file.output,cutOff=cutOff, Model.selection = Model.selection,output.numerical = output.numerical,
          output.hapmap = output.hapmap, Create.indicator = Create.indicator,QTN=QTN, QTN.round=1,QTN.limit=0, QTN.update=TRUE, QTN.method="Penalty", Major.allele.zero = Major.allele.zero,
          method.GLM=method.GLM,method.sub=method.sub,method.sub.final="reward",method.bin="static",bin.size=bin.size,bin.selection=bin.selection,model=model,Random.model=Random.model,
-         h2=h2,NQTN=NQTN,QTNDist="normal",effectunit=effectunit,category=category,r=r,cveff=NULL,a2=0,adim=2,Multi_iter=Multi_iter,num_regwas=num_regwas,WS0=WS0,ws=ws,Aver.Dis=Aver.Dis,
+         h2=h2,NQTN=NQTN,QTNDist="normal",effectunit=effectunit,category=category,r=r,cveff=NULL,a2=0,adim=2,Multi_iter=Multi_iter,num_regwas=num_regwas,WS0=1e6,ws=200,Aver.Dis=1000,
          memo="",Prior=NULL,ncpus=1,maxLoop=maxLoop,threshold.output=threshold.output,WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=alpha,maxOut=100,QTN.position=QTN.position,CG=CG,
          converge=converge,iteration.output=iteration.output,acceleration=0,iteration.method="accum",PCA.View.output=PCA.View.output,Geno.View.output=Geno.View.output,plot.style="Oceanic",SUPER_GD=NULL,SUPER_GS=SUPER_GS,Multiple_analysis=Multiple_analysis)
         if(model=="MLM")
