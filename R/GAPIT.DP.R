@@ -36,7 +36,7 @@ myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,PCA.total=PCA.total,kinship.alg
                 file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
                 SNP.MAF=SNP.MAF,FDR.Rate = FDR.Rate,SNP.FDR=SNP.FDR,SNP.effect=SNP.effect,SNP.impute=SNP.impute,NJtree.group=NJtree.group,NJtree.type=NJtree.type,
                 LD.chromosome=LD.chromosome,LD.location=LD.location,LD.range=LD.range,
-                GP=GP,GK=GK,bin.size=NULL,inclosure.size=NULL, 
+                GP=GP,GK=GK,bin.size=NULL,inclosure.size=NULL, WS=WS,ws=ws,Aver.Dis=Aver.Dis,
                 sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,GTindex=NULL,file.output=file.output, Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero,Geno.View.output=Geno.View.output,PCA.col=PCA.col,PCA.3d=PCA.3d)
 
 # }
