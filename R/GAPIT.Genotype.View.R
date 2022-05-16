@@ -130,7 +130,7 @@ x2=X[,-1]
 # print("@@@@@@")
 
 # dist=myGI[-1,3]-myGI[-nrow(myGI),3]
-dist=as.numeric(myGM[-1,3])-as.numeric(myGM[-nrow(myGM),3])
+dist=as.numeric(myGI[-1,3])-as.numeric(myGI[-nrow(myGI),3])
 index=dist<10|dist>WS0
 dist[index]=NA
 

@@ -504,6 +504,7 @@ if("s"%in%plot.type)
  #       col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
  #       bty = "o", bg = "white",box.col="white")
  # step.vals=0
+ # if(1>2){
  for(k in 1:Nenviron)
   { 
     step.vals=ceiling(k/length(allpch0))-1
@@ -631,11 +632,12 @@ if("s"%in%plot.type)
     
  }#end of environ_name
  dev.off()
-
+ # }
  ## Plot legend
  nchar.traits=1.5
- # environ_name=paste(environ_name,"1234560420423423420",sep="")
+ # environ_name=paste(environ_name,"1234",sep="")
  nchar0=max(nchar(environ_name))
+ print(nchar0)
  if(Nenviron>5)
  {
   yourpch=c(rep(allpch0,n.vals),allpch0[1:(Nenviron-length(allpch0)*n.vals)])
@@ -668,10 +670,11 @@ if("s"%in%plot.type)
   cex.betw=c(.38,.5,.7,0.9,1)[ratio.cex] # distance between cexes
   x.di=c(1.12,1.09,0.5,0.8,1.3)[ratio.cex]/2 # distance between markers in x axis
   # print(nchar0)
+  # x.di0=c(0)
   if(n.col.pch>1){
     text.di=(0.01*nchar0)/3+0.02
     # x.di=0.52*n.col.pch
-    x.di=0.28*ceiling(nchar0/10)*n.col.pch
+    x.di=(0.1*(ceiling(nchar0/5)-1)+(n.col.pch-1)*0.1)*ceiling(nchar0/5)#*n.col.pch
   }
   # print(x.di)
  # if(Nenviron>5){
