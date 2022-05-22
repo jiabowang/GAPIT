@@ -1389,7 +1389,7 @@ print("Compression portfolios..." )
 #print(Compression)
 if(file.output){
   GAPIT.Compression.Visualization(Compression = Compression, 
-                                  name.of.trait = name.of.trait)
+                                  name.of.trait = name.of.trait,file.output=file.output)
 }
 print("Compression Visualization done")
 

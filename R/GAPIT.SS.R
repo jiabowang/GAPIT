@@ -433,7 +433,7 @@ mc=gapitMain$effect.snp
 bc=gapitMain$effect.cv
 mp=gapitMain$P
 Compression=gapitMain$Compression
-GAPIT.Compression.Visualization(Compression = Compression, name.of.trait = DP$name.of.trait)
+GAPIT.Compression.Visualization(Compression = Compression, name.of.trait = DP$name.of.trait,file.output=DP$file.output)
 # # print(list(GWAS=GWAS,Pred=Pred,FDR=NULL,Power=NULL,
 #   Power.Alpha=NULL,alpha=NULL,h2=h2,va=va,ve=ve,Compression=Compression,
 #   mc=mc,bc=bc,mp=mp,TV=gapitMain$TV,

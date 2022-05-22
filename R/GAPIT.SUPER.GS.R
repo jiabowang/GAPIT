@@ -430,25 +430,11 @@ X <-  X0 #covariate variables such as population structure
 j=1
   if (is.null(Z)) Z=diag(x=1,nrow(K),ncol(K))
   if (group==1)   K=1
-  # print(head(X))
-  # print(length(ys))
-  # print(dim(X))
-  # print(apply(X,2,var))
-  # print(dim(Z))
-  xxt=F
-  while(!xxt)
-    {
-       x.inv <- try(tcrossprod(X %*% solve(crossprod(X)), X), silent = TRUE)
-       if ('try-error' %in% class(x.inv))
-        {
-          X=X[,-ncol(X)]
-        }else{
-          xxt=T}
-     }
-     print("For tcrossprod(X %*% solve(crossprod(X)), X) reduce dim of X to :")
-     print(dim(X))
+  
+  X=GAPIT.Licols(X)$Xsub
   # aa=tcrossprod(X %*% solve(crossprod(X)), X)
    emma_test <- EMMREML::emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
+   # emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
 
    print(paste(order_count, "of",numSetting,"--","Vg=",round(emma_test$Vu,4), "VE=",round(emma_test$Ve,4),"-2LL=",round(-2*emma_test$loglik,2), "  Clustering=",ca,"  Group number=", group ,"  Group kinship=",kt,sep = " "))
   emma_test_reml=-2*emma_test$loglik
@@ -505,7 +491,10 @@ Z=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol)
 
 if(is.null(dim(ys)) || ncol(ys) == 1)  ys <- matrix(ys, 1, length(ys))
 if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
-  X <-  X0 #covariate variables such as population structure
+  # X <-  X0 #covariate variables such as population structure
+  XX=GAPIT.Licols(X0)
+  X=XX$Xsub
+  X.idx=XX$idx
   if (is.null(Z)) Z=diag(x=1,nrow(K),ncol(K))
   
   # print(my_allCV)
@@ -515,14 +504,21 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    emma_REMLE=emma_test
    print("gBLUP with only one time emma")
   } 
+  print(dim(X))
+
   if (is.null(my_allCV)){my_allX=matrix(1,length(my_taxa),1)
   }else{
    # my_allX=as.matrix(my_allCV[,-1])
+       # my_allX=cbind(1,as.matrix(my_allCV[,1+GAPIT.Licols(my_allCV)$idx]))
        my_allX=cbind(1,as.matrix(my_allCV[,-1]))
   }
 
-  # print(head(emma_REMLE$uhat))
-   my_allX=my_allX[,1:ncol(X)]
+  # print(GAPIT.Licols(X0)$idx)
+  # print(dim(my_allX))
+   XX=GAPIT.Licols(X0)
+   X=XX$Xsub
+   X.idx=XX$idx
+   my_allX=my_allX[,X.idx]
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(my_taxa,emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")

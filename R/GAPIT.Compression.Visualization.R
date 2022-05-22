@@ -61,6 +61,7 @@
   theOptimum=c(label.comp,LL.best) 
   #print(variance)
   if( file.output == TRUE ){
+    # print("!!!!!!!!")
     grDevices::pdf(paste("GAPIT.", name.of.trait,".Optimum.pdf", sep = ""), width = 14)
     graphics::par(mfrow = c(1,1), mar = c(1,1,5,5), lab = c(5,5,7))
     graphics::pie(variance,  col=colors, labels=labels,angle=45,border=NA)

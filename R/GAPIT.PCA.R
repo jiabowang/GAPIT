@@ -60,10 +60,10 @@ if(PCA.3d==TRUE)
     file.remove(list.files(pattern=".png"))
     }
 
-#    if(!require(rgl)) install.packages("rgl")
-#    if(!require(rglwidget)) install.packages("rglwidget")
-#    library(rgl)
-    
+   if(!require(rgl)) install.packages("rgl")
+   if(!require(rglwidget)) install.packages("rglwidget")
+   library(rgl)
+
     PCA1 <- PCA.X$x[,1]
     PCA2 <- PCA.X$x[,2]
     PCA3 <- PCA.X$x[,3]

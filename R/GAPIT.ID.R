@@ -164,7 +164,7 @@ Pred=SS$Pred
    if(DP$file.output & !is.null(SS$Compression) & !is.na(SS$Compression[1,6])){
      GAPIT.Compression.Visualization(Compression = SS$Compression, 
                                      name.of.trait = DP$name.of.trait,
-                                     file.output = file.output)
+                                     file.output = DP$file.output)
    }
   
 }else{

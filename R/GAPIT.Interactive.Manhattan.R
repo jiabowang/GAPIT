@@ -3,7 +3,10 @@ function(GWAS=NULL,MAF.threshold=seq(0,0.5,.1),cutOff=0.01,DPP=50000,X_fre=NULL,
   )
 {   
     if(is.null(GWAS)) stop("Please add GWAS result in here!!!")
- 
+  if(!require(rgl)) install.packages("rgl")
+   if(!require(rglwidget)) install.packages("rglwidget")
+   library(rgl)
+
     MP=GWAS[,2:4]
     #print(head(GWAS))
     GWAS=GWAS[order(GWAS[,3]),]

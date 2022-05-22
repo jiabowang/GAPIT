@@ -26,13 +26,13 @@ layout.matrix <- matrix(c(1,2,1,3,4,5), nrow = 2, ncol = 3)
 layout(mat = layout.matrix,
        heights = c(100,100), # Heights of the two rows
        widths = c(2, 2,2)) # Widths of the two columns
-y=myY[,2]
+y=myY[!is.na(myY[,2]),2]
 par(mar = c(5, 5, 2, 1))
 plot(y,xlab="Individual",ylab="Observation", cex=.5,main="a")
 par(mar = c(5, 5, 2, 1))
 hist(y,xlab="Observation",ylab="Frequency", cex=.5,main="c")
 par(mar = c(5, 4, 2, 1))
-plot(density(y),xlab="Observation",ylab="Density", cex=.5,main="d")
+plot(density(na.omit(y)),xlab="Observation",ylab="Density", cex=.5,main="d")
 par(mar = c(5, 4, 2, 1))
 boxplot(y,horizontal=F,xlab="",ylab="Observation", cex=.5,main="b")
 par(mar = c(5, 4, 2, 1))

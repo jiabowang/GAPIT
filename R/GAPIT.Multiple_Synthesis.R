@@ -6,6 +6,10 @@ function(model_store,DPP=500,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y.nam
     #Authors: Zhiwu Zhang and Jiabo Wang
     # Last update: MAY 9, 2022
     ##############################################################################################
+  if(!require(rgl)) install.packages("rgl")
+  if(!require(rglwidget)) install.packages("rglwidget")
+  library(rgl)
+
   Nenviron=length(model_store)*length(Y.names)
   environ_name=NULL
   new_xz=NULL

@@ -185,7 +185,7 @@ if("h"%in%plot.type)
 {
     Max.high=6*Nenviron
     if(Max.high>8)Max.high=40
-    pdf(paste("GAPIT.Manhattan.Mutiple.Plot.high",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
+    pdf(paste("GAPIT.Manhattan.Multiple.Plot.high",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
     par(mfrow=c(Nenviron,1))
     mypch=1
     for(k in 1:Nenviron)
@@ -318,7 +318,7 @@ if("h"%in%plot.type)
 
 if("w"%in%plot.type)
 {
- pdf(paste("GAPIT.Manhattan.Mutiple.Plot.wide",".pdf" ,sep = ""), width = 16,height=8.5)
+ pdf(paste("GAPIT.Manhattan.Multiple.Plot.wide",".pdf" ,sep = ""), width = 16,height=8.5)
  par(mfrow=c(Nenviron,1))
  mtext.h=0.5
  size=2

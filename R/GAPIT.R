@@ -233,7 +233,7 @@
   Inter.type = c("m","q"), #Interactive plot type for Manhattan and QQ plots
   kinship.cluster = "average", #cMLM
   kinship.group = 'Mean',#cMLM
-  kinship.algorithm = "VanRaden",#cMLM
+  kinship.algorithm = "Zhang",#cMLM
   llim = -10, 
   lmpred = FALSE, #option for linear model prediction or ABLUP prediction
   LD.chromosome = NULL, #LD plot of markers in significant marker region
@@ -372,21 +372,21 @@ if(!is.null(Y))
             Para$group.from=1
             Para$group.to=1
             Para$group.by=group.by
-            Para$kinship.algorithm="VanRaden"
+            Para$kinship.algorithm=kinship.algorithm
           }
         if(model=="MLM")
           {
             Para$group.from=1000000
             Para$group.to=1000000
             Para$group.by=group.by
-            Para$kinship.algorithm="VanRaden"
+            Para$kinship.algorithm=kinship.algorithm
           }
         if(model=="CMLM")
           {
             if(group.from>=group.to)Para$group.from=1
             Para$group.to=group.to
             Para$group.by=group.by
-            Para$kinship.algorithm="VanRaden"
+            Para$kinship.algorithm=kinship.algorithm
 #if(Para$group.from==Para$group.to)Para$group.from=10
             print(group.from)
             print(group.to)
@@ -409,7 +409,7 @@ if(!is.null(Y))
             if(is.null(Para$sangwich.top))Para$sangwich.top="MLM"
             if(!is.null(sangwich.bottom)&is.null(Para$sangwich.bottom))Para$sangwich.bottom=sangwich.bottom  
             if(is.null(Para$sangwich.bottom))Para$sangwich.bottom="SUPER"
-            Para$kinship.algorithm="VanRaden"
+            Para$kinship.algorithm=kinship.algorithm
           }
         if(model=="FarmCPU")Para$kinship.algorithm="FarmCPU"
         if(model=="MLMM")Para$kinship.algorithm="MLMM"
@@ -637,7 +637,7 @@ if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store
 #print(str(GMM$multip_mapP))
    GAPIT.Circle.Manhattan.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
    # GAPIT.Multiple_Synthesis(model_store=model_store,Y.names=colnames(Y)[-1],cutOff=DP$cutOff,GM=IC$GM)
-  }#else{# end of mutiple manhantton plot
+  }#else{# end of multiple manhantton plot
 if(SNP.test&Multiple_analysis&Para$file.output) GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff,plot.type=c("s"))
   
   
@@ -649,7 +649,7 @@ if(file.output&!SNP.test&model_store%in%c("gBLUP","cBLUP","sBLUP")&Inter.Plot)
 
 #print(str(GMM$multip_mapP))
 #GAPIT.Circle.Manhatton.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
-  }# end of mutiple manhantton plot
+  }# end of multiple manhantton plot
 
 
 
