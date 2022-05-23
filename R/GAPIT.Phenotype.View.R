@@ -28,11 +28,11 @@ layout(mat = layout.matrix,
        widths = c(2, 2,2)) # Widths of the two columns
 y=myY[!is.na(myY[,2]),2]
 par(mar = c(5, 5, 2, 1))
-plot(y,xlab="Individual",ylab="Observation", cex=.5,main="a")
+plot(y,xlab="Individual",ylab="Observation", freq=FALSE,cex=.5,main="a")
 par(mar = c(5, 5, 2, 1))
-hist(y,xlab="Observation",ylab="Frequency", cex=.5,main="c")
+hist(y,xlab="Observation",ylab="Frequency",freq=FALSE, cex=.5,main="c")
 par(mar = c(5, 4, 2, 1))
-plot(density(na.omit(y)),xlab="Observation",ylab="Density", cex=.5,main="d")
+plot(density(na.omit(y)),xlab="Observation",freq=FALSE,ylab="Density", cex=.5,main="d")
 par(mar = c(5, 4, 2, 1))
 boxplot(y,horizontal=F,xlab="",ylab="Observation", cex=.5,main="b")
 par(mar = c(5, 4, 2, 1))

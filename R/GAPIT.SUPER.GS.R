@@ -430,9 +430,10 @@ X <-  X0 #covariate variables such as population structure
 j=1
   if (is.null(Z)) Z=diag(x=1,nrow(K),ncol(K))
   if (group==1)   K=1
-  
-  X=GAPIT.Licols(X)$Xsub
-  # aa=tcrossprod(X %*% solve(crossprod(X)), X)
+  XX=GAPIT.Licols(X0)
+  X=XX$Xsub
+  X.idx=XX$idx
+ # aa=tcrossprod(X %*% solve(crossprod(X)), X)
    emma_test <- EMMREML::emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
    # emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
 
@@ -515,9 +516,8 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
 
   # print(GAPIT.Licols(X0)$idx)
   # print(dim(my_allX))
-   XX=GAPIT.Licols(X0)
-   X=XX$Xsub
-   X.idx=XX$idx
+   # X=XX$Xsub
+   # X.idx=XX$idx
    my_allX=my_allX[,X.idx]
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(my_taxa,emma_BLUE))
