@@ -22,12 +22,12 @@ if(is.null(mav1)){mav1=10}
 # if(is.null(chr)){chr=1}
 chr=as.character(unique(myGI[,2]))
 allchr=as.character(myGI[,2])
-chr=chr[order(chr)]
+# chr=chr[order(chr)]
 for(i in 1:length(chr))
 {
   allchr[allchr==chr[i]]=i
 }
-myGI[,2]=allchr
+myGI[,2]=as.data.frame(allchr)
 colnames(myGI)[2]="Chr"
 # print(table(myGI[,2]))
 # map=myGI
