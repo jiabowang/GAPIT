@@ -1,3 +1,22 @@
+if(!require(gplots)) install.packages("gplots")
+if(!require(LDheatmap)) install.packages("LDheatmap")
+if(!require(genetics)) install.packages("genetics")
+if(!require(ape)) install.packages("ape")
+if(!require(compiler)) install.packages("compiler")
+if(!require(grid)) install.packages("grid")
+if(!require(bigmemory)) install.packages("bigmemory")
+if(!require(EMMREML)) install.packages("EMMREML")
+if(!require(scatterplot3d)) install.packages("scatterplot3d")
+if(!require(lme4)) install.packages("lme4")
+# if(!require(rgl)) install.packages("rgl")
+
+if(!'multtest'%in% installed.packages()[,"Package"]){
+	if (!requireNamespace("BiocManager", quietly = TRUE))
+   install.packages("BiocManager")
+   BiocManager::install("multtest")
+   BiocManager::install("snpStats")
+}
+
 `GAPIT.0000` <-
 function(){
 ##############################################################################################
@@ -32,32 +51,7 @@ function(){
 #    #biocLite("multtest")
 #}
 
-#if(!require(gplots)) install.packages("gplots")
-#if(!require(LDheatmap)) install.packages("LDheatmap")
-#if(!require(genetics)) install.packages("genetics")
-#if(!require(ape)) install.packages("ape")
-#if(!require(compiler)) install.packages("compiler")
-
-#if(!require(EMMREML)) install.packages("EMMREML")
-#if(!require(scatterplot3d)) install.packages("scatterplot3d")
-
-#if(!'multtest'%in% installed.packages()[,"Package"]){
-#	if (!requireNamespace("BiocManager", quietly = TRUE))
-#    install.packages("BiocManager")
-#    BiocManager::install("multtest")
-#    BiocManager::install("snpStats")
-#}
-
-
 GAPIT.Version="2022.4.16, GAPIT 3.1"
-# print(paste("All packages are loaded already !  ","GAPIT.Version is ",GAPIT.Version,sep=""))
-# cat("If you use GAPIT and publish your analysis, please report the program version and cite the appropriate article:\n
-# The citation for GAPIT3 is:\n
-# Wang J., Zhang Z., GAPIT Version 3: Boosting Power and Accuracy for Genomic Association and Prediction, Genomics, Proteomics & Bioinformatics (2021), doi: https://doi.org/10.1016/j.gpb.2021.08.005.\n
-# The citation for GAPIT2 is:\n
-# Tang Y., Liu X., Wang J., Li M., Wang Q., et al., 2016 GAPIT Version 2: An Enhanced Integrated Tool for Genomic Association and Prediction. Plant J. 9, https://10.3835/plantgenome2015.11.0120.\n
-# The citation for GAPIT is:\n
-# Lipka A. E., Tian F., Wang Q., Peiffer J., Li M., et al., 2012 GAPIT: genome association and prediction integrated tool. Bioinformatics 28: 2397–2399, https://doi.org/10.1093/bioinformatics/bts444.\n")
 return(GAPIT.Version)
 }
 #=============================================================================================

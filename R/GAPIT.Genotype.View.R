@@ -13,117 +13,54 @@
 
 #if(nrow(myGI)<1000) return() #Markers are not enough for this analysis
   
-if(is.null(myGI)){stop("Validation Invalid. Please select read valid Genotype flies  !")}
-
+if(is.null(myGI)){stop("Validation Invalid. Please select read valid Map flies  !")}
 if(is.null(myGD)){stop("Validation Invalid. Please select read valid Genotype flies  !")}
-
 if(is.null(w1_start)){w1_start=1}
-
 ##if(is.null(w1_end)){w1_end=100}
-
 if(is.null(mav1)){mav1=10}
 
+# if(is.null(chr)){chr=1}
+chr=as.character(unique(myGI[,2]))
+allchr=as.character(myGI[,2])
+chr=chr[order(chr)]
+for(i in 1:length(chr))
+{
+  allchr[allchr==chr[i]]=i
+}
+myGI[,2]=allchr
+colnames(myGI)[2]="Chr"
+# print(table(myGI[,2]))
+# map=myGI
+# WS0=1e6
+## make an index for marker selection with binsize
+print("Filting marker for GAPIT.Genotype.View function ...")
+pos.fix=as.numeric(myGI[,2])*10^(nchar(max(as.numeric(myGI[,3]))))+as.numeric(myGI[,3])
+set.seed(99163)
+bins=ceiling(pos.fix/WS0)
+n.bins=length(unique(bins))
+uni.bins=unique(bins)
 
-if(is.null(chr)){chr=1}
+n.markers=nrow(myGI)
+n.select=10000
+if(n.markers<n.select)n.select=n.markers
+n.targ=floor(n.select/n.bins)
+if(n.targ<1)
+{
+  n.targ=1
+  uni.bins=sample(uni.bins,n.select)
+}
+rs.markers=NULL
+for(i in uni.bins)
+{
+  map0=myGI[bins==i,]
+  n.targ0=n.targ
+  if(nrow(map0)<n.targ)n.targ0=nrow(map0)
+  rs.markers=append(rs.markers,as.character(map0[sample(1:(nrow(map0)),n.targ0),1]))
+}
 
-#heterozygosity of individuals and SNPs (By Zhiwu Zhang)
-  #print("Heterozygosity of individuals and SNPs (By Zhiwu Zhang)")
-#   X=myGD[,-1]
-#   H=1-abs(X-1)
-#   het.ind=apply(H,1,mean)
-#   het.snp=apply(H,2,mean)
-#   ylab.ind=paste("Frequency (out of ",length(het.ind)," individuals)",sep="")
-#   ylab.snp=paste("Frequency (out of ",length(het.snp)," markers)",sep="")
-#   grDevices::pdf("GAPIT.Heterozygosity.pdf", width =10, height = 6)
-#   graphics::par(mfrow=c(1,2),mar=c(5,5,1,1)+0.1)
-#   graphics::hist(het.ind,col="gray", main="",ylab=ylab.ind, xlab="Heterozygosity of individuals")
-#   graphics::hist(het.snp,col="gray", main="",ylab=ylab.snp, xlab="Heterozygosity of markers")
-#   grDevices::dev.off()
-#   rm(X, H, het.ind, het.snp) #Feree memory
-  
-# myFig21<-myGI
-# myFig21<-myFig21[!is.na(as.numeric(as.matrix(myFig21[,3]))),]
-
-# n<-nrow(myFig21)
-# maxchr<-0
-# for(i in 1:n){
-# if(as.numeric(as.matrix(myFig21[i,2]))>maxchr){
-# maxchr<-as.numeric(as.matrix(myFig21[i,2]))
-# }
-# }
-# n_end<-maxchr
-# if(maxchr==0){
-# chr=0
-# }
-
-# #n_end<-as.numeric(as.matrix(myFig21[n,2]))
-# aaa<-NULL
-# for(i in 0:n_end){
-# #myChr<-myFig21[myFig21[,2]==i,]
-# myChr<-myFig21[as.numeric(as.matrix(myFig21[,2]))==i,]
-# index<-order(as.numeric(as.matrix(as.data.frame(myChr[,3]))))
-# aaa<-rbind(aaa,myChr[index,])
-
-# }
-# myFig2<-aaa
-
-# if(is.null(w1_end)){
-# if(nrow(myFig2[as.numeric(as.matrix(myFig2[,2]))==chr,])>100){
-# w1_end=100
-# }else{
-# w1_end=nrow(myFig2[as.numeric(as.matrix(myFig2[,2]))==chr,])
-# }
-# }
-
-
-# subResult<-matrix(0,n,1)
-# for(i in 1 :( n-1))
-# {
-# k<-as.numeric(as.matrix(myFig2[i+1,3]))-as.numeric(as.matrix(myFig2[i,3]))
-# if(k>0){
-# subResult[i]<-k
-# }
-# else{
-# subResult[i]<-0
-# }}
-# results<-cbind(myFig2,subResult)
-
-# #####Out  Distribution of SNP density ##########
-
-
-# #####Out Accumulation##########
-
-# kk0<-order(as.numeric(as.matrix(results[,4])))
-
-# myFig22<-results[kk0,]
-
-# m<-nrow(myFig22)
-
-# kk1<-matrix(1:m,m,1)
-# results2<-cbind(myFig22,kk1)
-# max2<-max(myFig22[,4])
-
-# # print(results[,4])
-# index.density=as.numeric(as.matrix(results[,4]))<1e6
-# grDevices::pdf("GAPIT.Marker.Density.pdf", width =10, height = 6)
-# graphics::par(mar=c(5,5,4,5)+0.1)
-# graphics::hist(as.numeric(as.matrix(results[index.density,4])),
-#                xlab="Density",
-#                main="Distribution of SNP",
-#                breaks=12, cex.axis=0.9,
-#                col = "dimgray",
-#                cex.lab=1.3)###,xlim=c(0,25040359))
-
-# graphics::par(new=T)
-# plot(results2[,4],results2[,5]/m,xaxt="n", yaxt="n",bg="lightgray",xlab="",ylab="",type="l",pch=20,col="#990000",cex=1.0,cex.lab=1.3, cex.axis=0.9, lwd=3,las=1,xlim=c(0,max2))
-# graphics::axis(4,col="#990000",col.ticks="#990000",col.axis="#990000")
-# graphics::mtext("Accumulation Frequency",side=4,line=3,font=2,font.axis=1.3,col="#990000")
-# graphics::abline(h=0,col="forestgreen",lty=2)
-# graphics::abline(h=1,col="forestgreen",lty=2)
-
-# print("!!!!!")
-# print(dim(myGD))
-# print(head(myGI))
+rs.markers=unique(rs.markers)
+rs.index=as.character(myGI[,1])%in%rs.markers
+print(table(rs.index))
 X=myGD
 x1=X[,-ncol(X)]
 x2=X[,-1]
@@ -139,24 +76,34 @@ dist[index]=NA
 r=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
 
 grDevices::pdf("GAPIT.Marker.Density.R.sqaure.pdf", width =10, height = 6)
-# par(mfrow=c(2,3),mar = c(5,5,2,2))
-# plot(r, xlab="Marker", ylab="R", main="a",cex=.5,col="gray60")
-# plot(dist/Aver.Dis, xlab="Marker", ylab="Distance (Kb)", main="b",cex=.5,col="gray60")
-# plot(dist/Aver.Dis,r, xlab="Distance (Kb)", ylab="r", main="c",cex=.5,col="gray60")
-# abline(h=0,col="darkred")
-# # print("######")
-# hist(r, xlab="r", ylab="Frequency", main="d")
-# hist(dist/Aver.Dis, xlab="Distance (Kb)", ylab="Frequency", main="e",cex=.5)
 # plot(dist/Aver.Dis,r^2, xlab="Distance (Kb)", ylab="R sqaure", main="f",cex=.5,col="gray60")
+d.V=dist/Aver.Dis
 par(mfrow=c(2,3),mar = c(5,5,2,2))
-plot(r, xlab="Marker",las=1, ylab="R", main="a",cex=.5,col="gray60")
-plot(dist/Aver.Dis,las=1, xlab="Marker", ylab="Distance (Kb)", main="b",cex=.5,col="gray60")
-plot(dist/Aver.Dis,r, las=1,xlab="Distance (Kb)", ylab="R", main="c",cex=.5,col="gray60")
+plot(r[rs.index], xlab="Marker",las=1, ylab="R", main="a",cex=.5,col="gray60")
+plot(d.V[rs.index],las=1, xlab="Marker", ylab="Distance (Kb)", main="b",cex=.5,col="gray60")
+plot(d.V[rs.index],r[rs.index], las=1,xlab="Distance (Kb)", ylab="R", main="c",cex=.5,col="gray60")
 abline(h=0,col="darkred")
+r0.hist=hist(r,  plot=FALSE)
+r0=r0.hist$counts
+r0.demo=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,1000,ifelse(nchar(max(r0))<=12,10000000,100000000000)))
+r0.hist$counts=r0/r0.demo
+ylab0=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,2,ifelse(nchar(max(r0))<=12,3,4)))
+ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
+# print(nchar(max(r0)))
+# print(ylab.store)
+plot(r0.hist, xlab="R", las=1,ylab=ylab.store[ylab0], main="d",col="gray")
+# hist(r0, xlab="R", las=1,ylab=ylab.store[ylab0], main="d")
+d.V.hist=hist(d.V, plot=FALSE)
+d.V0=d.V.hist$counts
+d.V0.demo=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,1000,ifelse(nchar(max(d.V0))<=12,10000000,100000000000)))
 
-hist(r, xlab="R", las=1,ylab="Frequency", main="d")
-hist(dist/Aver.Dis, las=1,xlab="Distance (Kb)", ylab="Frequency", main="e",cex=.5)
-plot(dist/Aver.Dis,r^2, las=1,xlab="Distance (Kb)", ylab="R sqaure", main="f",cex=.5,col="gray60")
+ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max(d.V0))<=12,3,4)))
+ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
+d.V.hist$counts=d.V0/d.V0.demo
+plot(d.V.hist, las=1,xlab="Distance (Kb)",col="gray", ylab=ylab.store[ylab0], main="e",cex=.5)
+
+# hist(d.V0, las=1,xlab="Distance (Kb)", ylab="Frequency", main="e",cex=.5)
+plot(d.V[rs.index],(r^2)[rs.index], las=1,xlab="Distance (Kb)", ylab="R sqaure", main="f",cex=.5,col="gray60")
 
 #Moving average
 indOrder=order(dist)
@@ -178,121 +125,6 @@ lines(loc[,1]/Aver.Dis,loc[,2],col="darkred")
 
 grDevices::dev.off()
 
-
-
-
-#####Out Moving Average of density##########
-#print(unique(myGI[,2]))
-
-# myGD<-myGD[,myGI[,2]==chr]
-# gc()
-
-
-# myGM0<-myGI[myGI[,2]==chr,]
-
-
-# ##remove invalid SNPs
-# #X<-myGD0[,-1]
-# X<-myGD
-# colMax=apply(X,2,max)
-# colMin=apply(X,2,min)
-# #mono=as.numeric(colMax)-as.numeric(colMin)
-# mono=colMax-colMin
-# index=mono<10E-5
-# X=X[,!index]
-
-
-# myFig3<-myGM0[!index,]
-
-
-# n3<-nrow(myFig3)
-
-
-# kk3<-order(as.numeric(as.matrix(myFig3[,3])))
-
-# myFig23<-myFig3[kk3,]
-
-
-# myGD3<-X[,kk3]
-
-# ##set windows long 
-# ##w1_start<-30
-# ##w1_end<-230
-# ###get windows numeric snp at the same chr
-# #print(w1_start)
-# #print(w1_end)
-# #print(dim(myFig3))
-
-
-# if(nrow(myFig23)<w1_end)w1_end=nrow(myFig23)
-
-# results3_100<-myFig23[w1_start:w1_end,]
-# myGD3_100<-myGD3[,w1_start:w1_end]
-
-# km<-w1_end-w1_start+1
-# ##get number of Density about snp
-# sum_number_Density <-0
-
-# for(j in 1:km)
-# {
-# sum_number_Density<-sum_number_Density+(j-1)
-
-# }
-
-# save_Density_Cor<-matrix(0.0,sum_number_Density,3)
-# save_Density_Cor_name<-matrix("",sum_number_Density,1)
-
-# countSDC<-1
-# for(j in 1:(km-1))
-# {
-# for(k in (j+1):km)
-# {
-
-# save_Density_Cor[countSDC,1]<-abs(as.numeric(as.matrix(results3_100[k,3]))-as.numeric(as.matrix(results3_100[j,3])))
-# save_Density_Cor[countSDC,2]<-stats::cor(myGD3_100[,j],myGD3_100[,k])
-# #options(digits=8)
-# #save_Density_Cor[countSDC,3]<-as.numeric(as.matrix(format(cor(myGD3_100[,j],myGD3_100[,k])%*% cor(myGD3_100[,j],myGD3_100[,k]),digits=8)))
-# save_Density_Cor[countSDC,3]<-save_Density_Cor[countSDC,2]^2
-# save_Density_Cor_name[countSDC,1]<-paste(results3_100[j,1],"::::",results3_100[k,1],seq="")
-# countSDC<-countSDC+1
-# }
-# }
-
-# #result3_30<-as.data.frame(cbind(save_Density_Cor_name,save_Density_Cor))
-
-# k3_3<-order(save_Density_Cor[,1])
-# result3_3<-save_Density_Cor[k3_3,]
-
-# ##set moving average value
-
-# ##mav1<-100
-
-# result_mav2<-matrix(0.0,sum_number_Density-mav1,1)
-
-# mav1_1<-floor(mav1/2)
-# mav1_1_end<-sum_number_Density-mav1+mav1_1
-
-# result_mav1<-result3_3[(mav1_1+1):mav1_1_end,1]
-
-# for(g in 1:(sum_number_Density-mav1)){
-# sum<-0
-# for(i in g:(g+mav1-1)){
-
-# sum<-sum+result3_3[i,3]
-
-# }
-# #result_mav2[g]<-sum/mav1*5
-# result_mav2[g]<-sum/mav1
-# }
-# result_mav<-cbind(result_mav1,result_mav2)
-
-# grDevices::pdf("GAPIT.Marker.LD.pdf", width =10, height = 6)
-# graphics::par(mar = c(5,5,5,5))
-# index.ld=as.numeric(as.matrix(result3_3[,1]))<1e6
-# plot(as.matrix(result3_3[index.ld,1]),as.matrix(result3_3[index.ld,3]),bg="dimgray",xlab="Distance",ylab="R Square",pch=1,cex=0.9,cex.lab=1.2, lwd=0.75,las=1)
-# #,ylim=c(0,round(max(result3_3[,3]))))
-
-#  graphics::lines(result_mav[,2]~result_mav[,1], lwd=6,type="l",pch=20,col="#990000")
 H=1-abs(X-1)
 het.ind=apply(H,1,mean)
 het.snp=apply(H,2,mean)
@@ -302,16 +134,17 @@ maf=apply(cbind(.5*ss/(nrow(X)),1-.5*ss/(nrow(X))),1,min)
 #Set collor
 
 m=ncol(X)
-theCol=array(0,m-1)
-for (i in 2:(m-1)){
-  if(myGI[i,2]==myGI[i-1,2])theCol[i]=theCol[i-1]
-  else theCol[i]=abs(theCol[i-1]-1)
-}
+# theCol=array(0,m-1)
+# for (i in 2:(m-1)){
+#   if(myGI[i,2]==myGI[i-1,2])theCol[i]=theCol[i-1]
+#   else theCol[i]=abs(theCol[i-1]-1)
+# }
 
-theCol=theCol
+theCol=as.numeric(myGI[,2])%%2 # here should work, based on the Chr is numeric values
 colDisp=array("gray50",m-1)
 colIndex=theCol==1
 colDisp[colIndex]="goldenrod"
+colDisp=colDisp[rs.index]
 grDevices::pdf("GAPIT.Marker.MAF.Heterozosity.pdf", width =10, height = 6)
 
 #Display
@@ -320,11 +153,11 @@ layout(mat = layout.matrix,
        heights = c(100,80,120), # Heights of the two rows
        widths = c(2, 3)) # Widths of the two columns
 par(mar = c(1, 5, 1, 1))
-plot(het.snp,  las=1,ylab="Heterozygosity", cex=.5,col=colDisp,xaxt='n')
+plot(het.snp[rs.index],  las=1,ylab="Heterozygosity", cex=.5,col=colDisp,xaxt='n')
 par(mar = c(1, 5, 0, 1))
-plot(maf, las=1,xlab="Marker", ylab="MAF",cex=.5,col=colDisp,xaxt='n')
+plot(maf[rs.index], las=1,xlab="Marker", ylab="MAF",cex=.5,col=colDisp,xaxt='n')
 par(mar = c(5, 5, 0, 1))
-plot(r^2,  las=1,ylab="R Sqaure", xlab="Marker", cex=.5,col=colDisp)
+plot((r^2)[rs.index],  las=1,ylab="R Sqaure", xlab="Marker", cex=.5,col=colDisp)
 grDevices::dev.off()
 
 
@@ -335,18 +168,18 @@ layout(mat = layout.matrix,
        heights = c(100,80,120), # Heights of the two rows
        widths = c(2, 2,2)) # Widths of the two columns
 par(mar = c(5, 5, 2, 0))
-hist(het.ind, las=1,xlab="Individual heterozygosity",freq=FALSE,ylab="Frequency", cex=.5,,main="a")
+hist(het.ind[rs.index], las=1,xlab="Individual heterozygosity",freq=FALSE,ylab="Frequency", cex=.5,,main="a")
 par(mar = c(5, 4, 2, 1))
-hist(het.snp, las=1,xlab="Marker heterozygosity", freq=FALSE,ylab="Frequency",cex=.5,main="b")
+hist(het.snp[rs.index], las=1,xlab="Marker heterozygosity", freq=FALSE,ylab="Frequency",cex=.5,main="b")
 par(mar = c(5, 4, 2, 1))
-hist(maf,  las=1,ylab="Frequency", xlab="MAF",freq=FALSE, cex=.5,main="c")
+hist(maf[rs.index],  las=1,ylab="Frequency", xlab="MAF",freq=FALSE, cex=.5,main="c")
 
 grDevices::dev.off()
 
 
 
 
-print(paste("GAPIT.Genotype.View ", ".Two pdf generate.","successfully!" ,sep = ""))
+print(paste("GAPIT.Genotype.View ", ".Three pdfs generate.","successfully!" ,sep = ""))
 
 #GAPIT.Genotype.View
 }

@@ -240,13 +240,6 @@
   LD.location = NULL, #LD plot of markers in significant marker region
   LD.range = NULL, #LD plot of markers in significant marker region
   LD = 0.1, #SUPER
-  plot.bin = 10^5,
-  PCA.total = 0, # PCA number
-  PCA.col = NULL, #indicater colors for individuals in PCA plot
-  PCA.3d = FALSE, #3D PCA plot option
-  PCA.View.output = TRUE, #option for PCA plot
-  NJtree.group = NULL, #NJtree set number of cluster group
-  NJtree.type = c("fan","unrooted"),#NJtree type
   model = "MLM",# model or method in GWAS or GS
   method.GLM = "FarmCPU.LM", 
   method.sub = "reward",
@@ -263,7 +256,9 @@
   ncpus = 1,
   ngrid = 100, 
   NQTN = NULL, #Simulation phenotype, number of QTN
-  N.sig=NULL, #Random.model, Number of significant markers
+  N.sig=20, #Random.model, Number of significant markers
+  NJtree.group = NULL, #NJtree set number of cluster group
+  NJtree.type = c("fan","unrooted"),#NJtree type
   opt = "extBIC",
   output.numerical = FALSE,# option for output numeric files
   output.hapmap = FALSE, # option for output hapmap files
@@ -277,7 +272,7 @@
   QTN.position = NULL, #Simulation phenotype, QTN position in the order of map file
   QTNDist = "normal",
   r = 0.25,
-  Random.model = FALSE, #Random.model to calculate PVE
+  Random.model = TRUE, #Random.model to calculate PVE
   sangwich.top = NULL, #SUPER
   sangwich.bottom = NULL,#SUPER
   seed = NULL, 
@@ -296,6 +291,11 @@
   threshold.output = .01,
   testY = NULL,
   plot.style = "Oceanic",
+  plot.bin = 10^5,
+  PCA.total = 0, # PCA number
+  PCA.col = NULL, #indicater colors for individuals in PCA plot
+  PCA.3d = FALSE, #3D PCA plot option
+  PCA.View.output = TRUE, #option for PCA plot
   Prior = NULL,
   Para = NULL,
   ulim = 10, 

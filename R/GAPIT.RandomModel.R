@@ -5,8 +5,8 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,N.sig=NULL,n_ran=500){
     #Authors: Jiabo Wang and Zhiwu Zhang
     # Last update: Nov 6, 2019
     ##############################################################################################
-#    if(!require(lme4))  install.packages("lme4")
-#    library("lme4")
+   if(!require(lme4))  install.packages("lme4")
+   library("lme4")
     # GWAS=myGAPIT_SUPER$GWAS
     # CV=myGAPIT_SUPER$PCA
     # cut.set=0.01
@@ -25,7 +25,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,N.sig=NULL,n_ran=500){
     print("GAPIT setup Number of significant markers into Random model:")
     print(N.sig)
     cutoff=max(sort.p[1:N.sig])
-    index=P.value<cutoff 
+    index=P.value<=cutoff 
     }
     geneGD=X[,index,drop=FALSE]
 
@@ -37,7 +37,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,N.sig=NULL,n_ran=500){
     }
     index_T=as.matrix(table(index))
     # print(index_T)
-    in_True=index_T[rownames(index_T)=="TRUE"]
+    in_True=sum(index)
     print(in_True==1)
     if(in_True!=1)
     {
@@ -134,22 +134,22 @@ if(!is.null(CV))
     
     command2=command1
     for(j in 1:n_gd)
-{
-	command2=paste(command2,"+(1|gene_",j,")",sep="")
-}
+   {
+	   command2=paste(command2,"+(1|gene_",j,")",sep="")
+    }
 
     }else{
-    command0=paste("trait~1",sep="")
-    command1=command0
-    for(i in 1:n_cv)
-{	
-	command1=paste(command1,"+CV",i,sep="")
-}
-    command2=command1
-    for(j in 1:n_gd)
-{
-	command2=paste(command2,"+(1|gene_",j,")",sep="")
-}
+       command0=paste("trait~1",sep="")
+       command1=command0
+       for(i in 1:n_cv)
+       {	
+	       command1=paste(command1,"+CV",i,sep="")
+       }
+           command2=command1
+       for(j in 1:n_gd)
+       {
+    	   command2=paste(command2,"+(1|gene_",j,")",sep="")
+       }
     }
 }else{
 
@@ -158,9 +158,9 @@ if(!is.null(CV))
     
     command2=command1
     for(j in 1:n_gd)
-{
-	command2=paste(command2,"+(1|gene_",j,")",sep="")
-}
+    {
+    	command2=paste(command2,"+(1|gene_",j,")",sep="")
+    }
 
 }
 #command3=paste(command2,"+(1|gene_",j,")",sep="")

@@ -289,9 +289,9 @@ SUPER_X=SUPER_optimum_GD[,-1]
   if(kinship.algorithm=="Loiselle")SUPER_myKI_test= GAPIT.kinship.loiselle(snps=t(as.matrix(.5*(SUPER_optimum_GD[,-1]))), method="additive", use="all")
  # if(kinship.algorithm=="VanRaden")SUPER_myKI_test= GAPIT.kinship.VanRaden(snps=as.matrix(SUPER_optimum_GD[,-1])) 
   if(kinship.algorithm=="Zhang")SUPER_myKI_test= GAPIT.kinship.Zhang(snps=as.matrix(SUPER_optimum_GD[,-1])) 
-  if(!kinship.algorithm=="Loiselle"|!kinship.algorithm=="Zhang")SUPER_myKI_test= GAPIT.kinship.VanRaden(snps=as.matrix(SUPER_optimum_GD[,-1])) 
+  if(kinship.algorithm!="Loiselle"&kinship.algorithm!="Zhang")SUPER_myKI_test= GAPIT.kinship.VanRaden(snps=as.matrix(SUPER_optimum_GD[,-1])) 
 
-SUPER_myKI_test=GAPIT.kinship.VanRaden(snps=as.matrix(SUPER_optimum_GD[,-1]))     #  build kinship
+# SUPER_myKI_test=GAPIT.kinship.VanRaden(snps=as.matrix(SUPER_optimum_GD[,-1]))     #  build kinship
 colnames(SUPER_myKI_test)=SUPER_taxa
 SUPER_myKI=cbind(SUPER_taxa,as.data.frame(SUPER_myKI_test))
 print("select optimum number of marker effect in GD")
@@ -530,7 +530,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
    all_gs=cbind(BB,prediction)
    colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-  if(file.output) utils::write.csv(all_gs,paste("GAPIT.",model,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
+  if(file.output) utils::write.csv(all_gs,paste("GAPIT.",model,".",colnames(Y)[2],".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
 
   print("GAPIT SUPER GS completed successfully for multiple traits. Results are saved")
   return (list(GPS=BB,Pred=all_gs,Compression=Compression,kinship=my_allKI,SUPER_kinship=SUPER_myKI,SUPER_GD=SUPER_optimum_GD ,PC=my_allCV,Timmer=Timmer,Memory=Memory,GWAS=NULL,h2=optimum_h2 ))
