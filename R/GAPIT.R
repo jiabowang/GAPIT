@@ -315,22 +315,26 @@ all.memo=NULL
 GAPIT.Version=GAPIT.0000()
 #if(!is.null(model))if(!match(model,c("MLM","CMLM","SUPER","GLM","FarmCPU","Blink","BlinkC","MLMM","gBLUP","cBLUP","sBLUP"))) stop(paste("PLease choose one model from ","MLM","CMLM","SUPER","GLM","FarmCPU","Blink","gBLUP","cBLUP","sBLUP",sep=""))
 #Allow either KI or K, but not both
-if(model%in%c("gBLUP","cBLUP","sBLUP"))
-  {
-    SNP.test=FALSE
-    SUPER_GS=TRUE
-  }
+
 if(!is.null(KI)&is.null(GD)&is.null(G)&is.null(file.G)&is.null(file.GD)) SNP.test=FALSE
 model_store=model
 KI0=KI
 
 
 print(model_store)
+
 if(!is.null(Y))
   {
      for(m in 1:length(model_store))
         {
         model=model_store[m]
+        if(model%in%c("gBLUP","cBLUP","sBLUP"))
+        {
+          SNP.test=FALSE
+          SUPER_GS=TRUE
+        }else{
+          SNP.test=TRUE
+        }
         if(toupper(model)=="BLINK") model="Blink"
         if(toupper(model)=="FARMCPU") model="FarmCPU"
         if(toupper(model)=="BLINKC") model="BlinkC"
