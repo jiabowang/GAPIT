@@ -17,10 +17,12 @@
  values=-log10(values)
  cut0=ceiling(-log10(0.01/length(values))/2)
  rv=runif(length(values))
- values=values+rv*(values-10+cut0)
+ values=values+rv*(values-5+cut0)
  index=values>cut0
  print(table(index))
+ # if(nrow(mapP)>DPP) mapP=mapP[index,]
  
+ P=mapP[,-c(1:3)]
  taxa=colnames(mapP)[-c(1:3)]
  if(!is.null(memo))taxa=paste(taxa,"_",memo,sep="")
  if(Nenviron>5)
@@ -36,6 +38,7 @@
  pdf(paste("GAPIT.QQ.Mutiple.Plot.",memo,".symphysic",".pdf" ,sep = ""), width = 30,height=18)
  par(mfrow=c(1,1))
  par(mar = c(5,5,5,1))
+ par(cex=1.8)
  themax.y02=ceiling((ceiling(themax.y0/4))*4)
  p_value_quantiles0 <- (1:NN)/(NN+1)
  log.Quantiles0 <- -log10(p_value_quantiles0)
@@ -54,7 +57,7 @@
  }
 
  plot(NULL, xlim = c(0,max(log.Quantiles0)), ylim = c(0,themax.y0), 
- 	type="l",lty=5, lwd = 2, 
+ 	type="l",lty=5, lwd = 2, las=1,
  	ylab=expression(Observed~~-log[10](italic(p))), xlab=expression(Expected~~-log[10](italic(p))),
  	col="gray")
  index=length(c95):1        
@@ -73,10 +76,19 @@
 
     #Set up the p-value quantiles
     #print("Setting p_value_quantiles...")
-    p_value_quantiles <- (1:length(P.values))/(length(P.values)+1)
+    p_value_quantiles <- (1:NN)/(NN+1)
     log.P.values <- -log10(P.values)
     log.Quantiles <- -log10(p_value_quantiles)
-    
+    # log.P.values2=apply(cbind(log.P.values,log.Quantiles),1,mean)
+    # print(max(log.P.values))
+    # log.P.values[5:NN]=log.P.values2[5:NN]
+    if(nrow(mapP)>DPP) log.P.values=log.P.values[index]
+    if(nrow(mapP)>DPP) log.Quantiles=log.Quantiles[index]
+
+    # log.P.values=log.P.values[order(log.P.values)]
+    # print(themax.y0)
+    # print(max(log.P.values2))
+    # print(max(log.P.values))
         par(new=T)
         plot(log.Quantiles, log.P.values, xlim = c(0,max(log.Quantiles0)), 
         	ylim = c(0,themax.y0), cex.axis=1, cex.lab=1.3, axes=FALSE, 

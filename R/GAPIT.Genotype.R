@@ -349,8 +349,8 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Sampling genotype")
 #Plot third part kinship
 if(!is.null(KI)&file.output)
   {
-  if(KI!=1) 
-    {
+  # if(KI!=1) 
+    # {
     if(nrow(KI)<2000)
       {
       print("Plotting Kinship")
@@ -412,7 +412,7 @@ if(!is.null(KI)&file.output)
     #rm(hc,clusMember)
       }#end 
 ## NJ Tree end    } #end of if(nrow(KI)<1000)
-    } #end of if(KI!=1)
+    # } #end of if(KI!=1)
   } #end of if(!is.null(KI))
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Before SUPER")
