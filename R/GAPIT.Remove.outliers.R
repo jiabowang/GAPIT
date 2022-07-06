@@ -19,8 +19,8 @@
 	H=1.5*IQR(y,na.rm=na.rm)
 	y=x
 	y[x<=(qnt[1]-H)]=min(y,na.rm=na.rm)
-	y[x>=(qnt[1]+H)]=max(y,na.rm=na.rm)
-	idx=x<=(qnt[1]-H)|x>=(qnt[1]+H)
+	y[x>=(qnt[2]+H)]=max(y,na.rm=na.rm)
+	idx=x<=(qnt[1]-H)|x>=(qnt[2]+H)
 	res <- vector("list")
     res$y=y
     res$idx=idx
