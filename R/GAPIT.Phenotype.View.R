@@ -15,7 +15,7 @@ if(is.null(myY)){stop("Validation Invalid. Please select read valid Phenotype fl
 
 grDevices::pdf(paste("GAPIT",memo,traitname,"phenotype_view.pdf",sep ="."), width =10, height = 6)
 # graphics::par(mar = c(5,5,5,5))
-
+# print(myY)
 # graphics::par(mfrow=c(2,2))
 # plot(obs,pch=1)
 # #hist(obs)
@@ -23,9 +23,11 @@ grDevices::pdf(paste("GAPIT",memo,traitname,"phenotype_view.pdf",sep ="."), widt
 # graphics::boxplot(obs)
 # plot(stats::ecdf(obs),col="red",bg="lightgray",xlab="Density",ylab="Accumulation",main="")
 layout.matrix <- matrix(c(1,2,1,3,4,5), nrow = 2, ncol = 3)
+# print("!!!!")
 layout(mat = layout.matrix,
        heights = c(100,100), # Heights of the two rows
        widths = c(2, 2,2)) # Widths of the two columns
+# print("@@@@")
 y=myY[!is.na(myY[,2]),2]
 par(mar = c(5, 5, 2, 1))
 plot(y,xlab="Individual",las=1,ylab="Observation", cex=.5,main="a")

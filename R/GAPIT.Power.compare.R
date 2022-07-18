@@ -26,7 +26,7 @@ for(j in 1:length(all.method))
 for(i in 1:nrep)
 {
 
-mysimulation<-GAPIT(Para=Para,GD=GD,GM=GM,PCA.total=PCA.total,file.output=FALSE)
+mysimulation<-GAPIT(Para=Para,G=G,GD=GD,GM=GM,PCA.total=PCA.total,file.output=FALSE)
 QTN.position=mysimulation$QTN.position
 Y=mysimulation$Y
 colnames(Y)=c("Taxa","Simu")
@@ -36,6 +36,7 @@ colnames(Y)=c("Taxa","Simu")
     {
        myGAPIT=GAPIT(
        Y=Y,
+       G=G,
        GD=GD,
        GM=GM,
        PCA.total=PCA.total,

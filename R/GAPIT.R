@@ -296,6 +296,7 @@
   PCA.col = NULL, #indicater colors for individuals in PCA plot
   PCA.3d = FALSE, #3D PCA plot option
   PCA.View.output = TRUE, #option for PCA plot
+  Phenotype.View= TRUE, # option for phenotype view plot
   Prior = NULL,
   Para = NULL,
   ulim = 10, 
@@ -507,7 +508,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
 ###Correlation between phenotype and principal components
              print(paste("Processing trait: ",traitname,sep=""))
              if(!is.null(Para$memo)) traitname=paste(Para$memo,".",traitname,sep="")
-             if(!is.null(Y) & Para$file.output)ViewPhenotype<-GAPIT.Phenotype.View(myY=Y[,c(1,trait)],traitname=traitname,memo=Para$memo)
+             if(!is.null(Y) & Para$file.output&Phenotype.View)ViewPhenotype<-GAPIT.Phenotype.View(myY=Y[,c(1,trait)],traitname=traitname,memo=Para$memo)
              if(!Para$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC")&is.null(DP$KI))
              {
                 myKI_test=GAPIT.kinship.VanRaden(snps=as.matrix(DP$GD[,-1]))     #  build kinship

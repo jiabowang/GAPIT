@@ -168,7 +168,7 @@ layout(mat = layout.matrix,
        heights = c(100,80,120), # Heights of the two rows
        widths = c(2, 2,2)) # Widths of the two columns
 par(mar = c(5, 5, 2, 0))
-hist(as.numeric(het.ind[rs.index]), las=1,xlab="Individual heterozygosity",freq=FALSE,ylab="Frequency", cex=.5,main="a")
+hist(as.numeric(het.ind), las=1,xlab="Individual heterozygosity",freq=FALSE,ylab="Frequency", cex=.5,main="a")
 par(mar = c(5, 4, 2, 1))
 hist(het.snp[rs.index], las=1,xlab="Marker heterozygosity", freq=FALSE,ylab="Frequency",cex=.5,main="b")
 par(mar = c(5, 4, 2, 1))
