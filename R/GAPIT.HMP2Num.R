@@ -9,9 +9,9 @@ function(nLines=n,fileHMP="hmp.txt",fileNum="num.txt",bit=1,SNP.effect="Add",SNP
 ##############################################################################################
 #print("GAPIT.HMP2Num start")
 
-setwd("/Users/Zhiwu/Dropbox/Current/paper/BigData/BUS/Robust/MaizeGBS")
-fileHMP="NAMs26HM2.c10.imp.hmp.txt"
-fileNum="NAMs26HM2.c10s.imp.num.txt"
+# setwd("/Users/Zhiwu/Dropbox/Current/paper/BigData/BUS/Robust/MaizeGBS")
+# fileHMP="NAMs26HM2.c10.imp.hmp.txt"
+# fileNum="NAMs26HM2.c10s.imp.num.txt"
 
 bit=1
 SNP.effect="Add"
