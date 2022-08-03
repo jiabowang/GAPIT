@@ -77,7 +77,7 @@ for(i in 1:length(environ_name))
   # map_store=max.x
   sig_pos=append(sig_pos,as.numeric(rownames(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),,drop=FALSE])))
 }
-  write.table(y_filter0,paste("GAPIT.Filter_GWAS_results.txt",sep=""))
+  write.csv(y_filter0,paste("GAPIT.Filter_GWAS_results.csv",sep=""),quote=FALSE)
 
 # print(sig_pos)
 #if(length(sig_pos)!=0)sig_pos=sig_pos[!duplicated(sig_pos)]
