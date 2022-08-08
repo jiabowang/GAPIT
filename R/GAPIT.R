@@ -646,8 +646,9 @@ if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store
 if(SNP.test&Multiple_analysis&Para$file.output) GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff,plot.type=c("s"))
   
   
-if(file.output&!SNP.test&model_store%in%c("gBLUP","cBLUP","sBLUP")&Inter.Plot)
+if(file.output&!SNP.test&Inter.Plot)
   { 
+  model_store=model_store[model_store%in%c("gBLUP","cBLUP","sBLUP")]  
   print("here will start interactive for GS !!!")
   GAPIT.Interactive.GS(model_store=model_store,Y=Y)
   if(!is.null(testY))GAPIT.Interactive.GS(model_store=model_store,Y=Y,testY=testY)

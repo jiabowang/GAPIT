@@ -410,17 +410,17 @@ function(Y,
 
 # print(dim(Z))
 # print("!!!!!")
-if(QC)
-{
-  qc <- GAPIT.QC(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
-  GTindex=qc$GTindex
-  Y=qc$Y  # here make twice qc and chaos with numeric taxa, Thanks for Dennis. 20210913
-  KI=qc$KI
-  CV=qc$CV
-  Z=qc$Z
-  GK=qc$GK
-  # if(noCV)CVI=qc$CV #this part will make GS without CV not present all prediction
-}
+# if(QC) ###### from 413 to 423 codes were shield by jiabo 2022.8.8
+# {
+#   qc <- GAPIT.QC(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
+#   GTindex=qc$GTindex
+#   Y=qc$Y  # here make twice qc and chaos with numeric taxa, Thanks for Dennis. 20210913
+#   KI=qc$KI
+#   CV=qc$CV
+#   Z=qc$Z
+#   GK=qc$GK
+#   # if(noCV)CVI=qc$CV #this part will make GS without CV not present all prediction
+# }
 
 # print(length(GK))
     GTindex=match(as.character(KI[,1]),as.character(Y[,1]))
@@ -740,8 +740,6 @@ if(QC)
                 Memory=GAPIT.Memory(Memory=Memory,Infor="PreP3D 2 bk")
 
 #print("ZC...")
-  print(dim(Z))
-  print(dim(bk$GA))
                 zc <- GAPIT.ZmatrixCompress(Z=Z,GAU =bk$GA)
 
                 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PreP3D 2_zc")
