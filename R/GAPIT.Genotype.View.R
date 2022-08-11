@@ -15,6 +15,13 @@
   
 if(is.null(myGI)){stop("Validation Invalid. Please select read valid Map flies  !")}
 if(is.null(myGD)){stop("Validation Invalid. Please select read valid Genotype flies  !")}
+myGI2=myGI[order(myGI[,2]),]
+myGI2=GI.MP2[order(GI.MP2[,3]),]
+rs2=as.character(myGI2[,1])
+rs1=as.character(myGI[,1])
+index=match(rs2,rs1)
+myGD=myGD[,index]
+myGI=myGI2
 if(is.null(w1_start)){w1_start=1}
 ##if(is.null(w1_end)){w1_end=100}
 if(is.null(mav1)){mav1=10}

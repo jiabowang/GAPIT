@@ -141,6 +141,7 @@
         ves <- REMLE$ve
         REMLs <- REMLE$REML
         REMLE_delta=REMLE$delta
+        # print("$$$")
         rm(REMLE)
         gc()
     }
@@ -248,7 +249,7 @@
     ves <- REMLE$ve
     REMLs <- REMLE$REML
     REMLE_delta=REMLE$delta
-
+    # print("@@@")
     rm(REMLE)
     gc()
   }
@@ -429,7 +430,6 @@
 
 #set starting point of loop
             if(file==file.from&frag==1){loopStart=0}else{loopStart=1}
-
             for (i in loopStart:mloop)
             {
 #print(i)
@@ -610,6 +610,8 @@
                        ves <- REMLE$ve
                        REMLs <- REMLE$REML
                        REMLE_delta=REMLE$delta
+                       # print("!!!")
+
                      }#end of SNP.P3D==FALSE & !is.null(K)
                      if(n==nr)
                      {
@@ -644,6 +646,7 @@
                        if(i == 0 &file==file.from &frag==1)
                        {
                           X0X0 <- crossprod(X0t, X0t)
+                          # print(X0X0)
                        }
                        if(i > 0 | file>file.from |frag>1)
                        {
@@ -652,10 +655,10 @@
                           XstX0 <- t(X0Xst)
                           xstxst <- crossprod(xst, xst)
                        }
-                       if(X0X0[1,1] == "NaN")
+                       if(is.na(X0X0[1,1])) ## by Jiabo 2022.8.10
                        {
-                          Xt[which(Xt=="NaN")]=0
-                          yt[which(yt=="NaN")]=0
+                          Xt[is.na(Xt)]=0
+                          yt[is.na(yt)]=0
                           XX=crossprod(Xt, Xt)
                        }
                        if(i == 0 &file==file.from & frag==1)
@@ -746,12 +749,21 @@
 
                        if(!is.null(Z)) Zt <- crossprod(U, Z)
                        if(is.null(Z)) Zt <- t(U)
-
-                       if(X0X0[1,1] == "NaN")
+                       # print(i)
+                       # print(ves)
+                       # print(vgs)
+                       if(is.na(X0X0[1,1]))
                        {
-                         Dt[which(Dt=="NaN")]=0
-                         Zt[which(Zt=="NaN")]=0
+                          # Dt[is.na(Dt)]=0
+                          # Zt[is.na(Zt)]=0
+                          Dt[which(Dt=="NaN")]=0
+                          Zt[which(Zt=="NaN")]=0
                        }
+                       # if(X0X0[1,1] == "NaN") # by Jiabo 2022.8.10
+                       # {
+                       #   Dt[which(Dt=="NaN")]=0
+                       #   Zt[which(Zt=="NaN")]=0
+                       # }
 
                        BLUP <- K %*% crossprod(Zt, Dt) #Using K instead of vgK because using H=V/Vg
 #print("!!!!")
