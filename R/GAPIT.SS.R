@@ -44,7 +44,7 @@ if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.FarmCPU")
  Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.FarmCPU")
 
- myBus=GAPIT.Bus(Y=ic_Y,CV=ic_PCA,Z=NULL,GK=NULL,KI=ic_KI,GD=ic_GD,GM=ic_GM,GT=IC$GT,
+ myBus=GAPIT.Bus(Y=ic_Y,CV=ic_PCA,Z=NULL,GK=NULL,KI=ic_KI,GD=ic_GD,GM=ic_GM,GT=IC$GT,name.of.trait=DP$name.of.trait,
                 method=DP$kinship.algorithm,GTindex=DP$GTindex,LD=DP$LD,opt=DP$opt,N.sig=DP$N.sig,
                 bin.size=DP$bin.size,bin.selection=DP$bin.selection,alpha=DP$alpha,WS=DP$WS,
                 cutOff=DP$cutOff,p.threshold=DP$p.threshold,QTN.threshold=DP$QTN.threshold,FDRcut=DP$FDRcut,
@@ -196,7 +196,7 @@ if(buspred)
    }#lmpred
 }#buspred
  
- if(DP$file.output) utils::write.csv(Pred,paste("GAPIT.",DP$kinship.algorithm,".Pred.result.csv",sep=""), row.names = FALSE,col.names = TRUE)
+ if(DP$file.output) utils::write.csv(Pred,paste("GAPIT.Association.Pred_result.",DP$kinship.algorithm,".csv",sep=""), row.names = FALSE,col.names = TRUE)
 
 
  va=myBus$vg
@@ -311,7 +311,7 @@ if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC"))
 						             SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
  GWAS=gapitMain$GWAS
- if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,N.sig=DP$N.sig,GT=IC$GT)
+ if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,name.of.trait=DP$name.of.trait,N.sig=DP$N.sig,GT=IC$GT)
  Pred=gapitMain$Pred
 #print(head(Pred))
  va=NA#gapitMain$vg

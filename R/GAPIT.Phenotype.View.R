@@ -13,7 +13,7 @@ if(is.null(myY)){stop("Validation Invalid. Please select read valid Phenotype fl
 
 # traitname=colnames(myY)[2]
 
-grDevices::pdf(paste("GAPIT",memo,traitname,"phenotype_view.pdf",sep ="."), width =10, height = 6)
+grDevices::pdf(paste("GAPIT.Phenotype.View.",traitname,".pdf",sep =""), width =10, height = 6)
 # graphics::par(mar = c(5,5,5,5))
 # print(myY)
 # graphics::par(mfrow=c(2,2))
@@ -44,7 +44,7 @@ plot(ecdf(y),xlab="Observation",las=1,ylab="Accumulative density", cex=.5,main="
 grDevices::dev.off()
 
 
-print(paste("GAPIT.Phenotype.View ", ".output pdf generate.","successfully!" ,sep = ""))
+print(paste("GAPIT.Phenotype.View", " output pdf has been generated ","successfully!" ,sep = ""))
 
 #GAPIT.Phenotype.View
 }

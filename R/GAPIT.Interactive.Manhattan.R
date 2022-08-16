@@ -107,7 +107,7 @@ if(c("m")%in%plot.type)
    #       xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
    #       yaxis = list (title = "-Log10(p)"))
 
-    htmltools::save_html(p, paste("Interactive.Manhattan.",name.of.trait,".html",sep=""))
+    htmltools::save_html(p, paste("GAPIT.Association.Interactive_Manhattan.",name.of.trait,".html",sep=""))
 }
 
 
@@ -157,7 +157,7 @@ if(c("q")%in%plot.type)
                          yaxis = list (title = "Observed -Log10(p)"),
                          #showticklabels = FALSE,
                          showlegend = FALSE)
-    htmltools::save_html(qp, paste("Interactive.QQ ",name.of.trait,".html",sep=""))
+    htmltools::save_html(qp, paste("GAPIT.Association.Interactive_QQ ",name.of.trait,".html",sep=""))
 
     # plotly::layout(title = "Interactive.QQ.Plot",
     #     xaxis = list(title = "Expected -Log10(p)"),
@@ -168,7 +168,7 @@ if(c("q")%in%plot.type)
 
 
 }   
-print("GAPIT.Interactive.Plot has done !!!")
+print("GAPIT.Association.Interactive has done !!!")
 
 }#end of GAPIT.Interactive.Manhattan
 #=============================================================================================

@@ -338,7 +338,7 @@ utils::write.csv(cbind(myalpha,rep.Power.Alpha.plink),paste(h2,"_",NQTN,".Power.
 utils::write.csv(cbind(rep.FDR.GLM[,6],rep.power.GLM[,6],rep.FDR.MLM[,6],rep.power.MLM[,6],rep.FDR.CMLM[,6],rep.power.CMLM[,6],rep.FDR.ECMLM[,6],rep.power.ECMLM[,6],rep.FDR.SUPER[,6],rep.power.SUPER[,6],rep.FDR.plink[,6],rep.power.plink[,6]),paste(h2,"_",NQTN,".Power.by.FDR.GLM.MLM.SUPER.plink",rel,".csv",sep=""))
 	name.of.trait=noquote(names(myY)[2])
 
-grDevices::pdf(paste("GAPIT.Power ", name.of.trait,".compare to GLM,MLM,CMLM,ECMLM,SUPER.plink", ".pdf", sep = ""), width = 4.5, height = 4,pointsize=9)
+grDevices::pdf(paste("GAPIT.Powers.", name.of.trait, ".pdf", sep = ""), width = 4.5, height = 4,pointsize=9)
 graphics::par(mar = c(5,6,5,3))
 	#win.graph(width=6, height=4, pointsize=9)
 	grDevices::palette(c("green4","red","blue","brown4","orange","black",grDevices::rainbow(6)))
@@ -361,7 +361,7 @@ utils::write.csv(cbind(myalpha,rep.Power.Alpha.SUPER[,1],rep.Power.Alpha.ECMLM[,
 
 myalpha1<-myalpha/10
 
-grDevices::pdf(paste("GAPIT.Type I error_Power ", name.of.trait,".compare to GLM,MLM,CMLM,ECMLM,SUPER,plink", ".pdf", sep = ""), width = 6, height = 4.5,pointsize=9)
+grDevices::pdf(paste("GAPIT.Type I error_Power ", name.of.trait,".pdf", sep = ""), width = 6, height = 4.5,pointsize=9)
 graphics::par(mar = c(5,6,5,3))
 	
 	grDevices::palette(c("green4","red","blue","brown4","orange","black",grDevices::rainbow(6)))

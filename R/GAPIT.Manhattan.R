@@ -88,7 +88,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     {
         #print("Manhattan ploting Chromosomewise")
         GI.MP=cbind(GI.MP,bin.mp)
-        pdf(paste("GAPIT.", name.of.trait,".Manhattan.Plot.Chromosomewise.pdf" ,sep = ""), width = 10)
+        pdf(paste("GAPIT.Association.Manhattan_Chro.", name.of.trait,".pdf" ,sep = ""), width = 10)
             #par(mar = c(5,5,4,3), lab = c(8,5,7))
         layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
         for(i in 1:numCHR)
@@ -282,7 +282,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         if(plot.style =="FarmCPU"){
         pdf(paste("FarmCPU.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = width0,height=height0)
         }else{
-        pdf(paste("GAPIT.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = width0,height=height0)
+        pdf(paste("GAPIT.Association.Manhattan_Geno.", name.of.trait,".pdf" ,sep = ""), width = width0,height=height0)
         }
             par(mar = c(3,6,5,1))
             plot(y~x,xlab="",ylab=expression(-log[10](italic(p))) ,las=1,

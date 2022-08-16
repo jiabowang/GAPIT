@@ -375,7 +375,7 @@ if(!is.null(KI)&file.output)
       if(file.output)
       {
       print("Creating heat map for kinship...")
-      grDevices::pdf(paste("GAPIT.Kin.thirdPart.pdf",sep=""), width = 12, height = 12)
+      grDevices::pdf(paste("GAPIT.Genotype.Kin_thirdPart.pdf",sep=""), width = 12, height = 12)
       graphics::par(mar = c(25,25,25,25))
       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="prepare heatmap")
       Memory=GAPIT.Memory(Memory=Memory,Infor="prepare heatmap")
@@ -391,7 +391,7 @@ if(!is.null(KI)&file.output)
         for(tr in 1:length(NJtree.type))
            {
            print("Creating NJ Tree for kinship...")
-           grDevices::pdf(paste("GAPIT.Kin.NJtree.",NJtree.type[tr],".pdf",sep=""), width = 12, height = 12)
+           grDevices::pdf(paste("GAPIT.Genotype.Kin_NJtree_",NJtree.type[tr],".pdf",sep=""), width = 12, height = 12)
            graphics::par(mar = c(5,5,5,5))
            Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="prepare NJ TREE")
            Memory=GAPIT.Memory(Memory=Memory,Infor="prepare NJ TREE")
@@ -402,7 +402,7 @@ if(!is.null(KI)&file.output)
         }
         if(!is.null(compress_z)){
             utils::write.table(compress_z, 
-                paste("GAPIT.Kin.NJtree.compress_z.txt",sep=""),
+                paste("GAPIT.Genotype.Kin_NJtre_compress_z.txt",sep=""),
                 quote=F)
         }
         print("Kinship NJ TREE PDF created!")
@@ -489,7 +489,7 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
       {
     #Create heat map for kinship
       print("Creating heat map for kinship...")
-      grDevices::pdf(paste("GAPIT.Kin.",kinship.algorithm,".pdf",sep=""), width = 12, height = 12)
+      grDevices::pdf(paste("GAPIT.Genotype.Kin_",kinship.algorithm,".pdf",sep=""), width = 12, height = 12)
       graphics::par(mar = c(25,25,25,25))
       gplots::heatmap.2(theKin,  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
       grDevices::dev.off()
@@ -500,7 +500,7 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
         print("Creating NJ Tree for kinship...")
         for(tr in 1:length(NJtree.type))
            {
-           grDevices::pdf(paste("GAPIT.Kin.NJtree.",NJtree.type[tr],".pdf",sep=""), width = 12, height = 12)
+           grDevices::pdf(paste("GAPIT.Genotype.Kin_NJtree_",NJtree.type[tr],".pdf",sep=""), width = 12, height = 12)
            graphics::par(mar = c(0,0,0,0))
            Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="prepare NJ TREE")
            Memory=GAPIT.Memory(Memory=Memory,Infor="prepare NJ TREE")   
@@ -510,7 +510,7 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
            grDevices::dev.off()
            }
     # print(Optimum)   
-        utils::write.table(compress_z,paste("GAPIT.Kin.NJtree.compress_z.txt",sep=""),quote=F)
+        utils::write.table(compress_z,paste("GAPIT.Genotype.Kin_NJtree_compress_z.txt",sep=""),quote=F)
         print("Kinship NJ TREE PDF created!")  
         Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="plot NJ TREE")
         Memory=GAPIT.Memory(Memory=Memory,Infor="plot NJ TREE")
@@ -521,7 +521,7 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
     #Write the kinship into a text file
     KI=cbind(myGT,as.data.frame(theKin)) #This require big memory. Need a way to solve it.
     print("Writing kinship to file...")
-    if(file.output) utils::write.table(KI, paste("GAPIT.Kin.",kinship.algorithm,".csv",sep=""), quote = FALSE, sep = ",", row.names = FALSE,col.names = FALSE)
+    if(file.output) utils::write.table(KI, paste("GAPIT.Genotype.Kin_",kinship.algorithm,".csv",sep=""), quote = FALSE, sep = ",", row.names = FALSE,col.names = FALSE)
     print("Kinship save as file")    
     rm(theKin)
     gc()
@@ -583,7 +583,7 @@ if(!is.null(GLD) &file.output)
     LDsnp=genetics::makeGenotypes(hapmapgeno,sep="",method=genetics::as.genotype)   #This need to be converted to genotype object
     print("Caling LDheatmap...")
 #pdf(paste("GAPIT.LD.pdf",sep=""), width = 12, height = 12)
-    grDevices::pdf(paste("GAPIT.LD.chromosom",LD.chromosome,"(",round(max(0,LD.location-LD.range)/1000000),"_",round((LD.location+LD.range)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
+    grDevices::pdf(paste("GAPIT.Genotype.LD_chromosom_",LD.chromosome,"(",round(max(0,LD.location-LD.range)/1000000),"_",round((LD.location+LD.range)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
     graphics::par(mar = c(25,25,25,25))
 
     MyHeatmap <- try(LDheatmap::LDheatmap(LDsnp, LDdist, LDmeasure="r", add.map=TRUE,

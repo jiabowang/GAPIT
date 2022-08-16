@@ -87,7 +87,7 @@ return(NULL)
     utils::write.table(power,file=paste("FarmCPU.",trait,".ROC.csv",sep=""),quote = TRUE, sep = ",", row.names = TRUE,col.names = NA)
     }
     if(plot.style=="rainbow"){
-        utils::write.table(power,file=paste("GAPIT.",trait,".ROC.csv",sep=""),quote = TRUE, sep = ",", row.names = TRUE,col.names = NA)
+        utils::write.table(power,file=paste("GAPIT.Association.ROC.",trait,".csv",sep=""),quote = TRUE, sep = ",", row.names = TRUE,col.names = NA)
     }
     FDR_log<-FDR/10
     #palette(c("black","red","blue","brown", "orange","cyan", "green",rainbow(nc)))
@@ -96,7 +96,7 @@ return(NULL)
     graphics::par(mar = c(5,6,5,3))
     }
     if(plot.style=="rainbow"){
-        grDevices::pdf(paste("GAPIT.", trait,".ROC.pdf" ,sep = ""), width = 7,height=7)
+        grDevices::pdf(paste("GAPIT.Association.ROC.", trait,".pdf" ,sep = ""), width = 7,height=7)
         graphics::par(mar = c(5,5,5,3))
     }
   

@@ -1445,7 +1445,7 @@ function(GM,P=NULL,Prior=NULL,kinship.algorithm="FARM-CPU"){
                         colnames(betapc) = c("CV","Effect")
                         utils::write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep = ""),quote = F,row.names = FALSE)
                     }
-                    GAPIT.Report(name.of.trait = name.of.trait2,GWAS = GWAS,pred = NULL,ypred = ypred,tvalue = NULL,stderr = stderr,Vp = Vp,DPP = DPP,cutOff = cutOff,threshold.output = threshold.output,MAF = MAF,seqQTN = QTN.position,MAF.calculate = MAF.calculate,plot.style = plot.style)
+                    # GAPIT.Report(name.of.trait = name.of.trait2,GWAS = GWAS,pred = NULL,ypred = ypred,tvalue = NULL,stderr = stderr,Vp = Vp,DPP = DPP,cutOff = cutOff,threshold.output = threshold.output,MAF = MAF,seqQTN = QTN.position,MAF.calculate = MAF.calculate,plot.style = plot.style)
                     myPower = GAPIT.Power(WS = WS, alpha = alpha, maxOut = maxOut,seqQTN = QTN.position,GM = GM,GWAS = GWAS,MaxBP = 1e10)
                 }
                 #} #enf of is done
@@ -1663,7 +1663,7 @@ function(GM,P=NULL,Prior=NULL,kinship.algorithm="FARM-CPU"){
                             utils::write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep=""),quote=F,row.names=FALSE)
                         }
                         
-                        GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
+                        # GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=NULL,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
                         
                     }else{
                         if(npc!=0){
@@ -1672,7 +1672,7 @@ function(GM,P=NULL,Prior=NULL,kinship.algorithm="FARM-CPU"){
                             utils::write.csv(betapc,paste("FarmCPU.",name.of.trait2,".CVeffect.csv",sep=""),quote=F,row.names=FALSE)
                         }
                         
-                        GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=ypred,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
+                        # GAPIT.Report(name.of.trait=name.of.trait2,GWAS=GWAS,pred=NULL,ypred=ypred,tvalue=NULL,stderr=stderr,Vp=Vp,DPP=DPP,cutOff=cutOff,threshold.output=threshold.output,MAF=MAF,seqQTN=QTN.position,MAF.calculate=MAF.calculate,plot.style=plot.style)
                     }
                 }
                 #Evaluate Power vs FDR and type I error

@@ -29,7 +29,7 @@ y_filter0=NULL
 for(i in 1:length(environ_name))
 {
   print(paste("Reading GWAS result with ",environ_name[i],sep=""))
-  environ_result=read.csv(paste("GAPIT.",environ_name[i],".GWAS.Results.csv",sep=""),head=T)
+  environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[i],".csv",sep=""),head=T)
   environ_result=environ_result[order(environ_result[,3]),]
   environ_result=environ_result[order(environ_result[,2]),]
   environ_filter=environ_result[!is.na(environ_result[,4]),]
@@ -77,7 +77,7 @@ for(i in 1:length(environ_name))
   # map_store=max.x
   sig_pos=append(sig_pos,as.numeric(rownames(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),,drop=FALSE])))
 }
-  write.csv(y_filter0,paste("GAPIT.Filter_GWAS_results.csv",sep=""),quote=FALSE)
+  write.csv(y_filter0,paste("GAPIT.Association.Filter_GWAS_results.csv",sep=""),quote=FALSE)
 
 # print(sig_pos)
 #if(length(sig_pos)!=0)sig_pos=sig_pos[!duplicated(sig_pos)]
@@ -107,7 +107,7 @@ for(i in 1:length(environ_name))
        common=as.numeric(new_xz0[,3])
        scom=sort(common)
        de.sc=scom[-1]-scom[-length(scom)]
-       dayu1.index=duplicated(scom)|c(de.sc<WS,FALSE)
+       dayu1.index=duplicated(scom)|c(abs(de.sc)<WS,FALSE)
 
        print(table(dayu1.index))
        if(sum(dayu1.index)>0)
@@ -185,7 +185,7 @@ if("h"%in%plot.type)
 {
     Max.high=6*Nenviron
     if(Max.high>8)Max.high=40
-    pdf(paste("GAPIT.Manhattan.Multiple.Plot.high",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
+    pdf(paste("GAPIT.Association.Manhattans_High",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
     par(mfrow=c(Nenviron,1))
     mypch=1
     for(k in 1:Nenviron)
@@ -199,7 +199,7 @@ if("h"%in%plot.type)
             #par(mfrow=c(Nenviron,1))
         par(mar = c(1.5,8,0.5,8))    
         }
-       environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
+       environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
        result=environ_result[,1:4]
        result=result[order(result[,3]),]
        result=result[order(result[,2]),]
@@ -318,7 +318,7 @@ if("h"%in%plot.type)
 
 if("w"%in%plot.type)
 {
- pdf(paste("GAPIT.Manhattan.Multiple.Plot.wide",".pdf" ,sep = ""), width = 16,height=8.5)
+ pdf(paste("GAPIT.Association.Manhattans_Wide",".pdf" ,sep = ""), width = 16,height=8.5)
  par(mfrow=c(Nenviron,1))
  mtext.h=0.5
  size=2
@@ -337,7 +337,7 @@ if("w"%in%plot.type)
          # par(pin=c(10,(8-mtext.h)/Nenviron))
 
         }
-  environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
+  environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
   #print(environ_result[as.numeric(new_xz[,1]),])
   result=environ_result[,1:4]
     result=result[order(result[,3]),]
@@ -476,7 +476,7 @@ if("s"%in%plot.type)
  
 
 
- pdf(paste("GAPIT.Manhattan.Mutiple.Plot.symphysic",".pdf" ,sep = ""), width = 30,height=18)
+ pdf(paste("GAPIT.Association.Manhattans_Symphysic",".pdf" ,sep = ""), width = 30,height=18)
  par(mfrow=c(1,1))
  par(mar = c(5,8,5,1))
  themax.y02=ceiling((ceiling(themax.y0/4))*4)
@@ -509,7 +509,7 @@ if("s"%in%plot.type)
   { 
     step.vals=ceiling(k/length(allpch0))-1
 
-    environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
+    environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
     result=environ_result[,1:4]
     result=result[order(result[,3]),]
     result=result[order(result[,2]),]
@@ -690,8 +690,10 @@ if("s"%in%plot.type)
  #  text.di=.02
  #  cex.betw=0.9
  #  }
- write.csv(environ_name,"GAPIT.traits.names.csv",quote=FALSE)
- pdf(paste("GAPIT.Manhattan.Mutiple.Plot.symphysic.legend",".pdf" ,sep = ""), width = 4+(x.di*(n.col.pch+1)),height=high.Ne)
+
+
+ write.csv(environ_name,"GAPIT.Association.Manhattans_Symphysic_Traitsnames.csv",quote=FALSE)
+ pdf(paste("GAPIT.Association.Manhattans_Symphysic_Legend",".pdf" ,sep = ""), width = 4+(x.di*(n.col.pch+1)),height=high.Ne)
  par(mfrow=c(1,1))
  par(mar = c(cex.Ne+1,2,cex.Ne+1,2))
  # print(length(yourpch))
@@ -706,7 +708,7 @@ if("s"%in%plot.type)
  {
   if(n.col.pch==1)
   {
-  print(kk)
+  # print(kk)
   max.pch2=Nenviron-(n.col.pch-1)*max.row
   
   plot(rep(0,max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,xlab="",ylab="" ,axes=FALSE,col="black",
@@ -717,7 +719,7 @@ if("s"%in%plot.type)
   pch=yourpch2[((kk-1)*max.row+1):Nenviron])
   text(rep((0+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=environ_name[((kk-1)*max.row+1):Nenviron],pos=4,cex=cex.Ne-c.t.d)
   }else{
-  print(kk)
+  # print(kk)
   max.pch2=Nenviron-(n.col.pch-1)*max.row
   
   plot(rep((kk-1)*x.di,max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,xlab="",ylab="" ,axes=FALSE,col="black",
@@ -757,7 +759,7 @@ if("s"%in%plot.type)
  dev.off()
 
 }
-print("GAPIT.Manhattan.Mutiple.Plot has done !!!")
+print("GAPIT.Association.Manhattans has done !!!")
 return(list(multip_mapP=result0,xz=new_xz))
 } #end of GAPIT.Manhattan
 #=============================================================================================

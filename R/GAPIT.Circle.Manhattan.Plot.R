@@ -203,7 +203,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 		print("SNP_Density Plotting...")
 		if(file.output){
 			if(file=="jpg")	grDevices::jpeg(paste("SNP_Density.",paste(taxa,collapse="."),".jpg",sep=""), width = 9*dpi,height=7*dpi,res=dpi,quality = 100)
-			if(file=="pdf")	grDevices::pdf(paste("GAPIT.", taxa,".SNP_Density.Plot.pdf" ,sep=""), width = 9,height=7)
+			if(file=="pdf")	grDevices::pdf(paste("GAPIT.Association.SNP_Density", taxa,".pdf" ,sep=""), width = 9,height=7)
 			if(file=="tiff")	grDevices::tiff(paste("SNP_Density.",paste(taxa,collapse="."),".tiff",sep=""), width = 9*dpi,height=7*dpi,res=dpi)
 			graphics::par(xpd=TRUE)
 		}else{
@@ -404,7 +404,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
     {
 		if(file.output){
 			if(file=="jpg")	grDevices::jpeg(paste("GAPIT.Manhattan.Multiple.Plot.circular.jpg",sep=""), width = 8*dpi,height=8*dpi,res=dpi,quality = 100)
-			if(file=="pdf")	grDevices::pdf(paste("GAPIT.Manhattan.Multiple.Plot.circular.pdf" ,sep=""), width = 10,height=10)
+			if(file=="pdf")	grDevices::pdf(paste("GAPIT.Association.Manhattans_Circular.pdf" ,sep=""), width = 10,height=10)
 			if(file=="tiff")	grDevices::tiff(paste("GAPIT.Manhattan.Multiple.Plot.circular.tiff",sep=""), width = 8*dpi,height=8*dpi,res=dpi)
 		}
 		if(!file.output){
@@ -889,7 +889,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 		if(multracks){
 			if(file.output){
 				if(file=="jpg")	grDevices::jpeg(paste("GAPIT.Multracks.QQ.plot.jpg",sep=""), width = R*2.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
-				if(file=="pdf")	grDevices::pdf(paste("GAPIT.Multracks.QQ.plot.pdf",sep=""), width = R*2.5,height=5.5)
+				if(file=="pdf")	grDevices::pdf(paste("GAPIT.Association.QQs_Tracks.pdf",sep=""), width = R*2.5,height=5.5)
 				if(file=="tiff")	grDevices::tiff(paste("GAPIT.Multracks.QQ.plot.tiff",sep=""), width = R*2.5*dpi,height=5.5*dpi,res=dpi)
 				graphics::par(mfcol=c(1,R),mar = c(0,1,4,1.5),oma=c(3,5,0,0),xpd=TRUE)
 			}else{
@@ -980,7 +980,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				signal.col <- NULL
 				if(file.output){
 					if(file=="jpg")	grDevices::jpeg(paste("GAPIT.Multiple.QQ.plot.symphysic.jpg",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
-					if(file=="pdf")	grDevices::pdf(paste("GAPIT.Multiple.QQ.plot.symphysic.pdf",sep=""), width = 5.5,height=5.5)
+					if(file=="pdf")	grDevices::pdf(paste("GAPIT.Association.QQs_Symphysic.pdf",sep=""), width = 5.5,height=5.5)
 					if(file=="tiff")	grDevices::tiff(paste("GAPIT.Multiple.QQ.plot.symphysic.tiff",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi)
 					graphics::par(mar = c(5,5,4,2),xpd=TRUE)
 				}else{
@@ -1093,7 +1093,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				print(paste("Q_Q Plotting ",taxa[i],"...",sep=""))
 				if(file.output){
 					if(file=="jpg")	grDevices::jpeg(paste("QQplot.",taxa[i],".jpg",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi,quality = 100)
-					if(file=="pdf")	grDevices::pdf(paste("QQplot.",taxa[i],".pdf",sep=""), width = 5.5,height=5.5)
+					if(file=="pdf")	grDevices::pdf(paste("GAPIT.Association.Q_Q.",taxa[i],".pdf",sep=""), width = 5.5,height=5.5)
 					if(file=="tiff")	grDevices::tiff(paste("QQplot.",taxa[i],".tiff",sep=""), width = 5.5*dpi,height=5.5*dpi,res=dpi)
 					graphics::par(mar = c(5,5,4,2),xpd=TRUE)
 				}else{

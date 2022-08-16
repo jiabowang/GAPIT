@@ -62,7 +62,7 @@
   #print(variance)
   if( file.output == TRUE ){
     # print("!!!!!!!!")
-    grDevices::pdf(paste("GAPIT.", name.of.trait,".Optimum.pdf", sep = ""), width = 14)
+    grDevices::pdf(paste("GAPIT.Association.Optimum.", name.of.trait,".pdf", sep = ""), width = 14)
     graphics::par(mfrow = c(1,1), mar = c(1,1,5,5), lab = c(5,5,7))
     graphics::pie(variance,  col=colors, labels=labels,angle=45,border=NA)
     graphics::legend(1.0, 0.5, legend, cex=1.5, bty="n",
@@ -104,7 +104,7 @@ line.vector <-  rep(1:(length(unique(Compression[,1])) * length(unique(Compressi
 #We want to have a total of three plots, one displaying the likelihood function, one displaying the variance components, and one displaying the
 # heritability 
 if( file.output == TRUE ){
-  grDevices::pdf(paste("GAPIT.", name.of.trait,".Compression.multiple.group", ".pdf", sep = ""), width = 14)
+  grDevices::pdf(paste("GAPIT.Association.Compression_multiple_group", name.of.trait,".pdf", sep = ""), width = 14)
   graphics::par(mfrow = c(2,3), mar = c(5,5,1,1), lab = c(5,5,7))
 
   # Make the likelihood function plot
@@ -281,7 +281,7 @@ if(length(unique(Compression[,3]))==1& length(unique(Compression[,1]))*length(un
 
 #Graph the compression with only one group
 if( file.output == TRUE ){
-  grDevices::pdf(paste("GAPIT.Compression.single.group.", name.of.trait, ".pdf", sep = ""),
+  grDevices::pdf(paste("GAPIT.Association.Compression_single_group.", name.of.trait, ".pdf", sep = ""),
                  width = 14)
   graphics::par(mfrow = c(2,2), mar = c(5,5,1,1), lab = c(5,5,7))
 

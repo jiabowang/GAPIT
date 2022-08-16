@@ -35,7 +35,7 @@
 
  NN=nrow(P)
  themax.y0=max(-log10(P))
- pdf(paste("GAPIT.QQ.Mutiple.Plot.",memo,".symphysic",".pdf" ,sep = ""), width = 30,height=18)
+ pdf(paste("GAPIT.Association.QQs_Symphysic2.",memo,".pdf" ,sep = ""), width = 30,height=18)
  par(mfrow=c(1,1))
  par(mar = c(5,5,5,1))
  par(cex=1.8)

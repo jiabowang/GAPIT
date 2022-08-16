@@ -1223,7 +1223,7 @@ print("--------------------Final results presentations------------------------")
 if(!byPass) {
   if(length(bk$KW)>1 &length(bk$KW)<length(KI) & length(bk$KW)<1000 & GAPIT3.output){
 #    if( file.output == TRUE ){
-        grDevices::pdf(paste("GAPIT.",name.of.trait,".Kin.Optimum.pdf",sep=""), width = 12, height = 12)
+        grDevices::pdf(paste("GAPIT.Genotype.Kin_Optimum.",name.of.trait,".pdf",sep=""), width = 12, height = 12)
         graphics::par(mar = c(25,25,25,25))
         gplots::heatmap.2(as.matrix(bk$KW),  cexRow =.2, cexCol = 0.2, col=rev(grDevices::heat.colors(256)), scale="none", symkey=FALSE, trace="none")
         grDevices::dev.off()
@@ -1520,7 +1520,7 @@ if(!byPass &GAPIT3.output)
 {
 print("Exporting BLUP and Pred")
   #try(write.table(gs$BLUP, paste("GAPIT.", name.of.trait,".BLUP.csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
-  try(utils::write.table(Pred, paste("GAPIT.", name.of.trait,".PRED.csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
+  try(utils::write.table(Pred, paste("GAPIT.Association.Pred.", name.of.trait,".csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
 }
 
 if(byPass) 
@@ -1643,9 +1643,9 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Manhattan plot")
   #print(dim(GWAS))
 
   if(file.output){
-   utils::write.table(GWAS, paste("GAPIT.", name.of.trait, ".GWAS.Results.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-   utils::write.table(DTS, paste("GAPIT.", name.of.trait, ".Df.tValue.StdErr.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-   if(!byPass) utils::write.table(GWAS.2, paste("GAPIT.", name.of.trait, ".Allelic_Effect_Estimates.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+    utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   utils::write.table(DTS, paste("GAPIT.Association.Df_tValue_StdErr.", name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   if(!byPass) utils::write.table(GWAS.2, paste("GAPIT.Genotype.Allelic_Effect_Estimates.", name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
   }
 
 
@@ -1658,9 +1658,9 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Extract GWAS end")
 } #end of if(hasGenotype )
 
 #Log
-if(GAPIT3.output) log=GAPIT.Log(Y=Y,KI=KI,Z=Z,CV=CV,SNP.P3D=SNP.P3D,
-				group.from = group.from ,group.to =group.to ,group.by = group.by ,kinship.cluster = kinship.cluster, kinship.group= kinship.group,
-                      	ngrid = ngrid , llin = llin , ulim = ulim , esp = esp ,name.of.trait = name.of.trait)
+# if(GAPIT3.output) log=GAPIT.Log(Y=Y,KI=KI,Z=Z,CV=CV,SNP.P3D=SNP.P3D,
+				# group.from = group.from ,group.to =group.to ,group.by = group.by ,kinship.cluster = kinship.cluster, kinship.group= kinship.group,
+                      	# ngrid = ngrid , llin = llin , ulim = ulim , esp = esp ,name.of.trait = name.of.trait)
 #Memory usage
 #GAPIT.Memory.Object(name.of.trait=name.of.trait)
 

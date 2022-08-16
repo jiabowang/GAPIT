@@ -38,7 +38,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
         graphics::par(mar = c(5,6,5,3))
         }
         if(plot.style=="rainbow"){
-            grDevices::pdf(paste("GAPIT.", name.of.trait,".QQ-Plot.pdf" ,sep = ""),width = 5,height=5)
+            grDevices::pdf(paste("GAPIT.Association.QQ.", name.of.trait,".pdf" ,sep = ""),width = 5,height=5)
             graphics::par(mar = c(5,6,5,3))
         }
         #Add conficence interval
@@ -82,7 +82,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
     
     if(plot.type == "P_values")
     {
-        grDevices::pdf(paste("QQ-Plot_", name.of.trait,".pdf" ,sep = ""))
+        grDevices::pdf(paste("GAPIT.Association.QQ.", name.of.trait,".pdf" ,sep = ""))
         graphics::par(mar = c(5,5,5,5))
         stats::qqplot(p_value_quantiles, P.values, xlim = c(0,1),
         ylim = c(0,1), type = "l" , xlab = "Uniform[0,1] Theoretical Quantiles", 

@@ -23,7 +23,7 @@ no_model=c("gBLUP","cBLUP","sBLUP")[!index]
 gs_store=NULL
 for(i in 1:n)
    {
-    gs_result=utils::read.csv(paste("GAPIT.",method_store[i],".Pred.result.csv",sep=""),head=T)
+    gs_result=utils::read.csv(paste("GAPIT.Association.Pred_result.",method_store[i],".csv",sep=""),head=T)
     m=nrow(gs_result)
     gs_store=cbind(gs_store,gs_result[,8])
    }
@@ -202,7 +202,7 @@ Predicted=pred_all$gBLUP[pred_all$refinf==1]
     symbol= I(4),
     name=c("gBLUP with Inf")
     )
-    htmltools::save_html(p, "Interactive.GS.html")
+    htmltools::save_html(p, "GAPIT.Association.Interactive_GS.html")
 
 }
 

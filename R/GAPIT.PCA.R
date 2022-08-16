@@ -17,7 +17,7 @@ if(is.null(PCA.col)) PCA.col="red"
 print("Creating PCA graphs...")
 #Create a Scree plot 
 if(file.output & PC.number>1) {
-grDevices::pdf("GAPIT.PCA.eigenValue.pdf", width = 12, height = 12)
+grDevices::pdf("GAPIT.Genotype.PCA_eigenValue.pdf", width = 12, height = 12)
   graphics::par(mar=c(5,5,4,5)+.1,cex=2)
   #par(mar=c(10,9,9,10)+.1)
   plot(xout,eigenvalues[xout],type="b",col="blue",xlab="Principal components",ylab="Variance")
@@ -27,7 +27,7 @@ grDevices::pdf("GAPIT.PCA.eigenValue.pdf", width = 12, height = 12)
   graphics::mtext("Percentage (%)",side=4,line=3,cex=2)
 grDevices::dev.off()
 
-grDevices::pdf("GAPIT.PCA.2D.pdf", width = 8, height = 8)
+grDevices::pdf("GAPIT.Genotype.PCA_2D.pdf", width = 8, height = 8)
 graphics::par(mar = c(5,5,5,5))
 maxPlot=min(as.numeric(PC.number[1]),3)
 
@@ -113,7 +113,7 @@ if(PCA.3d==TRUE)
 #    if(!require(scatterplot3d)) install.packages("scatterplot3d")
 #    library(scatterplot3d)
 
-    grDevices::pdf("GAPIT.PCA.3D.pdf", width = 7, height = 7)
+    grDevices::pdf("GAPIT.Genotype.PCA_3D.pdf", width = 7, height = 7)
     graphics::par(mar = c(5,5,5,5))
     scatterplot3d::scatterplot3d(PCA.X$x[,1],
                   PCA.X$x[,2],
@@ -144,11 +144,11 @@ PCs <- cbind(taxa,as.data.frame(PCA.X$x))
 
 print("Exporting PCs...")
 #Write the PCs into a text file
-if(file.output) utils::write.table(PCs[,1:(PCA.total+1)], "GAPIT.PCA.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+if(file.output) utils::write.table(PCs[,1:(PCA.total+1)], "GAPIT.Genotype.PCA.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
-if(file.output) utils::write.table(PCA.X$rotation[,1:PC.number], "GAPIT.PCA.loadings.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+# if(file.output) utils::write.table(PCA.X$rotation[,1:PC.number], "GAPIT.Genotype.PCA_loadings.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
-if(file.output) utils::write.table(eigenvalues, "GAPIT.PCA.eigenvalues.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+if(file.output) utils::write.table(eigenvalues, "GAPIT.Genotype.PCA_eigenvalues.csv", quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
 #Return the PCs
 return(list(PCs=PCs,EV=PCA.X$sdev^2,nPCs=NULL))

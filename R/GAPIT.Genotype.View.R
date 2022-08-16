@@ -16,7 +16,7 @@
 if(is.null(myGI)){stop("Validation Invalid. Please select read valid Map flies  !")}
 if(is.null(myGD)){stop("Validation Invalid. Please select read valid Genotype flies  !")}
 myGI2=myGI[order(myGI[,2]),]
-myGI2=GI.MP2[order(GI.MP2[,3]),]
+myGI2=myGI2[order(myGI2[,3]),]
 rs2=as.character(myGI2[,1])
 rs1=as.character(myGI[,1])
 index=match(rs2,rs1)
@@ -82,7 +82,7 @@ dist[index]=NA
 
 r=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
 
-grDevices::pdf("GAPIT.Marker.Density.R.sqaure.pdf", width =10, height = 6)
+grDevices::pdf("GAPIT.Genotype.Density_R_sqaure.pdf", width =10, height = 6)
 # plot(dist/Aver.Dis,r^2, xlab="Distance (Kb)", ylab="R sqaure", main="f",cex=.5,col="gray60")
 d.V=dist/Aver.Dis
 par(mfrow=c(2,3),mar = c(5,5,2,2))
@@ -152,7 +152,7 @@ colDisp=array("gray50",m-1)
 colIndex=theCol==1
 colDisp[colIndex]="goldenrod"
 colDisp=colDisp[rs.index]
-grDevices::pdf("GAPIT.Marker.MAF.Heterozosity.pdf", width =10, height = 6)
+grDevices::pdf("GAPIT.Genotype.MAF_Heterozosity.pdf", width =10, height = 6)
 
 #Display
 layout.matrix <- matrix(c(1,2,3), nrow = 3, ncol = 1)
@@ -169,7 +169,7 @@ grDevices::dev.off()
 
 
 #Display Het and MAF distribution
-grDevices::pdf("GAPIT.Marker.MAF.Heterozosity.distribution.pdf", width =10, height = 3.5)
+grDevices::pdf("GAPIT.Genotype.Distribution.pdf", width =10, height = 3.5)
 layout.matrix <- matrix(c(1,2,3), nrow = 1, ncol = 3)
 layout(mat = layout.matrix,
        heights = c(100,80,120), # Heights of the two rows

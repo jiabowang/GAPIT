@@ -1,5 +1,5 @@
 `GAPIT.RandomModel` <-
-function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,N.sig=NULL,n_ran=500){
+function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ran=500){
     #Object: To calculate the genetics variance ratio of Candidate Genes
     #Output: The genetics variance raito between CG and total
     #Authors: Jiabo Wang and Zhiwu Zhang
@@ -13,7 +13,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,N.sig=NULL,n_ran=500){
     #return(list(GVs=NULL))
     print("GAPIT.RandomModel beginning...")
     if(is.null(GT))GT=as.character(Y[,1])
-    name.of.trait=colnames(Y)[2]
+    # name.of.trait=colnames(Y)[2]
     P.value=as.numeric(GWAS[,4])
     P.value[is.na(P.value)]=1
     if(is.null(N.sig))
@@ -177,14 +177,14 @@ if(!is.null(CV))
     v_rat=100*var_gene/sum(var_gene+var_res)
     gene_list=cbind(geneGWAS,v_rat)
     colnames(gene_list)[ncol(gene_list)]="Phenotype_Variance_Explained(%)"
-    utils::write.csv(var_gene,paste("GAPIT.", name.of.trait,".V_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-    utils::write.csv(gene_list,paste("GAPIT.", name.of.trait,".PVE_by_Association_Markers.csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+    utils::write.csv(var_gene,paste("GAPIT.Association.Vairance_markers.", name.of.trait,".csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+    utils::write.csv(gene_list,paste("GAPIT.Association.PVE.", name.of.trait,".csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 #gene_list=read.csv("GAPIT.Weight.GrowthIntercept.Phenotype_Variance_Explained_by_Association_Markers.csv",head=T)
     colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
 # print(gene_list)
 if(!is.na(sum(gene_list[1,c(4:8)])))
 {
-         grDevices::pdf(paste("GAPIT.", name.of.trait,".Effect_VP.pdf" ,sep = ""), width = 7,height=5.75)
+         grDevices::pdf(paste("GAPIT.Association.Effect_PVE.", name.of.trait,".pdf" ,sep = ""), width = 7,height=5.75)
         graphics::par(mar=c(4,5,4,4))
 
         gene_list=gene_list[order(gene_list$effect),]
@@ -194,7 +194,7 @@ if(!is.na(sum(gene_list[1,c(4:8)])))
             )
         grDevices::dev.off()
 
-        grDevices::pdf(paste("GAPIT.", name.of.trait,".MAF_VP.pdf" ,sep = ""), width = 7,height=5.75)
+        grDevices::pdf(paste("GAPIT.Association.MAF_PVE.", name.of.trait,".pdf" ,sep = ""), width = 7,height=5.75)
         graphics::par(mar=c(4,5,4,4))
         gene_list=gene_list[order(gene_list$maf),]
         plot(gene_list$maf,gene_list$Variance_Explained,xlab="MAF",cex=1.2,
@@ -203,7 +203,7 @@ if(!is.na(sum(gene_list[1,c(4:8)])))
 
     if(n_gd>=5)
         {
-        grDevices::pdf(paste("GAPIT.", name.of.trait,".MAF_Effect_VP.pdf" ,sep = ""), width = 9,height=5.75)
+        grDevices::pdf(paste("GAPIT.Association.MAF_Effect_PVE.", name.of.trait,".pdf" ,sep = ""), width = 9,height=5.75)
         
         n=10
         graphics::layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
@@ -249,7 +249,7 @@ if(!is.na(sum(gene_list[1,c(4:8)])))
 
 
 
-return(list(GVs=var_gene/sum(var_gene+var_res)))
+return(list(GVs=var_gene/sum(var_gene+var_res),PVEs=gene_list))
 
 }#end of GAPIT.RandomModel function
 #=============================================================================================
