@@ -103,7 +103,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
      # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
         Y=Y[taxa_Y%in%GT,]
         CV=CV[taxa_CV%in%GT,]
-    	tree2=cbind(Y,CV[,-1],geneGD)
+    	tree2=cbind(Y,CV[,-1,drop=FALSE],geneGD)
         }
     }
     if(in_True==1)colnames(tree2)[ncol(tree2)]=paste("gene_",1,sep="")
