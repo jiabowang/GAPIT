@@ -68,7 +68,7 @@ print("GAPIT.IC in process...")
      print(dim(comCV))
      
      print("GAPIT.IC accomplished successfully for multiple traits. Results are saved")
-     if(DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM")){ 
+     if(DP$kinship.algorithm%in%c("FarmCPU","BLINK","MLMM")){ 
         return (list(Y=comY,GT=GT,PCA=comCV,K=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=GD))
      }else{
         return (list(Y=comY,GT=GT,PCA=comCV,K=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=GD,myallY=Y))

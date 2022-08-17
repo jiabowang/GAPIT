@@ -336,9 +336,9 @@ if(!is.null(Y))
         }else{
           SNP.test=TRUE
         }
-        if(toupper(model)=="BLINK") model="Blink"
+        if(toupper(model)=="BLINK") model="BLINK"
         if(toupper(model)=="FARMCPU") model="FarmCPU"
-        if(toupper(model)=="BLINKC") model="BlinkC"
+        if(toupper(model)=="BLINKC") model="BLINKC"
         if(toupper(model)=="GBLUP") model="gBLUP"
         if(toupper(model)=="CBLUP") model="cBLUP"
         if(toupper(model)=="SBLUP") model="sBLUP"
@@ -348,7 +348,7 @@ if(!is.null(Y))
          # memo=paste(memo,"_Back",sep="")
         }
         if(toupper(model)=="BLINK2") 
-        {model="Blink2"
+        {model="BLINK2"
          Multi_iter=TRUE
          # memo=paste(memo,"_Back",sep="")
         }
@@ -418,17 +418,17 @@ if(!is.null(Y))
           }
         if(model=="FarmCPU")Para$kinship.algorithm="FarmCPU"
         if(model=="MLMM")Para$kinship.algorithm="MLMM"
-        if(model=="Blink")Para$kinship.algorithm="Blink"
+        if(model=="BLINK")Para$kinship.algorithm="BLINK"
         if(model=="FarmCPU2")
         {Para$kinship.algorithm="FarmCPU"
          Para$Multi_iter=TRUE}
         if(model=="MLMM2")
         {Para$kinship.algorithm="MLMM"
         Para$Multi_iter=TRUE}
-        if(model=="Blink2")
-        {Para$kinship.algorithm="Blink"
+        if(model=="BLINK2")
+        {Para$kinship.algorithm="BLINK"
         Para$Multi_iter=TRUE}
-        if(model=="BlinkC")Para$kinship.algorithm="BlinkC"
+        if(model=="BLINKC")Para$kinship.algorithm="BLINKC"
         if(is.null(memo))
             {
                 Para$memo=model
@@ -509,7 +509,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              print(paste("Processing trait: ",traitname,sep=""))
              if(!is.null(Y) & Para$file.output&Phenotype.View&m==1)ViewPhenotype<-GAPIT.Phenotype.View(myY=Y[,c(1,trait)],traitname=traitname)
              if(!is.null(Para$memo)) traitname=paste(Para$memo,".",traitname,sep="")
-             if(!Para$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC")&is.null(DP$KI))
+             if(!Para$kinship.algorithm%in%c("FarmCPU","MLMM","BLINK","BLINKC")&is.null(DP$KI))
              {
                 myKI_test=GAPIT.kinship.VanRaden(snps=as.matrix(DP$GD[,-1]))     #  build kinship
                 colnames(myKI_test)=as.character(DP$GD[,1])

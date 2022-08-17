@@ -334,10 +334,12 @@
       index=which(ac>1)
       P[P==0] <- min(P[P!=0],na.rm=TRUE)*0.01
       P[is.na(P)] =1
+      # print(str(myGLM))
       gc()
       nf=ncol(myGLM$P)/4
       tvalue=myGLM$P[,nf*2-shift]
       stderr=myGLM$P[,3*nf-shift]
+      B=myGLM$B
       GWAS=cbind(GM[MAF.index,],P,MAF,NA,NA,NA,NA)
       colnames(GWAS)=c(colnames(GM),"P.value","maf","nobs","Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP","FDR_Adjusted_P-values")
       Vp=stats::var(Y1[,2],na.rm=TRUE)
@@ -391,7 +393,7 @@
   # print(proc.time())
     # write.table(GWAS,paste(name.of.trait2,"_GWAS.txt",sep=""),sep="\t",col.names=T,row.names=F)
   }#end of phenotype
-  return(list(GWAS=GWAS,myGLM=myGLM,PEV = PEV,seqQTN=seqQTN))
+  return(list(GWAS=GWAS,myGLM=myGLM,PEV = PEV,seqQTN=seqQTN,Beta=B))
 }#  end of function Blink
 
 

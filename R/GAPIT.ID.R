@@ -130,7 +130,7 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
     GI=GI[order(GI[,3]),]
     GI=GI[order(GI[,2]),]
     byPass=TRUE
-    if(DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC"))byPass=FALSE
+    if(DP$kinship.algorithm%in%c("FarmCPU","MLMM","BLINK","BLINKC"))byPass=FALSE
     if(byPass) 
     {
  # print(head(SS$GWAS))
