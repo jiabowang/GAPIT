@@ -296,6 +296,20 @@ sBLUP used SUPER method to build psedue QTN kinship matrix. The code is:
       file.output=T
       )
 
+* MABLUP
+
+MABLUP (Markers Assisted BLUP) used significant markers as fixed effect in the mixed linear model after GWAS. The GWAS method could be selected following model="". The buspred is used to predict GEBV after GWAS. The lmpred is used to select linear model or GBLUP method. The code is:
+
+      myGAPIT_MABLUP <- GAPIT(
+      Y=myY[,c(1,2)],
+      GD=myGD,
+      GM=myGM,
+      model="BLINK",
+      buspred=TRUE,
+      lmpred=FALSE,
+      PCA.total=5,
+      file.output=TRUEf
+      )
 
 Result
 =====
