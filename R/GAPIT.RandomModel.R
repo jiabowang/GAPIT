@@ -14,6 +14,8 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     print("GAPIT.RandomModel beginning...")
     if(is.null(GT))GT=as.character(Y[,1])
     # name.of.trait=colnames(Y)[2]
+    GWAS=GWAS[order(GWAS[,3]),]
+    GWAS=GWAS[order(GWAS[,2]),]
     P.value=as.numeric(GWAS[,4])
     P.value[is.na(P.value)]=1
     if(is.null(N.sig))
@@ -182,7 +184,9 @@ if(!is.null(CV))
 #gene_list=read.csv("GAPIT.Weight.GrowthIntercept.Phenotype_Variance_Explained_by_Association_Markers.csv",head=T)
     colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
 # print(gene_list)
-if(!is.na(sum(gene_list[1,c(4:8)])))
+# print(is.na(gene_list[1,c(4:8)]))
+
+if(sum(is.na(gene_list[1,c(4:8)]))==0)
 {
          grDevices::pdf(paste("GAPIT.Association.Effect_PVE.", name.of.trait,".pdf" ,sep = ""), width = 7,height=5.75)
         graphics::par(mar=c(4,5,4,4))
@@ -210,8 +214,8 @@ if(!is.na(sum(gene_list[1,c(4:8)])))
         do_color = grDevices::colorRampPalette(c("green", "red"))(n)
 
             graphics::par(mar=c(4,5,2,8),cex=1)
-            y=gene_list$maf
-            x=gene_list$effect
+            y=as.numeric(gene_list$maf)
+            x=as.numeric(gene_list$effect)
             x.lim=max(x)+max(x)/10
             y.lim=max(y)+max(y)/10
             z=gene_list$Variance_Explained

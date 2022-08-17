@@ -368,6 +368,8 @@
  		X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof)])[,((j)*round(m/nbchunks)+1):(m-(ncol(cof)-1))]) 
  		RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
  		rm(X_t,j) 
+ 		print(dim(RSS))
+ 		print(head(RSS))
  		RSSf<-unlist(RSS) 
  		RSS_H0<-sum(Res_H0^2) 
  		df2<-n-df1-ncol(cof) 

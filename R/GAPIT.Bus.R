@@ -312,9 +312,9 @@ system(paste("rm -f FarmCPU.",taxa,".QQ-Plot.pdf",sep=""))
 
 print("FarmCPU has been done succeedly!!")
 }
-if(method=="BlinkC")
+if(method=="BLINKC")
 {
-  print("BlinkC will be started !!")
+  print("BLINKC will be started !!")
   colnames(GD)[-1]=as.character(GM[,1])
 
 blink_GD=t(GD[,-1])
@@ -371,19 +371,9 @@ ve=NULL
 delta=NULL
 REMLs=NULL
 }
-if(method=="Blink")
+if(method=="BLINK")
 {
-  # if(!require(devtools))  install.packages("devtools")
-  # if(!require(devtools))  system("git config --global http.proxy http://proxyuser:proxypwd@proxy.server.com:8080")
-  # if(!require(devtools))  install.packages("devtools")
-  #if(!require(BLINK)) devtools::install_github("YaoZhou89/BLINK", host = "api.github.com")
-  # if(!require(BLINK)) devtools::install_github("jiabowang/BLINK")
-#  if(!require(bigmemory)) install.packages("bigmemory")
-#  if(!require(biganalytics)) install.packages("biganalytics")
-#library(bigmemory)  #for FARM-CPU
-#library(biganalytics) #for FARM-CPU
-  #source("http://zzlab.net/GAPIT/gapit_functions.txt")
-  #source("http://zzlab.net/FarmCPU/FarmCPU_functions.txt")
+ 
   colnames(GD)[-1]=as.character(GM[,1])
 
   blink_GD=t(GD[,-1])
@@ -524,12 +514,14 @@ GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
 
-effect=rep(NA,nrow(GWAS))
+# effect=rep(NA,nrow(GWAS))
+effect=myBlink$Beta
+effect[effect=="NaN"]=0
 GWAS=cbind(GWAS,effect)
 GPS=myBlink$Pred
-# print(head(GWAS))
 colnames(GWAS)[1:3]=c("SNP","Chromosome","Position")
 GWAS=GWAS[,c(1:4,6,5,7)]
+# print(head(GWAS))
 if(Random.model)GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
 
 
@@ -543,7 +535,7 @@ system(paste("rm -f FarmCPU.",taxa,".GWAS.Results.csv",sep=""))
 system(paste("rm -f FarmCPU.",taxa,".Manhattan.Plot.Genomewise.pdf",sep=""))
 system(paste("rm -f FarmCPU.",taxa,".QQ-Plot.pdf",sep=""))
   #print(head(GWAS))
-  print("Bink R is done !!!!!")
+  print("BLINK R is done !!!!!")
 }
 if(method=="MLMM")
 {
@@ -582,15 +574,7 @@ CV=CV[taxa_CV%in%taxa_com,]
 }
 
 if(ncol(KI)!=nrow(GD)) print("Please make sure dim of K equal number of GD !!")
-
-# print(dim(KI))
-# print(dim(GD))
-# print(colnames(GD))
-# print(rownames(GD))
-# print(dim(CV))
- # print(KI[1:5,1:5])
 rownames(GD)=1:nrow(GD)
-# colnames(GD)[-1]=as.character(GM[,1])
 if(is.null(CV))
 {
 mymlmm=mlmm(
@@ -623,10 +607,12 @@ GWAS_result=mymlmm$opt_thresh$out
 effect=mymlmm$opt_thresh$coef[-1,]
 
 }
+# print(head(GWAS_result,40))
+# print(str(effect))
+
    taxa=names(Y)[2]
    cof_marker=rownames(effect)
-   effect=cbind(cof_marker,effect)
-   # write.table(effect, paste("GAPIT.", taxa, ".MLMM.effect.csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+   effect=GWAS_result[,c(1,3)]
 
 colnames(GWAS_result)=c("SNP","P.value")
 xs=t(GD[,-1])
@@ -641,7 +627,7 @@ colnames(maf)=c("SNP","maf")
 nobs=ns
 GWAS_GM=merge(GM,GWAS_result, by.x = "SNP", by.y = "SNP")
 mc=matrix(NA,nrow(GWAS_GM),1)
-GWAS_GM=cbind(GWAS_GM,mc)
+# GWAS_GM=cbind(GWAS_GM,mc)
 # print(dim(GWAS_GM))
 #print(head(maf))
 #maf=NULL
@@ -661,8 +647,15 @@ vg=NULL
 ve=NULL
 delta=NULL
 REMLs=NULL
+# print(head(GWAS))
 GWAS=GWAS[,c(1:4,6,7,5)]
+# print(head(GWAS))
 colnames(GWAS)=c("SNP","Chromosome","Position","P.value","maf","nobs","effect")
+GWAS=GWAS[order(GWAS[,3]),]
+GWAS=GWAS[order(GWAS[,2]),]
+# print(head(GWAS))
+
+if(Random.model)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
 
 }
 # print(head(GWAS))

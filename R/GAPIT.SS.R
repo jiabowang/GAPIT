@@ -39,7 +39,7 @@ if(max(ic_PCA[,2])==min(ic_PCA[,2]))ic_PCA=NULL
 #print(head(ic_PCA))
 # print("@@@@@")
 # print(DP$kinship.algorithm)
-if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","Blink","MLMM","BlinkC"))
+if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","BLINK","MLMM","BLINKC"))
  {
  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.FarmCPU")
  Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.FarmCPU")
@@ -216,7 +216,7 @@ if(buspred)
 
 
 
-if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","Blink","BlinkC"))
+if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","BLINK","BLINKC"))
  {
  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.Main")
  Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.Main")
