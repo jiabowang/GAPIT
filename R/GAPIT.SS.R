@@ -9,225 +9,209 @@ print("GAPIT.SS in process...")
 #Define the funcitno here
 Timmer=GAPIT.Timmer(Infor="GAPIT.SS")
 Memory=GAPIT.Memory(Infor="GAPIT.SS")
- GR=list()
- GR$GVs=NULL
+GR=list()
+GR$GVs=NULL
 
 if(DP$SNP.test)
 {
-ic_GD=IC$GD
-ic_GM=IC$GM
-ic_Y=IC$Y
-ic_KI=IC$K
-ic_PCA=IC$PCA
-Z=DP$Z
+  ic_GD=IC$GD
+  ic_GM=IC$GM
+  ic_Y=IC$Y
+  ic_KI=IC$K
+  ic_PCA=IC$PCA
+  Z=DP$Z
 
-taxa_Y=as.character(ic_Y[,1])
-Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.QC")
-Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.QC")
+  taxa_Y=as.character(ic_Y[,1])
+  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.QC")
+  Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.QC")
 
-if(DP$kinship.algorithm!="None" & DP$kinship.algorithm!="SUPER" & is.null(Z))
- {
- Z=as.data.frame(diag(1,nrow(ic_Y)))
- Z=rbind(taxa_Y,Z)
- taxa=c('Taxa',as.character(taxa_Y))
- Z=cbind(taxa,Z)
- }
+  if(DP$kinship.algorithm!="None" & DP$kinship.algorithm!="SUPER" & is.null(Z))
+  {
+    Z=as.data.frame(diag(1,nrow(ic_Y)))
+    Z=rbind(taxa_Y,Z)
+    taxa=c('Taxa',as.character(taxa_Y))
+    Z=cbind(taxa,Z)
+  }
 # print(head(ic_PCA))
 # print(dim(DP$CV))
 # print(head(DP$PC))
-if(max(ic_PCA[,2])==min(ic_PCA[,2]))ic_PCA=NULL
+  if(max(ic_PCA[,2])==min(ic_PCA[,2]))ic_PCA=NULL
 #print(head(ic_PCA))
 # print("@@@@@")
 # print(DP$kinship.algorithm)
-if (DP$SNP.test&DP$kinship.algorithm%in%c("FarmCPU","BLINK","MLMM","BLINKC"))
- {
- Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.FarmCPU")
- Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.FarmCPU")
+  if(DP$kinship.algorithm%in%c("FarmCPU","BLINK","MLMM","BLINKC"))
+  {
+     Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.FarmCPU")
+     Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.FarmCPU")
 
- myBus=GAPIT.Bus(Y=ic_Y,CV=ic_PCA,Z=NULL,GK=NULL,KI=ic_KI,GD=ic_GD,GM=ic_GM,GT=IC$GT,name.of.trait=DP$name.of.trait,
+     myBus=GAPIT.Bus(Y=ic_Y,CV=ic_PCA,Z=NULL,GK=NULL,KI=ic_KI,GD=ic_GD,GM=ic_GM,GT=IC$GT,name.of.trait=DP$name.of.trait,
                 method=DP$kinship.algorithm,GTindex=DP$GTindex,LD=DP$LD,opt=DP$opt,N.sig=DP$N.sig,
                 bin.size=DP$bin.size,bin.selection=DP$bin.selection,alpha=DP$alpha,WS=DP$WS,
                 cutOff=DP$cutOff,p.threshold=DP$p.threshold,QTN.threshold=DP$QTN.threshold,FDRcut=DP$FDRcut,
                 maf.threshold=DP$maf.threshold,method.GLM=DP$method.GLM,method.sub=DP$method.sub,
                 method.sub.final=DP$method.sub.final,method.bin=DP$method.bin,Random.model=DP$Random.model,
 				        DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter,num_regwas=DP$num_regwas )
- GWAS=myBus$GWAS
- Pred=myBus$Pred
+     GWAS=myBus$GWAS
+     Pred=myBus$Pred
 
  # BUS Prediction with gBLUP
 # lmpred=TRUE
 # if(!is.null(Pred))buspred=FALSE
-print(myBus$seqQTN)
-if(buspred)
-{  
-   X=DP$GD[,-1]
+     print(myBus$seqQTN)
+     if(buspred)
+     {  
+        X=DP$GD[,-1]
 # print(dim(X))
 # print(dim(IC$myallCV))
 # print(dim(ic_PCA))
-   if(lmpred)
-   {
-   print("Linear Regression to Predict phenotype !!")
+        if(lmpred)
+        {
+          print("Linear Regression to Predict phenotype !!")
     # colnames(busCV)[1]=c("Taxa")
     # print(length(IC$GT))
-    index=as.character(DP$GD[,1])%in%as.character(ic_Y[,1])
+          index=as.character(DP$GD[,1])%in%as.character(ic_Y[,1])
     # print(cbind(ic_Y,IC$PCA))
-    if(!is.null(myBus$seqQTN))
-         {
+          if(!is.null(myBus$seqQTN))
+          {
           # busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
-          GD1 = as.matrix(X[index,myBus$seqQTN])
-          GD2 = as.matrix(X[,myBus$seqQTN])
-         }else{
-          numMarker=nrow(GWAS)
-          sp=sort(GWAS$P.value)
-          spd=abs(DP$cutOff-sp)
-          index_fdr=grep(min(spd),spd)[1]
-          FDRcutoff=DP$cutOff*index_fdr/numMarker
-          seqQTN=as.numeric(rownames(GWAS[GWAS$P.value<FDRcutoff,]))
+            GD1 = as.matrix(X[index,myBus$seqQTN])
+            GD2 = as.matrix(X[,myBus$seqQTN])
+          }else{
+            numMarker=nrow(GWAS)
+            sp=sort(GWAS$P.value)
+            spd=abs(DP$cutOff-sp)
+            index_fdr=grep(min(spd),spd)[1]
+            FDRcutoff=DP$cutOff*index_fdr/numMarker
+            seqQTN=as.numeric(rownames(GWAS[GWAS$P.value<FDRcutoff,]))
           # busCV=cbind(IC$myallCV,X[,seqQTN])
-          GD1 = as.matrix(X[index,seqQTN])
-          GD2 = as.matrix(X[,seqQTN])
-         }
-   if(!is.null(IC$myallCV)) 
-   {
-    CV1 = as.matrix(IC$PCA[,-1])
-    Group=1:nrow(DP$GD)
-    RefInf=rep(2,nrow(DP$GD))
-    print(table(index))
-    RefInf[index]=1
-    ID=1:nrow(IC$myallCV)
-    BLUP=rep(NA,nrow(DP$GD))
-    PEV=rep(NA,nrow(DP$GD))
-    BLUE=rep(NA,nrow(DP$GD))
-    print("The dimension of CV in lm model :")
-    print(dim(CV1))
-    print(dim(GD1))
+            GD1 = as.matrix(X[index,seqQTN])
+            GD2 = as.matrix(X[,seqQTN])
+          }
+          if(!is.null(IC$myallCV)) 
+          {
+            CV1 = as.matrix(IC$PCA[,-1])
+            Group=1:nrow(DP$GD)
+            RefInf=rep(2,nrow(DP$GD))
+            print(table(index))
+            RefInf[index]=1
+            ID=1:nrow(IC$myallCV)
+            BLUP=rep(NA,nrow(DP$GD))
+            PEV=rep(NA,nrow(DP$GD))
+            BLUE=rep(NA,nrow(DP$GD))
+            print("The dimension of CV in lm model :")
+            print(dim(CV1))
+            print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
-    mylm = stats::lm(ic_Y[,2] ~cbind(CV1, GD1))
-    print(stats::cor(ic_Y[,2],as.numeric(stats::predict(mylm,as.data.frame(cbind(CV1,GD1))))))
+            mylm = stats::lm(ic_Y[,2] ~cbind(CV1, GD1))
+            print(stats::cor(ic_Y[,2],as.numeric(stats::predict(mylm,as.data.frame(cbind(CV1,GD1))))))
     # Pred = cbind(as.data.frame(DP$GD[index,1]),as.data.frame(predict(mylm,as.data.frame(cbind(CV1,GD1)))))
     # colnames(Pred)=c("Taxa","Prediction")
     # print(mylm$coefficients)
     # print(head(cbind(IC$myallCV,GD2))
-    if(stats::var(IC$myallCV[,2])==0)
-      {kk=1:2
-        }else{
-          kk=1
-        }
-    aa=as.numeric(mylm$coefficients[-kk]%*%t(as.matrix(cbind(IC$myallCV[,-kk],GD2))))
+            if(stats::var(IC$myallCV[,2])==0)
+            {
+              kk=1:2
+            }else{
+              kk=1
+            }
+            aa=as.numeric(mylm$coefficients[-kk]%*%t(as.matrix(cbind(IC$myallCV[,-kk],GD2))))
     # print(aa)
-    pred0=cbind(Group,RefInf,ID,BLUP,PEV,BLUE,as.data.frame(aa))
-    Pred = cbind(as.data.frame(DP$GD[,1]),as.matrix(pred0))
-    colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-    
-   }else{
-     busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
-    CV1=NULL
-    Group=1:nrow(IC$myallCV)
-    RefInf=rep(2,nrow(IC$myallCV))
-    RefInf[index]=1
-    ID=1:nrow(IC$myallCV)
-    BLUP=NA
-    PEV=NA
-    BLUE=NA
-    print("The dimension of CV in lm model :")
-    print(dim(CV1))
-    print(dim(GD1))
+            pred0=cbind(Group,RefInf,ID,BLUP,PEV,BLUE,as.data.frame(aa))
+            Pred = cbind(as.data.frame(DP$GD[,1]),as.matrix(pred0))
+            colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
+          }else{
+            busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
+            CV1=NULL
+            Group=1:nrow(IC$myallCV)
+            RefInf=rep(2,nrow(IC$myallCV))
+            RefInf[index]=1
+            ID=1:nrow(IC$myallCV)
+            BLUP=NA
+            PEV=NA
+            BLUE=NA
+            print("The dimension of CV in lm model :")
+            print(dim(CV1))
+            print(dim(GD1))
     # print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
-    mylm = stats::lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
+            mylm = stats::lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
     # print("!!")
-    print(stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
-    Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
-    colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-    
-   }
-    
+            print(stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
+            Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
+            colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")   
+          }   
     # print(dim(CV1))
     # print(table(index))
-     print("Linear Regression to Predict phenotype Done !!")
-   
-   }else{
-   print("aBLUP to Predict phenotype !!")
-
-   if(!is.null(IC$myallCV)) 
-    {
-     if(!is.null(myBus$seqQTN))
-         {
-          busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
-         }else{
-          numMarker=nrow(GWAS)
-          sp=sort(GWAS$P.value)
-          spd=abs(DP$cutOff-sp)
-          index_fdr=grep(min(spd),spd)[1]
-          FDRcutoff=DP$cutOff*index_fdr/numMarker
-          seqQTN=as.numeric(rownames(GWAS[GWAS$P.value<FDRcutoff,]))
-          busCV=cbind(IC$myallCV,X[,seqQTN])
-         }
-
-     }else{
-     busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
-    }
-    pv=GWAS$P.value
-    noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
-
-    if(is.null(DP$KI))
-   {
-    KI= GAPIT.kinship.VanRaden(snps=as.matrix(X))
-    colnames(KI)=as.character(DP$GD[,1])
-    busKI=cbind(as.data.frame(DP$GD[,1]),KI)
-    colnames(busKI)[1]=c("Taxa")
-   }else{
-    busKI=DP$KI
-   }
-   print("The dimension of CV in lm model :")
-   print(dim(busCV))
+          print("Linear Regression to Predict phenotype Done !!")  
+        }else{
+          print("aBLUP to Predict phenotype !!")
+          if(!is.null(IC$myallCV)) 
+          {
+            if(!is.null(myBus$seqQTN))
+            {
+               busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
+            }else{
+               numMarker=nrow(GWAS)
+               sp=sort(GWAS$P.value)
+               spd=abs(DP$cutOff-sp)
+               index_fdr=grep(min(spd),spd)[1]
+               FDRcutoff=DP$cutOff*index_fdr/numMarker
+               seqQTN=as.numeric(rownames(GWAS[GWAS$P.value<FDRcutoff,]))
+               busCV=cbind(IC$myallCV,X[,seqQTN])
+            }
+          }else{
+            busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
+          }
+          pv=GWAS$P.value
+          noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
+          if(is.null(DP$KI))
+          {
+            KI= GAPIT.kinship.VanRaden(snps=as.matrix(X))
+            colnames(KI)=as.character(DP$GD[,1])
+            busKI=cbind(as.data.frame(DP$GD[,1]),KI)
+            colnames(busKI)[1]=c("Taxa")
+          }else{
+            busKI=DP$KI
+          }
+          print("The dimension of CV in lm model :")
+          print(dim(busCV))
    # print(dim(busKI))
    # print(busKI[1:10,1:10])
    # print(cor(busCV[,-1]))
-   busGAPIT=GAPIT(
-     Y=ic_Y,
-     KI=busKI,
-     CV=busCV,
-     model="gBLUP",
-     file.output=F)
-    Pred=busGAPIT$Pred
-   print("aBLUP to Predict phenotype Done!!")
-
-   }#lmpred
-}#buspred
- 
- if(DP$file.output) utils::write.csv(Pred,paste("GAPIT.Association.Pred_result.",DP$kinship.algorithm,".csv",sep=""), row.names = FALSE,col.names = TRUE)
-
-
- va=myBus$vg
- ve=myBus$ve
- h2=va/(va+ve)
- mc=NULL
+          busGAPIT=GAPIT(
+                  Y=ic_Y,
+                  KI=busKI,
+                  CV=busCV,
+                  model="gBLUP",
+                  file.output=F)
+          Pred=busGAPIT$Pred
+          print("aBLUP to Predict phenotype Done!!")
+        }#lmpred
+        if(DP$file.output) utils::write.csv(Pred,paste("GAPIT.Association.Pred_result.",DP$kinship.algorithm,".csv",sep=""), row.names = FALSE,col.names = TRUE)
+     }#buspred
+     va=myBus$vg
+     ve=myBus$ve
+     h2=va/(va+ve)
+     mc=NULL
 #mc=(exp(1)^(1/GWAS$P.value))/10000
- bc=NULL
- mp=NULL
+     bc=NULL
+     mp=NULL
 #myP=1/(exp(10000*fm$tau2)
 #print(str(GWAS))
- TV=NULL
- Compression=NULL
- GVs=myBus$GVs
- }
-#print(ic_GD[1:10,1:10])
+     TV=NULL
+     Compression=NULL
+     GVs=myBus$GVs
+  }else{
+    Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.Main")
+    Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.Main")
 
-
-
-if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","BLINK","BLINKC"))
- {
- Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.Main")
- Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.Main")
-
-	GT=as.matrix(ic_GD[,1])
+    GT=as.matrix(ic_GD[,1])
 #print("!!!!!!!")
 #print(DP$sangwich.top)
- if(DP$PCA.total==0) ic_PCA=NULL
+    if(DP$PCA.total==0) ic_PCA=NULL
 # print(ic_Y)
 #print(dim(ic_PCA))
- gapitMain <- GAPIT.Main(Y=ic_Y,
+    gapitMain <- GAPIT.Main(Y=ic_Y,
                          GD=IC$GD[,-1],
                          GM=DP$GM,
                          KI=ic_KI,
@@ -310,21 +294,20 @@ if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","BLINK","BLINKC"))
 						             plot.style=DP$plot.style,
 						             SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
- GWAS=gapitMain$GWAS
- if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,name.of.trait=DP$name.of.trait,N.sig=DP$N.sig,GT=IC$GT)
- Pred=gapitMain$Pred
+    GWAS=gapitMain$GWAS
+    if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,name.of.trait=DP$name.of.trait,N.sig=DP$N.sig,GT=IC$GT)
+    Pred=gapitMain$Pred
 #print(head(Pred))
- va=NA#gapitMain$vg
- ve=NA#gapitMain$ve
- h2=gapitMain$h2
- mc=gapitMain$effect.snp
- bc=gapitMain$effect.cv
- mp=gapitMain$P
- TV=gapitMain$TV
- Compression=gapitMain$Compression
- GVs=GR$GVs
-
- }
+    va=NA#gapitMain$vg
+    ve=NA#gapitMain$ve
+    h2=gapitMain$h2
+    mc=gapitMain$effect.snp
+    bc=gapitMain$effect.cv
+    mp=gapitMain$P
+    TV=gapitMain$TV
+    Compression=gapitMain$Compression
+    GVs=GR$GVs
+  }#!DP$kinship.algorithm%in%c("FarmCPU","MLMM","BLINK","BLINKC")
 myPower=NULL
 #print(head(GWAS))
 #print(DP$QTN.position)

@@ -198,7 +198,7 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
           }
           GWAS[,2]=chro
         }
-        DTS=cbind(GWAS[,1:3],df,tvalue,stderr,effect.est)
+        DTS=cbind(GWAS[,1:3],df,tvalue,stderr,GWAS[,ncol(GWAS)])
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")  
         utils::write.table(DTS, paste("GAPIT.Association.GWAS_StdErr.", DP$name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
