@@ -8,7 +8,7 @@
 # Aver.Dis is average display windowsize
 # mav1:Moving Average set value length
 # Authors:  Zhiwu Zhang and Jiabo Wang
-# Last update: May 15, 2022 
+# Last update: AUG 24, 2022 
 ##############################################################################################
 
 #if(nrow(myGI)<1000) return() #Markers are not enough for this analysis

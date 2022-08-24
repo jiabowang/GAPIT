@@ -1,10 +1,11 @@
 `GAPIT.Multiple.Manhattan` <-
-function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y.names=NULL,GM=NULL,interQTN=NULL,WS=10e5,
+function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,
+    Y.names=NULL,GM=NULL,interQTN=NULL,WS=10e5,
     plot.style="Oceanic",plot.line=TRUE,allpch=NULL,plot.type=c("h","s","w")){
     #Object: Make a Manhattan Plot
     #Output: pdfs of the Multiple Manhattan Plot
     #Authors: Zhiwu Zhang and Jiabo Wang
-    # Last update: Feb 22, 2022
+    # Last update: AUG 24, 2022
     ##############################################################################################
   Nenviron=length(model_store)*length(Y.names)
   environ_name=NULL
