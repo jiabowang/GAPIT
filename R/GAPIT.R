@@ -229,6 +229,7 @@
   inclosure.by = 10, #SUPER
   iteration.output = FALSE,
   iteration.method = "accum",
+  inpch=NULL, # in pch of S manhattans
   Inter.Plot = FALSE, #Interactive plot option
   Inter.type = c("m","q"), #Interactive plot type for Manhattan and QQ plots
   kinship.cluster = "average", #cMLM
@@ -262,6 +263,7 @@
   opt = "extBIC",
   output.numerical = FALSE,# option for output numeric files
   output.hapmap = FALSE, # option for output hapmap files
+  outpch=NULL, # out pch of S manhattans
   QTN = NULL, 
   QTN.round = 1,
   QTN.limit = 0, 
@@ -481,7 +483,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
              QC= Para$QC,GTindex= Para$GTindex,cutOff=Para$cutOff, Model.selection = Para$Model.selection,output.numerical = Para$output.numerical,Random.model=Para$Random.model,
              Create.indicator = Para$Create.indicator,QTN= Para$QTN, QTN.round= Para$QTN.round,QTN.limit= Para$QTN.limit, QTN.update= Para$QTN.update, QTN.method= Para$QTN.method, Major.allele.zero = Para$Major.allele.zero,
              method.GLM=Para$method.GLM,method.sub= Para$method.sub,method.sub.final= Para$method.sub.final,
-             method.bin= Para$method.bin,bin.size= Para$bin.size,bin.selection= Para$bin.selection,WS0=Para$WS0,ws=Para$ws,Aver.Dis=Para$Aver.Dis,
+             method.bin= Para$method.bin,bin.size= Para$bin.size,bin.selection= Para$bin.selection,WS0=WS0,ws=Para$ws,Aver.Dis=Para$Aver.Dis,
              memo= Para$memo,Prior= Para$Prior,ncpus=Para$ncpus,maxLoop= Para$maxLoop,threshold.output= Para$threshold.output,
              WS= Para$WS,alpha= Para$alpha,maxOut= Para$maxOut,QTN.position= Para$QTN.position, converge=Para$converge,iteration.output= Para$iteration.output,acceleration=Para$acceleration,
              iteration.method= Para$iteration.method,PCA.View.output=Para$PCA.View.output, 
@@ -643,7 +645,9 @@ if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store
    GAPIT.Circle.Manhattan.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
    # GAPIT.Multiple_Synthesis(model_store=model_store,Y.names=colnames(Y)[-1],cutOff=DP$cutOff,GM=IC$GM)
   }#else{# end of multiple manhantton plot
-if(SNP.test&Multiple_analysis&Para$file.output) GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff,plot.type=c("s"))
+if(SNP.test&Multiple_analysis&Para$file.output) GMM=GAPIT.Multiple.Manhattan(model_store=model_store,
+  Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,inpch=inpch,outpch=outpch,
+  cutOff=DP$cutOff,plot.type=c("s"))
   
   
 if(file.output&!SNP.test&Inter.Plot)

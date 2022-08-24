@@ -1,7 +1,7 @@
 `GAPIT.Multiple.Manhattan` <-
 function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,
-    Y.names=NULL,GM=NULL,interQTN=NULL,WS=10e5,
-    plot.style="Oceanic",plot.line=TRUE,allpch=NULL,plot.type=c("h","s","w")){
+    Y.names=NULL,GM=NULL,interQTN=NULL,WS=10e5,outpch=NULL,inpch=NULL,
+    plot.style="Oceanic",plot.line=TRUE,plot.type=c("h","s","w")){
     #Object: Make a Manhattan Plot
     #Output: pdfs of the Multiple Manhattan Plot
     #Authors: Zhiwu Zhang and Jiabo Wang
@@ -469,8 +469,18 @@ if("s"%in%plot.type)
 {
     # wd=((y-themin+base)/(themax-themin+base))*size*ratio
  wd=2
- allpch0=c(0,1,2,5,6)
- add.pch=c("+","*","-","#","<",">","^","$","=","|","?",as.character(1:9),letters[1:26],LETTERS[1:26]) 
+ if(is.null(outpch))
+ {
+   allpch0=c(0,1,2,5,6)
+ }else{
+   allpch0=outpch
+ }
+ if(is.null(inpch))
+ {
+   add.pch=c("+","*","-","#","<",">","^","$","=","|","?",as.character(1:9),letters[1:26],LETTERS[1:26]) 
+ }else{
+   add.pch=inpch
+ }
  n.vals=ceiling(Nenviron/length(allpch0))-1
  s=size-wd/ratio/2
  DPP=500

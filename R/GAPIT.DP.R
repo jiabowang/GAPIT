@@ -30,7 +30,7 @@ print("GAPIT.DP in process...")
 #Judge phenotype  genotype and GAPIT logical
 #print(file.from)
 #print(kinship.algorithm)
-#print(NJtree.group)
+# print(WS0)
 myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,PCA.total=PCA.total,kinship.algorithm=kinship.algorithm,SNP.fraction=SNP.fraction,SNP.test=FALSE,
                 file.path=file.path,file.from=file.from, file.to=file.to, file.total=file.total, file.fragment = file.fragment, file.G=file.G, 
                 file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
