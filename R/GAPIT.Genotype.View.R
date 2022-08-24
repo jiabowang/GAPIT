@@ -1,4 +1,4 @@
-`GAPIT.Genotype.View` <-function(myGI=NULL,myGD=NULL,chr=NULL, w1_start=NULL,w1_end=NULL,mav1=NULL,
+`GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, w1_start=NULL,w1_end=NULL,mav1=NULL,
                                  WS0=1e6,ws=200,Aver.Dis=1000,...){
 # Object: Analysis for Genotype data:Distribution of SNP density,Accumulation,Moving Average of density,result:a pdf of the scree plot
 # myG:Genotype data
@@ -13,12 +13,12 @@
 
 #if(nrow(myGI)<1000) return() #Markers are not enough for this analysis
   
-if(is.null(myGI)){stop("Validation Invalid. Please select read valid Map flies  !")}
-if(is.null(myGD)){stop("Validation Invalid. Please select read valid Genotype flies  !")}
+if(is.null(GI)){stop("Validation Invalid. Please select read valid Map flies  !")}
+if(is.null(X)){stop("Validation Invalid. Please select read valid Genotype flies  !")}
 
 # modified by Jiabo in 20190927. sorted number of chrom by numeric and charicter
 
-chor_taxa=as.character(unique(myGI[,2]))
+chor_taxa=as.character(unique(GI[,2]))
 chor_taxa=chor_taxa[order(as.numeric(as.character(chor_taxa)))]
 chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
 if(!setequal(integer(0),chr_letter))
@@ -26,44 +26,47 @@ if(!setequal(integer(0),chr_letter))
   # myGI=as.matrix(myGI)
       for(i in 1:(length(chor_taxa)))
         {
-         index=myGI[,2]==chor_taxa[i]
-         myGI[index,2]=i    
+         Chr=as.character(GI[,2])
+         index=Chr==chor_taxa[i]
+         Chr[index]=i 
         }
+      GI[,2]=as.data.frame(Chr)
   }
-myGI2=myGI[order(as.numeric(myGI[,3])),]
-myGI2=myGI2[order(as.numeric(myGI2[,2])),]
-rs2=as.character(myGI2[,1])
-rs1=as.character(myGI[,1])
+GI2=GI[order(as.numeric(GI[,3])),]
+GI2=GI2[order(as.numeric(GI2[,2])),]
+rs2=as.character(GI2[,1])
+rs1=as.character(GI[,1])
 index=match(rs2,rs1)
-myGD=myGD[,index]
-myGI=myGI2
-# print(head(myGI))
+X=X[,index]
+GI=GI2
+# chrom=as.character(unique(GI[,2]))
+
 if(is.null(w1_start)){w1_start=1}
 ##if(is.null(w1_end)){w1_end=100}
 if(is.null(mav1)){mav1=10}
 
 # if(is.null(chr)){chr=1}
-chr=as.character(unique(myGI[,2]))
-allchr=as.character(myGI[,2])
+chr=as.character(unique(GI[,2]))
+allchr=as.character(GI[,2])
 # chr=chr[order(chr)]
 for(i in 1:length(chr))
 {
   allchr[allchr==chr[i]]=i
 }
-myGI[,2]=as.data.frame(allchr)
-colnames(myGI)[2]="Chr"
+GI[,2]=as.data.frame(allchr)
+colnames(GI)[2]="Chr"
 # print(table(myGI[,2]))
 # map=myGI
 # WS0=1e6
 ## make an index for marker selection with binsize
 print("Filting marker for GAPIT.Genotype.View function ...")
-pos.fix=as.numeric(myGI[,2])*10^(nchar(max(as.numeric(myGI[,3]))))+as.numeric(myGI[,3])
+pos.fix=as.numeric(GI[,2])*10^(nchar(max(as.numeric(GI[,3]))))+as.numeric(GI[,3])
 set.seed(99163)
 bins=ceiling(pos.fix/WS0)
 n.bins=length(unique(bins))
 uni.bins=unique(bins)
 
-n.markers=nrow(myGI)
+n.markers=nrow(GI)
 n.select=10000
 if(n.markers<n.select)n.select=n.markers
 n.targ=floor(n.select/n.bins)
@@ -75,16 +78,16 @@ if(n.targ<1)
 rs.markers=NULL
 for(i in uni.bins)
 {
-  map0=myGI[bins==i,]
+  map0=GI[bins==i,]
   n.targ0=n.targ
   if(nrow(map0)<n.targ)n.targ0=nrow(map0)
   rs.markers=append(rs.markers,as.character(map0[sample(1:(nrow(map0)),n.targ0),1]))
 }
 
 rs.markers=unique(rs.markers)
-rs.index=as.character(myGI[,1])%in%rs.markers
+rs.index=as.character(GI[,1])%in%rs.markers
 print(table(rs.index))
-X=myGD
+# X=myGD
 x1=X[,-ncol(X)]
 x2=X[,-1]
 # print("@@@@@@")
@@ -92,27 +95,45 @@ x2=X[,-1]
 #Set collor
 
 m=ncol(X)
-theCol=as.numeric(myGI[,2])%%2 # here should work, based on the Chr is numeric values
+theCol=as.numeric(GI[,2])%%2 # here should work, based on the Chr is numeric values
 colDisp=array("gray50",m-1)
 colIndex=theCol==1
 colDisp[colIndex]="goldenrod"
 colDisp=colDisp[rs.index]
 # dist=myGI[-1,3]-myGI[-nrow(myGI),3]
-dist=as.numeric(myGI[-1,3])-as.numeric(myGI[-nrow(myGI),3])
+dist=as.numeric(GI[-1,3])-as.numeric(GI[-nrow(GI),3])
 dist2=dist
 index=dist<10|dist>WS0
 dist[index]=NA
 
 # myF=function(a,b) cor(a,b)
-
+GI2=GI[rs.index,]
+chr.pos=rep(NA,length(chr))
+chr.pos2=rep(1,length(chr)+1)
+rownames(GI2)=1:nrow(GI2)
+mm=nrow(GI2)
+# pos0=0
+for(i in 1:length(chr))
+{
+  chr.pos[i]=floor(median(as.numeric(rownames(GI2[GI2[,2]==chr[i],]))))
+  chr.pos2[i+1]=max(as.numeric(rownames(GI2[GI2[,2]==chr[i],])))
+}
+odd=seq(1,length(chr),2)
 r=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
 
 grDevices::pdf("GAPIT.Genotype.Density_R_sqaure.pdf", width =10, height = 6)
-# plot(dist/Aver.Dis,r^2, xlab="Distance (Kb)", ylab="R sqaure", main="f",cex=.5,col="gray60")
 d.V=dist/Aver.Dis
 par(mfrow=c(2,3),mar = c(5,5,2,2))
-plot(r[rs.index], xlab="Marker",las=1, ylab="R", main="a",cex=.5,col=colDisp)
-plot(d.V[rs.index],las=1, xlab="Marker", ylab="Distance (Kb)", main="b",cex=.5,col=colDisp)
+plot(r[rs.index], xlab="Marker",las=1,xlim=c(1,mm), 
+    ylab="R",axes=FALSE, main="a",cex=.5,col=colDisp)
+axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
+axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
+axis(2,las=1)
+plot(d.V[rs.index],las=1, xlab="Marker", ylab="Distance (Kb)",xlim=c(1,mm), 
+    axes=FALSE,main="b",cex=.5,col=colDisp)
+axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
+axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
+axis(2,las=1)
 
 r0.hist=hist(r,  plot=FALSE)
 r0=r0.hist$counts
@@ -181,11 +202,23 @@ layout(mat = layout.matrix,
        heights = c(100,80,120), # Heights of the two rows
        widths = c(2, 3)) # Widths of the two columns
 par(mar = c(1, 5, 1, 1))
-plot(het.snp[rs.index],  las=1,ylab="Heterozygosity", cex=.5,col=colDisp,xaxt='n')
+plot(het.snp[rs.index],  las=1,ylab="Heterozygosity", xlim=c(1,mm),axes=FALSE,
+    cex=.5,col=colDisp,xaxt='n')
+# axis(1,at=chr.pos,labels=rep("",length(chr)))
+# axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
+axis(2,las=1)
 par(mar = c(1, 5, 0, 1))
-plot(maf[rs.index], las=1,xlab="Marker", ylab="MAF",cex=.5,col=colDisp,xaxt='n')
+plot(maf[rs.index], las=1,xlab="Marker", ylab="MAF",xlim=c(1,mm),axes=FALSE,
+    cex=.5,col=colDisp,xaxt='n')
+# axis(1,at=chr.pos,labels=rep("",length(chr)))
+# axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
+axis(2,las=1)
 par(mar = c(5, 5, 0, 1))
-plot((r^2)[rs.index],  las=1,ylab="R Sqaure", xlab="Marker", cex=.5,col=colDisp)
+plot((r^2)[rs.index],  las=1,ylab="R Sqaure", xlab="Marker", xlim=c(1,mm),axes=FALSE,
+    cex=.5,col=colDisp)
+axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
+axis(1,at=chr.pos,labels=chr,tick=FALSE)
+axis(2,las=1)
 grDevices::dev.off()
 
 

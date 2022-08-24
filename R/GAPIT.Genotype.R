@@ -615,8 +615,8 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="after LD plot")
 if(!is.null(GI) & !is.null(GD) & file.output & Geno.View.output)
 {
 ViewGenotype<-GAPIT.Genotype.View(
-myGI=GI,
-myGD=GD,
+GI=GI,
+X=GD,
 WS0=WS0,
 ws=ws,
 Aver.Dis=Aver.Dis
