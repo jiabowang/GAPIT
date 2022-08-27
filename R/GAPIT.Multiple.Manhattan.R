@@ -1,5 +1,5 @@
 `GAPIT.Multiple.Manhattan` <-
-function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,
+function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,byTraits=FALSE,
     Y.names=NULL,GM=NULL,interQTN=NULL,WS=10e5,outpch=NULL,inpch=NULL,
     plot.style="Oceanic",plot.line=TRUE,plot.type=c("h","s","w")){
     #Object: Make a Manhattan Plot
@@ -10,12 +10,24 @@ function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,
   Nenviron=length(model_store)*length(Y.names)
   environ_name=NULL
   new_xz=NULL
-  for(i in 1:length(model_store))
+  if(byTraits)
   {
-    for(j in 1:length(Y.names))
+    for(i in 1:length(Y.names))
     {
+       for(j in 1:length(model_store))
+       {
       # environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],sep=""))
-      environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],sep=""))
+          environ_name=c(environ_name,paste(model_store[j],".",Y.names[i],sep=""))
+       }
+    }
+  }else{
+    for(i in 1:length(model_store))
+    {
+       for(j in 1:length(Y.names))
+       {
+      # environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],sep=""))
+          environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],sep=""))
+       }
     }
   }
 sig_pos=NULL

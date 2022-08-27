@@ -360,7 +360,7 @@ GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 # print(dim(GWAS))
 # print(head(GWAS))
 #GWAS=GWAS[order(GWAS$P.value),]
-colnames(GWAS)=c("SNP","Chromosome","Position","P.value","effect","maf","nobs")
+colnames(GWAS)=c("SNP","Chr","Pos","P.value","effect","maf","nobs")
 
 GPS=NULL
 #colnames(GPS)[3]=c("Prediction")
@@ -650,7 +650,7 @@ REMLs=NULL
 # print(head(GWAS))
 GWAS=GWAS[,c(1:4,6,7,5)]
 # print(head(GWAS))
-colnames(GWAS)=c("SNP","Chromosome","Position","P.value","maf","nobs","effect")
+colnames(GWAS)=c("SNP","Chr","Pos","P.value","maf","nobs","effect")
 GWAS=GWAS[order(GWAS[,3]),]
 GWAS=GWAS[order(GWAS[,2]),]
 # print(head(GWAS))

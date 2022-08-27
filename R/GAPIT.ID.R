@@ -168,21 +168,29 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
     {  
       print("Filtering SNPs with MAF..." )
       PWI.Filtered=cbind(GWAS[,1:6],rsquare_base,rsquare)
-      colnames(PWI.Filtered)=c("SNP","Chromosome","Position ","P.value", "maf", "nobs", "Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP")
+      colnames(PWI.Filtered)=c("SNP","Chr","Pos","P.value", "maf", "nobs", "Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP")
   #Run the BH multiple correction procedure of the results
   #Create PWIP, which is a table of SNP Names, Chromosome, bp Position, Raw P-values, FDR Adjusted P-values
       print("Calculating FDR..." )
       PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
-  #print(str(PWIP))  
+  # print(str(PWIP)) 
+
+      GWAS=merge(GWAS[,c(1:6,ncol(GWAS))],PWIP$PWIP[,c(1,9)],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1])  
+      # print(head(GWAS))
+      GWAS=GWAS[,c(1:6,8,7)]
+      GWAS=GWAS[order(as.numeric(GWAS[,3])),]
+      GWAS=GWAS[order(as.numeric(GWAS[,2])),]
+      colnames(GWAS)=c("SNP","Chr","Pos","P.value", "MAF", "nobs", "H&B.P.Value","Effect")
+      # print(head(GWAS))
+
       if(DP$file.output)
       {
         print("QQ plot..." )      
-        GAPIT.QQ(P.values = GI$P.value, name.of.trait = DP$name.of.trait,DPP=DP$DPP)
+        GAPIT.QQ(P.values = GWAS[,4], name.of.trait = DP$name.of.trait,DPP=DP$DPP)
         print("Manhattan plot (Genomewise)..." )
         GAPIT.Manhattan(GI.MP = GWAS[,2:4], name.of.trait = DP$name.of.trait, DPP=DP$DPP, plot.type = "Genomewise",cutOff=DP$cutOff,seqQTN=DP$QTN.position,plot.style=DP$plot.style,plot.bin=DP$plot.bin,chor_taxa=DP$chor_taxa)
         print("Manhattan plot (Chromosomewise)..." )
         GAPIT.Manhattan(GI.MP = GWAS[,2:4],GD=IC$GD[,-1], CG=DP$CG,name.of.trait = DP$name.of.trait, DPP=DP$DPP, plot.type = "Chromosomewise",cutOff=DP$cutOff,plot.bin=DP$plot.bin)
-        utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", DP$name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
         
         print("Association table..." )
         print("Joining tvalue and stderr" )
@@ -199,6 +207,8 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
           GWAS[,2]=chro
         }
         DTS=cbind(GWAS[,1:3],df,tvalue,stderr,GWAS[,ncol(GWAS)])
+        utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", DP$name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")  
         utils::write.table(DTS, paste("GAPIT.Association.GWAS_StdErr.", DP$name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
