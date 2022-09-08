@@ -257,7 +257,7 @@
   ncpus = 1,
   ngrid = 100, 
   NQTN = NULL, #Simulation phenotype, number of QTN
-  N.sig=20, #Random.model, Number of significant markers
+  N.sig=NULL, #Random.model, Number of significant markers
   NJtree.group = NULL, #NJtree set number of cluster group
   NJtree.type = c("fan","unrooted"),#NJtree type
   opt = "extBIC",

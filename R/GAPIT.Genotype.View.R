@@ -37,6 +37,8 @@ GI2=GI2[order(as.numeric(GI2[,2])),]
 rs2=as.character(GI2[,1])
 rs1=as.character(GI[,1])
 index=match(rs2,rs1)
+# print(dim(X))
+# print(table(index))
 X=X[,index]
 GI=GI2
 # chrom=as.character(unique(GI[,2]))

@@ -294,7 +294,7 @@ nobs=ns
 # print(head(GWAS))
 GWAS=GWAS[,c(1:5,7,6)]
 #print(head(GWAS))
-if(Random.model)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
+if(Random.model&file.output)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
 
 GPS=myFarmCPU$Pred
 #colnames(GPS)[3]=c("Prediction")
@@ -522,7 +522,7 @@ GPS=myBlink$Pred
 colnames(GWAS)[1:3]=c("SNP","Chromosome","Position")
 GWAS=GWAS[,c(1:4,6,5,7)]
 # print(head(GWAS))
-if(Random.model)GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
+if(Random.model&file.output)GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
 
 
 h2=NULL
@@ -655,7 +655,7 @@ GWAS=GWAS[order(GWAS[,3]),]
 GWAS=GWAS[order(GWAS[,2]),]
 # print(head(GWAS))
 
-if(Random.model)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
+if(Random.model&file.output)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
 
 }
 # print(head(GWAS))

@@ -295,7 +295,7 @@ if(DP$SNP.test)
 						             SUPER_GS=DP$SUPER_GS)  
 #print(str(gapitMain))
     GWAS=gapitMain$GWAS
-    if(DP$Random.model)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,name.of.trait=DP$name.of.trait,N.sig=DP$N.sig,GT=IC$GT)
+    if(DP$Random.model&DP$file.output)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,name.of.trait=DP$name.of.trait,N.sig=DP$N.sig,GT=IC$GT)
     Pred=gapitMain$Pred
 #print(head(Pred))
     va=NA#gapitMain$vg

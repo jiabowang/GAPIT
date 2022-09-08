@@ -30,8 +30,10 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     index=P.value<=cutoff 
     }
     geneGD=X[,index,drop=FALSE]
-
     geneGWAS=GWAS[index,,drop=FALSE]
+    gene.licols=GAPIT.Licols(X=geneGD)
+    geneGD=gene.licols$Xsub
+    geneGWAS=geneGWAS[gene.licols$idx,]
     if(length(unique(index))==1)
     {
     	print("There is no significant marker for VE !!")
@@ -39,7 +41,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     }
     index_T=as.matrix(table(index))
     # print(index_T)
-    in_True=sum(index)
+    in_True=ncol(geneGD)
     print(in_True==1)
     if(in_True!=1)
     {
@@ -136,7 +138,7 @@ if(!is.null(CV))
     
     command2=command1
     for(j in 1:n_gd)
-   {
+    {
 	   command2=paste(command2,"+(1|gene_",j,")",sep="")
     }
 
@@ -165,6 +167,8 @@ if(!is.null(CV))
     }
 
 }
+# print(head(tree2))
+# print(apply(tree2,2,unique))
 #command3=paste(command2,"+(1|gene_",j,")",sep="")
     dflme <- lme4::lmer(command2, data=tree2, control = lme4::lmerControl(check.nobs.vs.nlev = "ignore",
      check.nobs.vs.rankZ = "ignore",
