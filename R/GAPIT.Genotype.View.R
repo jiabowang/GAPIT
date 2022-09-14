@@ -103,7 +103,7 @@ colIndex=theCol==1
 colDisp[colIndex]="goldenrod"
 colDisp=colDisp[rs.index]
 # dist=myGI[-1,3]-myGI[-nrow(myGI),3]
-dist=as.numeric(GI[-1,3])-as.numeric(GI[-nrow(GI),3])
+dist=abs(as.numeric(GI[-1,3])-as.numeric(GI[-nrow(GI),3]))
 dist2=dist
 index=dist<10|dist>WS0
 dist[index]=NA
