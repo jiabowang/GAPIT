@@ -1,4 +1,4 @@
-`GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, w1_start=NULL,w1_end=NULL,mav1=NULL,
+`GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, 
                                  WS0=NULL,ws=200,Aver.Dis=1000,...){
 # Object: Analysis for Genotype data:Distribution of SNP density,Accumulation,Moving Average of density,result:a pdf of the scree plot
 # myG:Genotype data
@@ -42,31 +42,27 @@ if(!setequal(integer(0),letter.index))
       GI[,2]=as.data.frame(Chr)
   }
 
-GI2=GI[order(as.numeric(GI[,3])),]
-GI2=GI2[order(as.numeric(GI2[,2])),]
+GI2=GI[order(as.numeric(as.matrix(GI[,3]))),]
+GI2=GI2[order(as.numeric(as.matrix(GI2[,2]))),]
 rs2=as.character(GI2[,1])
 rs1=as.character(GI[,1])
 index=match(rs2,rs1)
-# print(dim(X))
-# print(table(index))
 X=X[,index]
 GI=GI2
 # chrom=as.character(unique(GI[,2]))
-
-if(is.null(w1_start)){w1_start=1}
-##if(is.null(w1_end)){w1_end=100}
-if(is.null(mav1)){mav1=10}
+# aa=GI[!duplicated(GI[,2]),]
+# idd=order(as.numeric(aa[,2]))
 
 # if(is.null(chr)){chr=1}
-chr=as.character(unique(GI[,2]))
+chr=as.character(as.matrix(unique(GI[,2])))
 allchr=as.character(GI[,2])
 # chr=chr[order(chr)]
-for(i in 1:length(chr))
-{
-  allchr[allchr==chr[i]]=i
-}
-GI[,2]=as.data.frame(allchr)
-colnames(GI)[2]="Chr"
+# for(i in 1:length(chr))
+# {
+#   allchr[allchr==chr[i]]=i
+# }
+# GI[,2]=as.data.frame(allchr)
+# colnames(GI)[2]="Chr"
 # print(unique(GI[,2]))
 # map=myGI
 # WS0=1e6
@@ -139,14 +135,17 @@ r=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
 
 grDevices::pdf("GAPIT.Genotype.Density_R_sqaure.pdf", width =10, height = 6)
 d.V=dist/Aver.Dis
-print(summary(d.V))
+# print(summary(d.V))
 par(mfcol=c(2,3),mar = c(5,5,2,2))
 plot(r[rs.index], xlab="Marker",las=1,xlim=c(1,mm), 
     ylab="R",axes=FALSE, main="a",cex=.5,col=colDisp)
 axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
 axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
 axis(2,las=1)
-plot(d.V[rs.index],las=1, xlab="Marker", ylab="Distance (Kb)",xlim=c(1,mm), ylim=c(0,ceiling(max(d.V[rs.index]))),
+
+# aa=d.V[rs.index]
+
+plot(d.V[rs.index],las=1, xlab="Marker", ylab="Distance (Kb)",xlim=c(1,mm), ylim=c(0,ceiling(max(d.V[rs.index],na.rm=TRUE))),
     axes=FALSE,main="b",cex=.5,col=colDisp)
 axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
 axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
