@@ -10,7 +10,7 @@ function(G=NULL,GD=NULL,GM=NULL,KI=NULL,
   LD.chromosome=NULL,LD.location=NULL,LD.range=NULL, SNP.CV=NULL,
   GP = NULL,GK = NULL,GTindex=NULL,  
   bin.size = 1000,inclosure.size = 100,
-  sangwich.top=NULL,sangwich.bottom=NULL,
+  sangwich.top=NULL,sangwich.bottom=NULL,PCA.legend=NULL,
   file.output=TRUE,kinship.cluster="average",NJtree.group=NULL,NJtree.type=c("fan","unrooted"),
   Create.indicator = FALSE, Major.allele.zero = FALSE,Geno.View.output=TRUE){
 #Object: To unify genotype and calculate kinship and PC if required:
@@ -465,7 +465,7 @@ if(is.null(KI) & (!is.null(GD) |!is.null(GK)) & !kinship.algorithm%in%c("FarmCPU
   if(kinship.algorithm=="Zhang")theKin= GAPIT.kinship.Zhang(snps=as.matrix(thisGD)) 
   if(kinship.algorithm=="Separation")
   {
-    thePCA=GAPIT.PCA(X = GD, taxa = GT, PC.number = PCA.total,file.output=F,PCA.total=PCA.total,PCA.col=NULL,PCA.3d=F)
+    thePCA=GAPIT.PCA(X = GD, taxa = GT, PC.number = PCA.total,file.output=F,PCA.total=PCA.total,PCA.col=NULL,PCA.3d=F,PCA.legend=PCA.legend)
     PC=thePCA$PCs[,1:(1+PCA.total)]
     theKin= GAPIT.kinship.separation(PCs=thePCA$PCs,EV=thePCA$EV,nPCs=PCA.total)
   }

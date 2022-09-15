@@ -1,5 +1,5 @@
 `GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, w1_start=NULL,w1_end=NULL,mav1=NULL,
-                                 WS0=1e6,ws=200,Aver.Dis=1000,...){
+                                 WS0=NULL,ws=200,Aver.Dis=1000,...){
 # Object: Analysis for Genotype data:Distribution of SNP density,Accumulation,Moving Average of density,result:a pdf of the scree plot
 # myG:Genotype data
 # chr: chromosome value
@@ -63,6 +63,12 @@ colnames(GI)[2]="Chr"
 ## make an index for marker selection with binsize
 print("Filting marker for GAPIT.Genotype.View function ...")
 pos.fix=as.numeric(GI[,2])*10^(nchar(max(as.numeric(GI[,3]))))+as.numeric(GI[,3])
+dist=abs(as.numeric(GI[-1,3])-as.numeric(GI[-nrow(GI),3]))
+dist2=dist
+if(is.null(WS0)) WS0=((median(dist,rm.na=TRUE))%/%1000)*1000
+index=dist<10|dist>WS0
+dist[index]=NA
+
 set.seed(99163)
 bins=ceiling(pos.fix/WS0)
 n.bins=length(unique(bins))
@@ -103,10 +109,6 @@ colIndex=theCol==1
 colDisp[colIndex]="goldenrod"
 colDisp=colDisp[rs.index]
 # dist=myGI[-1,3]-myGI[-nrow(myGI),3]
-dist=abs(as.numeric(GI[-1,3])-as.numeric(GI[-nrow(GI),3]))
-dist2=dist
-index=dist<10|dist>WS0
-dist[index]=NA
 
 # myF=function(a,b) cor(a,b)
 GI2=GI[rs.index,]

@@ -1,5 +1,7 @@
 `GAPIT.PCA` <-
-function(X,taxa, PC.number = min(ncol(X),nrow(X)),file.output=TRUE,PCA.total=0,PCA.col=NULL,PCA.3d=FALSE){
+function(X,taxa, PC.number = min(ncol(X),nrow(X)),
+  file.output=TRUE,PCA.total=0,PCA.col=NULL,
+  PCA.3d=FALSE,PCA.legend=NULL){
 # Object: Conduct a principal component analysis, and output the prinicpal components into the workspace,
 #         a text file of the principal components, and a pdf of the scree plot
 # Authors: Alex Lipka and Hyun Min Kang
@@ -13,7 +15,7 @@ evp=eigenvalues/sum(eigenvalues)
 nout=min(10,length(evp))
 xout=1:nout
 if(is.null(PCA.col)) PCA.col="red"
-
+# if(!is.null(PCA.legend)) PCA.col0=
 print("Creating PCA graphs...")
 #Create a Scree plot 
 if(file.output & PC.number>1) {
@@ -31,11 +33,13 @@ grDevices::pdf("GAPIT.Genotype.PCA_2D.pdf", width = 8, height = 8)
 graphics::par(mar = c(5,5,5,5))
 maxPlot=min(as.numeric(PC.number[1]),3)
 
-for(i in 1:(maxPlot-1)){
-for(j in (i+1):(maxPlot)){
-plot(PCA.X$x[,i],PCA.X$x[,j],xlab=paste("PC",i,sep=""),ylab=paste("PC",j,sep=""),pch=19,col=PCA.col,cex.axis=1.3,cex.lab=1.4, cex.axis=1.2, lwd=2,las=1)
-
-}
+for(i in 1:(maxPlot-1))
+{
+   for(j in (i+1):(maxPlot))
+   {
+      plot(PCA.X$x[,i],PCA.X$x[,j],xlab=paste("PC",i,sep=""),ylab=paste("PC",j,sep=""),pch=19,col=PCA.col,cex.axis=1.3,cex.lab=1.4, cex.axis=1.2, lwd=2,las=1)
+      if(!is.null(PCA.legend)) legend(as.character(PCA.legend$pos),legend=PCA.legend$taxa,pch=19,col=PCA.legend$col,
+           ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"))   }
 }
 grDevices::dev.off()
 
@@ -130,6 +134,8 @@ if(PCA.3d==TRUE)
                   lwd = 3,
                   angle = 55,
                   scale.y = 0.7)
+    if(!is.null(PCA.legend)) legend(as.character(PCA.legend$pos),legend=PCA.legend$taxa,pch=19,col=PCA.legend$col,
+      ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"))
     grDevices::dev.off()
 }
 print("Joining taxa...")
