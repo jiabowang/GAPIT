@@ -67,18 +67,20 @@ for(i in 1:length(chr))
 }
 GI[,2]=as.data.frame(allchr)
 colnames(GI)[2]="Chr"
-# print(table(myGI[,2]))
+# print(unique(GI[,2]))
 # map=myGI
 # WS0=1e6
 ## make an index for marker selection with binsize
 print("Filting marker for GAPIT.Genotype.View function ...")
 pos.fix=as.numeric(GI[,2])*10^(nchar(max(as.numeric(GI[,3]))))+as.numeric(GI[,3])
 dist=abs(as.numeric(GI[-1,3])-as.numeric(GI[-nrow(GI),3]))
+# print(summary(dist))
 dist2=dist
-if(is.null(WS0)) WS0=((median(dist,rm.na=TRUE))%/%1000)*1000
+dist.out=GAPIT.Remove.outliers(dist,pro=0.1,size=1.1)
+if(is.null(WS0)) WS0=((max(dist[!dist.out$idx],rm.na=TRUE))%/%1000)*1000
 index=dist<10|dist>WS0
 dist[index]=NA
-
+# print(summary(dist))
 set.seed(99163)
 bins=ceiling(pos.fix/WS0)
 n.bins=length(unique(bins))
@@ -137,7 +139,7 @@ r=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
 
 grDevices::pdf("GAPIT.Genotype.Density_R_sqaure.pdf", width =10, height = 6)
 d.V=dist/Aver.Dis
-# print(summary(d.V))
+print(summary(d.V))
 par(mfcol=c(2,3),mar = c(5,5,2,2))
 plot(r[rs.index], xlab="Marker",las=1,xlim=c(1,mm), 
     ylab="R",axes=FALSE, main="a",cex=.5,col=colDisp)
