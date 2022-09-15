@@ -298,21 +298,31 @@ if(!byData & byFile)
 
 #GM=as.matrix(GI)
 #GI=GM
-GM=GI
+# GM=GI
 
 # modified by Jiabo in 20190927. sorted number of chrom by numeric and charicter
-
-chor_taxa=as.character(unique(GM[,2]))
+chor_taxa=as.character(unique(GI[,2]))
 chor_taxa=chor_taxa[order(as.numeric(as.character(chor_taxa)))]
-chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
-if(!setequal(integer(0),chr_letter))
+letter.index=grep("[A-Z]|[a-z]",chor_taxa)
+
+if(!setequal(integer(0),letter.index))
   {     
-  GI=as.matrix(GI)
-      for(i in 1:(length(chor_taxa)))
+  # myGI=as.matrix(myGI)
+      if(length(lettet.index)!=length(chor_taxa))
         {
-         index=GM[,2]==chor_taxa[i]
-         GI[index,2]=i    
+          chr.letter=chor_taxa[letter.index]
+          chr.taxa=chor_taxa[-letter.index]
+        }else{
+          chr.letter=chor_taxa
+          chr.taxa=NULL
         }
+      Chr=as.character(GI[,2])
+      for(i in letter.index)
+        {
+         index=Chr==chor_taxa[i]
+         Chr[index]=i 
+        }
+      GI[,2]=as.data.frame(Chr)
   }
 
 #print(chor_taxa)
@@ -338,7 +348,7 @@ if(!is.null(GD))
 
   GD=GD[,maf_index]
   GI=as.data.frame(GI[maf_index,])
-  GM=as.data.frame(GM[maf_index,])
+  # GM=as.data.frame(GM[maf_index,])
   #GI=GM
   }
 #print("file loaded")

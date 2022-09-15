@@ -17,21 +17,31 @@ if(is.null(GI)){stop("Validation Invalid. Please select read valid Map flies  !"
 if(is.null(X)){stop("Validation Invalid. Please select read valid Genotype flies  !")}
 
 # modified by Jiabo in 20190927. sorted number of chrom by numeric and charicter
-
+# GI=myGM
 chor_taxa=as.character(unique(GI[,2]))
 chor_taxa=chor_taxa[order(as.numeric(as.character(chor_taxa)))]
-chr_letter=grep("[A-Z]|[a-z]",chor_taxa)
-if(!setequal(integer(0),chr_letter))
+letter.index=grep("[A-Z]|[a-z]",chor_taxa)
+
+if(!setequal(integer(0),letter.index))
   {     
   # myGI=as.matrix(myGI)
-      for(i in 1:(length(chor_taxa)))
+      if(length(lettet.index)!=length(chor_taxa))
         {
-         Chr=as.character(GI[,2])
+          chr.letter=chor_taxa[letter.index]
+          chr.taxa=chor_taxa[-letter.index]
+        }else{
+          chr.letter=chor_taxa
+          chr.taxa=NULL
+        }
+      Chr=as.character(GI[,2])
+      for(i in letter.index)
+        {
          index=Chr==chor_taxa[i]
          Chr[index]=i 
         }
       GI[,2]=as.data.frame(Chr)
   }
+
 GI2=GI[order(as.numeric(GI[,3])),]
 GI2=GI2[order(as.numeric(GI2[,2])),]
 rs2=as.character(GI2[,1])
@@ -127,13 +137,14 @@ r=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
 
 grDevices::pdf("GAPIT.Genotype.Density_R_sqaure.pdf", width =10, height = 6)
 d.V=dist/Aver.Dis
+# print(summary(d.V))
 par(mfcol=c(2,3),mar = c(5,5,2,2))
 plot(r[rs.index], xlab="Marker",las=1,xlim=c(1,mm), 
     ylab="R",axes=FALSE, main="a",cex=.5,col=colDisp)
 axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
 axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
 axis(2,las=1)
-plot(d.V[rs.index],las=1, xlab="Marker", ylab="Distance (Kb)",xlim=c(1,mm), 
+plot(d.V[rs.index],las=1, xlab="Marker", ylab="Distance (Kb)",xlim=c(1,mm), ylim=c(0,ceiling(max(d.V[rs.index]))),
     axes=FALSE,main="b",cex=.5,col=colDisp)
 axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
 axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
