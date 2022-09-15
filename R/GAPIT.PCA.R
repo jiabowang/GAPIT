@@ -30,7 +30,7 @@ grDevices::pdf("GAPIT.Genotype.PCA_eigenValue.pdf", width = 12, height = 12)
 grDevices::dev.off()
 
 grDevices::pdf("GAPIT.Genotype.PCA_2D.pdf", width = 8, height = 8)
-graphics::par(mar = c(5,5,5,5))
+graphics::par(mar = c(5,5,5,5),xpd=TRUE)
 maxPlot=min(as.numeric(PC.number[1]),3)
 
 for(i in 1:(maxPlot-1))
@@ -39,7 +39,8 @@ for(i in 1:(maxPlot-1))
    {
       plot(PCA.X$x[,i],PCA.X$x[,j],xlab=paste("PC",i,sep=""),ylab=paste("PC",j,sep=""),pch=19,col=PCA.col,cex.axis=1.3,cex.lab=1.4, cex.axis=1.2, lwd=2,las=1)
       if(!is.null(PCA.legend)) legend(as.character(PCA.legend$pos),legend=PCA.legend$taxa,pch=19,col=PCA.legend$col,
-           ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"))   }
+           ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"),inset=-0.05)
+   }
 }
 grDevices::dev.off()
 
@@ -118,7 +119,7 @@ if(PCA.3d==TRUE)
 #    library(scatterplot3d)
 
     grDevices::pdf("GAPIT.Genotype.PCA_3D.pdf", width = 7, height = 7)
-    graphics::par(mar = c(5,5,5,5))
+    graphics::par(mar = c(5,5,5,5),xpd=TRUE)
     scatterplot3d::scatterplot3d(PCA.X$x[,1],
                   PCA.X$x[,2],
                   PCA.X$x[,3],
@@ -135,7 +136,7 @@ if(PCA.3d==TRUE)
                   angle = 55,
                   scale.y = 0.7)
     if(!is.null(PCA.legend)) legend(as.character(PCA.legend$pos),legend=PCA.legend$taxa,pch=19,col=PCA.legend$col,
-      ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"))
+      ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"),inset=-0.05)
     grDevices::dev.off()
 }
 print("Joining taxa...")
