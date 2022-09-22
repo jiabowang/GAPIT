@@ -425,11 +425,13 @@ function(Y,
 # print(length(GK))
     GTindex=match(as.character(KI[,1]),as.character(Y[,1]))
     GTindex=GTindex[!is.na(GTindex)]
-# KI=KI[GTindex,GTindex+1]
+    # KI=KI[GTindex,GTindex+1]
     my_taxa=as.character(KI[,1])
     CV=CV[as.character(CV[,1])%in%as.character(Y[,1]),]
-# print(dim(KI))
-# print(dim(CV))
+print(dim(KI))
+print(dim(CV))
+print(dim(Y))
+print(length(GTindex))
 
     #Output phenotype
     colnames(Y)=c("Taxa",name.of.trait)

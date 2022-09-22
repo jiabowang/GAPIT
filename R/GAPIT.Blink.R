@@ -335,6 +335,7 @@
       P[P==0] <- min(P[P!=0],na.rm=TRUE)*0.01
       P[is.na(P)] =1
       # print(str(myGLM))
+      
       gc()
       nf=ncol(myGLM$P)/4
       tvalue=myGLM$P[,nf*2-shift]

@@ -115,8 +115,8 @@ if(!needKinPC &SNP.fraction<1)  stop("GAPIT says: You did not require calculate 
 if(!SNP.test & is.null(KI) & !byData & !byFile)  stop("GAPIT says: For SNP.test optioin, please input either use KI or use genotype")
 
 #if(is.null(file.path) & !byData & byFile) stop("GAPIT Ssays: A path for genotype data should be provided!")
-if(is.null(file.total) & !byData & byFile) stop("GAPIT Ssays: Number of file should be provided: >=1")
-if(!is.null(G) & !is.null(GD)) stop("GAPIT Ssays: Both hapmap and EMMA format exist, choose one only.")
+if(is.null(file.total) & !byData & byFile) stop("GAPIT Says: Number of file should be provided: >=1")
+if(!is.null(G) & !is.null(GD)) stop("GAPIT Says: Both hapmap and EMMA format exist, choose one only.")
 
 if(!is.null(file.GD) & is.null(file.GM) & (!is.null(GP)|!is.null(GK)) ) stop("GAPIT Ssays: Genotype data and map files should be in pair")
 if(is.null(file.GD) & !is.null(file.GM) & (!is.null(GP)|!is.null(GK)) ) stop("GAPIT Ssays: Genotype data and map files should be in pair")

@@ -29,16 +29,17 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     cutoff=max(sort.p[1:N.sig])
     index=P.value<=cutoff 
     }
-    geneGD=X[,index,drop=FALSE]
-    geneGWAS=GWAS[index,,drop=FALSE]
-    gene.licols=GAPIT.Licols(X=geneGD)
-    geneGD=gene.licols$Xsub
-    geneGWAS=geneGWAS[gene.licols$idx,]
+    
     if(length(unique(index))==1)
     {
     	print("There is no significant marker for VE !!")
     	return(list(GVs=NULL))
     }
+    geneGD=X[,index,drop=FALSE]
+    geneGWAS=GWAS[index,,drop=FALSE]
+    gene.licols=GAPIT.Licols(X=geneGD)
+    geneGD=gene.licols$Xsub
+    geneGWAS=geneGWAS[gene.licols$idx,]
     index_T=as.matrix(table(index))
     # print(index_T)
     in_True=ncol(geneGD)

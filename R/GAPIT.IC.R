@@ -12,58 +12,68 @@ print("GAPIT.IC in process...")
      CV=DP$CV
      GD=DP$GD
      noCV=FALSE
-     if(is.null(CV)){
-     noCV=TRUE
-     if(is.null(GD))
+     if(is.null(CV))
      {
-       CV=Y[,1:2]
-          }else{
-       CV=GD[,1:2]
-     }
-     CV[,2]=1
-     colnames(CV)=c("taxa","overall")
-     print(paste("There is 0 Covarinces.",sep=""))
+       noCV=TRUE
+       if(is.null(GD))
+       {
+         CV=Y[,1:2]
+       }else{
+         CV=GD[,1:2]
+       }
+       CV[,2]=1
+       colnames(CV)=c("taxa","overall")
+       print(paste("There is 0 Covarinces.",sep=""))
      }
      Y=Y[!is.na(Y[,2]),]
      taxa_Y=as.character(Y[,1])
      # print(head(Y))
      if(DP$PCA.total>0&!is.null(DP$CV))CV=GAPIT.CVMergePC(DP$CV,PC)
      if(DP$PCA.total>0&is.null(DP$CV))CV=PC
-     if(is.null(GD)&!is.null(DP$KI))
+     if(!is.null(GD))
      {
-     taxa_KI=as.character(DP$KI[,1])
-     taxa_CV=as.character(CV[,1])
-     taxa_comall=intersect(intersect(taxa_KI,taxa_Y),taxa_CV)
+       if(!is.null(DP$KI))
+       {
+         taxa_GD=as.character(GD[,1])
+         taxa_KI=as.character(DP$KI[,1])
+         taxa_CV=as.character(CV[,1])
+         taxa_comall=intersect(intersect(intersect(taxa_KI,taxa_GD),taxa_Y),taxa_CV)
      # print(length(taxa_comall))
-     comCV=CV[taxa_CV%in%taxa_comall,]
-     comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
-     comY=Y[taxa_Y%in%taxa_comall,]
-     comY <- comY[match(taxa_comall,as.character(comY[,1])),]
-    
-     comGD=NULL
+         comCV=CV[taxa_CV%in%taxa_comall,]
+         comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
+         comY=Y[taxa_Y%in%taxa_comall,]
+         comY <- comY[match(taxa_comall,as.character(comY[,1])),]
+         comGD=GD[taxa_GD%in%taxa_comall,]
+         comGD <- comGD[match(taxa_comall,as.character(comGD[,1])),]# comGD=NULL
 
-     }else{
+       }else{
      # print("@@@@")
-     taxa_GD=as.character(GD[,1])
-     taxa_comGD=as.character(GD[,1])
-     taxa_CV=as.character(CV[,1])
-     taxa_comall=intersect(intersect(taxa_GD,taxa_Y),taxa_CV)
-     comCV=CV[taxa_CV%in%taxa_comall,]
-     comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
-     
-     comGD=GD[taxa_GD%in%taxa_comall,]
-     comGD <- comGD[match(taxa_comall,as.character(comGD[,1])),]
-
-     comY=Y[taxa_Y%in%taxa_comall,]
-     comY <- comY[match(taxa_comall,as.character(comY[,1])),]
+         taxa_GD=as.character(GD[,1])
+         taxa_comGD=as.character(GD[,1])
+         taxa_CV=as.character(CV[,1])
+         taxa_comall=intersect(intersect(taxa_GD,taxa_Y),taxa_CV)
+         comCV=CV[taxa_CV%in%taxa_comall,]
+         comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
+         comGD=GD[taxa_GD%in%taxa_comall,]
+         comGD <- comGD[match(taxa_comall,as.character(comGD[,1])),]
+         comY=Y[taxa_Y%in%taxa_comall,]
+         comY <- comY[match(taxa_comall,as.character(comY[,1])),]
+       }
+     }else{
+       # taxa_GD=as.character(GD[,1])
+       taxa_KI=as.character(DP$KI[,1])
+       taxa_CV=as.character(CV[,1])
+       taxa_comall=intersect(intersect(taxa_KI,taxa_Y),taxa_CV)
+     # print(length(taxa_comall))
+       comCV=CV[taxa_CV%in%taxa_comall,]
+       comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
+       comY=Y[taxa_Y%in%taxa_comall,]
+       comY <- comY[match(taxa_comall,as.character(comY[,1])),]
+       comGD=NULL
      }
-
-
      GT=as.matrix(as.character(taxa_comall))
      print(paste("There are ",length(GT)," common individuals in genotype , phenotype and CV files.",sep=""))
-
      if(nrow(comCV)!=length(GT))stop ("GAPIT says: The number of individuals in CV does not match to the number of individuals in genotype files.")
-
      print("The dimension of total CV is ")
      print(dim(comCV))
      

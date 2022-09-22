@@ -1,5 +1,5 @@
 `GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, 
-                                 WS0=NULL,ws=200,Aver.Dis=1000,...){
+                                 WS0=NULL,ws=20,Aver.Dis=1000,...){
 # Object: Analysis for Genotype data:Distribution of SNP density,Accumulation,Moving Average of density,result:a pdf of the scree plot
 # myG:Genotype data
 # chr: chromosome value
@@ -132,9 +132,22 @@ for(i in 1:length(chr))
 }
 odd=seq(1,length(chr),2)
 r=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
+d.V=dist/Aver.Dis
+
+# fig.d=cbind(d.V[rs.index],(r^2)[rs.index])
+# dv=d.V[rs.index]
+# r2=(r^2)[rs.index]
+# dv2=ceiling(dv/ws)*ws
+# dv2.un=as.character(unique(dv2))
+# fig.d=NULL
+# for(i in 1:length(dv2.un))
+# {
+#   index=dv2==dv2.un[i]
+#   fig.d=rbind(fig.d,cbind(dv2.un[i],mean(r2[index],na.rm=TRUE)))
+# }
+
 
 grDevices::pdf("GAPIT.Genotype.Density_R_sqaure.pdf", width =10, height = 6)
-d.V=dist/Aver.Dis
 # print(summary(d.V))
 par(mfcol=c(2,3),mar = c(5,5,2,2))
 plot(r[rs.index], xlab="Marker",las=1,xlim=c(1,mm), 
@@ -171,6 +184,7 @@ d.V.hist$counts=d.V0/d.V0.demo
 plot(d.V[rs.index],r[rs.index], las=1,xlab="Distance (Kb)", ylab="R", main="c",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 abline(h=0,col="darkred")
 plot(d.V[rs.index],(r^2)[rs.index], las=1,xlab="Distance (Kb)", ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
+# plot(as.numeric(fig.d[,1]),as.numeric(fig.d[,2]), las=1,xlab="Distance (Kb)", ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 
 #Moving average
 dist2[dist2>WS0]=NA
@@ -181,7 +195,7 @@ maPure=ma[!indRM,]
 maPure=maPure[!is.na(maPure[,1]),]
 ns=nrow(maPure)
 # ws=ws
-slide=10
+slide=ws
 loc=matrix(NA,floor(ns/slide),2)
 
 for (i in 1:floor(ns/slide)){
