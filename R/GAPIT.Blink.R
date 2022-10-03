@@ -102,9 +102,12 @@
     Y1 = Y[seqTaxa,]
     if(!is.null(CV)){
         CV1 = CV[seqTaxa,] #Thanks for jloat's suggestion in Jul 23 2021
+        no.cv=ncol(CV)
     }else{
       CV1=NULL
-    }
+      no.cv=0
+    }   
+    # print(no.cv)
     if(orientation == "col"){
       if(bigmemory::is.big.matrix(GD)){
         GD1=bigmemory::deepcopy(GD,rows=seqTaxa,cols=index)
@@ -323,10 +326,10 @@
         #print(dim(myGLM$P))
 
         if(!isDone){
-          myGLM=Blink.SUB(GM=GM,GLM=myGLM,QTN=GM[seqQTN,],method=method.sub,model=model)
+          myGLM=Blink.SUB(GM=GM,GLM=myGLM,QTN=GM[seqQTN,],method=method.sub,model=model,no.cv=no.cv)
         }else{
           #save(myGLM,file="myGLM_last.Rdata")
-            myGLM=Blink.SUB(GM=GM,GLM=myGLM,QTN=GM[seqQTN,],method=method.sub,model=model)
+            myGLM=Blink.SUB(GM=GM,GLM=myGLM,QTN=GM[seqQTN,],method=method.sub,model=model,no.cv=no.cv)
         }
       t5=proc.time()
       GLM.time[theLoop]=as.numeric(t5)[3]-as.numeric(t4)[3]
@@ -792,7 +795,7 @@
 
 
 `Blink.SUB` <-
-function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
+function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A",no.cv=0){
     #Input: FarmCPU.GLM object
     #Input: QTN - s by 3  matrix for SNP name, chromosome and BP
     #Input: method - options are "penalty", "reward","mean","median",and "onsite"
@@ -827,7 +830,9 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
             if(method=="onsite") P.QTN=GLM$P0[(length(GLM$P0)-nqtn+1):length(GLM$P0)]
         }
         GLM$P[position,spot]=P.QTN
-        GLM$B[position,]=GLM$betapred
+        # print(position)
+        # print(GLM$betapred)
+        GLM$B[position,]=GLM$betapred[(no.cv+1):length(GLM$betapred)]
     }
     return(GLM)
 }#The function FarmCPU.SUB ends here
