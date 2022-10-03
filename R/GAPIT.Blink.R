@@ -335,7 +335,7 @@
       P[P==0] <- min(P[P!=0],na.rm=TRUE)*0.01
       P[is.na(P)] =1
       # print(str(myGLM))
-      
+
       gc()
       nf=ncol(myGLM$P)/4
       tvalue=myGLM$P[,nf*2-shift]
@@ -827,6 +827,7 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A"){
             if(method=="onsite") P.QTN=GLM$P0[(length(GLM$P0)-nqtn+1):length(GLM$P0)]
         }
         GLM$P[position,spot]=P.QTN
+        GLM$B[position,]=GLM$betapred
     }
     return(GLM)
 }#The function FarmCPU.SUB ends here

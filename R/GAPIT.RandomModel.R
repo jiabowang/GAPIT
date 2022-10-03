@@ -5,8 +5,8 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     #Authors: Jiabo Wang and Zhiwu Zhang
     # Last update: Nov 6, 2019
     ##############################################################################################
-   if(!require(lme4))  install.packages("lme4")
-   library("lme4")
+    if(!require(lme4))  install.packages("lme4")
+    library("lme4")
     # GWAS=myGAPIT_SUPER$GWAS
     # CV=myGAPIT_SUPER$PCA
     # cut.set=0.01

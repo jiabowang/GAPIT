@@ -33,7 +33,7 @@
     r <- sum(diagr >= tol * diagr[1])
     
     idx <- sort(E[1:r])
-    Xsub <- X[,idx]
+    Xsub <- X[,idx,drop=FALSE]
   }
   res <- vector("list")
   res$Xsub <- Xsub
