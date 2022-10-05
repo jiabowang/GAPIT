@@ -25,7 +25,7 @@ letter.index=grep("[A-Z]|[a-z]",chor_taxa)
 if(!setequal(integer(0),letter.index))
   {     
   # myGI=as.matrix(myGI)
-      if(length(lettet.index)!=length(chor_taxa))
+      if(length(letter.index)!=length(chor_taxa))
         {
           chr.letter=chor_taxa[letter.index]
           chr.taxa=chor_taxa[-letter.index]
