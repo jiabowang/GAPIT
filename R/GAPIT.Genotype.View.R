@@ -1,4 +1,4 @@
-`GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, 
+`GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, cut.dis=10,n.select=10000,
                                  WS0=NULL,ws=20,Aver.Dis=1000,...){
 # Object: Analysis for Genotype data:Distribution of SNP density,Accumulation,Moving Average of density,result:a pdf of the scree plot
 # myG:Genotype data
@@ -74,7 +74,8 @@ dist=abs(as.numeric(GI[-1,3])-as.numeric(GI[-nrow(GI),3]))
 dist2=dist
 dist.out=GAPIT.Remove.outliers(dist,pro=0.1,size=1.1)
 if(is.null(WS0)) WS0=((max(dist[!dist.out$idx],rm.na=TRUE))%/%1000)*1000
-index=dist<10|dist>WS0
+if(WS0==0)WS0=1
+index=dist<cut.dis|dist>WS0
 dist[index]=NA
 # print(summary(dist))
 set.seed(99163)
@@ -83,7 +84,7 @@ n.bins=length(unique(bins))
 uni.bins=unique(bins)
 
 n.markers=nrow(GI)
-n.select=10000
+
 if(n.markers<n.select)n.select=n.markers
 n.targ=floor(n.select/n.bins)
 if(n.targ<1)
