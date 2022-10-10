@@ -94,12 +94,6 @@ GAPIT3 can currently be installed in several ways.
 
 GAPIT can be loaded with a single funciton. 
 
-```      
-R> source("http://zzlab.net/GAPIT/GAPIT.library.R")
-```
-
-
-After loading the library, we'll need to source the GAPIT function as well.
 
 ```
 R> source("http://zzlab.net/GAPIT/gapit_functions.txt")
