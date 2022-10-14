@@ -1,4 +1,4 @@
-`GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, cut.dis=10,n.select=10000,
+`GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, cut.dis=1,n.select=10000,
                                  WS0=NULL,ws=20,Aver.Dis=1000,...){
 # Object: Analysis for Genotype data:Distribution of SNP density,Accumulation,Moving Average of density,result:a pdf of the scree plot
 # myG:Genotype data
@@ -151,7 +151,7 @@ d.V=dist/Aver.Dis
 grDevices::pdf("GAPIT.Genotype.Density_R_sqaure.pdf", width =10, height = 6)
 # print(summary(d.V))
 par(mfcol=c(2,3),mar = c(5,5,2,2))
-plot(r[rs.index], xlab="Marker",las=1,xlim=c(1,mm), 
+plot(r[rs.index], xlab="Marker",las=1,xlim=c(1,mm),ylim=c(-1,1),
     ylab="R",axes=FALSE, main="a",cex=.5,col=colDisp)
 axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
 axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
@@ -182,9 +182,11 @@ d.V0.demo=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,1000,ifelse(nc
 ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max(d.V0))<=12,3,4)))
 ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
 d.V.hist$counts=d.V0/d.V0.demo
-plot(d.V[rs.index],r[rs.index], las=1,xlab="Distance (Kb)", ylab="R", main="c",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
+plot(d.V[rs.index],r[rs.index], las=1,xlab="Distance (Kb)", ylim=c(-1,1),
+  ylab="R", main="c",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 abline(h=0,col="darkred")
-plot(d.V[rs.index],(r^2)[rs.index], las=1,xlab="Distance (Kb)", ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
+plot(d.V[rs.index],(r^2)[rs.index], las=1,xlab="Distance (Kb)", ylim=c(0,1),
+ ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 # plot(as.numeric(fig.d[,1]),as.numeric(fig.d[,2]), las=1,xlab="Distance (Kb)", ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 
 #Moving average
