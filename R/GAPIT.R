@@ -305,7 +305,7 @@
   ulim = 10, 
   WS = c(1e0,1e3,1e4,1e5,1e6,1e7),
   WS0 = NULL,
-  ws=200
+  ws=20
 	){
 #Object: To perform GWAS and GPS (Genomic Prediction/Selection)
 #Designed by Zhiwu Zhang
