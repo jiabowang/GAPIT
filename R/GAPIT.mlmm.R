@@ -130,7 +130,11 @@
  pval[[1]]<-'NA' 
   
  fwd_lm<-list() 
-  
+ # markers effect by jiabo 20220817
+ effect<-list()
+ effect0<-list()
+ effect0[[1]]<-'NA'
+
  cat('null model done! pseudo-h=',round(herit_fwd[[1]],3),'\n') 
   
  #step 1 : EMMAX 
@@ -146,9 +150,11 @@
  for (j in 1:(nbchunks-1)) { 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[1]])])[,((j-1)*round(m/nbchunks)+1):(j*round(m/nbchunks))]) 
  RSS[[j]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ effect[[j]]<-apply(X_t,2,function(x){stats::lsfit(x,Res_H0,intercept = FALSE)$coefficients})
  rm(X_t)} 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[1]])])[,((j)*round(m/nbchunks)+1):(m-(ncol(cof_fwd[[1]])-1))]) 
  RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ effect[[nbchunks]]<-apply(X_t,2,function(x){stats::lsfit(x,Res_H0,intercept = FALSE)$coefficients})
  rm(X_t,j) 
 
  RSSf[[2]]<-unlist(RSS) 
@@ -164,7 +170,8 @@
  # print(head(rep(RSS_H0[[2]],length(RSSf[[2]]))/RSSf[[2]]-1))
  # print(head(Ftest[[2]]))
  pval[[2]] <- stats::pf(Ftest[[2]],df1,df2[[2]],lower.tail=FALSE) 
- # print(length(pval[[2]]))
+ effect0[[2]]=unlist(effect) ###
+# print(length(pval[[2]]))
  cof_fwd[[2]]<-cbind(cof_fwd[[1]],X[,colnames(X) %in% names(which(RSSf[[2]]==min(RSSf[[2]]))[1])]) 
  colnames(cof_fwd[[2]])<-c(colnames(cof_fwd[[1]]),names(which(RSSf[[2]]==min(RSSf[[2]]))[1])) 
  mod_fwd[[2]]<-emma.REMLE(Y,cof_fwd[[2]],K_norm) 
@@ -189,9 +196,11 @@
  for (j in 1:(nbchunks-1)) { 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[i-1]])])[,((j-1)*round(m/nbchunks)+1):(j*round(m/nbchunks))]) 
  RSS[[j]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ effect[[j]]<-apply(X_t,2,function(x){stats::lsfit(x,Res_H0,intercept = FALSE)$coefficients})###
  rm(X_t)} 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[i-1]])])[,((j)*round(m/nbchunks)+1):(m-(ncol(cof_fwd[[i-1]])-1))]) 
  RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ effect[[nbchunks]]<-apply(X_t,2,function(x){stats::lsfit(x,Res_H0,intercept = FALSE)$coefficients})###
  rm(X_t,j) 
   
  RSSf[[i]]<-unlist(RSS) 
@@ -199,7 +208,8 @@
  df2[[i]]<-n-df1-ncol(cof_fwd[[i-1]]) 
  Ftest[[i]]<-(rep(RSS_H0[[i]],length(RSSf[[i]]))/RSSf[[i]]-1)*df2[[i]]/df1 
  pval[[i]] <- stats::pf(Ftest[[i]],df1,df2[[i]],lower.tail=FALSE) 
-  
+ effect0[[i]]=unlist(effect)  ###
+ 
  cof_fwd[[i]]<-cbind(cof_fwd[[i-1]],X[,colnames(X) %in% names(which(RSSf[[i]]==min(RSSf[[i]]))[1])]) 
  colnames(cof_fwd[[i]])<-c(colnames(cof_fwd[[i-1]]),names(which(RSSf[[i]]==min(RSSf[[i]]))[1])) 
  mod_fwd[[i]]<-emma.REMLE(Y,cof_fwd[[i]],K_norm) 
@@ -222,9 +232,11 @@
  for (j in 1:(nbchunks-1)) { 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[length(mod_fwd)]])])[,((j-1)*round(m/nbchunks)+1):(j*round(m/nbchunks))]) 
  RSS[[j]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ effect[[j]]<-apply(X_t,2,function(x){stats::lsfit(x,Res_H0,intercept = FALSE)$coefficients})  ###
  rm(X_t)} 
  X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof_fwd[[length(mod_fwd)]])])[,((j)*round(m/nbchunks)+1):(m-(ncol(cof_fwd[[length(mod_fwd)]])-1))]) 
  RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ effect[[nbchunks]]<-apply(X_t,2,function(x){stats::lsfit(x,Res_H0,intercept = FALSE)$coefficients}) ###
  rm(X_t,j) 
   
  RSSf[[length(mod_fwd)+1]]<-unlist(RSS) 
@@ -232,6 +244,7 @@
  df2[[length(mod_fwd)+1]]<-n-df1-ncol(cof_fwd[[length(mod_fwd)]]) 
  Ftest[[length(mod_fwd)+1]]<-(rep(RSS_H0[[length(mod_fwd)+1]],length(RSSf[[length(mod_fwd)+1]]))/RSSf[[length(mod_fwd)+1]]-1)*df2[[length(mod_fwd)+1]]/df1 
  pval[[length(mod_fwd)+1]] <- stats::pf(Ftest[[length(mod_fwd)+1]],df1,df2[[length(mod_fwd)+1]],lower.tail=FALSE) 
+ effect0[[length(mod_fwd)+1]]=unlist(effect) ###
  rm(M,Y_t,cof_fwd_t,Res_H0,Q_,RSS) 
   
  ##get max pval at each forward step 
@@ -336,9 +349,11 @@
   
  #GLS pvals at each step 
  pval_step<-list() 
- pval_step[[1]]<-list(out=data.frame("SNP"=colnames(X),"pval"=pval[[2]]),"cof"=NA, "coef"=fwd_lm[[1]]$coef) 
- for (i in 2:(length(mod_fwd))) {pval_step[[i]]<-list(out=rbind(data.frame(SNP=colnames(cof_fwd[[i]])[-1],'pval'=fwd_lm[[i]]$coef[2:i,4]), 
- 	data.frame(SNP=colnames(X)[-which(colnames(X) %in% colnames(cof_fwd[[i]]))],'pval'=pval[[i+1]])),"cof"=colnames(cof_fwd[[i]])[-1], "coef"=fwd_lm[[i]]$coef)} 
+ pval_step[[1]]<-list(out=data.frame("SNP"=colnames(X),"pval"=pval[[2]],'effect'=effect0[[2]]),"cof"=NA, "coef"=fwd_lm[[1]]$coef) 
+ for (i in 2:(length(mod_fwd))) {
+ 	# print(head(fwd_lm))
+ pval_step[[i]]<-list(out=rbind(data.frame(SNP=colnames(cof_fwd[[i]])[-1],'pval'=fwd_lm[[i]]$coef[2:i,4], 'effect'=fwd_lm[[i]]$coef[2:i,1]), 
+ 	data.frame(SNP=colnames(X)[-which(colnames(X) %in% colnames(cof_fwd[[i]]))],'pval'=pval[[i+1]],'effect'=effect0[[i+1]])),"cof"=colnames(cof_fwd[[i]])[-1], "coef"=fwd_lm[[i]]$coef)} 
   
  #GLS pvals for best models according to extBIC and mbonf 
   
