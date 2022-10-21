@@ -59,13 +59,12 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     	return(list(GVs=NULL))
     	}     	
     	taxa_Y=as.character(Y[,1])
-    	#print("!!")
-        if(in_True==1)
-        {
-        	geneGD=geneGD[GT%in%taxa_Y]
-        }else{
-        	geneGD=geneGD[GT%in%taxa_Y,]
-        }
+    	# print("!!")
+     #    print(dim(geneGD))
+        # print(taxa_Y)
+        
+        geneGD=geneGD[GT%in%taxa_Y,]
+        
      # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
         Y=Y[taxa_Y%in%GT,]
         tree2=cbind(Y,geneGD)
