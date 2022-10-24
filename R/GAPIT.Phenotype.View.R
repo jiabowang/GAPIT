@@ -27,10 +27,10 @@ layout.matrix <- matrix(c(1,2,1,3,4,5), nrow = 2, ncol = 3)
 layout(mat = layout.matrix,
        heights = c(100,100), # Heights of the two rows
        widths = c(2, 2,2)) # Widths of the two columns
-# print("@@@@")
+print(head(myY))
 y=myY[!is.na(myY[,2]),2]
 par(mar = c(5, 5, 2, 1))
-plot(y,xlab="Individual",las=1,ylab="Observation", cex=.5,main="a")
+plot(y,xlab="Individual",las=1,ylim=c(min(y,na.rm=TRUE),max(y,na.rm=TRUE)),ylab="Observation", cex=.5,main="a")
 par(mar = c(5, 5, 2, 1))
 hist(y,xlab="Observation",las=1,ylab="Frequency",cex=.5,main="c")
 par(mar = c(5, 4, 2, 1))
