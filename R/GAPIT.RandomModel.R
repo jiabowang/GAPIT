@@ -98,12 +98,9 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     	colnames(CV)=c("Taxa",paste("CV",1:(ncol(CV)-1),sep=""))
     	taxa_Y=as.character(Y[,1])
     	taxa_CV=as.character(CV[,1])
-        if(in_True==1)
-            {
-        	geneGD=geneGD[GT%in%taxa_Y]
-            }else{
-        	geneGD=geneGD[GT%in%taxa_Y,]
-            }     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
+        
+        geneGD=geneGD[GT%in%taxa_Y,]
+            # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
      # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
         Y=Y[taxa_Y%in%GT,]
         CV=CV[taxa_CV%in%GT,]
