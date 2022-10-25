@@ -81,12 +81,12 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     	# print(dim(geneGD))
     	# print(head(GT))
     	# print(head(taxa_Y))
-         if(in_True==1)
-            {
-        	geneGD=geneGD[GT%in%taxa_Y]
-            }else{
+         # if(in_True==1)
+         #    {
+        	# geneGD=geneGD[GT%in%taxa_Y]
+         #    }else{
         	geneGD=geneGD[GT%in%taxa_Y,]
-            }     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
+            # }     # if(!is.null(PC))PC=PC[taxa_GD%in%taxa_Y,]
         Y=Y[taxa_Y%in%GT,]
         tree2=cbind(Y,geneGD)
     	}else{
