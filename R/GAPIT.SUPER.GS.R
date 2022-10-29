@@ -162,7 +162,10 @@ if(QC)
   Z=qc$Z
   GK=qc$GK
 }
-# print(dim(Y))
+# print(dim(Z))
+# print("!!!!!")
+# aa=apply(Z,1,function(one) grep(1,as.numeric(one)))
+# print(as.numeric(aa))
 # print(dim(KI))
 # print(dim(Z))
 my_taxa=as.character(KI[,1])
@@ -335,9 +338,7 @@ if(QC)
   Z=qc$Z
   GK=qc$GK
 }
-# print(dim(Y))
-# print(dim(KI))
-# print(dim(Z))
+
 rm(qc)
 gc()
 }# super_pass end
@@ -418,7 +419,7 @@ zc <- GAPIT.ZmatrixCompress(Z=hold_Z,GAU =bk$GA)
 zrow=nrow(zc$Z)
 zcol=ncol(zc$Z)-1
 K = as.matrix(bk$KW)
-
+# print(colnames(K))
 #if (nrow(as.matrix(bk$KW))==1)
 Z=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol)
 if(is.null(dim(ys)) || ncol(ys) == 1)  ys <- matrix(ys, 1, length(ys))
@@ -434,6 +435,9 @@ j=1
   X=XX$Xsub
   X.idx=XX$idx
  # aa=tcrossprod(X %*% solve(crossprod(X)), X)
+# print("!!!!")
+# aa=apply(Z,1,function(one) grep(1,as.numeric(one)))
+# print(as.numeric(aa))
    emma_test <- EMMREML::emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
    # emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
 
@@ -522,7 +526,12 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(my_taxa,emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")
-  
+   # print(dim(bk$KW))
+   # print(dim(bk$KO))
+   # print(dim(bk$KWO))
+   # print(bk$GAU)
+   aa=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat)
+   # print(emma_REMLE$uhat)
    gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
    BB= merge(gs$BLUP, emma_BLUE, by.x = "Taxa", by.y = "Taxa",sort=F)
    # print(head(BB))

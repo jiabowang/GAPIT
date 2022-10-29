@@ -38,8 +38,9 @@ if(!is.null(KI))
 {
   taxa.all=KI[,1]
   taxa.uniqe=unique(taxa.all)
+  # taxa.uniqe=taxa.uniqe[taxa.uniqe%in%taxa.kept]
   position=match(taxa.uniqe, taxa.all,nomatch = 0)
-  position.addition=cbind(1,t(1+position))
+  position.addition=append(1,(1+position))
   KI=KI[position,position.addition]
 }
 
@@ -104,14 +105,14 @@ if(!is.null(Z) & !is.null(KI))
 }# end of  if(!is.null(Z) & !is.null(K))
 
 # get intersect of all the data
-taxa=intersect(Y[,1],Y[,1])
+# taxa=intersect(Y[,1],Y[,1])
 if(!is.null(Z))taxa=intersect(Z[-1,1],taxa)
 if(!is.null(GT))taxa=intersect(taxa,taxa.kept)
 if(!is.null(CV))taxa=intersect(taxa,CV[,1])
 if(!is.null(GK))taxa=intersect(taxa,GK[,1])
 if(length(taxa)<=1)stop("GAPIT says: There is no individual ID matched to covariate. Please check!")
 
-print(length(taxa))
+# print(length(taxa))
 # print(taxa)
 # if(!is.null(Z))
 # {
@@ -175,7 +176,9 @@ print("GAPIT.QC accomplished successfully!")
 
 #print(dim(Y))
 #print(dim(CV))
-#print(dim(KI))
+# print(KI[1:5,1:5])
+colnames(KI)=c("Taxa",as.character(as.matrix(KI[,1])))
+# print(colnames(KI))
 return(list(Y = Y, KI = KI, GT = GT, CV = CV, Z = Z, GK = GK, GTindex=GTindex, flag=flag))
 }#The function GAPIT.QC ends here
 #=============================================================================================
