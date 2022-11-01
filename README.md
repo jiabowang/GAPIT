@@ -302,7 +302,7 @@ MABLUP (Markers Assisted BLUP) used significant markers as fixed effect in the m
       buspred=TRUE,
       lmpred=FALSE,
       PCA.total=5,
-      file.output=TRUEf
+      file.output=TRUE
       )
 
 Result
