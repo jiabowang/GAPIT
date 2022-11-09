@@ -10,8 +10,8 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     print("GAPIT.RandomModel beginning...")
     if(is.null(GT))GT=as.character(Y[,1])
     # name.of.trait=colnames(Y)[2]
-    GWAS=GWAS[order(GWAS[,3]),]
-    GWAS=GWAS[order(GWAS[,2]),]
+    # GWAS=GWAS[order(GWAS[,3]),]
+    # GWAS=GWAS[order(GWAS[,2]),]
     P.value=as.numeric(GWAS[,4])
     P.value[is.na(P.value)]=1
     if(is.null(N.sig))
@@ -169,8 +169,8 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
         graphics::layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
         do_color = grDevices::colorRampPalette(c("green", "red"))(n)
             graphics::par(mar=c(4,5,2,8),cex=1)
-            y=as.numeric(gene_list$maf)
-            x=as.numeric(gene_list$effect)
+            x=as.numeric(gene_list$maf)
+            y=as.numeric(gene_list$effect)
             x.lim=max(x)+max(x)/10
             y.lim=max(y)+max(y)/10
             z=gene_list$Variance_Explained
@@ -180,11 +180,12 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
         {
             r2_color[z<=quantile_cut[i+1]&z>=quantile_cut[i]]=do_color[2*i]
         }
-            plot(y~x,type="p", ylim=c(0,y.lim), 
-                xlim = c(min(x), max(x)),col = r2_color,cex=1.2,
-                 xlab = "",ylab = "", cex.lab=1.2,pch=21,bg=r2_color)
-            graphics::mtext("Estimated Effect",side=1,line=2.5)
-            graphics::mtext("MAF",side=2,line=2.5)
+            
+            plot(y~x,type="p", ylim=c(min(y), max(y)), 
+                xlim =c(0,x.lim) ,cex=1.2,#col = "r2_color",bg=r2_color,
+                 xlab = "",ylab = "", cex.lab=1.2,pch=21)
+            graphics::mtext("Estimated Effect",side=2,line=2.5)
+            graphics::mtext("MAF",side=1,line=2.5)
             graphics::par(mar=c(2,6,3,3))           
             graphics::barplot(matrix(rep(0.4,times=n),n,1),beside=T,col=do_color,border=do_color,axes=FALSE,horiz =T)
             step=length(seq(0,round(max(z),3),by=0.01))
