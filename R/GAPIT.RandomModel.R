@@ -138,6 +138,8 @@ if(!is.null(CV))
     print(100*var_gene/sum(var_gene+var_res))
     v_rat=100*var_gene/sum(var_gene+var_res)
     gene_list=cbind(geneGWAS,v_rat)
+    # print("!!!!")
+    # print(gene_list)
     colnames(gene_list)[ncol(gene_list)]="Phenotype_Variance_Explained(%)"
     utils::write.csv(var_gene,paste("GAPIT.Association.Vairance_markers.", name.of.trait,".csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
     utils::write.csv(gene_list,paste("GAPIT.Association.PVE.", name.of.trait,".csv",sep=""),quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
@@ -164,11 +166,11 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
 
     if(n_gd>=5)
         {
-        grDevices::pdf(paste("GAPIT.Association.MAF_Effect_PVE.", name.of.trait,".pdf" ,sep = ""), width = 9,height=5.75)      
+        grDevices::pdf(paste("GAPIT.Association.MAF_Effect.", name.of.trait,".pdf" ,sep = ""), width = 7,height=5.75)      
         n=10
-        graphics::layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
+        # graphics::layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
         do_color = grDevices::colorRampPalette(c("green", "red"))(n)
-            graphics::par(mar=c(4,5,2,8),cex=1)
+            graphics::par(mar=c(4,5,4,4),cex=1)
             x=as.numeric(gene_list$maf)
             y=as.numeric(gene_list$effect)
             x.lim=max(x)+max(x)/10
@@ -186,13 +188,37 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
                  xlab = "",ylab = "", cex.lab=1.2,pch=21)
             graphics::mtext("Estimated Effect",side=2,line=2.5)
             graphics::mtext("MAF",side=1,line=2.5)
-            graphics::par(mar=c(2,6,3,3))           
-            graphics::barplot(matrix(rep(0.4,times=n),n,1),beside=T,col=do_color,border=do_color,axes=FALSE,horiz =T)
-            step=length(seq(0,round(max(z),3),by=0.01))
-            small_bar=round(seq(0,round(max(z),3),by=(max(z)-min(z))/10),2)
-            graphics::mtext("Phenotypic Variance Explained (%)",side=2,line=0.4,col="black",cex=0.7)
-            graphics::axis(4,c(1,6,11),c(min(small_bar),stats::median(small_bar),max(small_bar)),las=2,cex.axis = 0.7,tick=F,line=0) 
+            # graphics::par(mar=c(2,6,3,3))           
+            # graphics::barplot(matrix(rep(0.4,times=n),n,1),beside=T,col=do_color,border=do_color,axes=FALSE,horiz =T)
+            # step=length(seq(0,round(max(z),3),by=0.01))
+            # small_bar=round(seq(0,round(max(z),3),by=(max(z)-min(z))/10),2)
+            # graphics::mtext("Phenotypic Variance Explained (%)",side=2,line=0.4,col="black",cex=0.7)
+            # graphics::axis(4,c(1,6,11),c(min(small_bar),stats::median(small_bar),max(small_bar)),las=2,cex.axis = 0.7,tick=F,line=0) 
             grDevices::dev.off()
+
+
+            print("Creating marker p-value, MAF, estimated effect, PVE 3 plot...")
+
+            grDevices::pdf(paste("GAPIT.Association.Significant_SNPs.", name.of.trait,".pdf" ,sep = ""), width =10, height = 3.5)      
+            layout.matrix <- matrix(c(1,2,3), nrow = 1, ncol = 3)
+            layout(mat = layout.matrix,
+                   heights = c(100,80,120), # Heights of the two rows
+                   widths = c(2, 2,2)) # Widths of the two columns
+            par(mar = c(5, 5, 2, 1))
+            plot(gene_list$maf,-log10(gene_list$P.value),xlab="MAF",las=1,
+            cex=1.2,xlim =c(0,x.lim) ,
+            ylab=expression(-log[10](italic(p))))
+            par(mar = c(5, 5, 2, 1))
+            plot(gene_list$maf,gene_list$Variance_Explained,cex=1.2,las=1,
+            xlab="MAF",xlim =c(0,x.lim) ,
+            ylab="Phenotypic Variance Explained (%)")
+            par(mar = c(5, 5, 2, 1))
+            plot(gene_list$maf,gene_list$effect,cex=1.2,
+            xlab="MAF",ylim=c(min(y), max(y)), xlim =c(0,x.lim) ,las=1,
+            ylab="Estimated Effect")
+            grDevices::dev.off()
+
+
         }
 }
 return(list(GVs=var_gene/sum(var_gene+var_res),PVEs=gene_list))

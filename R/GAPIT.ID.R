@@ -124,6 +124,7 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
     plot.bin=DP$CG
     name.of.trait=DP$name.of.trait
     GWAS=SS$GWAS
+    GVs=SS$GVs
 #print(head(GWAS))
     Pred=SS$Pred
     GI=GWAS
@@ -211,12 +212,7 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
 
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")  
         utils::write.table(DTS, paste("GAPIT.Association.GWAS_StdErr.", DP$name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-
-        # print("Creating ROC table and plot" )
-        # myROC=GAPIT.ROC(t=as.numeric(tvalue),se=as.numeric(stderr),Vp=stats::var(as.matrix(IC$Y[,2])),trait=DP$name.of.trait)
-        # print("ROC table and plot created" )
-        # print("MAF plot..." )
-        # myMAF1=GAPIT.MAF(MAF=maf,P=ps,E=NULL,trait=DP$name.of.trait)      
+   
         if(DP$Inter.Plot)
         {
           if(ncol(GI)>1)

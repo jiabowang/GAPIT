@@ -171,7 +171,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
 
             plot(y~x,type="p", ylim=c(0,y.lim), xlim = c(min(x), max(x)),las=1,
             col = r2_color[,2], xlab = expression(Base~Pairs~(x10^-6)),
-            ylab = "-Log Base 10 p-value", main =           paste("Chromosome",chm.to.analyze[i],sep=" "),
+            ylab = expression(-log[10](italic(p))), main =           paste("Chromosome",chm.to.analyze[i],sep=" "),
             cex.lab=1.6,pch=21,bg=r2_color[,2])
             
             abline(h=bonferroniCutOff,col="forestgreen")

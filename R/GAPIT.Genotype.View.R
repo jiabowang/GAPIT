@@ -135,19 +135,6 @@ odd=seq(1,length(chr),2)
 r=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
 d.V=dist/Aver.Dis
 
-# fig.d=cbind(d.V[rs.index],(r^2)[rs.index])
-# dv=d.V[rs.index]
-# r2=(r^2)[rs.index]
-# dv2=ceiling(dv/ws)*ws
-# dv2.un=as.character(unique(dv2))
-# fig.d=NULL
-# for(i in 1:length(dv2.un))
-# {
-#   index=dv2==dv2.un[i]
-#   fig.d=rbind(fig.d,cbind(dv2.un[i],mean(r2[index],na.rm=TRUE)))
-# }
-
-
 grDevices::pdf("GAPIT.Genotype.Density_R_sqaure.pdf", width =10, height = 6)
 # print(summary(d.V))
 par(mfcol=c(2,3),mar = c(5,5,2,2))
