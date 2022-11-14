@@ -125,16 +125,13 @@ if(a2>0&NQTN>=nint){
     ec=sqrt(ev)/sqrt(diag(stats::var(CV[,-1])))    
     #enveff=as.matrix(myCV[,-1])%*%ec
     enveff=as.matrix(CV[,-1])%*%ec
-    
-    #print(cbind(effectvar,residualvar,ev,ec))
-    #print(cbind(effect,enveff,residual))
-    
+
     residual=residual+enveff
     }
     
     #Simulating  phenotype
     y=effect+residual+cp
-    
+    # print("!!!")
     if(orientation=="col") myY=cbind(as.data.frame(GD[,1]),as.data.frame(y))
     if(orientation=="row") myY=cbind(NA,as.data.frame(y))
     

@@ -119,8 +119,6 @@ if(is.null(GD) & is.null(GT)) {
 if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
 if(PCA.total>0&is.null(CV))CV=PC
 my_allCV=CV
-#print(dim(my_allCV))
-   # write.table(my_allCV,"X0.txt",quote=F,row.names=F,col.names=F)
 
 if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & is.null(Z)){
 taxa=as.character(Y[,1])
@@ -191,14 +189,16 @@ if(super_pass)
 print("-------------------start SUPER BREAD-----------------------------------")
 #Create GK if not provided
 #print(memory.size())
-  if(is.null(GK)){
+  if(is.null(GK))
+  {
     nY=floor(nrow(Y)*.9)
     nG=ncol(GD)
+    # snpsam=0
     if(nG>nY){snpsam=sample(1:nG,nY)}else{snpsam=1:nG}
     GK=GD[GTindex,snpsam]
     SNPVar=apply(as.matrix(GK), 2, stats::var)
 	#print(snpsam)
-if (snpsam==1)stop ("GAPIT says: SUPER_GS must putin GD and GM.")
+    # if(snpsam==1)stop ("GAPIT says: SUPER_GS must putin GD and GM.")
     GK=GK[,SNPVar>0]
     GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
     
@@ -434,9 +434,7 @@ j=1
   XX=GAPIT.Licols(X0)
   X=XX$Xsub
   X.idx=XX$idx
- # aa=tcrossprod(X %*% solve(crossprod(X)), X)
-# print("!!!!")
-# aa=apply(Z,1,function(one) grep(1,as.numeric(one)))
+
 # print(as.numeric(aa))
    emma_test <- EMMREML::emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
    # emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
@@ -511,31 +509,20 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   } 
   print(dim(X))
 
-  if (is.null(my_allCV)){my_allX=matrix(1,length(my_taxa),1)
+  if (is.null(my_allCV))
+  {
+    my_allX=matrix(1,length(my_taxa),1)
   }else{
-   # my_allX=as.matrix(my_allCV[,-1])
-       # my_allX=cbind(1,as.matrix(my_allCV[,1+GAPIT.Licols(my_allCV)$idx]))
-       my_allX=cbind(1,as.matrix(my_allCV[,-1]))
+    my_allX=cbind(1,as.matrix(my_allCV[,-1]))
   }
 
-  # print(GAPIT.Licols(X0)$idx)
-  # print(dim(my_allX))
-   # X=XX$Xsub
-   # X.idx=XX$idx
    my_allX=my_allX[,X.idx]
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
-   emma_BLUE=as.data.frame(cbind(my_taxa,emma_BLUE))
+   emma_BLUE=as.data.frame(cbind(as.character(my_allCV[,1]),emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")
-   # print(dim(bk$KW))
-   # print(dim(bk$KO))
-   # print(dim(bk$KWO))
-   # print(bk$GAU)
-   aa=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat)
-   # print(emma_REMLE$uhat)
+   
    gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
    BB= merge(gs$BLUP, emma_BLUE, by.x = "Taxa", by.y = "Taxa",sort=F)
-   # print(head(BB))
-   # }
    prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
    all_gs=cbind(BB,prediction)
    colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
