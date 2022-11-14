@@ -129,9 +129,11 @@ if(!is.null(CV))
     dflme <- lme4::lmer(command2, data=tree2, control = lme4::lmerControl(check.nobs.vs.nlev = "ignore",
      check.nobs.vs.rankZ = "ignore",
      check.nobs.vs.nRE="ignore"))
-
+    gene_names=paste("gene_",1:n_gd,sep="")
     carcor_matrix=as.data.frame(summary(dflme)$varcor)
-    var_gene=as.numeric(carcor_matrix[1:(nrow(carcor_matrix)-1),4])
+    carcor_matrix=carcor_matrix[-nrow(carcor_matrix),]
+    carcor_matrix=carcor_matrix[match(gene_names,as.character(carcor_matrix[,1])),]
+    var_gene=as.numeric(carcor_matrix[,4])
     var_res=carcor_matrix[nrow(carcor_matrix),4]
 
     print(paste("Candidate Genes could Phenotype_Variance_Explained(%) :",sep=""))

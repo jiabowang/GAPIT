@@ -105,7 +105,7 @@ if(!is.null(Z) & !is.null(KI))
 }# end of  if(!is.null(Z) & !is.null(K))
 
 # get intersect of all the data
-# taxa=intersect(Y[,1],Y[,1])
+taxa=intersect(Y[,1],Y[,1])
 if(!is.null(Z))taxa=intersect(Z[-1,1],taxa)
 if(!is.null(GT))taxa=intersect(taxa,taxa.kept)
 if(!is.null(CV))taxa=intersect(taxa,CV[,1])
