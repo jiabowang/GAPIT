@@ -431,9 +431,9 @@ X <-  X0 #covariate variables such as population structure
 j=1
   if (is.null(Z)) Z=diag(x=1,nrow(K),ncol(K))
   if (group==1)   K=1
-  # XX=GAPIT.Licols(X0)
-  # X=XX$Xsub
-  # X.idx=XX$idx
+  XX=GAPIT.Licols(X0)
+  X=XX$Xsub
+  X.idx=XX$idx
 
 # print(as.numeric(aa))
    emma_test <- EMMREML::emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
@@ -495,9 +495,9 @@ Z=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol)
 if(is.null(dim(ys)) || ncol(ys) == 1)  ys <- matrix(ys, 1, length(ys))
 if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   # X <-  X0 #covariate variables such as population structure
-  # XX=GAPIT.Licols(X0)
-  # X=XX$Xsub
-  # X.idx=XX$idx
+  XX=GAPIT.Licols(X0)
+  X=XX$Xsub
+  X.idx=XX$idx
   if (is.null(Z)) Z=diag(x=1,nrow(K),ncol(K))
   
   # print(my_allCV)
@@ -516,7 +516,9 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
     my_allX=cbind(1,as.matrix(my_allCV[,-1]))
   }
 
-   # my_allX=my_allX[,X.idx]
+   my_allX=my_allX[,X.idx]
+   print(dim(my_allX))
+   print(length(emma_REMLE$betahat))
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(as.character(my_allCV[,1]),emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")
