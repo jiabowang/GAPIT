@@ -151,17 +151,19 @@ if(DP$SNP.test)
             {
                busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
             }else{
-               numMarker=nrow(GWAS)
-               sp=sort(GWAS$P.value)
-               spd=abs(DP$cutOff-sp)
-               index_fdr=grep(min(spd),spd)[1]
-               FDRcutoff=DP$cutOff*index_fdr/numMarker
-               seqQTN=as.numeric(rownames(GWAS[GWAS$P.value<FDRcutoff,]))
-               busCV=cbind(IC$myallCV,X[,seqQTN])
+               # numMarker=nrow(GWAS)
+               # sp=sort(GWAS$P.value)
+               # spd=abs(DP$cutOff-sp)
+               # index_fdr=grep(min(spd),spd)[1]
+               # FDRcutoff=DP$cutOff*index_fdr/numMarker
+               # seqQTN=as.numeric(rownames(GWAS[GWAS$P.value<FDRcutoff,]))
+               # busCV=cbind(IC$myallCV,X[,seqQTN])
+               busCV=IC$myallCV
             }
           }else{
             busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
           }
+          # print(myBus$seqQTN)
           pv=GWAS$P.value
           noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
           if(is.null(DP$KI))
