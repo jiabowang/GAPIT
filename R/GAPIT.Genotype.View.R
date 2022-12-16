@@ -135,9 +135,9 @@ odd=seq(1,length(chr),2)
 r=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
 d.V=dist/Aver.Dis
 
-grDevices::pdf("GAPIT.Genotype.Density_R_sqaure.pdf", width =10, height = 6)
+grDevices::pdf("GAPIT.Genotype.Density_neighbors.pdf", width =20, height = 6)
 # print(summary(d.V))
-par(mfcol=c(2,3),mar = c(5,5,2,2))
+par(mfcol=c(1,3),mar = c(5,5,2,2))
 plot(r[rs.index], xlab="Marker",las=1,xlim=c(1,mm),ylim=c(-1,1),
     ylab="R",axes=FALSE, main="a",cex=.5,col=colDisp)
 axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
@@ -169,36 +169,35 @@ d.V0.demo=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,1000,ifelse(nc
 ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max(d.V0))<=12,3,4)))
 ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
 d.V.hist$counts=d.V0/d.V0.demo
-plot(d.V[rs.index],r[rs.index], las=1,xlab="Distance (Kb)", ylim=c(-1,1),
-  ylab="R", main="c",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
-abline(h=0,col="darkred")
-plot(d.V[rs.index],(r^2)[rs.index], las=1,xlab="Distance (Kb)", ylim=c(0,1),
- ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
-# plot(as.numeric(fig.d[,1]),as.numeric(fig.d[,2]), las=1,xlab="Distance (Kb)", ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
+# plot(d.V[rs.index],r[rs.index], las=1,xlab="Distance (Kb)", ylim=c(-1,1),
+#   ylab="R", main="c",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
+# abline(h=0,col="darkred")
+# plot(d.V[rs.index],(r^2)[rs.index], las=1,xlab="Distance (Kb)", ylim=c(0,1),
+#  ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 
 #Moving average
-dist2[dist2>WS0]=NA
-indOrder=order(dist2)
-ma=cbind(as.data.frame(dist2[indOrder]),as.data.frame(r[indOrder]))
-indRM=ma[,1]==0
-maPure=ma[!indRM,]
-maPure=maPure[!is.na(maPure[,1]),]
-ns=nrow(maPure)
-# ws=ws
-slide=ws
-loc=matrix(NA,floor(ns/slide),2)
+# dist2[dist2>WS0]=NA
+# indOrder=order(dist2)
+# ma=cbind(as.data.frame(dist2[indOrder]),as.data.frame(r[indOrder]))
+# indRM=ma[,1]==0
+# maPure=ma[!indRM,]
+# maPure=maPure[!is.na(maPure[,1]),]
+# ns=nrow(maPure)
+# # ws=ws
+# slide=ws
+# loc=matrix(NA,floor(ns/slide),2)
 
-for (i in 1:floor(ns/slide)){
-  pieceD=maPure[ ((i-1)*slide+1):((i-1)*slide+ws), 1]
-  pieceR=maPure[ ((i-1)*slide+1):((i-1)*slide+ws), 2]^2
-  loc[i,1]=mean(pieceD,na.rm=T)
-  loc[i,2]=mean(pieceR,na.rm=T)
-}
-lines(loc[,1]/Aver.Dis,loc[,2],col="darkred",xlim=c(0,WS0/Aver.Dis))
+# for (i in 1:floor(ns/slide)){
+#   pieceD=maPure[ ((i-1)*slide+1):((i-1)*slide+ws), 1]
+#   pieceR=maPure[ ((i-1)*slide+1):((i-1)*slide+ws), 2]^2
+#   loc[i,1]=mean(pieceD,na.rm=T)
+#   loc[i,2]=mean(pieceR,na.rm=T)
+# }
+# lines(loc[,1]/Aver.Dis,loc[,2],col="darkred",xlim=c(0,WS0/Aver.Dis))
 
-plot(r0.hist, xlab="R", las=1,ylab=ylab.store[ylab0], main="e",col="gray")
+# plot(r0.hist, xlab="R", las=1,ylab=ylab.store[ylab0], main="e",col="gray")
 
-plot(d.V.hist, las=1,xlab="Distance (Kb)",col="gray", ylab=ylab.store[ylab0], main="f",cex=.5,xlim=c(0,WS0/Aver.Dis))
+plot(d.V.hist, las=1,xlab="Distance (Kb)",col="gray", ylab=ylab.store[ylab0], main="c",cex=.5,xlim=c(0,WS0/Aver.Dis))
 
 # hist(d.V0, las=1,xlab="Distance (Kb)", ylab="Frequency", main="e",cex=.5)
 
@@ -261,7 +260,17 @@ hist(maf[rs.index],  las=1,ylab="Frequency", xlab="MAF",freq=FALSE, cex=.5,main=
 grDevices::dev.off()
 
 
-
+# ViewGenotype2<-GAPIT.LD.decay(
+# GI=GI,
+# X=X,
+# WS0=WS0,
+# ws=ws,
+# max.num=length(chr),
+# # fre.by=100,  ## set 
+# # MAXfregment=NULL,
+# # max.number=NULL,
+# Aver.Dis=Aver.Dis
+# )
 
 print(paste("GAPIT.Genotype.View ", ".Three pdfs generate.","successfully!" ,sep = ""))
 

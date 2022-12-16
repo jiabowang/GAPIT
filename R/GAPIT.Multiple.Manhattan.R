@@ -50,26 +50,12 @@ for(i in 1:length(environ_name))
   themax.y0=round(max(c(themax.y,themax.y0)),0)
   chm.to.analyze <- unique(environ_result[,2])
   nchr=length(chm.to.analyze)
-  # xx=environ_result[,-1]
-  # ticks=NULL
-  # lastbase=0
-  # max.x=NULL
 
-  # for(ii in chm.to.analyze)
-  #   {
-  #   index=(xx[,1]==ii)
-  #   ticks <- c(ticks, lastbase+mean(xx[index,2]))
-  #   xx[index,2]=xx[index,2]+lastbase
-  #   lastbase=max(xx[index,2])
-  #   max.x=c(max.x,max(as.numeric(xx[index,2])))
-  #   }
-  # max.x=c(min(as.numeric(xx[,2])),max.x)
-  # store.x=c(store.x,as.numeric(xx[,2]))
   y_filter=environ_filter[environ_filter[,4]<(cutOff/(nrow(environ_filter))),,drop=FALSE]
   traits=environ_name[i]
   # print(head(y_filter))
   # print(traits)
-  if(nrow(y_filter)>0)y_filter=cbind(y_filter[,1:5],traits)
+  if(nrow(y_filter)>0)y_filter=cbind(as.matrix(y_filter[,1:5]),traits)
   y_filter0=rbind(y_filter0,y_filter)
   # write.table(y_filter,paste("GAPIT.Filter_",environ_name[i],"_GWAS_result.txt",sep=""))
 
