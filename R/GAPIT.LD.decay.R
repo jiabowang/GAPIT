@@ -128,6 +128,7 @@ for (i in 1:floor(ns/slide)){
   loc[i,1]=mean(pieceD,na.rm=T)
   loc[i,2]=mean(pieceR,na.rm=T)
 }
+lines(loc[,1]/Aver.Dis,loc[,2],lwd=4,col="gold",xlim=c(0,WS0/Aver.Dis))
 
 
 r0.hist=hist(R.all,  plot=FALSE)
@@ -143,7 +144,7 @@ ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max
 ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
 d.V.hist$counts=d.V0/d.V0.demo
 par(mar = c(5,2,2,5))
-plot(r0.hist, xlab="R", las=1,ylab="",axes=FALSE, main="c",col="gray")
+plot(r0.hist, xlab="R", las=1,ylab="",axes=FALSE, main="",col="gray")
 
 axis(4,col="black",col.ticks="black",col.axis="black")
 axis(1,col="black",col.ticks="black",col.axis="black")
