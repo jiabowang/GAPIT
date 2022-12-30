@@ -118,7 +118,6 @@ if(is.null(GD) & is.null(GT)) {
 # print(cbind(CV,PC))
 if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
 if(PCA.total>0&is.null(CV))CV=PC
-my_allCV=CV
 
 if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & is.null(Z)){
 taxa=as.character(Y[,1])
@@ -133,20 +132,34 @@ if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & !is.null(Z))
 }
 noCV=FALSE
 if(is.null(CV)){
-noCV=TRUE
-CV=Y[,1:2]
-CV[,2]=1
-colnames(CV)=c("taxa","overall")
+  noCV=TRUE
+  if(!is.null(GD))
+  {
+    taxa.gd=as.character(rownames(GD))
+    CV=cbind(as.data.frame(taxa.gd),GD[,1])
+    }else{
+      if(!is.null(KI))
+      {
+        CV=KI[,1:2]
+      }else{
+        CV=Y[,1:2]  
+      }
+    }
+  
+  CV[,2]=1
+  colnames(CV)=c("taxa","overall")
 }
+# print(CV)
 #Remove duplicat and integragation of data
 print("QC is in process...")
-CVI <- CV
+# CVI <- CV
 
 # print(cbind(as.character(Y[,1]),as.character(CV[,1])))
 # print("@@@@@")
 # print(dim(Y))
-# print(dim(KI))
+# print(dim(CV))
 # print(length(GT))
+my_allCV=CV
 
 if(QC)
 {
@@ -160,8 +173,9 @@ if(QC)
   Z=qc$Z
   GK=qc$GK
 }
-# print(dim(Z))
-# print("!!!!!")
+# print(dim(CV))
+# print(dim(KI))
+
 # aa=apply(Z,1,function(one) grep(1,as.numeric(one)))
 # print(as.numeric(aa))
 # print(dim(KI))
@@ -323,7 +337,7 @@ if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & !is.null(Z))
 }
 print("QC2 is in process...")
 GK=NULL
-CVI <- CV
+# CVI <- CV
 # print("@@@")
 # print(dim(Y))
 # print(dim(SUPER_myKI))
