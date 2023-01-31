@@ -102,6 +102,7 @@ for(i in 1:7)
      ylab="", main="",axes=FALSE,cex=.5,col=i,xlim=c(0,WS0/Aver.Dis))
      # ylab="R sqaure", main="",axes=TRUE,cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
  if(i<7)par(new=T)
+ # write.csv(data.all[[i]],paste("Distance.R.",i,".csv",sep=""))
  # plot(as.numeric(fig.d[,1]),as.numeric(fig.d[,2]), las=1,xlab="Distance (Kb)", ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 }
 
@@ -162,6 +163,6 @@ grDevices::dev.off()
 
 # print(paste("GAPIT.LD.decay ", "pdf generate.","successfully!" ,sep = ""))
 
-#GAPIT.Genotype.View
+#GAPIT.LD.decay
 }
 #=============================================================================================
