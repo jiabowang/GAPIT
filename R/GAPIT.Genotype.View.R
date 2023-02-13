@@ -87,15 +87,21 @@ pos.fix=as.numeric(GI[,2])*10^(nchar(max(as.numeric(GI[,3]))))+as.numeric(GI[,3]
 # print(table(rs.index))
 
 set.seed(99163)
-if(is.null(n.select))n.select=nrow(GI)
-rs.index=sample(nrow(GI),n.select)
+if(is.null(n.select))n.select=nrow(GI)-1
+rs.index=sample(nrow(GI)-1,n.select)
 rs.index=sort(rs.index)
 
 ## filter genotype by rs.index
+if((max(rs.index)+10)>nrow(GI)) rs.index[(rs.index+10)>nrow(GI)]=rs.index[(rs.index+10)>nrow(GI)]-10
+
 GI2=GI[rs.index,]
 X2=X[,rs.index]
-
-dist=abs(as.numeric(GI2[-1,3])-as.numeric(GI2[-nrow(GI2),3]))
+x1=X2
+x2=X[,rs.index+1]
+x3=X[,rs.index+4]
+dist1=abs(as.numeric(GI[rs.index,3])-as.numeric(GI[rs.index+1,3]))
+dist2=abs(as.numeric(GI[rs.index,3])-as.numeric(GI[rs.index+4,3]))
+dist=c(dist1,dist2)
 dist.out=GAPIT.Remove.outliers(dist,pro=0.1,size=1.1)
 # WS0=10000
 if(is.null(WS0)) WS0=((max(dist,na.rm=TRUE))%/%1000)*1000
@@ -103,9 +109,8 @@ if(WS0==0)WS0=1
 index=dist>WS0
 dist[index]=NA
 # X=myGD
-x1=X2[,-ncol(X2)]
-x2=X2[,-1]
 
+# x2=x2[,-1]
 ## set different colors for odd or even chromosome
 m=ncol(X2)
 theCol=as.numeric(GI2[,2])%%2 # here should work, based on the Chr is numeric values
@@ -125,9 +130,9 @@ for(i in 1:length(chr))
   chr.pos2[i+1]=max(as.numeric(rownames(GI2[GI2[,2]==chr[i],])))
 }
 odd=seq(1,length(chr),2)
-r=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
-# r2=mapply(GAPIT.Cor.matrix,as.data.frame(x3),as.data.frame(x4))
-# r=append(r1,r2)
+r1=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
+r2=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x3))
+r=append(r1,r2)
 r[is.na(r)]=0
 d.V=dist/Aver.Dis
 
@@ -174,30 +179,33 @@ ns=maPure[,1]
 # slide=ws
 # n.bin=ceiling(ns/slide)
 # ns.bin=unique(ceiling(ns/slide))
-if(n.select>50000)
-{ns.bin=c(seq(0,90,10),seq(100,max(ns)/4,100),seq(max(ns)/4+150,max(ns)/3,150),seq(max(ns)/3+200,max(ns)/2,200),seq(max(ns)/2+300,max(ns),300))
+if(n.select>500)
+{
+ns.bin=c(seq(0,90,10),seq(100,max(ns)/4,100),seq(max(ns)/4+200,max(ns)/3,200),seq(max(ns)/3+500,max(ns)/2,500),seq(max(ns)/2+1000,max(ns),1000))
+# ns.bin=c(seq(0,90,10),seq(100,max(ns),500))
 }else{
 ns.bin=seq(0,max(ns),5000)
 }
-loc=matrix(NA,length(ns.bin)-1,2)
+loc=matrix(NA,length(ns.bin)-1,3)
 j=0
 for (i in 1:(length(ns.bin)-1)){
   j=j+1
   pieceD=maPure[ ns.bin[i]<ns&ns<ns.bin[i+1], 1]
   pieceR=maPure[ ns.bin[i]<ns&ns<ns.bin[i+1], 2]
-  loc[i,1]=mean(pieceD,na.rm=T)
+  loc[i,1]=ns.bin[i+1]
   loc[i,2]=mean(pieceR,na.rm=T)
+  loc[i,3]=length(pieceR)
 }
 lines(loc[,1]/Aver.Dis,loc[,2],col="darkred",xlim=c(0,WS0/Aver.Dis))
 
 grDevices::dev.off()
-colnames(loc)=c("Distance","Rsquare")
+colnames(loc)=c("Distance","Rsquare","Number")
 write.csv(loc,paste("GAPIT.Genotype.Distance.Rsquare.csv",sep=""))
 
 grDevices::pdf("GAPIT.Genotype.Distance_R_Freq.pdf", width =10, height = 6)
 par(mfcol=c(1,2),mar = c(5,5,2,2))
 
-r0.hist=hist(r,  plot=FALSE)
+r0.hist=hist(r1,  plot=FALSE)
 r0=r0.hist$counts
 r0.demo=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,1000,ifelse(nchar(max(r0))<=12,10000000,100000000000)))
 r0.hist$counts=r0/r0.demo
@@ -246,11 +254,14 @@ axis(2,las=1)
 par(mar = c(1, 5, 0, 1))
 plot(maf, las=1,xlab="Marker", ylab="MAF",xlim=c(1,mm),axes=FALSE,
     cex=.5,col=colDisp,xaxt='n')
+output=cbind(het.snp,maf,r1)
+colnames(output)=c("het.snp","maf","r")
+write.csv(output,"GAPIT.Genotype.Frequency_MAF.csv",quote=FALSE)
 # axis(1,at=chr.pos,labels=rep("",length(chr)))
 # axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
 axis(2,las=1)
 par(mar = c(5, 5, 0, 1))
-plot((r^2),  las=1,ylab="R Sqaure", xlab="Marker", xlim=c(1,mm),axes=FALSE,
+plot((r1^2),  las=1,ylab="R Sqaure", xlab="Marker", xlim=c(1,mm),axes=FALSE,
     cex=.5,col=colDisp)
 axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
 axis(1,at=chr.pos,labels=chr,tick=FALSE)
