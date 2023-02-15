@@ -256,6 +256,7 @@
   num_regwas = 10,# the max number of Multiple step loops
   ncpus = 1,
   ngrid = 100, 
+  N4=FALSE,
   NQTN = NULL, #Simulation phenotype, number of QTN
   N.sig=NULL, #Random.model, Number of significant markers
   NJtree.group = NULL, #NJtree set number of cluster group
@@ -304,7 +305,7 @@
   Para = NULL,
   ulim = 10, 
   WS = c(1e0,1e3,1e4,1e5,1e6,1e7),
-  WS0 = NULL,
+  WS0 = 10000,
   ws=20
 	){
 #Object: To perform GWAS and GPS (Genomic Prediction/Selection)

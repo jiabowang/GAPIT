@@ -1,5 +1,5 @@
-`GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, cut.dis=1,n.select=10000,
-                                 WS0=100000,Aver.Dis=1000,...){
+`GAPIT.Genotype.View` <-function(GI=NULL,X=NULL,chr=NULL, cut.dis=1,n.select=NULL,N4=FALSE,
+                                 WS0=10000,Aver.Dis=1000,...){
 # Object: Analysis for Genotype data:Distribution of SNP density,Accumulation,Moving Average of density,result:a pdf of the scree plot
 # myG:Genotype data
 # chr: chromosome value
@@ -87,20 +87,23 @@ pos.fix=as.numeric(GI[,2])*10^(nchar(max(as.numeric(GI[,3]))))+as.numeric(GI[,3]
 # print(table(rs.index))
 
 set.seed(99163)
-if(is.null(n.select))n.select=nrow(GI)-1
+if(is.null(n.select))n.select=10000
+if(n.select>nrow(GI))n.select=nrow(GI)-1
 rs.index=sample(nrow(GI)-1,n.select)
 rs.index=sort(rs.index)
 
 ## filter genotype by rs.index
 if((max(rs.index)+10)>nrow(GI)) rs.index[(rs.index+10)>nrow(GI)]=rs.index[(rs.index+10)>nrow(GI)]-10
-
+x3=NULL
+r2=NULL
+dist2=NULL
 GI2=GI[rs.index,]
 X2=X[,rs.index]
 x1=X2
 x2=X[,rs.index+1]
-x3=X[,rs.index+4]
+if(N4) x3=X[,rs.index+4]
 dist1=abs(as.numeric(GI[rs.index,3])-as.numeric(GI[rs.index+1,3]))
-dist2=abs(as.numeric(GI[rs.index,3])-as.numeric(GI[rs.index+4,3]))
+if(N4) dist2=abs(as.numeric(GI[rs.index,3])-as.numeric(GI[rs.index+4,3]))
 dist=c(dist1,dist2)
 dist.out=GAPIT.Remove.outliers(dist,pro=0.1,size=1.1)
 # WS0=10000
@@ -131,7 +134,7 @@ for(i in 1:length(chr))
 }
 odd=seq(1,length(chr),2)
 r1=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x2))
-r2=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x3))
+if(N4) r2=mapply(GAPIT.Cor.matrix,as.data.frame(x1),as.data.frame(x3))
 r=append(r1,r2)
 r[is.na(r)]=0
 d.V=dist/Aver.Dis
