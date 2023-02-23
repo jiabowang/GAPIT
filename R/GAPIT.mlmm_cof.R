@@ -398,18 +398,25 @@
  		for (j in 1:(nbchunks-1)) { 
  		X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof)])[,((j-1)*round(m/nbchunks)+1):(j*round(m/nbchunks))]) 
  		RSS[[j]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
- 		rm(X_t)} 
+ 		effect[[j]]<-apply(X_t,2,function(x){stats::lsfit(x,Res_H0,intercept = FALSE)$coefficients})
+        rm(X_t)} 
  		X_t<-crossprod(M %*% (diag(n)-tcrossprod(Q_,Q_)),(X[,!colnames(X) %in% colnames(cof)])[,((j)*round(m/nbchunks)+1):(m-ncol(cof))]) 
  		RSS[[nbchunks]]<-apply(X_t,2,function(x){sum(stats::lsfit(x,Res_H0,intercept = FALSE)$residuals^2)}) 
+ 		effect[[nbchunks]]<-apply(X_t,2,function(x){stats::lsfit(x,Res_H0,intercept = FALSE)$coefficients})
  		rm(X_t,j) 
  		RSSf<-unlist(RSS) 
  		RSS_H0<-sum(Res_H0^2) 
  		df2<-n-df1-ncol(fix_cofs)-ncol(cof) 
  		Ftest<-(rep(RSS_H0,length(RSSf))/RSSf-1)*df2/df1 
  		# print("*****")
+ 		effect.all=NULL
+ 		for(k in 1:nbchunks)
+ 		{
+           effect.all=append(effect.all,effect[[k]])
+ 		}
  		pval <- stats::pf(Ftest,df1,df2,lower.tail=FALSE) 
- 		list('out'=rbind(data.frame(SNP=colnames(cof),'pval'=GLS_lm$coef[(ncol(fix_cofs)+1):(ncol(fix_cofs)+ncol(cof)),4]), 
- 		                 data.frame('SNP'=names(pval),'pval'=pval)), 
+        list('out'=rbind(data.frame('SNP'=colnames(cof),'pval'=GLS_lm$coef[(ncol(fix_cofs)+1):(ncol(fix_cofs)+ncol(cof)),4], 'effect'=GLS_lm$coef[(ncol(fix_cofs)+1):(ncol(fix_cofs)+ncol(cof)),1]), 
+ 		                 data.frame('SNP'=names(pval),'pval'=as.numeric(pval),'effect'=effect.all)), 
  		     'cof'=colnames(cof), 
  		     'coef'=GLS_lm$coef)} else {cat('error \n')}} 
  opt_extBIC_out<-bestmodel_pvals(opt_extBIC) 
