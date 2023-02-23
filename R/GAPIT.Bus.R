@@ -607,7 +607,7 @@ GWAS_result=mymlmm$opt_thresh$out
 effect=mymlmm$opt_thresh$coef[-1,]
 
 }
-print(head(GWAS_result,))
+# print(head(GWAS_result,))
 # print(str(effect))
 
    taxa=names(Y)[2]
