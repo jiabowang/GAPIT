@@ -1,5 +1,5 @@
 
-GAPIT [![](https://img.shields.io/badge/Issues-0%2B-brightgreen.svg)](https://github.com/jiabowang/GAPIT3/issues)
+GAPIT [![](https://img.shields.io/badge/Issues-0%2B-brightgreen.svg)](https://github.com/jiabowang/GAPIT/issues)
 ===========
 
 Genome Association and Prediction Integrated Tools Version III
@@ -59,7 +59,7 @@ Contents:
 
    
    * [Start](#start)
-      * [Installing GAPIT3](#installing-gapit3)
+      * [Installing GAPIT](#installing-gapit)
       * [Data Preparation](#data-preparation)
          * [Phenotype Data](#phenotype-data)
          * [Genotype Data](#genotype-data)
@@ -81,9 +81,9 @@ R can be freely downloaded from [http://www.r-project.org](http://www.r-project.
 We also recommend the integrated development environment RStudio which is also freely available at [http://www.rstudio.com](http://www.rstudio.com).
 
 
-## Installing GAPIT3
+## Installing GAPIT
 
-GAPIT3 can currently be installed in several ways.
+GAPIT can currently be installed in several ways.
 
 - From source on the internet
 - From GitHub
@@ -105,8 +105,8 @@ Installation can also be made from GitHub when the R package `devtools` is avail
 
 ```
 R> install.packages("devtools")
-R> devtools::install_github("jiabowang/GAPIT3",force=TRUE)
-R> library(GAPIT3)
+R> devtools::install_github("jiabowang/GAPIT",force=TRUE)
+R> library(GAPIT)
 ```
 
 
@@ -118,21 +118,21 @@ An archive can be downloaded from the "releases" page.
 If you would like the latest version of GAPIT from the GitHub site you may want to clone it and then build it (this may require Rtools on Windows).
 
 ```
-bash$ git clone git@github.com:jiabowang/GAPIT3.git
-bash$ R CMD build GAPIT3
+bash$ git clone git@github.com:jiabowang/GAPIT.git
+bash$ R CMD build GAPIT
 ```
 
 Once an archive has been obtained it can be installed from a shell, similar to as follows.
 
 
 ```
-bash$ R CMD INSTALL GAPIT3_3.2.0.9000.tar.gz
+bash$ R CMD INSTALL GAPIT_3.2.0.9000.tar.gz
 ```
 
 Or similarly from within R.
 
 ```
-R> install.packages("GAPIT3_3.2.0.9000.tar.gz", repos = NULL, type="source")
+R> install.packages("GAPIT_3.2.0.9000.tar.gz", repos = NULL, type="source")
 ```
 
 
