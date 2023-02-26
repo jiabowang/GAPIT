@@ -1,3 +1,0 @@
-exportPattern("^[[:alpha:]]+")
-import(bigmemory)
-import(biganalytics)
