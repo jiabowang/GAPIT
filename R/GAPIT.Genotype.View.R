@@ -202,6 +202,7 @@ for (i in 1:(length(ns.bin)-1)){
 lines(loc[,1]/Aver.Dis,loc[,2],col="darkred",xlim=c(0,WS0/Aver.Dis))
 
 grDevices::dev.off()
+
 colnames(loc)=c("Distance","Rsquare","Number")
 write.csv(loc,paste("GAPIT.Genotype.Distance.Rsquare.csv",sep=""))
 
