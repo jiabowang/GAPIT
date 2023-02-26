@@ -1,8 +1,8 @@
 
-GAPIT3 [![](https://img.shields.io/badge/Issues-0%2B-brightgreen.svg)](https://github.com/jiabowang/GAPIT3/issues)
+GAPIT [![](https://img.shields.io/badge/Issues-0%2B-brightgreen.svg)](https://github.com/jiabowang/GAPIT3/issues)
 ===========
 
-Genome Association and Prediction Integrated Tools
+Genome Association and Prediction Integrated Tools Version III
 
 ![The GAPIT logo](./tools/LOGO_WEB.png "Genome Association and Prediction Integrated Tools logo")
 
