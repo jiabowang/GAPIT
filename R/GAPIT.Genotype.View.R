@@ -141,7 +141,7 @@ d.V=dist/Aver.Dis
 
 grDevices::pdf("GAPIT.Genotype.Distance_R_Chro.pdf", width =10, height = 6)
 # print(summary(d.V))
-par(mfcol=c(1,2),mar = c(5,5,2,2))
+par(mfcol=c(2,3),mar = c(5,5,2,2))
 plot(r, xlab="Marker",las=1,xlim=c(1,mm),ylim=c(-1,1),
     ylab="R",axes=FALSE, main="a",cex=.5,col=colDisp)
 axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
@@ -151,19 +151,35 @@ axis(2,las=1)
 # aa=d.V[rs.index]
 
 plot(d.V,las=1, xlab="Marker", ylab="Distance (Kb)",xlim=c(1,mm), ylim=c(0,ceiling(max(d.V,na.rm=TRUE))),
-    axes=FALSE,main="b",cex=.5,col=colDisp)
+    axes=FALSE,main="d",cex=.5,col=colDisp)
 axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
 axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
 axis(2,las=1)
-grDevices::dev.off()
+# grDevices::dev.off()
 
-grDevices::pdf("GAPIT.Genotype.Distance_R_Rsqaure.pdf", width =10, height = 6)
-par(mfcol=c(1,2),mar = c(5,5,2,2))
+r0.hist=hist(r1,  plot=FALSE)
+r0=r0.hist$counts
+r0.demo=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,1000,ifelse(nchar(max(r0))<=12,10000000,100000000000)))
+r0.hist$counts=r0/r0.demo
+ylab0=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,2,ifelse(nchar(max(r0))<=12,3,4)))
+ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
+d.V.hist=hist(d.V, plot=FALSE)
+d.V0=d.V.hist$counts
+d.V0.demo=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,1000,ifelse(nchar(max(d.V0))<=12,10000000,100000000000)))
+ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max(d.V0))<=12,3,4)))
+ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
+d.V.hist$counts=d.V0/d.V0.demo
+plot(r0.hist, xlab="R", las=1,ylab=ylab.store[ylab0], main="b",col="gray")
+
+plot(d.V.hist, las=1,xlab="Distance (Kb)",col="gray", ylab=ylab.store[ylab0], main="e",cex=.5,xlim=c(0,WS0/Aver.Dis))
+
+# grDevices::pdf("GAPIT.Genotype.Distance_R_Rsqaure.pdf", width =10, height = 6)
+# par(mfcol=c(1,2),mar = c(5,5,2,2))
 plot(d.V,r,las=1,xlab="Distance (Kb)",ylim=c(-1,1),pch=16,
-  ylab="R",main="a",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
+  ylab="R",main="c",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 abline(h=0,col="darkred")
 plot(d.V,r^2,las=1,xlab="Distance (Kb)",ylim=c(0,1),pch=16,
-  ylab="R sqaure", main="b",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
+  ylab="R sqaure", main="f",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 
 #Moving average
 # dist2[dist2>WS0]=NA
@@ -201,29 +217,13 @@ for (i in 1:(length(ns.bin)-1)){
 }
 lines(loc[,1]/Aver.Dis,loc[,2],col="darkred",xlim=c(0,WS0/Aver.Dis))
 
-grDevices::dev.off()
+# grDevices::dev.off()
 
 colnames(loc)=c("Distance","Rsquare","Number")
 write.csv(loc,paste("GAPIT.Genotype.Distance.Rsquare.csv",sep=""))
 
-grDevices::pdf("GAPIT.Genotype.Distance_R_Freq.pdf", width =10, height = 6)
-par(mfcol=c(1,2),mar = c(5,5,2,2))
-
-r0.hist=hist(r1,  plot=FALSE)
-r0=r0.hist$counts
-r0.demo=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,1000,ifelse(nchar(max(r0))<=12,10000000,100000000000)))
-r0.hist$counts=r0/r0.demo
-ylab0=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,2,ifelse(nchar(max(r0))<=12,3,4)))
-ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
-d.V.hist=hist(d.V, plot=FALSE)
-d.V0=d.V.hist$counts
-d.V0.demo=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,1000,ifelse(nchar(max(d.V0))<=12,10000000,100000000000)))
-ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max(d.V0))<=12,3,4)))
-ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
-d.V.hist$counts=d.V0/d.V0.demo
-plot(r0.hist, xlab="R", las=1,ylab=ylab.store[ylab0], main="a",col="gray")
-
-plot(d.V.hist, las=1,xlab="Distance (Kb)",col="gray", ylab=ylab.store[ylab0], main="b",cex=.5,xlim=c(0,WS0/Aver.Dis))
+# grDevices::pdf("GAPIT.Genotype.Distance_R_Freq.pdf", width =10, height = 6)
+# par(mfcol=c(1,2),mar = c(5,5,2,2))
 
 # hist(d.V0, las=1,xlab="Distance (Kb)", ylab="Frequency", main="e",cex=.5)
 
