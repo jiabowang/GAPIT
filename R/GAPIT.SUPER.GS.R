@@ -521,7 +521,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    emma_REMLE=emma_test
    print("gBLUP with only one time emma")
   } 
-  print(dim(X))
+  # print(dim(X))
 
   if (is.null(my_allCV))
   {
@@ -531,8 +531,8 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   }
 
    my_allX=my_allX[,X.idx]
-   print(dim(my_allX))
-   print(length(emma_REMLE$betahat))
+   # print(dim(my_allX))
+   # print(length(emma_REMLE$betahat))
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(as.character(my_allCV[,1]),emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")
@@ -542,8 +542,9 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
    all_gs=cbind(BB,prediction)
    colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-  if(file.output) utils::write.csv(all_gs,paste("GAPIT.Association.Pred_result.",model,".",colnames(Y)[2],".csv",sep=""), row.names = FALSE,col.names = TRUE)
-
+   # print(name.of.trait)
+   if(file.output) utils::write.csv(all_gs,paste("GAPIT.Association.Prediction_results.",model,".",name.of.trait,".csv",sep=""), row.names = FALSE,col.names = TRUE)
+  
   print("GAPIT SUPER GS completed successfully for multiple traits. Results are saved")
   return (list(GPS=BB,Pred=all_gs,Compression=Compression,kinship=my_allKI,SUPER_kinship=SUPER_myKI,SUPER_GD=SUPER_optimum_GD ,PC=my_allCV,Timmer=Timmer,Memory=Memory,GWAS=NULL,h2=optimum_h2 ))
 

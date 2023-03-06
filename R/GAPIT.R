@@ -198,6 +198,8 @@
   Create.indicator = FALSE, #
   CG = NULL, #candidate gene matrix for relationship
   CV.Inheritance = NULL,
+  Cross.Vali=TRUE,
+  color0=NULL,
   DPP = 100000, #content points in Manhattan Plot
   DP=NULL,
   esp = 1e-10,
@@ -236,7 +238,7 @@
   kinship.group = 'Mean',#cMLM
   kinship.algorithm = "Zhang",#cMLM
   llim = -10, 
-  lmpred = FALSE, #option for linear model prediction or ABLUP prediction
+  lmpred = FALSE, #option for linear model prediction or ABLUP prediction, that could be set as multiple parameters
   LD.chromosome = NULL, #LD plot of markers in significant marker region
   LD.location = NULL, #LD plot of markers in significant marker region
   LD.range = NULL, #LD plot of markers in significant marker region
@@ -303,6 +305,8 @@
   Phenotype.View= TRUE, # option for phenotype view plot
   Prior = NULL,
   Para = NULL,
+  Predict.type="Phenotype",
+  pch0=NULL,
   ulim = 10, 
   WS = c(1e0,1e3,1e4,1e5,1e6,1e7),
   WS0 = 10000,
@@ -320,7 +324,14 @@ all.memo=NULL
 GAPIT.Version=GAPIT.0000()
 #if(!is.null(model))if(!match(model,c("MLM","CMLM","SUPER","GLM","FarmCPU","Blink","BlinkC","MLMM","gBLUP","cBLUP","sBLUP"))) stop(paste("PLease choose one model from ","MLM","CMLM","SUPER","GLM","FarmCPU","Blink","gBLUP","cBLUP","sBLUP",sep=""))
 #Allow either KI or K, but not both
-
+# if(buspred)
+# {
+  # if(length(model)!=length(lmpred))
+  # {
+    # stop("Please supply same length lmpred with model!!!")
+    
+  # }
+# }
 if(!is.null(KI)&is.null(GD)&is.null(G)&is.null(file.G)&is.null(file.GD)) SNP.test=FALSE
 model_store=model
 KI0=KI
@@ -333,12 +344,14 @@ if(!is.null(Y))
      for(m in 1:length(model_store))
         {
         model=model_store[m]
+        # lmpred0=lmpred[m]
         if(model%in%c("gBLUP","cBLUP","sBLUP"))
         {
           SNP.test=FALSE
           SUPER_GS=TRUE
         }else{
           SNP.test=TRUE
+          SUPER_GS=FALSE
         }
         if(toupper(model)=="BLINK") model="BLINK"
         if(toupper(model)=="FARMCPU") model="FarmCPU"
@@ -361,13 +374,14 @@ if(!is.null(Y))
          Multi_iter=TRUE
          # memo=paste(memo,"_Back",sep="")
         }
-
         if(group.from<nrow(Y)) model="CMLM"
-  # }  
         if(group.to!=group.from)model="CMLM"
         if(group.to==1&group.from==1)model="GLM"
         if(!is.null(sangwich.bottom)&!is.null(sangwich.bottom))model="SUPER"
-        if(model=="gBLUP") model="MLM"
+        if(model=="gBLUP") 
+          {
+            model="MLM"
+          }
         if(model=="cBLUP") model="CMLM"
         if(model=="sBLUP") 
           { model="SUPER"
@@ -508,6 +522,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
         for (trait in 2: ncol(Y))  
           {
              traitname=colnames(Y)[trait]
+             traitname0=colnames(Y)[trait]
 ###Statistical distributions of phenotype
 ###Correlation between phenotype and principal components
              print(paste("Processing trait: ",traitname,sep=""))
@@ -530,7 +545,7 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
 # print(Para$SNP.test)
              IC=GAPIT.IC(DP=DP)
              SS=GAPIT.SS(DP=DP, IC=IC, buspred=buspred, lmpred=lmpred)
-             if(Para$SNP.test&Para$file.output)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS)
+             if(Para$SNP.test&Para$file.output)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS,testY=testY)
           }#for loop trait
 #print(SNP.test)
         print("GAPIT accomplished successfully for multiple traits. Result are saved")
@@ -604,15 +619,15 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
         rownames(GD)=GT
         colnames(GD)=GI[,1]
         taxa=GT
-   if(!is.null(chor_taxa))
-   {
-     chro=as.numeric(as.matrix(GI[,2]))
-     for(i in 1:length(chro))
-     {
-      chro[chro==i]=chor_taxa[i]
-     }
-     GI[,2]=chro
-   }
+        if(!is.null(chor_taxa))
+          {
+             chro=as.numeric(as.matrix(GI[,2]))
+             for(i in 1:length(chro))
+                {
+                 chro[chro==i]=chor_taxa[i]
+                }
+             GI[,2]=chro
+          }
 #print(GD[1:5,1:5])
         if(output.numerical) 
           {
@@ -639,34 +654,105 @@ GAPIT_list=list(group.from=group.from ,group.to=group.to,group.by=group.by,DPP=D
   }# is.null(Y)
 
 #print(tail(IC$GM))
-model_store=all.memo
-if(!is.null(Y)&SNP.test)if(Multiple_analysis&Para$file.output&length(model_store)*(ncol(Y)-1)>1&length(model_store)*(ncol(Y)-1)<9)
-  { 
-  #print(DP$QTN.position)
-   GMM=GAPIT.Multiple.Manhattan(model_store=model_store,Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff,plot.type=c("w","h"))
-#print(str(GMM$multip_mapP))
-   GAPIT.Circle.Manhattan.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
-   # GAPIT.Multiple_Synthesis(model_store=model_store,Y.names=colnames(Y)[-1],cutOff=DP$cutOff,GM=IC$GM)
-  }#else{# end of multiple manhantton plot
-if(SNP.test&Multiple_analysis&Para$file.output) GMM=GAPIT.Multiple.Manhattan(model_store=model_store,
-  Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,inpch=inpch,outpch=outpch,
-  cutOff=DP$cutOff,plot.type=c("s"))
-  
-  
-if(file.output&!SNP.test&Inter.Plot)
-  { 
-  model_store=model_store[model_store%in%c("gBLUP","cBLUP","sBLUP")]  
-  print("Here will start interactive for GS !!!")
-  GAPIT.Interactive.GS(model_store=model_store,Y=Y)
-  if(!is.null(testY))GAPIT.Interactive.GS(model_store=model_store,Y=Y,testY=testY)
-
-#print(str(GMM$multip_mapP))
-#GAPIT.Circle.Manhatton.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
-  }# end of multiple manhantton plot
-
-
-
-  options(warn = 0)
-
+# model_store=all.memo
+if(!is.null(Y)) 
+  {
+    if(Multiple_analysis&Para$file.output&SNP.test)
+      {
+        all.memo=all.memo[!model_store%in%c("gBLUP","cBLUP","sBLUP")]
+        GMM=GAPIT.Multiple.Manhattan(model_store=all.memo,
+                Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,inpch=inpch,outpch=outpch,
+                cutOff=DP$cutOff,plot.type=c("s"))
+        print("GAPIT has been output Multiple Manhattan figure with Symphysic type!!!")
+        if(length(all.memo)*(ncol(Y)-1)>1&length(all.memo)*(ncol(Y)-1)<9)
+          {
+            GMM=GAPIT.Multiple.Manhattan(model_store=all.memo,Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,cutOff=DP$cutOff,plot.type=c("w","h"))
+            print("GAPIT has been output Multiple Manhattan figures with Wide and High types!!!")
+            GAPIT.Circle.Manhattan.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=DP$cutOff)
+            print("GAPIT has been output Multiple Manhattan and QQ figures with Circle types!!!")
+          }
+      } 
+    if(!SNP.test|buspred)
+      {
+        model_store2=model_store
+        if(length(model_store)==length(model_store[model_store%in%c("gBLUP","cBLUP","sBLUP")]))
+          {
+            memo=NULL
+            model_store2[model_store=="gBLUP"]="MLM"
+            model_store2[model_store=="cBLUP"]="CMLM"
+            model_store2[model_store=="sBLUP"]="SUPER"
+            container=paste(model_store2,".",traitname0,sep="")
+          }else{
+            if(length(model_store)==length(model_store[model_store%in%c("MLM","GLM","CMLM","SUPER","MLMM","MLMM2","FarmCPU","FarmCPU2","BLINK","BLINK2","BLINKC")]))
+            {
+              model.n=length(model_store)
+              lmpred.n=length(lmpred)
+              model2=NULL
+              for(i in 1:model.n)
+              {
+                model2=append(model2,rep(model_store[i],2))
+              }
+              lmpred2=rep(lmpred,model.n)
+              pred.way=rep(".MAS",length(lmpred2))
+              pred.way[!lmpred2]=".ABLUP"
+              container=paste(model2,".",traitname0,pred.way,sep="")
+            }else{
+              blup.index=model_store%in%c("gBLUP","cBLUP","sBLUP")
+              model.n=length(model_store)
+              lmpred.n=length(lmpred)
+              model2=NULL
+              for(i in 1:model.n)
+              {
+                dupl=2
+                if(model_store[i]%in%c("gBLUP","cBLUP","sBLUP"))dupl=1
+                model2=append(model2,rep(model_store[i],dupl))
+              }
+              if(length(lmpred)==1)
+              {
+                lmpred2=rep(lmpred,model.n)
+                pred.way=rep(".MAS",length(lmpred2))
+                pred.way[!lmpred2]=".ABLUP"
+                container=paste(model2,".",traitname0,pred.way,sep="")
+              }else{
+                container=NULL
+                cm=1
+                pred.way=c(".MAS",".ABLUP")
+                for(i in 1:length(model2))
+                {
+                  if(model2[i]%in%c("gBLUP","cBLUP","sBLUP"))
+                  {
+                    model2.tem=ifelse(model2[i]=="gBLUP","MLM",ifelse(model2[i]=="cBLUP","CMLM","SUPER"))
+                    container=append(container,paste(model2.tem,".",traitname0,sep=""))
+                  }else{
+                    container=append(container,paste(model2[i],".",traitname0,pred.way[1+cm%%2],sep=""))
+                    cm=cm+1
+                  }
+                }
+              }# end of length(lmpred)==1 else
+            }# end of gwas model
+          }# end of all model
+        
+        if(!is.null(testY)) GAPIT.PagainstP(Y=Y,testY=testY,container=container,
+                            type=Predict.type,pch0=pch0,color0=color0,
+                            Cross.Vali=Cross.Vali,)
+      }
+    if(file.output&!SNP.test)
+      { 
+        model_store.gs=model_store[model_store%in%c("gBLUP","cBLUP","sBLUP")]  
+        print("Here will start interactive for GS!!!")
+        if(Inter.Plot)
+          {
+            GAPIT.Interactive.GS(model_store=model_store.gs,Y=Y)
+            if(!is.null(testY))GAPIT.Interactive.GS(model_store=model_store.gs,Y=Y,testY=testY)
+          }
+      }# file.output&!SNP.test
+  } # !is.null(Y)
+options(warn = 0)
+print("GAPIT has done all analysis!!!")
+if(file.output) 
+{
+  print("Please find your all results in :")
+  print(paste(getwd()))
+}
 return (out)
 }  #end of GAPIT function

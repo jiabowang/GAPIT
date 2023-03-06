@@ -281,7 +281,7 @@ function(Y,
                         )
 # Compression=as.matrix(SUPER_GS_GAPIT$Compression)
 # opt=
-	  print("SUPER_GS_GAPIT FUNCTION DONE")	
+	  print("SUPER.GS function Done！！")	
 	  return (list(Compression=SUPER_GS_GAPIT$Compression,
 	               kinship.optimum=SUPER_GS_GAPIT$SUPER_kinship,
 	               kinship=SUPER_GS_GAPIT$kinship, 
@@ -1517,7 +1517,7 @@ if(!byPass &GAPIT3.output)
 {
 print("Exporting BLUP and Pred")
   #try(write.table(gs$BLUP, paste("GAPIT.", name.of.trait,".BLUP.csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
-  try(utils::write.table(Pred, paste("GAPIT.Association.Pred.", name.of.trait,".csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
+  try(utils::write.table(Pred, paste("GAPIT.Association.Prediction_results.", name.of.trait,".csv" ,sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE))
 }
 
 if(byPass) 

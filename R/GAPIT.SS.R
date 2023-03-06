@@ -56,17 +56,16 @@ if(DP$SNP.test)
 
  # BUS Prediction with gBLUP
 # lmpred=TRUE
-# if(!is.null(Pred))buspred=FALSE
      print(myBus$seqQTN)
      if(buspred)
      {  
         X=DP$GD[,-1]
-# print(dim(X))
-# print(dim(IC$myallCV))
-# print(dim(ic_PCA))
-        if(lmpred)
+        for(l in lmpred)
         {
-          print("Linear Regression to Predict phenotype !!")
+          memo=ifelse(l,"MAS","ABLUP")
+        if(l)
+        {
+          print("MAS to Predict phenotype !!")
     # colnames(busCV)[1]=c("Taxa")
     # print(length(IC$GT))
           index=as.character(DP$GD[,1])%in%as.character(ic_Y[,1])
@@ -144,7 +143,7 @@ if(DP$SNP.test)
     # print(table(index))
           print("Linear Regression to Predict phenotype Done !!")  
         }else{
-          print("aBLUP to Predict phenotype !!")
+          print("ABLUP to Predict phenotype !!")
           if(!is.null(IC$myallCV)) 
           {
             if(!is.null(myBus$seqQTN))
@@ -175,7 +174,7 @@ if(DP$SNP.test)
           }else{
             busKI=DP$KI
           }
-          print("The dimension of CV in lm model :")
+          print("The dimension of CV in ABLUP model :")
           print(dim(busCV))
    # print(dim(busKI))
    # print(busKI[1:10,1:10])
@@ -187,9 +186,13 @@ if(DP$SNP.test)
                   model="gBLUP",
                   file.output=F)
           Pred=busGAPIT$Pred
-          print("aBLUP to Predict phenotype Done!!")
-        }#lmpred
-        if(DP$file.output) utils::write.csv(Pred,paste("GAPIT.Association.Pred_result.",DP$kinship.algorithm,".csv",sep=""), row.names = FALSE,col.names = TRUE)
+          print("ABLUP Predict phenotype Done!!")
+        }#if lmpred
+        if(DP$file.output) 
+        {
+          utils::write.csv(Pred,paste("GAPIT.Association.Prediction_results.",DP$name.of.trait,".",memo,".csv",sep=""), row.names = FALSE,col.names = TRUE)
+        }
+        }#lmpred0
      }#buspred
      va=myBus$vg
      ve=myBus$ve
