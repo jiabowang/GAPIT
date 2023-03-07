@@ -333,9 +333,9 @@ GAPIT.Version=GAPIT.0000()
   # }
 # }
 if(!is.null(KI)&is.null(GD)&is.null(G)&is.null(file.G)&is.null(file.GD)) SNP.test=FALSE
-model_store=model
+# model_store=model
 KI0=KI
-
+model_store=append(model[!model%in%c("gBLUP","cBLUP","sBLUP")],model[model%in%c("gBLUP","cBLUP","sBLUP")])
 
 print(model_store)
 
@@ -378,13 +378,14 @@ if(!is.null(Y))
         if(group.to!=group.from)model="CMLM"
         if(group.to==1&group.from==1)model="GLM"
         if(!is.null(sangwich.bottom)&!is.null(sangwich.bottom))model="SUPER"
-        if(model=="gBLUP") 
-          {
-            model="MLM"
-          }
-        if(model=="cBLUP") model="CMLM"
+        # if(model=="gBLUP") 
+        #   {
+        #     model="MLM"
+        #   }
+        # if(model=="cBLUP") model="CMLM"
         if(model=="sBLUP") 
-          { model="SUPER"
+          { 
+            # model="SUPER"
             Para$group.from=1000000
             Para$group.to=1000000
             Para$group.by=nrow(Y)/10
@@ -397,14 +398,14 @@ if(!is.null(Y))
             Para$group.by=group.by
             Para$kinship.algorithm=kinship.algorithm
           }
-        if(model=="MLM")
+        if(model=="MLM"|model=="gBLUP")
           {
             Para$group.from=1000000
             Para$group.to=1000000
             Para$group.by=group.by
             Para$kinship.algorithm=kinship.algorithm
           }
-        if(model=="CMLM")
+        if(model=="CMLM"|model=="cBLUP")
           {
             if(group.from>=group.to)Para$group.from=1
             Para$group.to=group.to
@@ -414,7 +415,7 @@ if(!is.null(Y))
             print(group.from)
             print(group.to)
           }
-        if(model=="SUPER")
+        if(model=="SUPER"|model=="sBLUP")
           {
             if(!is.null(inclosure.from)&is.null(Para$inclosure.from))Para$inclosure.from=inclosure.from
             if(is.null(Para$inclosure.from))Para$inclosure.from=10
@@ -678,9 +679,9 @@ if(!is.null(Y))
         if(length(model_store)==length(model_store[model_store%in%c("gBLUP","cBLUP","sBLUP")]))
           {
             memo=NULL
-            model_store2[model_store=="gBLUP"]="MLM"
-            model_store2[model_store=="cBLUP"]="CMLM"
-            model_store2[model_store=="sBLUP"]="SUPER"
+            # model_store2[model_store=="gBLUP"]="MLM"
+            # model_store2[model_store=="cBLUP"]="CMLM"
+            # model_store2[model_store=="sBLUP"]="SUPER"
             container=paste(model_store2,".",traitname0,sep="")
           }else{
             if(length(model_store)==length(model_store[model_store%in%c("MLM","GLM","CMLM","SUPER","MLMM","MLMM2","FarmCPU","FarmCPU2","BLINK","BLINK2","BLINKC")]))
@@ -721,8 +722,8 @@ if(!is.null(Y))
                 {
                   if(model2[i]%in%c("gBLUP","cBLUP","sBLUP"))
                   {
-                    model2.tem=ifelse(model2[i]=="gBLUP","MLM",ifelse(model2[i]=="cBLUP","CMLM","SUPER"))
-                    container=append(container,paste(model2.tem,".",traitname0,sep=""))
+                    # model2.tem=ifelse(model2[i]=="gBLUP","MLM",ifelse(model2[i]=="cBLUP","CMLM","SUPER"))
+                    container=append(container,paste(model2[i],".",traitname0,sep=""))
                   }else{
                     container=append(container,paste(model2[i],".",traitname0,pred.way[1+cm%%2],sep=""))
                     cm=cm+1
