@@ -2,47 +2,47 @@
 #' GAPIT Genome Association and Prediction Integrated Tools
 #' 
 #' @description 
-#' GAPIT analyzes phenotypic and genotypics data to infer association.
+#' GWAS estimation procedure using the compressed linear mixed model (ref...)
 #' 
 #' 
-#' @param Y = NULL, data.frame of phenotype data, samples in rows, traits in column, first column is sample name
-#' @param G = NULL, data.frame of genotypic data, HAPMAP format
-#' @param GD = NULL, data.frame of genetic data in 'numerical' format, samples in rows, variants in columns.
-#' @param GM = NULL, Genetic Map data.frame to provide genomic coordinates for GD
-#' @param KI = NULL, Kinship matrix
-#' @param Z = NULL,
-#' @param CV = NULL, Covariate matrix
-#' @param CV.Inheritance = NULL,
-#' @param GP = NULL,
-#' @param GK = NULL,
-#' @param testY = NULL,
-#' @param group.from = 1e+06,
-#' @param group.to = 1e+06,
-#' @param group.by = 20,
-#' @param DPP = 1e+05,
-#' @param kinship.cluster = "average", options: complete, ward, single, mcquitty, median, and centroid 
-#' @param kinship.group = "Mean", options: Max, Min, and Median
-#' @param kinship.algorithm = "VanRaden", options: EMMA, Loiselle, VanRaden, Zhang
-#' @param buspred = FALSE,
-#' @param lmpred = FALSE,
-#' @param FDRcut = FALSE,
-#' @param bin.from = 10000,
-#' @param bin.to = 10000,
-#' @param bin.by = 10000,
-#' @param inclosure.from = 10,
-#' @param inclosure.to = 10,
-#' @param inclosure.by = 10,
-#' @param SNP.P3D = TRUE,
-#' @param SNP.effect = "Add",
-#' @param SNP.impute = "Middle",
-#' @param PCA.total = 0,
-#' @param SNP.fraction = 1,
+#' @param Y  data.frame of phenotype data where each row is a sample and each column is a trait, the first column is the sample names
+#' @param G  data.frame of genotypic data in HAPMAP format
+#' @param GD data.frame of genetic data in numerical format, where each row is a sample and each column is a variant.
+#' @param GM a data.frame of genomic coordinates for the genetic map
+#' @param KI an $NxN$ matrix of kinship coefficients
+#' @param Z  matrix of ???
+#' @param CV Covariance matrix
+#' @param CV.Inheritance 
+#' @param GP ????
+#' @param GK ????
+#' @param testY data.frame of ???
+#' @param group.from integer, minimum number of group(s) to consider
+#' @param group.to integer, maximum number of group(s) to consider
+#' @param group.by integer, increment for evaluating group size
+#' @param DPP integer, ???
+#' @param kinship.cluster algorithm for calculating kinship centroid (options: "average", "complete", "ward", "single", "mcquitty", "median", and "centroid") 
+#' @param kinship.group method for calculating group membership (options: "Mean", "Max", "Min", and "Median")
+#' @param kinship.algorithm algorithm to calculate the kinship matrix (options: "VanRaden", "EMMA", "Loiselle", and "Zhang")
+#' @param buspred logical
+#' @param lmpred logical
+#' @param FDRcut logical, filter pseudo QTN based on cut-off in BLINK
+#' @param bin.from integer,
+#' @param bin.to integer,
+#' @param bin.by integer,
+#' @param inclosure.from integer,
+#' @param inclosure.to integer,
+#' @param inclosure.by integer,
+#' @param SNP.P3D logical, to use P3D or Not for Testing SNPs
+#' @param SNP.effect genetic model for coding the SNP effect (options: "Add" (additive), "Dom", "Left", and "Right")
+#' @param SNP.impute SNP imputation method (options: "Middle", "Major", and "Minor")
+#' @param PCA.total integer, number of principal components to include in Q matrix (can be zero)
+#' @param SNP.fraction numerical input between 0 and 1, fraction of SNPs Sampled to Estimate Kinship and PCs
 #' @param seed = NULL,
 #' @param BINS = 20,
-#' @param SNP.test = TRUE,
-#' @param SNP.MAF = 0,
-#' @param FDR.Rate = 1,
-#' @param SNP.FDR = 1,
+#' @param SNP.test logical, statistical test SNPs or not
+#' @param SNP.MAF numerical input between 0 and 1, minor allele frequency to filter SNPs in GWAS reports
+#' @param FDR.Rate ????
+#' @param SNP.FDR numerical input between 0 and 1, false discovery rate for filtering SNPs
 #' @param SNP.permutation = FALSE,
 #' @param SNP.CV = NULL,
 #' @param SNP.robust = "GLM",
@@ -61,13 +61,13 @@
 #' @param llim = -10,
 #' @param ulim = 10,
 #' @param esp = 1e-10,
-#' @param LD.chromosome = NULL,
-#' @param LD.location = NULL,
-#' @param LD.range = NULL,
+#' @param LD.chromosome integer???, chromosome for linkage disequilibrium analysis
+#' @param LD.location ???, location (center) of SNPs for LD analysis
+#' @param LD.range ???, range around the Central Location of SNPs for LD Analysis,
 #' @param PCA.col = NULL,
-#' @param PCA.3d = FALSE,
+#' @param PCA.3d logical, ???
 #' @param NJtree.group = NULL,
-#' @param NJtree.type = c("fan", "unrooted"),
+#' @param NJtree.type type of neighbor joining tree (options: "fan" and "unrooted")
 #' @param sangwich.top = NULL,
 #' @param sangwich.bottom = NULL,
 #' @param QC = TRUE,
@@ -115,11 +115,11 @@
 #' @param iteration.output = FALSE,
 #' @param acceleration = 0,
 #' @param iteration.method = "accum",
-#' @param PCA.View.output = TRUE,
-#' @param Geno.View.output = TRUE,
+#' @param PCA.View.output logical, whether to output the PCA view
+#' @param Geno.View.output logical whether to output the Geno??? view
 #' @param plot.style = "Oceanic",
 #' @param SUPER_GD = NULL,
-#' @param SUPER_GS = FALSE,
+#' @param SUPER_GS logical,
 #' @param h2 = NULL,
 #' @param NQTN = NULL,
 #' @param QTNDist = "normal",
@@ -130,7 +130,7 @@
 #' @param a2 = 0,
 #' @param adim = 2,
 #' @param Multiple_analysis = FALSE,
-#' @param model = "MLM", options: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, or cBLUP
+#' @param model model type to run, (options: "MLM", "GLM", "CMLM", "MMLM", "SUPER", "FarmCPU", "gBLUP", and "cBLUP"_
 #' @param Para = NULL
 #' 
 #' 
@@ -148,15 +148,15 @@
 #' GAPIT.DP(), GAPIT.Phenotype.View(), GAPIT.judge(), GAPIT.IC(), GAPIT.SS(), GAPIT.ID().
 #' 
 #' 
-#' library(help = "GAPIT3")
+#' library(help = "GAPIT")
 #' 
 #' @author Zhiwu Zhang and Jiabo Wang
 #' 
 #' @examples 
 #' \dontrun{
 #' 
-#' myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz", package = "GAPIT3")
-#' myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz", package = "GAPIT3")
+#' myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz", package = "GAPIT")
+#' myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz", package = "GAPIT")
 #' myPhenotypes <- read.table(myPhenoFile, header = TRUE)
 #' myGenotypes  <- read.table(myGenoFile, header = FALSE)
 #' 
