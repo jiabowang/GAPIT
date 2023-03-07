@@ -23,7 +23,7 @@ no_model=c("gBLUP","cBLUP","sBLUP")[!index]
 gs_store=NULL
 for(i in 1:n)
    {
-    gs_result=utils::read.csv(paste("GAPIT.Association.Pred_result.",method_store[i],".csv",sep=""),head=T)
+    gs_result=utils::read.csv(paste("GAPIT.Association.Prediction_results.",method_store[i],".",colnames(Y)[2],".csv",sep=""),head=T)
     m=nrow(gs_result)
     gs_store=cbind(gs_store,gs_result[,8])
    }

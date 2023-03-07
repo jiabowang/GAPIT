@@ -104,7 +104,7 @@ line.vector <-  rep(1:(length(unique(Compression[,1])) * length(unique(Compressi
 #We want to have a total of three plots, one displaying the likelihood function, one displaying the variance components, and one displaying the
 # heritability 
 if( file.output == TRUE ){
-  grDevices::pdf(paste("GAPIT.Association.Compression_multiple_group", name.of.trait,".pdf", sep = ""), width = 14)
+  grDevices::pdf(paste("GAPIT.Association.Compression_multiple_group.", name.of.trait,".pdf", sep = ""), width = 14)
   graphics::par(mfrow = c(2,3), mar = c(5,5,1,1), lab = c(5,5,7))
 
   # Make the likelihood function plot

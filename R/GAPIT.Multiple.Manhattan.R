@@ -108,7 +108,7 @@ for(i in 1:length(environ_name))
        de.sc=scom[-1]-scom[-length(scom)]
        dayu1.index=duplicated(scom)|c(abs(de.sc)<WS,FALSE)
 
-       print(table(dayu1.index))
+       # print(table(dayu1.index))
        if(sum(dayu1.index)>0)
        {
        scom2=scom[dayu1.index]
@@ -646,7 +646,7 @@ if("s"%in%plot.type)
  nchar.traits=1.5
  # environ_name=paste(environ_name,"1234",sep="")
  nchar0=max(nchar(environ_name))
- print(nchar0)
+ # print(nchar0)
  if(Nenviron>5)
  {
   yourpch=c(rep(allpch0,n.vals),allpch0[1:(Nenviron-length(allpch0)*n.vals)])

@@ -39,6 +39,7 @@
   file.output=TRUE,
   SNP.MAF=0,
   CG=NULL,
+  testY=NULL,
   plot.bin=10^9 ){
 #Object: To Interpretation and Diagnoses 
 #Designed by Zhiwu Zhang
@@ -111,7 +112,7 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
             utils::write.table(DTS, paste("GAPIT.Association.Df_tValue_StdErr.", name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
           }#end file.output
       }#end !is.null(PWI.Filtered)
-  }else{ #inputdata is GAPIT3 result
+  }else{ #inputdata from GAPIT3 result
     cutOff=DP$cutOff
     DPP=DP$DPP
     Create.indicator=DP$Create.indicator
@@ -125,8 +126,8 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
     name.of.trait=DP$name.of.trait
     GWAS=SS$GWAS
     GVs=SS$GVs
-#print(head(GWAS))
     Pred=SS$Pred
+# print(head(GWAS))
     GI=GWAS
     GI=GI[order(GI[,3]),]
     GI=GI[order(GI[,2]),]

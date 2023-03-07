@@ -35,7 +35,7 @@ function(WS=c(1e0,1e3,1e4,1e5), GM=NULL,seqQTN=NULL,GWAS=NULL,maxOut=100,MaxBP=1
     for (theWS in 1:length(WS)){
         wsws=WS[theWS]
         qtn.pool=ceiling((as.numeric(GWAS[seqQTN,2])*MaxBP+as.numeric(GWAS[seqQTN,3]))/(2*wsws))
-        bonf.pool=ceiling((GWAS[total.index,2]*MaxBP+GWAS[total.index,3])/(2*wsws))
+        bonf.pool=ceiling((as.numeric(GWAS[total.index,2])*MaxBP+as.numeric(GWAS[total.index,3]))/(2*wsws))
         false.number=length(levels(factor(bonf.pool[!(bonf.pool%in%qtn.pool)])))
         for(j in 1:length(qtn.pool)){
             pbin=min(GWAS[bonf.pool==qtn.pool[j],4])
@@ -54,8 +54,8 @@ function(WS=c(1e0,1e3,1e4,1e5), GM=NULL,seqQTN=NULL,GWAS=NULL,maxOut=100,MaxBP=1
         for (theWS in 1:length(WS)){
             p.index=which(GWAS[,4]<=cutoff[theWS,j])
             wsws=WS[theWS]
-            qtn.pool=ceiling((GWAS[seqQTN,2]*MaxBP+GWAS[seqQTN,3])/(2*wsws))
-            bonf.pool=ceiling((GWAS[p.index,2]*MaxBP+GWAS[p.index,3])/(2*wsws))
+            qtn.pool=ceiling((as.numeric(GWAS[seqQTN,2])*MaxBP+as.numeric(GWAS[seqQTN,3]))/(2*wsws))
+            bonf.pool=ceiling((as.numeric(GWAS[p.index,2])*MaxBP+as.numeric(GWAS[p.index,3]))/(2*wsws))
             qtn.number=length(levels(factor(bonf.pool[bonf.pool%in%qtn.pool])))
             false.number=length(levels(factor(bonf.pool[!(bonf.pool%in%qtn.pool)])))
             if(theWS==1){
