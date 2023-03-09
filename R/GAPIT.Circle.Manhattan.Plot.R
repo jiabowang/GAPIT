@@ -1178,7 +1178,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				if(file.output) grDevices::dev.off()
 			}
 		}
-		print("Multiple QQ plot has been finished!",quote=F)
+		print("Multiple QQ plot has been finished!")
 	}
 
 		

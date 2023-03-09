@@ -543,7 +543,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
    all_gs=cbind(BB,prediction)
    colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-   print(head(all_gs))
+   # print(head(all_gs))
    if(GAPIT3.output)utils::write.csv(all_gs,paste("GAPIT.Association.Prediction_results.",model,".",name.of.trait,".csv",sep=""), row.names = FALSE,col.names = TRUE)
   
   print("GAPIT SUPER GS completed successfully for multiple traits. Results are saved")
