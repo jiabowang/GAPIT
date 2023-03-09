@@ -36,7 +36,7 @@ if (!is.null(GD))
 print(paste("There are ",nG," markers in genotype data."))}
 print("Phenotype and Genotype are test OK !!")
 
-print("--------------------GAPIT Logical ----------------------------------")
+print("--------------------GAPIT Logical Done----------------------------------")
 #if (group.to>nY&is.null(KI))group.to=nY
 #if (group.from>group.to&is.null(KI)) group.from=group.to
 if(!is.null(sangwich.top) & is.null(sangwich.bottom) ) stop("GAPIT Says: SUPER method need sangwich.top and bottom")

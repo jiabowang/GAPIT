@@ -91,7 +91,7 @@ if(DP$SNP.test)
             CV1 = as.matrix(IC$PCA[,-1])
             Group=1:nrow(DP$GD)
             RefInf=rep(2,nrow(DP$GD))
-            print(table(index))
+            # print(table(index))
             RefInf[index]=1
             ID=1:nrow(IC$myallCV)
             BLUP=rep(NA,nrow(DP$GD))
@@ -99,14 +99,10 @@ if(DP$SNP.test)
             BLUE=rep(NA,nrow(DP$GD))
             print("The dimension of CV in lm model :")
             print(dim(CV1))
-            print(dim(GD1))
+            # print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
             mylm = stats::lm(ic_Y[,2] ~cbind(CV1, GD1))
-            print(stats::cor(ic_Y[,2],as.numeric(stats::predict(mylm,as.data.frame(cbind(CV1,GD1))))))
-    # Pred = cbind(as.data.frame(DP$GD[index,1]),as.data.frame(predict(mylm,as.data.frame(cbind(CV1,GD1)))))
-    # colnames(Pred)=c("Taxa","Prediction")
-    # print(mylm$coefficients)
-    # print(head(cbind(IC$myallCV,GD2))
+            # print(stats::cor(ic_Y[,2],as.numeric(stats::predict(mylm,as.data.frame(cbind(CV1,GD1))))))
             if(stats::var(IC$myallCV[,2])==0)
             {
               kk=1:2
@@ -130,12 +126,9 @@ if(DP$SNP.test)
             BLUE=NA
             print("The dimension of CV in lm model :")
             print(dim(CV1))
-            print(dim(GD1))
-    # print(dim(GD1))
-    # print(ic_Y[!is.na(ic_Y[,2]),2])
+            # print(dim(GD1))
             mylm = stats::lm(ic_Y[!is.na(ic_Y[,2]),2] ~GD1)
-    # print("!!")
-            print(stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
+            # print(stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
             Pred = cbind(as.character(DP$GD[,1]),Group,RefInf,ID,BLUP,PEV,BLUE,stats::predict(mylm,as.data.frame(cbind(IC$myallCV[,-1],GD2))))
             colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")   
           }   
@@ -198,11 +191,8 @@ if(DP$SNP.test)
      ve=myBus$ve
      h2=va/(va+ve)
      mc=NULL
-#mc=(exp(1)^(1/GWAS$P.value))/10000
      bc=NULL
      mp=NULL
-#myP=1/(exp(10000*fm$tau2)
-#print(str(GWAS))
      TV=NULL
      Compression=NULL
      GVs=myBus$GVs
@@ -211,11 +201,7 @@ if(DP$SNP.test)
     Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.Main")
 
     GT=as.matrix(ic_GD[,1])
-#print("!!!!!!!")
-#print(DP$sangwich.top)
     if(DP$PCA.total==0) ic_PCA=NULL
-# print(ic_Y)
-#print(dim(ic_PCA))
     gapitMain <- GAPIT.Main(Y=ic_Y,
                          GD=IC$GD[,-1],
                          GM=DP$GM,
@@ -286,11 +272,11 @@ if(DP$SNP.test)
 						             GAPIT3.output=DP$file.output,
                          Model.selection = DP$Model.selection, 
 						             Create.indicator = DP$Create.indicator,
-						             QTN=DP$QTN, 
-						             QTN.round=DP$QTN.round,
-						             QTN.limit=DP$QTN.limit,
+						             # QTN=DP$QTN, 
+						             # QTN.round=DP$QTN.round,
+						             # QTN.limit=DP$QTN.limit,
 						             #QTN.update=QTN.update, 
-						             QTN.method=DP$QTN.method,
+						             # QTN.method=DP$QTN.method,
 						             Major.allele.zero=DP$Major.allele.zero,
 						             NJtree.group=DP$NJtree.group,
 						             NJtree.type=DP$NJtree.type,
@@ -298,11 +284,9 @@ if(DP$SNP.test)
                          QTN.position=DP$QTN.position,
 						             plot.style=DP$plot.style,
 						             SUPER_GS=DP$SUPER_GS)  
-#print(str(gapitMain))
     GWAS=gapitMain$GWAS
     if(DP$Random.model&DP$file.output)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,name.of.trait=DP$name.of.trait,N.sig=DP$N.sig,GT=IC$GT)
     Pred=gapitMain$Pred
-#print(head(Pred))
     va=NA#gapitMain$vg
     ve=NA#gapitMain$ve
     h2=gapitMain$h2
@@ -314,19 +298,13 @@ if(DP$SNP.test)
     GVs=GR$GVs
   }#!DP$kinship.algorithm%in%c("FarmCPU","MLMM","BLINK","BLINKC")
 myPower=NULL
-#print(head(GWAS))
-#print(DP$QTN.position)
 if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut,seqQTN=DP$QTN.position,GM=DP$GM,GWAS=GWAS)
-
-#print(str(myPower))
-  #print("GAPIT.III accomplished successfully for multiple traits. Results are saved")
   return (list(GWAS=GWAS,Pred=Pred,FDR=myPower$FDR,Power=myPower$Power,
   Power.Alpha=myPower$Power.Alpha,alpha=myPower$alpha,h2=h2,va=va,ve=ve,
   mc=mc,bc=bc,mp=mp,TV=TV,Compression=Compression,
   Timmer=Timmer,Memory=Memory,GVs=GVs))
 }else{
 # Here is Genomic Prediction function
-
 gapitMain <- GAPIT.Main(Y=IC$Y,
                         GD=DP$GD[,-1],
                         GM=DP$GM,
@@ -397,11 +375,11 @@ gapitMain <- GAPIT.Main(Y=IC$Y,
                         cutOff=DP$cutOff, 
                         Model.selection = DP$Model.selection, 
                         Create.indicator = DP$Create.indicator,
-                        QTN=DP$QTN,
-                        QTN.round=DP$QTN.round,
-                        QTN.limit=DP$QTN.limit, 
+                        # QTN=DP$QTN,
+                        # QTN.round=DP$QTN.round,
+                        # QTN.limit=DP$QTN.limit, 
                         #QTN.update=QTN.update, 
-                        QTN.method=DP$QTN.method, 
+                        # QTN.method=DP$QTN.method, 
                         Major.allele.zero=DP$Major.allele.zero,
                         NJtree.group=DP$NJtree.group,
                         NJtree.type=DP$NJtree.type,

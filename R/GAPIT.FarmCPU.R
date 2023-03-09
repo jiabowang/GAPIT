@@ -239,7 +239,7 @@ function(Y=NULL,GDP=NULL,GM=NULL,CV=NULL,orientation="row",package="FarmCPU.LM",
     #if(package!="FarmCPU.LM"){
     if(is.null(CV)) {
         myModel="Y [,2]~x"
-        if(package!="fast.lm"){
+        if(package=="fast.lm"){
             ccv=rep(1,nrow(Y))
         }
     }else{
@@ -248,7 +248,7 @@ function(Y=NULL,GDP=NULL,GM=NULL,CV=NULL,orientation="row",package="FarmCPU.LM",
         myModel=paste("Y[,2]~",paste("CV[,",(seqCV),"]",collapse= "+"),"+ x")
         #print(head(CV))
         #ccv=cbind(rep(1,nrow(Y)),as.matrix(CV[,2:ncol(CV)]))
-        if(package!="fast.lm"){
+        if(package=="fast.lm"){
             ccv=cbind(rep(1,nrow(Y)),as.matrix(CV))
         }
         #ccv=as.matrix(CV)

@@ -628,7 +628,6 @@ ViewGenotype<-GAPIT.Genotype.View(
 GI=GI,
 X=GD,
 WS0=WS0,
-ws=ws,
 Aver.Dis=Aver.Dis
 )
 }

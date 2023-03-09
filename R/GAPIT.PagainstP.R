@@ -1,5 +1,5 @@
 `GAPIT.PagainstP`<-
-function(container,Y,testY,type=c("Phenotype"),pch0=NULL,color0=NULL,
+function(container,Y,testY,model_store,traitname0="",lmpred=NULL,type=c("GEBV"),pch0=NULL,color0=NULL,
   Cross.Vali=TRUE,byTraits=TRUE,
   memo=NULL
   )
@@ -15,52 +15,60 @@ function(container,Y,testY,type=c("Phenotype"),pch0=NULL,color0=NULL,
 # model_store=c("BLINK","FarmCPU")
 Y.names=colnames(Y)[2]
 print("GAPIT.PagainstP has been beging...")
-# print(length(memo))
-  # Nenviron=length(model_store)*length(Y.names)*length(memo)
-  # environ_name=NULL
-  # environ_name2=NULL
-  # if(byTraits)
-  # {
-  #   for(i in 1:length(Y.names))
-  #   {
-  #      for(j in 1:length(model_store))
-  #      {
-  #         for(k in 1:length(memo))
-  #         {
-  #           environ_name=c(environ_name,paste(model_store[j],".",Y.names[i],memo[k],sep=""))
-  #         }         
-  #      }
-  #   }
-  # }else{
-  #   for(i in 1:length(model_store))
-  #   {
-  #      for(j in 1:length(Y.names))
-  #      {
-  #         environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],memo[k],sep=""))
-  #      }
-  #   }
-  # }
-  # if(byTraits)
-  # {
-  #   for(i in 1:length(Y.names))
-  #   {
-  #      for(j in 1:length(model_store))
-  #      {
-  #         for(k in 1:length(memo))
-  #         {
-  #           environ_name2=c(environ_name2,paste(model_store[j],memo[k],sep=""))
-  #         }         
-  #      }
-  #   }
-  # }else{
-  #   for(i in 1:length(model_store))
-  #   {
-  #      for(j in 1:length(Y.names))
-  #      {
-  #         environ_name2=c(environ_name2,paste(model_store[i],memo[k],sep=""))
-  #      }
-  #   }
-  # }
+model_store2=model_store
+if(length(model_store)==length(model_store[model_store%in%c("gBLUP","cBLUP","sBLUP")]))
+  {
+    container=paste(model_store2,".",traitname0,sep="")
+  }else{
+    if(length(model_store)==length(model_store[model_store%in%c("MLM","GLM","CMLM","SUPER","MLMM","MLMM2","FarmCPU","FarmCPU2","BLINK","BLINK2","BLINKC")]))
+      {
+        model.n=length(model_store)
+        lmpred.n=length(lmpred)
+        model2=NULL
+        for(i in 1:model.n)
+          {
+            model2=append(model2,rep(model_store[i],2))
+          }
+        lmpred2=rep(lmpred,model.n)
+        pred.way=rep(".MAS",length(lmpred2))
+        pred.way[!lmpred2]=".ABLUP"
+        container=paste(model2,".",traitname0,pred.way,sep="")
+      }else{
+        blup.index=model_store%in%c("gBLUP","cBLUP","sBLUP")
+        model.n=length(model_store)
+        lmpred.n=length(lmpred)
+        model2=NULL
+        for(i in 1:model.n)
+          {
+            dupl=2
+            if(model_store[i]%in%c("gBLUP","cBLUP","sBLUP"))dupl=1
+            model2=append(model2,rep(model_store[i],dupl))
+          }
+        if(length(lmpred)==1)
+          {
+            lmpred2=rep(lmpred,model.n)
+            pred.way=rep(".MAS",length(lmpred2))
+            pred.way[!lmpred2]=".ABLUP"
+            container=paste(model2,".",traitname0,pred.way,sep="")
+          }else{
+            container=NULL
+            cm=1
+            pred.way=c(".MAS",".ABLUP")
+            for(i in 1:length(model2))
+              {
+                if(model2[i]%in%c("gBLUP","cBLUP","sBLUP"))
+                  {
+                    # model2.tem=ifelse(model2[i]=="gBLUP","MLM",ifelse(model2[i]=="cBLUP","CMLM","SUPER"))
+                    container=append(container,paste(model2[i],".",traitname0,sep=""))
+                  }else{
+                    container=append(container,paste(model2[i],".",traitname0,pred.way[1+cm%%2],sep=""))
+                    cm=cm+1
+                  }
+              }
+          }# end of length(lmpred)==1 else
+      }# end of gwas model
+  }# end of all model
+        
 environ_name=container
 n=length(container)
 # print(n)
@@ -129,7 +137,6 @@ for(i in 1:n)
      # abline(h=hy,col="gray")
      # abline(v=hx,col="gray")
    }
-
 axis(1,col="black",col.ticks="black",col.axis="black",tck=-0.02,xaxp=c(floor(x.min),ceiling(x.max),5),cex.axis=1)
 axis(2,col="black",col.ticks="black",tck=-0.01,col.axis="black",yaxp=c(floor(y.min),ceiling(y.max),5),las=1,cex.axis=1)
 mtext("Observed Phenotype",side=1,line=2.6,col="black",cex=1)

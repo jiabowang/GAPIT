@@ -76,6 +76,7 @@ function(Y,
 				 GTindex = NULL,
 				 LD = 0.05,
 				 file.output = TRUE,
+         GAPIT3.output=TRUE,
 				 cutOff = 0.01
                         ){
  
@@ -220,11 +221,11 @@ print("-------------------start SUPER BREAD-----------------------------------")
   #print(head(CV))
   #myGD=cbind(as.data.frame(GT),as.data.frame(GD)) 
 
-  file.output.temp=file.output
-  file.output=FALSE
+  # file.output.temp=file.output
+  # file.output=FALSE
 #  print(memory.size())
-  GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=file.output)$GWAS
-  file.output=file.output.temp
+  GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=FALSE)$GWAS
+  # file.output=file.output.temp
 #  print(memory.size())
 
   GK=NULL
@@ -542,8 +543,8 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
    all_gs=cbind(BB,prediction)
    colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
-   # print(name.of.trait)
-   if(file.output) utils::write.csv(all_gs,paste("GAPIT.Association.Prediction_results.",model,".",name.of.trait,".csv",sep=""), row.names = FALSE,col.names = TRUE)
+   print(head(all_gs))
+   if(GAPIT3.output)utils::write.csv(all_gs,paste("GAPIT.Association.Prediction_results.",model,".",name.of.trait,".csv",sep=""), row.names = FALSE,col.names = TRUE)
   
   print("GAPIT SUPER GS completed successfully for multiple traits. Results are saved")
   return (list(GPS=BB,Pred=all_gs,Compression=Compression,kinship=my_allKI,SUPER_kinship=SUPER_myKI,SUPER_GD=SUPER_optimum_GD ,PC=my_allCV,Timmer=Timmer,Memory=Memory,GWAS=NULL,h2=optimum_h2 ))

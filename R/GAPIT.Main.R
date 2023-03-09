@@ -86,11 +86,6 @@
 #' @param cutOff param
 #' @param Model.selection param
 #' @param Create.indicator param
-#' @param QTN param
-#' @param QTN.round param
-#' @param QTN.limit param
-#' @param QTN.update param
-#' @param QTN.method param
 #' @param Major.allele.zero param
 #' @param QTN.position param
 #' @param SUPER_GD param
@@ -186,11 +181,11 @@ function(Y,
          cutOff=0.05, 
          Model.selection = FALSE, 
          Create.indicator = FALSE,
-				 QTN=NULL, 
-				 QTN.round=1,
-				 QTN.limit=0, 
-				 QTN.update=TRUE, 
-				 QTN.method="Penalty", 
+				 # QTN=NULL, 
+				 # QTN.round=1,
+				 # QTN.limit=0, 
+				 # QTN.update=TRUE, 
+				 # QTN.method="Penalty", 
 				 Major.allele.zero = FALSE,
          QTN.position=NULL,
 				 SUPER_GD=NULL,
@@ -276,7 +271,8 @@ function(Y,
                                     QC=QC,
                                     GTindex=GTindex,
                                     LD=LD,
-                                    file.output=GAPIT3.output,
+                                    file.output=FALSE,
+                                    GAPIT3.output=GAPIT3.output,
                                     cutOff=cutOff
                         )
 # Compression=as.matrix(SUPER_GS_GAPIT$Compression)
@@ -430,12 +426,12 @@ function(Y,
     CV=CV[as.character(CV[,1])%in%as.character(Y[,1]),]
     #Output phenotype
     colnames(Y)=c("Taxa",name.of.trait)
-    if(file.output){
-      try(utils::write.table(Y, paste("GAPIT.", name.of.trait,".phenotype.csv" ,sep = ""),
-                             quote = FALSE, sep = ",", 
-                             row.names = FALSE,
-                             col.names = TRUE))
-    }
+    # if(file.output){
+    #   try(utils::write.table(Y, paste("GAPIT.", name.of.trait,".phenotype.csv" ,sep = ""),
+    #                          quote = FALSE, sep = ",", 
+    #                          row.names = FALSE,
+    #                          col.names = TRUE))
+    # }
     
     # Default kinship.algorithm = "VanRaden".
     # This if() may be seldom used.
@@ -529,11 +525,11 @@ function(Y,
       }
   
   #myGD=cbind(as.data.frame(GT),as.data.frame(GD)) 
-      file.output.temp=file.output
-      file.output=FALSE
+      # file.output.temp=file.output
+      # file.output=FALSE
   #print(sangwich.top)[GTindex,c(1,GTindex+1)]
-      GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT[GTindex]),as.data.frame(GD[GTindex,])),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=file.output)$GWAS
-      file.output=file.output.temp
+      GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT[GTindex]),as.data.frame(GD[GTindex,])),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=FALSE)$GWAS
+      # file.output=file.output.temp
   
   
       GK=NULL
@@ -1202,7 +1198,7 @@ print("---------------Sandwich bottom: reload bins ---------------------------")
 #SUPER: Final screening
   GK=GK.save
   # print(GK)
-  myBread=GAPIT.Bread(Y=Y,CV=CV,Z=Z,GK=GK,GD=cbind(as.data.frame(GT[GTindex]),as.data.frame(GD)),GM=GI,method=sangwich.bottom,GTindex=GTindex,LD=LD,file.output=file.output)
+  myBread=GAPIT.Bread(Y=Y,CV=CV,Z=Z,GK=GK,GD=cbind(as.data.frame(GT[GTindex]),as.data.frame(GD)),GM=GI,method=sangwich.bottom,GTindex=GTindex,LD=LD,file.output=FALSE)
   
   print("SUPER saving results...")
 
@@ -1593,7 +1589,7 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Multiple Correction")
 
   #QQ plots
   #print("QQ plot..." )
-  if(file.output) GAPIT.QQ(P.values = PWIP$PWIP[,4], name.of.trait = name.of.trait,DPP=DPP)
+  # if(file.output) GAPIT.QQ(P.values = PWIP$PWIP[,4], name.of.trait = name.of.trait,DPP=DPP)
 
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="QQ plot")
@@ -1606,12 +1602,12 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="QQ plot")
    #print("Manhattan plot (Genomewise)..." )
 #  if(file.output) GAPIT.Manhattan(GI.MP = PWIP$PWIP[,2:4], name.of.trait = name.of.trait, DPP=DPP, plot.type = "Genomewise",cutOff=cutOff)
 #  if(file.output) GAPIT.Manhattan(GI.MP = PWIP$PWIP[,2:4], name.of.trait = name.of.trait, DPP=DPP, plot.type = "Genomewise",cutOff=cutOff,seqQTN=QTN.position)  #QTN does not work with sorted P
- if(file.output) GAPIT.Manhattan(GI.MP = PWI.Filtered[,2:4], name.of.trait = name.of.trait, DPP=DPP, plot.type = "Genomewise",cutOff=cutOff,seqQTN=QTN.position,plot.style=plot.style,plot.bin=plot.bin,chor_taxa=chor_taxa)
+ # if(file.output) GAPIT.Manhattan(GI.MP = PWI.Filtered[,2:4], name.of.trait = name.of.trait, DPP=DPP, plot.type = "Genomewise",cutOff=cutOff,seqQTN=QTN.position,plot.style=plot.style,plot.bin=plot.bin,chor_taxa=chor_taxa)
 
  #print("Manhattan plot (Chromosomewise)..." )
  
   #if(file.output) GAPIT.Manhattan(GI.MP = PWIP$PWIP[,2:4], name.of.trait = name.of.trait, DPP=DPP, plot.type = "Chromosomewise",cutOff=cutOff)
- if(file.output&SNP.fraction==1) GAPIT.Manhattan(GI.MP = PWI.Filtered[,2:4],GD=GD,CG=CG, name.of.trait = name.of.trait, DPP=DPP, plot.type = "Chromosomewise",cutOff=cutOff,plot.bin=plot.bin,chor_taxa=chor_taxa)
+ # if(file.output&SNP.fraction==1) GAPIT.Manhattan(GI.MP = PWI.Filtered[,2:4],GD=GD,CG=CG, name.of.trait = name.of.trait, DPP=DPP, plot.type = "Chromosomewise",cutOff=cutOff,plot.bin=plot.bin,chor_taxa=chor_taxa)
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Manhattan plot")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Manhattan plot")
@@ -1629,21 +1625,21 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Manhattan plot")
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")	
 
   #print("Creating ROC table and plot" )
-	if(file.output) myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=stats::var(ys),trait=name.of.trait)
+	# if(file.output) myROC=GAPIT.ROC(t=tvalue,se=stderr,Vp=stats::var(ys),trait=name.of.trait)
   #print("ROC table and plot created" )
 
   #MAF plots
   #print("MAF plot..." )
-   if(file.output) myMAF1=GAPIT.MAF(MAF=GWAS[,5],P=GWAS[,4],E=NULL,trait=name.of.trait)
+   # if(file.output) myMAF1=GAPIT.MAF(MAF=GWAS[,5],P=GWAS[,4],E=NULL,trait=name.of.trait)
 
 
   #print(dim(GWAS))
 
-  if(file.output){
-    utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-   utils::write.table(DTS, paste("GAPIT.Association.Df_tValue_StdErr.", name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-   if(!byPass) utils::write.table(GWAS.2, paste("GAPIT.Genotype.Allelic_Effect_Estimates.", name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-  }
+  # if(file.output){
+  #   utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+  #  utils::write.table(DTS, paste("GAPIT.Association.Df_tValue_StdErr.", name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+  #  if(!byPass) utils::write.table(GWAS.2, paste("GAPIT.Genotype.Allelic_Effect_Estimates.", name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+  # }
 
 
   
@@ -1664,13 +1660,13 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Extract GWAS end")
 #Timming
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Report")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Report")
-if(file.output){
-file=paste("GAPIT.", name.of.trait,".Timming.csv" ,sep = "")
-utils::write.table(Timmer, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+# if(file.output){
+# file=paste("GAPIT.", name.of.trait,".Timming.csv" ,sep = "")
+# utils::write.table(Timmer, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 
-file=paste("GAPIT.", name.of.trait,".Memory.Stage.csv" ,sep = "")
-utils::write.table(Memory, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-}
+# file=paste("GAPIT.", name.of.trait,".Memory.Stage.csv" ,sep = "")
+# utils::write.table(Memory, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+# }
 print(paste(name.of.trait, "has been analyzed successfully!") )
 print(paste("The results are saved in the directory of ", getwd()) )
 

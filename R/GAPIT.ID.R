@@ -122,7 +122,7 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
     file.output=DP$file.output
     SNP.MAF=DP$SNP.MAP
     CG=DP$CG
-    plot.bin=DP$CG
+    plot.bin=DP$plot.bin
     name.of.trait=DP$name.of.trait
     GWAS=SS$GWAS
     GVs=SS$GVs
