@@ -4,7 +4,7 @@ GAPIT [![](https://img.shields.io/badge/Issues-0%2B-brightgreen.svg)](https://gi
 
 Genome Association and Prediction Integrated Tools Version III
 
-![The GAPIT logo](./tools/LOGO_WEB.png "Genome Association and Prediction Integrated Tools logo")
+![The GAPIT logo](man/figures/LOGO_WEB.png "Genome Association and Prediction Integrated Tools logo")
 
 
 Citation
@@ -105,7 +105,7 @@ Installation can also be made from GitHub when the R package `devtools` is avail
 
 ```
 R> install.packages("devtools")
-R> devtools::install_github("jiabowang/GAPIT",force=TRUE)
+R> devtools::install_github("jiabowang/GAPIT", force=TRUE)
 R> library(GAPIT)
 ```
 
@@ -144,7 +144,7 @@ Data Preparation
 
 The user has the option of performing GWAS on multiple phenotypes in GAPIT. This is achieved by including all phenotypes in the text file of phenotypic data. Taxa names should be in the first column of the phenotypic data file and the remaining columns should contain the observed phenotype from each individual. Missing data should be indicated by either “NaN” or “NA”. 
 
-<img width="200" height="300" src="./tools/phenotype.png">
+<img width="200" height="300" src="man/figures/phenotype.png">
 
 ### Genotype Data
 
@@ -308,39 +308,39 @@ MABLUP (Markers Assisted BLUP) used significant markers as fixed effect in the m
 Result
 =====
 
-<div align=center><img width="400" height="300" src="./tools/Phenotype_view.png">
+<div align=center><img width="400" height="300" src="man/figures/Phenotype_view.png">
 
-<div align=center><img width="400" height="380" src="./tools/Marker_Density.png">
+<div align=center><img width="400" height="380" src="man/figures/Marker_Density.png">
 
-<div align=center><img width="400" height="300" src="./tools/Marker_LD.png">
+<div align=center><img width="400" height="300" src="man/figures/Marker_LD.png">
 
-<div align=center><img width="400" height="300" src="./tools/Heterozygosity.png">
+<div align=center><img width="400" height="300" src="man/figures/Heterozygosity.png">
 
-<div align=center><img width="450" height="400" src="./tools/MAF.png">
+<div align=center><img width="450" height="400" src="man/figures/MAF.png">
 
-<div align=center><img width="450" height="400" src="./tools/kinship_heatmap.png">
+<div align=center><img width="450" height="400" src="man/figures/kinship_heatmap.png">
 
-<div align=center><img width="450" height="400" src="./tools/2D_PCA.png">
+<div align=center><img width="450" height="400" src="man/figures/2D_PCA.png">
 
-<div align=center><img width="450" height="400" src="./tools/3D_PCA.png">
+<div align=center><img width="450" height="400" src="man/figures/3D_PCA.png">
 
-<div align=center><img width="450" height="380" src="./tools/PCA_eigenvalue.png">
+<div align=center><img width="450" height="380" src="man/figures/PCA_eigenvalue.png">
 
-<div align=center><img width="800" height="350" src="./tools/Manhattan.png">
+<div align=center><img width="800" height="350" src="man/figures/Manhattan.png">
 
-<div align=center><img width="450" height="400" src="./tools/QQ.png">
+<div align=center><img width="450" height="400" src="man/figures/QQ.png">
 
-<div align=center><img width="450" height="290" src="./tools/Optimum.png">
+<div align=center><img width="450" height="290" src="man/figures/Optimum.png">
 
-<div align=center><img width="450" height="400" src="./tools/ROC.png">
+<div align=center><img width="450" height="400" src="man/figures/ROC.png">
 
-<div align=center><img width="450" height="650" src="./tools/Figure_S01.Rectangle.Manhattan.Plot.6_methods.png">
+<div align=center><img width="450" height="650" src="man/figures/Figure_S01.Rectangle.Manhattan.Plot.6_methods.png">
 
-<div align=center><img width="450" height="400" src="./tools/Figure_S02.Circular.Manhattan.Plot.6_methods.png">
+<div align=center><img width="450" height="400" src="man/figures/Figure_S02.Circular.Manhattan.Plot.6_methods.png">
 
-<div align=center><img width="450" height="400" src="./tools/Figure_S03.QQ.Multiple.Plot.6_methods.png">
+<div align=center><img width="450" height="400" src="man/figures/Figure_S03.QQ.Multiple.Plot.6_methods.png">
 
-<div align=center><img width="450" height="400" src="./tools/Figure_S07.Kin.NJtree.fan.png">
+<div align=center><img width="450" height="400" src="man/figures/Figure_S07.Kin.NJtree.fan.png">
 
 <div align=left>
 
