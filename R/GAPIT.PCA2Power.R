@@ -40,7 +40,7 @@ if(!is.null(seed))set.seed(seed)
   
   power_npca=NULL
   fdr_npca=NULL
-  Para=list(h2=h2,NQTN=NQTN)
+  # Para=list(h2=h2,NQTN=NQTN)
 
 j=1
 for(k in 1:npc)
@@ -49,7 +49,7 @@ for(k in 1:npc)
     wholefdr=NULL
     for(i in 1:rep)
     {
-       mysimulation<-GAPIT(Para=Para,GD=myGD,GM=myGM)
+       mysimulation<-GAPIT(h2=h2,NQTN=NQTN,GD=myGD,GM=myGM)
        posi=mysimulation$QTN.position
        myY=mysimulation$Y
   

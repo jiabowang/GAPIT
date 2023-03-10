@@ -499,7 +499,7 @@ print(DP$name.of.trait)
           {
             myG_simulation<-GAPIT.Phenotype.Simulation(GD=cbind(as.data.frame(myGenotype$GT),myGenotype$GD),GM=myGenotype$GI,h2=h2,NQTN=NQTN,QTNDist=QTNDist,effectunit=effectunit)
             out=c(out,myG_simulation)
-            if(Para$file.output)ViewPhenotype<-GAPIT.Phenotype.View(myY=myG_simulation$Y,traitname="Simulated.Phenotype",memo=memo0)
+            if(file.output)ViewPhenotype<-GAPIT.Phenotype.View(myY=myG_simulation$Y,traitname="Simulated.Phenotype",memo=memo0)
           }
         out$GD=data.frame(cbind(as.data.frame(GT),as.data.frame(GD)))
         out$GM=GI

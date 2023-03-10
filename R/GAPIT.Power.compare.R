@@ -12,7 +12,7 @@ all.method=model
 ##simulation phyenotype
 ##-------------------------##
 set.seed(seed)
-Para=list(h2=h2,NQTN=NQTN)
+# Para=list(h2=h2,NQTN=NQTN)
 rep.power.store<-list()
 rep.FDR.store<-list()
 rep.Power.Alpha.store<-list()
@@ -26,7 +26,7 @@ for(j in 1:length(all.method))
 for(i in 1:nrep)
 {
 
-mysimulation<-GAPIT(Para=Para,G=G,GD=GD,GM=GM,PCA.total=PCA.total,file.output=FALSE)
+mysimulation<-GAPIT(h2=h2,NQTN=NQTN,G=G,GD=GD,GM=GM,PCA.total=PCA.total,file.output=FALSE)
 QTN.position=mysimulation$QTN.position
 Y=mysimulation$Y
 colnames(Y)=c("Taxa","Simu")
