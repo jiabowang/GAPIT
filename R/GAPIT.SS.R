@@ -109,9 +109,9 @@ if(DP$SNP.test)
             }else{
               kk=1
             }
-            aa=as.numeric(mylm$coefficients[-kk]%*%t(as.matrix(cbind(IC$myallCV[,-kk],GD2))))
+            aa=as.numeric(mylm$coefficients[-kk]%*%t(as.matrix(cbind(IC$myallCV[,-kk],GD2))))+as.numeric(mylm$coefficients[1])
     # print(aa)
-            pred0=cbind(Group,RefInf,ID,BLUP,PEV,BLUE,as.data.frame(aa))
+            pred0=cbind(Group,RefInf,ID,BLUP,PEV,as.data.frame(aa),as.data.frame(aa))
             Pred = cbind(as.data.frame(DP$GD[,1]),as.matrix(pred0))
             colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
           }else{
