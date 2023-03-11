@@ -314,7 +314,7 @@ Result
 
 <div align=center><img width="400" height="250" src="man/figures/Genotype.Frequency.png">
 
-<div align=center><img width="450" height="380" src="man/figures/Genotype.MAF_Heterozosity.png">
+<div align=center><img width="450" height="280" src="man/figures/Genotype.MAF_Heterozosity.png">
 
 <div align=center><img width="450" height="400" src="man/figures/kinship_heatmap.png">
 
