@@ -308,15 +308,13 @@ MABLUP (Markers Assisted BLUP) used significant markers as fixed effect in the m
 Result
 =====
 
-<div align=center><img width="400" height="300" src="man/figures/Phenotype_view.png">
+<div align=center><img width="400" height="300" src="man/figures/Phenotype.View.png">
 
-<div align=center><img width="400" height="380" src="man/figures/Marker_Density.png">
+<div align=center><img width="400" height="380" src="man/figures/Genotype.Distance_R_Chro.png">
 
-<div align=center><img width="400" height="300" src="man/figures/Marker_LD.png">
+<div align=center><img width="400" height="300" src="man/figures/Genotype.Frequency.png">
 
-<div align=center><img width="400" height="300" src="man/figures/Genotype.Frequency.pdf">
-
-<div align=center><img width="450" height="400" src="man/figures/MAF.png">
+<div align=center><img width="450" height="400" src="man/figures/Genotype.MAF_Heterozosity.png">
 
 <div align=center><img width="450" height="400" src="man/figures/kinship_heatmap.png">
 
