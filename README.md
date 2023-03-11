@@ -314,7 +314,7 @@ Result
 
 <div align=center><img width="400" height="300" src="man/figures/Marker_LD.png">
 
-<div align=center><img width="400" height="300" src="man/figures/Heterozygosity.png">
+<div align=center><img width="400" height="300" src="man/figures/Genotype.Frequency.pdf">
 
 <div align=center><img width="450" height="400" src="man/figures/MAF.png">
 
