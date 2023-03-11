@@ -312,7 +312,7 @@ Result
 
 <div align=center><img width="400" height="300" src="man/figures/Genotype.Distance_R_Chro.png">
 
-<div align=center><img width="400" height="250" src="man/figures/Genotype.Frequency.png">
+<div align=center><img width="400" height="200" src="man/figures/Genotype.Frequency.png">
 
 <div align=center><img width="450" height="280" src="man/figures/Genotype.MAF_Heterozosity.png">
 
