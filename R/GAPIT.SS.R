@@ -102,7 +102,7 @@ if(DP$SNP.test)
             # print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
             mylm = stats::lm(ic_Y[,2] ~cbind(CV1, GD1))
-            print(mylm)
+            # print(mylm)
             if(stats::var(IC$myallCV[,2])==0)
             {
               kk=1:2
