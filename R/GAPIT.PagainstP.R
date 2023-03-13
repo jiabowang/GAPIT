@@ -106,7 +106,8 @@ x.max=ceiling(max(gs_store[,2]))
 x.min=floor(min(gs_store[,2]))
 y.max=ceiling(max(gs_store[,-c(1,2)]))
 y.min=floor(min(gs_store[,-c(1,2)]))
-if(is.null(pch0))pch0=c(21:25)[1:n]
+# if(is.null(pch0))pch0=c(21:25)[1:n]
+if(is.null(pch0))pch0=c(1,0,5,2)[1:n]
 # if(is.null(color0))color0=rainbow(7)[1:n]
 if(is.null(color0))color0=c("turquoise4","indianred3","darkolivegreen3","red","aquamarine3","darkgoldenrod")[1:n]
 # if(is.null(color0))color0=c("lightblue","mistyrose","lavender")[1:n]
@@ -132,7 +133,8 @@ for(i in 1:n)
      plot(gs_store[,2],gs_store[,i+2],xlab="",ylab="",
       xlim=c(x.min,x.max+0.2*x.max),ylim=c(y.min,y.max),
       las=1,axes=F,
-      pch=pch0[i],col=color0[i],cex=1,lwd=1,bg=color1)
+      # bg=color1,
+      pch=pch0[i],col=color0[i],cex=1,lwd=1)
      r.store=append(r.store,cor(gs_store[,2],gs_store[,i+2]))
      # abline(h=hy,col="gray")
      # abline(v=hx,col="gray")

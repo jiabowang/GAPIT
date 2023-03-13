@@ -102,14 +102,15 @@ if(DP$SNP.test)
             # print(dim(GD1))
     # print(ic_Y[!is.na(ic_Y[,2]),2])
             mylm = stats::lm(ic_Y[,2] ~cbind(CV1, GD1))
-            # print(stats::cor(ic_Y[,2],as.numeric(stats::predict(mylm,as.data.frame(cbind(CV1,GD1))))))
+            print(mylm)
             if(stats::var(IC$myallCV[,2])==0)
             {
               kk=1:2
             }else{
               kk=1
             }
-            aa=as.numeric(mylm$coefficients[-kk]%*%t(as.matrix(cbind(IC$myallCV[,-kk],GD2))))+as.numeric(mylm$coefficients[1])
+            lm.coeff=mylm$coefficients[-kk]
+            aa=as.numeric(lm.coeff[!is.na(lm.coeff)]%*%t(as.matrix(cbind(IC$myallCV[,-kk],GD2)))[!is.na(lm.coeff),])+as.numeric(mylm$coefficients[1])
     # print(aa)
             pred0=cbind(Group,RefInf,ID,BLUP,PEV,as.data.frame(aa),as.data.frame(aa))
             Pred = cbind(as.data.frame(DP$GD[,1]),as.matrix(pred0))
