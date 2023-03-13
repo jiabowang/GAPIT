@@ -30,7 +30,7 @@ if(method=="GLM"){
   GM=GM,
   model=("GLM"),
   QC=FALSE,
-  GTindex=GTindex,
+  # GTindex=GTindex,
   file.output=file.output				
   )
   GWAS=myGAPIT$GWAS 
@@ -52,10 +52,9 @@ if(method=="MLM"){
   KI=KI,
   GD=GD,
   GM=GM,
-  group.from=nrow(Y),			
-  group.to=nrow(Y),
+  model="MLM",
   QC=FALSE,
-  GTindex=GTindex,
+  # GTindex=GTindex,
   file.output=file.output				
   )
   GWAS=myGAPIT$GWAS 
@@ -76,10 +75,9 @@ if(method=="CMLM"){
   KI=KI,
   GD=GD,
   GM=GM,
-  group.from=1,			
-  group.to=nrow(Y),
+  model="CMLM",
   QC=FALSE,
-  GTindex=GTindex,
+  # GTindex=GTindex,
   file.output=file.output				
   )
   GWAS=myGAPIT$GWAS 

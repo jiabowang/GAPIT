@@ -264,7 +264,9 @@ if(!is.null(Y))
   {
      for(m in 1:length(model_store))
         {
+        # print(model_store)
         model=model_store[m]
+        # print(model)
         if(model%in%c("gBLUP","cBLUP","sBLUP"))
         {
           SNP.test=FALSE
@@ -291,10 +293,10 @@ if(!is.null(Y))
         {model="MLMM2"
          Multi_iter=TRUE
         }
-        if(group.from<nrow(Y)) model="CMLM"
-        if(group.to!=group.from)model="CMLM"
-        if(group.to==1&group.from==1)model="GLM"
-        if(!is.null(sangwich.bottom)&!is.null(sangwich.bottom))model="SUPER"
+        # if(group.from<nrow(Y)) model="CMLM"
+        # if(group.to!=group.from)model="CMLM"
+        # if(group.to==1&group.from==1)model="GLM"
+        # if(!is.null(sangwich.bottom)&!is.null(sangwich.bottom))model="SUPER"
         if(model=="GLM")
           {
             group.from=1
@@ -363,6 +365,8 @@ if(!is.null(Y))
         if(ncol(Y)<2)  stop ("Phenotype should have taxa name and one trait at least. Please correct phenotype file!")
         print(paste("The ",m," model in all.",sep=""))
         print(model)
+        # print(SUPER_GS)
+        # print(SNP.test)
         if(m==1)
           {
             DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI0,Z=Z,CV=CV,
@@ -392,6 +396,8 @@ if(!is.null(Y))
              DP$inclosure.by=inclosure.by
              DP$Multi_iter=Multi_iter
              DP$file.output=file.output
+             DP$SNP.test=SNP.test
+             DP$model=model
           }
 
         for (trait in 2: ncol(Y))  
@@ -445,7 +451,7 @@ print(DP$name.of.trait)
         out$GM=DP$GM
         out$Compression=SS$Compression
         if(SNP.test)names(out$GWAS$P.value)="mp"
-        if(kinship.algorithm=="FarmCPU")names(out$Pred)=c("Taxa",traitname,"Prediction")
+        # if(kinship.algorithm=="FarmCPU")names(out$Pred)=c("Taxa",traitname,"Prediction")
 #return (out)
         }#end of model loop
   }else{# is.null(Y)
@@ -521,6 +527,7 @@ if(!is.null(Y))
         print("GAPIT has been output Multiple Manhattan figure with Symphysic type!!!")
         if(length(all.memo)*(ncol(Y)-1)>1&length(all.memo)*(ncol(Y)-1)<9)
           {
+            print(all.memo)
             GMM=GAPIT.Multiple.Manhattan(model_store=all.memo,Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=QTN.position,cutOff=cutOff,plot.type=c("w","h"))
             print("GAPIT has been output Multiple Manhattan figures with Wide and High types!!!")
             GAPIT.Circle.Manhattan.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=cutOff)

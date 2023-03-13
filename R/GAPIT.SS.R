@@ -14,6 +14,7 @@ GR$GVs=NULL
 
 if(DP$SNP.test)
 {
+  print("GAPIT will be into GWAS approach...")
   ic_GD=IC$GD
   ic_GM=IC$GM
   ic_Y=IC$Y
@@ -306,6 +307,7 @@ if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut
   Timmer=Timmer,Memory=Memory,GVs=GVs))
 }else{
 # Here is Genomic Prediction function
+  print("GAPIT will be into GS approach...")
 gapitMain <- GAPIT.Main(Y=IC$Y,
                         GD=DP$GD[,-1],
                         GM=DP$GM,

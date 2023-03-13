@@ -81,6 +81,7 @@ cv.index=c(rep(FALSE,nrow(obser)),rep(TRUE,nrow(testY)))
 # print(dim(testY))
 # print(table(cv.index))
 obser=rbind(obser,testY)
+obser=cbind(as.data.frame(obser[,1]),as.numeric(obser[,2]))
 cv.index=cv.index[!is.na(obser[,2])]
 obser=obser[!is.na(obser[,2]),]
 if(Cross.Vali) 
@@ -100,10 +101,10 @@ for(i in 1:n)
     # print(head(gs_result0))
     gs_store=merge(gs_store,gs_result0,by.x=colnames(obser)[1],by.y=colnames(gs_result0)[1])
    }
-# colnames(gs_store)[-1]=model_store
-print(dim(gs_store))
-x.max=ceiling(max(gs_store[,2]))
-x.min=floor(min(gs_store[,2]))
+# print(head(gs_store))
+# print(gs_store)
+x.max=ceiling(max(as.numeric(gs_store[,2])))
+x.min=floor(min(as.numeric(gs_store[,2])))
 y.max=ceiling(max(gs_store[,-c(1,2)]))
 y.min=floor(min(gs_store[,-c(1,2)]))
 # if(is.null(pch0))pch0=c(21:25)[1:n]
@@ -112,7 +113,7 @@ if(is.null(pch0))pch0=c(1,0,5,2)[1:n]
 if(is.null(color0))color0=c("turquoise4","indianred3","darkolivegreen3","red","aquamarine3","darkgoldenrod")[1:n]
 # if(is.null(color0))color0=c("lightblue","mistyrose","lavender")[1:n]
 grDevices::pdf(paste("GAPIT.Association.Prediction_",type,".pdf" ,sep = ""),width = 8,height=5)
-
+if(type=="GEBV") type.y="Breeding Values"
 par(mfrow=c(1,1))
 par(mar=c(5,7,1,1))
 hx=seq(x.min,x.max,abs(x.max-x.min)/5)
@@ -141,7 +142,7 @@ for(i in 1:n)
    }
 axis(1,col="black",col.ticks="black",col.axis="black",tck=-0.02,xaxp=c(floor(x.min),ceiling(x.max),5),cex.axis=1)
 axis(2,col="black",col.ticks="black",tck=-0.01,col.axis="black",yaxp=c(floor(y.min),ceiling(y.max),5),las=1,cex.axis=1)
-mtext("Observed Phenotype",side=1,line=2.6,col="black",cex=1)
+mtext(paste("Observed ",type.y,sep=""),side=1,line=2.6,col="black",cex=1)
 mtext(paste("Predicted ",type,sep="" ),side=2,line=3.5,col="black",cex=1)
 
 legend("bottomright",legend=paste("R (",colnames(gs_store)[-c(1,2)],")= ",round(r.store,2),sep=""),horiz=F,
