@@ -134,7 +134,7 @@ if(a2>0&NQTN>=nint){
     # print("!!!")
     if(orientation=="col") myY=cbind(as.data.frame(GD[,1]),as.data.frame(y))
     if(orientation=="row") myY=cbind(NA,as.data.frame(y))
-    
+    colnames(myY)=c("Taxa","Sim")
     #Convert to category phenotype
     if(category>1){
       myQuantile =(0:category)/category

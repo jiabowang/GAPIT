@@ -99,7 +99,7 @@ GD=cbind(as.data.frame(GT),GD)
         		WS= WS,alpha= alpha,maxOut= maxOut,QTN.position= QTN.position, converge=1,iteration.output= iteration.output,acceleration=0,
         		iteration.method= iteration.method,PCA.View.output= PCA.View.output, 
                 p.threshold=p.threshold,QTN.threshold=QTN.threshold,N.sig=N.sig,
-                maf.threshold=maf.threshold,chor_taxa=chor_taxa,num_regwas=num_regwas,
+                maf.threshold=maf.threshold,chor_taxa=chor_taxa,num_regwas=num_regwas,model=model,
         		Geno.View.output= Geno.View.output,plot.style= plot.style,SUPER_GD= SUPER_GD,SUPER_GS= SUPER_GS,CG=CG,plot.bin=plot.bin))
 }  #end of GAPIT DP function
 #=============================================================================================

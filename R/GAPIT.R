@@ -423,7 +423,7 @@ if(!is.null(Y))
              DP$Y=Y[!is.na(Y[,trait]),c(1,trait)]
              if(QC.Y) DP$Y[,2]=GAPIT.Remove.outliers(DP$Y[,2])
              DP$model=model
-print(DP$name.of.trait)
+# print(DP$name.of.trait)
              IC=GAPIT.IC(DP=DP)
              SS=GAPIT.SS(DP=DP, IC=IC, buspred=buspred, lmpred=lmpred)
              if(SNP.test&DP$file.output)ID=GAPIT.ID(DP=DP,IC=IC,SS=SS,testY=testY)

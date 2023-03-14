@@ -43,6 +43,7 @@ for(i in 1:length(environ_name))
 {
   print(paste("Reading GWAS result with ",environ_name[i],sep=""))
   environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[i],".csv",sep=""),head=T)
+  num.markers=nrow(environ_result)
   environ_result=environ_result[order(environ_result[,3]),]
   environ_result=environ_result[order(environ_result[,2]),]
   environ_filter=environ_result[!is.na(environ_result[,4]),]
@@ -51,7 +52,7 @@ for(i in 1:length(environ_name))
   chm.to.analyze <- unique(environ_result[,2])
   nchr=length(chm.to.analyze)
 
-  y_filter=environ_filter[environ_filter[,4]<(cutOff/(nrow(environ_filter))),,drop=FALSE]
+  y_filter=environ_filter[environ_filter[,4]<(cutOff/(num.markers)),,drop=FALSE]
   traits=environ_name[i]
   # print(head(y_filter))
   # print(traits)
