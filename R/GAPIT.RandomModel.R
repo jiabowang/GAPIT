@@ -180,6 +180,8 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
             cex=1.2,xlim =c(0,x.lim) ,main="a",
             ylab=expression(-log[10](italic(p))))
             # par(mar = c(5, 5, 2, 1))
+            print(min(y))
+            print(max(y))
             plot(gene_list$maf,gene_list$effect,cex=1.2,main="b",
             xlab="MAF",ylim=c(min(y), max(y)), xlim =c(0,x.lim) ,las=1,
             ylab="Estimated Effect")

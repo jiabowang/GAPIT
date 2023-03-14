@@ -67,7 +67,8 @@
 #' @param Multiple_analysis logical, whether to output the mulitple mahattan and QQ plots. default as TRUE 
 #' @param model model type to run, (options: "MLM", "GLM", "CMLM", "MMLM", "SUPER", "FarmCPU", "gBLUP",  "cBLUP", and "sBLUP"
 #' @param Predict.type option to display which type predicted factor again real phenotype in the GAPIT.Association.Prediction pdf file.(options: "GEBV","BLUP" and "BLUE")
-#' 
+#' @param SNP.test logical, whether to do GWAS or GS.
+
 #' @details 
 #' Genome Association and Prediction Integrated Tools
 #' Available models: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, cBLUP
@@ -219,7 +220,7 @@
   SNP.effect = "Add",
   SNP.impute = "Middle",
   SNP.fraction = 1, 
-  # SNP.test = TRUE,
+  SNP.test = TRUE,
   SNP.MAF = 0,
   SNP.FDR = 1,
   # SNP.permutation = FALSE,
@@ -272,7 +273,7 @@ if(!is.null(Y))
           SNP.test=FALSE
           SUPER_GS=TRUE
         }else{
-          SNP.test=TRUE
+          # SNP.test=TRUE
           SUPER_GS=FALSE
         }
         if(toupper(model)=="BLINK") model="BLINK"
@@ -517,7 +518,7 @@ if(!is.null(Y))
 # model_store=all.memo
 if(!is.null(Y)) 
   {
-    if(Multiple_analysis&DP$file.output)
+    if(SNP.test&Multiple_analysis&DP$file.output)
       {
         all.memo=all.memo[!model_store%in%c("gBLUP","cBLUP","sBLUP")]
         if(length(all.memo)==0) break
