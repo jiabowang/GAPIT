@@ -212,7 +212,7 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
         DTS=cbind(GWAS[,1:3],df,tvalue,stderr,GWAS[,ncol(GWAS)])
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")  
         utils::write.table(DTS, paste("GAPIT.Association.GWAS_StdErr.", DP$name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-        GAPIT.Phenotype.afterGWAS(GWAS=GWAS,GD=DP$GD,GM=DP$GM,Y=DP$Y,model=DP$model,cutOff=DP$cutOff)
+        GAPIT.Phenotype.afterGWAS(GWAS=GWAS,GD=DP$GD,GM=DP$GM,Y=DP$Y,G=DP$G,model=DP$model,cutOff=DP$cutOff)
 
         if(DP$Inter.Plot)
         {

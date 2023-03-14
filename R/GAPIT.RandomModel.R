@@ -177,15 +177,15 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
                    widths = c(2, 2,2)) # Widths of the two columns
             par(mar = c(5, 5, 2, 1))
             plot(gene_list$maf,-log10(gene_list$P.value),xlab="MAF",las=1,
-            cex=1.2,xlim =c(0,x.lim) ,
+            cex=1.2,xlim =c(0,x.lim) ,main="a",
             ylab=expression(-log[10](italic(p))))
             # par(mar = c(5, 5, 2, 1))
-            plot(gene_list$maf,gene_list$effect,cex=1.2,
+            plot(gene_list$maf,gene_list$effect,cex=1.2,main="b",
             xlab="MAF",ylim=c(min(y), max(y)), xlim =c(0,x.lim) ,las=1,
             ylab="Estimated Effect")
             # par(mar = c(5, 5, 2, 1))
             plot(gene_list$maf,gene_list$Variance_Explained,cex=1.2,las=1,
-            xlab="MAF",xlim =c(0,x.lim) ,
+            xlab="MAF",xlim =c(0,x.lim) ,main="c",
             ylab="Phenotypic Variance Explained (%)")
             grDevices::dev.off()
 

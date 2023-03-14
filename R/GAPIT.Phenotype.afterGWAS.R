@@ -10,6 +10,8 @@ function(GWAS, GD, G=NULL,GM,Y,model=NULL,cutOff=0.01,seed=1234){
 print("GAPIT Phenotype distribution with significant markers in process...")
 hapmap=FALSE
 if(!is.null(G)) hapmap=TRUE
+print(hapmap)
+# print(dim(G))
 set.seed(seed)
 # GWAS=myGAPIT$GWAS
 # cutOff=0.01
@@ -22,7 +24,7 @@ bonferroniCutOff=cutOff/nrow(GWAS)
 sigs=GWAS[GWAS[,4]<bonferroniCutOff,,drop=FALSE]
 N.sigs=nrow(sigs)
 print(dim(sigs))
-letter=letters[N.sigs]
+letter=letters[1:N.sigs]
 if(N.sigs<1|N.sigs>15) return()
 if(N.sigs<4)
 {
@@ -55,8 +57,8 @@ y.min=round(min(Y[,2],rm.na=T),1)
 y.max=round(max(Y[,2],rm.na=T),1)
 if(hapmap)
 {
-  X=t(G[-c(1:11),-1])
-  taxa=as.character(G[-c(1:11),1])
+  X=t(G[-1,-c(1:11)])
+  taxa=as.character(G[1,-c(1:11)])
   map=G[-1,c(1,3,4)]
 }else{
   X=GD[,-1]
@@ -64,7 +66,8 @@ if(hapmap)
   map=GM
 }
 
-
+# print(letter)
+# print(dim(X))
 for(i in 1:N.sigs)
 {
   marker=sigs[i,,drop=FALSE]
@@ -77,8 +80,9 @@ for(i in 1:N.sigs)
   yall=merge(Y,marker.genotype,by.x="Taxa",by.y="taxa")
   colnames(yall)=c("Taxa","Values","Genotype")
   marker.taxa=paste(marker.name,":",marker[,2],":",marker[,3],sep="")
-  boxplot(Values~Genotype,data=yall,xlab="",ylab=trait.name,las=1,ylim=c(y.min,y.max),
-      space=0.2,axes=F,xaxt="n", ann = FALSE,outline=FALSE)
+  boxplot(Values~Genotype,data=yall,xlab="",ylab="",
+    las=1,ylim=c(y.min,y.max),main=letter[i],
+    space=0.2,axes=F,outline=FALSE)
   for(j in 1:type.num)
   {
     yj=yall[yall[,3]==marker.type[j],2]
@@ -90,8 +94,8 @@ for(i in 1:N.sigs)
     # axis(1,at=posi,labels=labels,col="black",col.ticks="black",col.axis="black",tck=-0.01,tick=F)
   # axis(3,at=posi[even],labels=labels[even],col="black",col.ticks="black",col.axis="black",tck=-0.01,tick=F)
   mtext(paste(marker.taxa,sep=""),side=1,line=3.4,cex=1.2)
-  mtext(trait.name,side=2,line=3,cex=1)
-  # legend("topleft", letters[i], col=c("red","black","blue"),xpd=NA,text.col = "black", pch = c(19,19,19), merge = T, bg = "white",ncol=1, cex = 1.5, lwd=-2, bty='n')
+  mtext(trait.name,side=2,line=3,cex=1.2)
+  # legend("top", letters[i], col=c("red","black","blue"),xpd=NA,text.col = "black", pch = c(19,19,19), merge = T, bg = "white",ncol=1, cex = 1.5, lwd=-2, bty='n')
 
 }# end of i
 
