@@ -72,7 +72,7 @@ for(i in 1:N.sigs)
 {
   marker=sigs[i,,drop=FALSE]
   marker.name=as.character(marker[,1])
-  marker.index=myGM[,1]%in%marker.name
+  marker.index=map[,1]%in%marker.name
   marker.genotype=cbind(taxa,as.data.frame(as.character(X[,marker.index])))
   type.num=length(unique(marker.genotype[,2]))
   marker.type=as.character(unique(marker.genotype[,2]))
