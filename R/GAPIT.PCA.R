@@ -67,7 +67,10 @@ if(PCA.3d==TRUE)
 
    if(!require(rgl)) install.packages("rgl")
    if(!require(rglwidget)) install.packages("rglwidget")
+   if(!require(htmltools)) install.packages("htmltools")
+   if(!require(manipulateWidget)) install.packages("manipulateWidget")
    library(rgl)
+   library(manipulateWidget)
 
     PCA1 <- PCA.X$x[,1]
     PCA2 <- PCA.X$x[,2]
@@ -99,6 +102,7 @@ if(PCA.3d==TRUE)
       sids2 <- rgl::spheres3d(PCA1[index2], PCA2[index2], PCA3[index2], col = PCA.col[index2],radius=1)
       sids3 <- rgl::spheres3d(PCA1[index3], PCA2[index3], PCA3[index3], col = PCA.col[index3],radius=1)
       widgets<-rgl::rglwidget(width = 900, height = 900) %>% rgl::toggleWidget(ids = sids1, label = "Population 1") %>% rgl::toggleWidget(ids = sids2, label = "Population 2") %>% rgl::toggleWidget(ids = sids3, label = "Population 3")
+      # widgets<-combineWidgets(width = 900, height = 900) %>% rgl::toggleWidget(ids = sids1, label = "Population 1") %>% rgl::toggleWidget(ids = sids2, label = "Population 2") %>% rgl::toggleWidget(ids = sids3, label = "Population 3")
     }else if(num_col==4)
     {
       index1=PCA.col==unique(PCA.col)[1]
@@ -111,6 +115,20 @@ if(PCA.3d==TRUE)
       sids3 <- rgl::spheres3d(PCA1[index3], PCA2[index3], PCA3[index3], col = PCA.col[index3],radius=1)
       sids4 <- rgl::spheres3d(PCA1[index4], PCA2[index4], PCA3[index4], col = PCA.col[index4],radius=1)
       widgets <- rgl::rglwidget(width = 900, height = 900) %>% rgl::toggleWidget(ids = sids1, label = "Population 1") %>% rgl::toggleWidget(ids = sids2, label = "Population 2") %>% rgl::toggleWidget(ids = sids3, label = "Population 3") %>% rgl::toggleWidget(ids = sids4, label = "Population 4")
+    }else if(num_col==5)
+    {
+      index1=PCA.col==unique(PCA.col)[1]
+      index2=PCA.col==unique(PCA.col)[2]
+      index3=PCA.col==unique(PCA.col)[3]
+      index4=PCA.col==unique(PCA.col)[4]
+      index5=PCA.col==unique(PCA.col)[5]
+      
+      sids1 <- rgl::spheres3d(PCA1[index1], PCA2[index1], PCA3[index1], col = PCA.col[index1],radius=1)
+      sids2 <- rgl::spheres3d(PCA1[index2], PCA2[index2], PCA3[index2], col = PCA.col[index2],radius=1)
+      sids3 <- rgl::spheres3d(PCA1[index3], PCA2[index3], PCA3[index3], col = PCA.col[index3],radius=1)
+      sids4 <- rgl::spheres3d(PCA1[index4], PCA2[index4], PCA3[index4], col = PCA.col[index4],radius=1)
+      sids5 <- rgl::spheres3d(PCA1[index5], PCA2[index5], PCA3[index5], col = PCA.col[index5],radius=1)
+      widgets <- rgl::rglwidget(width = 900, height = 900) %>% rgl::toggleWidget(ids = sids1, label = "Population 1") %>% rgl::toggleWidget(ids = sids2, label = "Population 2") %>% rgl::toggleWidget(ids = sids3, label = "Population 3") %>% rgl::toggleWidget(ids = sids4, label = "Population 4")%>% rgl::toggleWidget(ids = sids5, label = "Population 5")
     }
     if (interactive()) widgets
     htmltools::save_html(widgets, "Interactive.PCA.html")

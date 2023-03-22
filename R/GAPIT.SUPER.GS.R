@@ -153,18 +153,13 @@ if(is.null(CV)){
 # print(CV)
 #Remove duplicat and integragation of data
 print("QC is in process...")
-# CVI <- CV
 
-# print(cbind(as.character(Y[,1]),as.character(CV[,1])))
-# print("@@@@@")
-# print(dim(Y))
-# print(dim(CV))
-# print(length(GT))
 my_allCV=CV
 
 if(QC)
 {
-#print(colnames(KI)[53:62])
+# print(head(Y))
+# print(Z[,1:3])
 
   qc <- GAPIT.QC2(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
   GTindex=qc$GTindex
@@ -174,21 +169,10 @@ if(QC)
   Z=qc$Z
   GK=qc$GK
 }
-# print(dim(CV))
-# print(dim(KI))
 
-# aa=apply(Z,1,function(one) grep(1,as.numeric(one)))
-# print(as.numeric(aa))
-# print(dim(KI))
-# print(dim(Z))
 my_taxa=as.character(KI[,1])
 my_allKI=KI
-# print(all.equal(as.character(Y[,1]),as.character(CV[,1])))
-# print(cbind(as.character(Y[,1]),my_taxa)
-   # write.table(CV,"X0.txt",quote=F,row.names=F,col.names=F)
 
-
-# print(CVI[,1])
 
 print("The value of QC is")
 print(QC)

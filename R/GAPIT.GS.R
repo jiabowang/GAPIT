@@ -8,8 +8,8 @@ function(KW,KO,KWO,GAU,UW){
 ##############################################################################################
 #print(dim(UW))
 UO=try(t(KWO)%*%solve(KW)%*%UW,silent=TRUE)
-#print(dim(KWO)) #kinship without inference
-#print(dim(KW))  #kinship within inference
+#print(dim(KWO)) #kinship without phenotype
+#print(dim(KW))  #kinship within phenotype
 # print(dim(UW))  #BLUP AND PEV of reference
 
 if(inherits(UO, "try-error")) 

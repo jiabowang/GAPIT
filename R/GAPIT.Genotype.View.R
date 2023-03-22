@@ -300,7 +300,7 @@ grDevices::dev.off()
 # # max.number=NULL,
 # Aver.Dis=Aver.Dis
 # )
-
+set.seed(Sys.time())
 print(paste("GAPIT.Genotype.View ", ". pdfs generate.","successfully!" ,sep = ""))
 
 #GAPIT.Genotype.View
