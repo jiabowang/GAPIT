@@ -475,7 +475,7 @@ if(!is.null(Y))
                           file.from=1, file.to=1, file.total=NULL, file.fragment =9999,file.path=NULL, 
              file.G=NULL, file.Ext.G=NULL,file.GD=NULL, file.GM=NULL, file.Ext.GD=NULL,file.Ext.GM= NULL,WS0=WS0,Aver.Dis=Aver.Dis,
                           SNP.MAF=SNP.MAF,FDR.Rate = 1,SNP.FDR=SNP.FDR,SNP.effect=SNP.effect,SNP.impute=SNP.impute,NJtree.group=NJtree.group,NJtree.type=NJtree.type,
-                          LD.chromosome=LD.chromosome,LD.location=LD.location,LD.range=LD.range,GP=NULL,GK=NULL,bin.size=NULL,inclosure.size=NULL, PCA.legend=PCA.legend,
+                          GP=NULL,GK=NULL,bin.size=NULL,inclosure.size=NULL, PCA.legend=PCA.legend,
                           sangwich.top=NULL,sangwich.bottom=sangwich.bottom,GTindex=NULL,file.output=file.output, Create.indicator = FALSE,
                           Major.allele.zero = Major.allele.zero,Geno.View.output=Geno.View.output,PCA.col=PCA.col,PCA.3d=PCA.3d)
         GD=myGenotype$GD

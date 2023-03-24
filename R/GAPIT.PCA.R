@@ -1,5 +1,5 @@
 `GAPIT.PCA` <-
-function(X,taxa, PC.number = min(ncol(X),nrow(X)),
+function(X,taxa, PC.number = min(ncol(X),nrow(X)),radius=1,
   file.output=TRUE,PCA.total=0,PCA.col=NULL,
   PCA.3d=FALSE,PCA.legend=NULL){
 # Object: Conduct a principal component analysis, and output the prinicpal components into the workspace,
@@ -78,19 +78,19 @@ if(PCA.3d==TRUE)
     rgl::plot3d(min(PCA1), min(PCA2), min(PCA3),xlim=c(min(PCA1),max(PCA1)),
      ylim=c(min(PCA2),max(PCA2)),zlim=c(min(PCA3),max(PCA3)),
      xlab="PCA1",ylab="PCA2",zlab="PCA3",
-     col = grDevices::rgb(255, 255, 255, 100, maxColorValue=255),radius=0.01)
+     col = grDevices::rgb(255, 255, 255, 100, maxColorValue=255),radius=radius*0.01)
     num_col=length(unique(PCA.col))
     if(num_col==1)
     { 
-      sids1 <- rgl::spheres3d(PCA1, PCA2, PCA3, col = PCA.col,radius=1)
+      sids1 <- rgl::spheres3d(PCA1, PCA2, PCA3, col = PCA.col,radius=radius)
       widgets <- rgl::rglwidget(width = 900, height = 900) %>% rgl::toggleWidget(ids = sids1, label = "PCA")
     }else if(num_col==2)
     {
       index1=PCA.col==unique(PCA.col)[1]
       index2=PCA.col==unique(PCA.col)[2]
       
-      sids1 <- rgl::spheres3d(PCA1[index1], PCA2[index1], PCA3[index1], col = PCA.col[index1],radius=1)
-      sids2 <- rgl::spheres3d(PCA1[index2], PCA2[index2], PCA3[index2], col = PCA.col[index2],radius=1)
+      sids1 <- rgl::spheres3d(PCA1[index1], PCA2[index1], PCA3[index1], col = PCA.col[index1],radius=radius)
+      sids2 <- rgl::spheres3d(PCA1[index2], PCA2[index2], PCA3[index2], col = PCA.col[index2],radius=radius)
       widgets <- rgl::rglwidget(width = 900, height = 900) %>% rgl::toggleWidget(ids = sids1, label = "Population 1") %>% rgl::toggleWidget(ids = sids2, label = "Population 2")
     }else if(num_col==3)
     {
@@ -98,9 +98,9 @@ if(PCA.3d==TRUE)
       index2=PCA.col==unique(PCA.col)[2]
       index3=PCA.col==unique(PCA.col)[3]
       
-      sids1 <- rgl::spheres3d(PCA1[index1], PCA2[index1], PCA3[index1], col = PCA.col[index1],radius=1)
-      sids2 <- rgl::spheres3d(PCA1[index2], PCA2[index2], PCA3[index2], col = PCA.col[index2],radius=1)
-      sids3 <- rgl::spheres3d(PCA1[index3], PCA2[index3], PCA3[index3], col = PCA.col[index3],radius=1)
+      sids1 <- rgl::spheres3d(PCA1[index1], PCA2[index1], PCA3[index1], col = PCA.col[index1],radius=radius)
+      sids2 <- rgl::spheres3d(PCA1[index2], PCA2[index2], PCA3[index2], col = PCA.col[index2],radius=radius)
+      sids3 <- rgl::spheres3d(PCA1[index3], PCA2[index3], PCA3[index3], col = PCA.col[index3],radius=radius)
       widgets<-rgl::rglwidget(width = 900, height = 900) %>% rgl::toggleWidget(ids = sids1, label = "Population 1") %>% rgl::toggleWidget(ids = sids2, label = "Population 2") %>% rgl::toggleWidget(ids = sids3, label = "Population 3")
       # widgets<-combineWidgets(width = 900, height = 900) %>% rgl::toggleWidget(ids = sids1, label = "Population 1") %>% rgl::toggleWidget(ids = sids2, label = "Population 2") %>% rgl::toggleWidget(ids = sids3, label = "Population 3")
     }else if(num_col==4)
@@ -110,10 +110,10 @@ if(PCA.3d==TRUE)
       index3=PCA.col==unique(PCA.col)[3]
       index4=PCA.col==unique(PCA.col)[4]
       
-      sids1 <- rgl::spheres3d(PCA1[index1], PCA2[index1], PCA3[index1], col = PCA.col[index1],radius=1)
-      sids2 <- rgl::spheres3d(PCA1[index2], PCA2[index2], PCA3[index2], col = PCA.col[index2],radius=1)
-      sids3 <- rgl::spheres3d(PCA1[index3], PCA2[index3], PCA3[index3], col = PCA.col[index3],radius=1)
-      sids4 <- rgl::spheres3d(PCA1[index4], PCA2[index4], PCA3[index4], col = PCA.col[index4],radius=1)
+      sids1 <- rgl::spheres3d(PCA1[index1], PCA2[index1], PCA3[index1], col = PCA.col[index1],radius=radius)
+      sids2 <- rgl::spheres3d(PCA1[index2], PCA2[index2], PCA3[index2], col = PCA.col[index2],radius=radius)
+      sids3 <- rgl::spheres3d(PCA1[index3], PCA2[index3], PCA3[index3], col = PCA.col[index3],radius=radius)
+      sids4 <- rgl::spheres3d(PCA1[index4], PCA2[index4], PCA3[index4], col = PCA.col[index4],radius=radius)
       widgets <- rgl::rglwidget(width = 900, height = 900) %>% rgl::toggleWidget(ids = sids1, label = "Population 1") %>% rgl::toggleWidget(ids = sids2, label = "Population 2") %>% rgl::toggleWidget(ids = sids3, label = "Population 3") %>% rgl::toggleWidget(ids = sids4, label = "Population 4")
     }else if(num_col==5)
     {
@@ -123,11 +123,11 @@ if(PCA.3d==TRUE)
       index4=PCA.col==unique(PCA.col)[4]
       index5=PCA.col==unique(PCA.col)[5]
       
-      sids1 <- rgl::spheres3d(PCA1[index1], PCA2[index1], PCA3[index1], col = PCA.col[index1],radius=1)
-      sids2 <- rgl::spheres3d(PCA1[index2], PCA2[index2], PCA3[index2], col = PCA.col[index2],radius=1)
-      sids3 <- rgl::spheres3d(PCA1[index3], PCA2[index3], PCA3[index3], col = PCA.col[index3],radius=1)
-      sids4 <- rgl::spheres3d(PCA1[index4], PCA2[index4], PCA3[index4], col = PCA.col[index4],radius=1)
-      sids5 <- rgl::spheres3d(PCA1[index5], PCA2[index5], PCA3[index5], col = PCA.col[index5],radius=1)
+      sids1 <- rgl::spheres3d(PCA1[index1], PCA2[index1], PCA3[index1], col = PCA.col[index1],radius=radius)
+      sids2 <- rgl::spheres3d(PCA1[index2], PCA2[index2], PCA3[index2], col = PCA.col[index2],radius=radius)
+      sids3 <- rgl::spheres3d(PCA1[index3], PCA2[index3], PCA3[index3], col = PCA.col[index3],radius=radius)
+      sids4 <- rgl::spheres3d(PCA1[index4], PCA2[index4], PCA3[index4], col = PCA.col[index4],radius=radius)
+      sids5 <- rgl::spheres3d(PCA1[index5], PCA2[index5], PCA3[index5], col = PCA.col[index5],radius=radius)
       widgets <- rgl::rglwidget(width = 900, height = 900) %>% rgl::toggleWidget(ids = sids1, label = "Population 1") %>% rgl::toggleWidget(ids = sids2, label = "Population 2") %>% rgl::toggleWidget(ids = sids3, label = "Population 3") %>% rgl::toggleWidget(ids = sids4, label = "Population 4")%>% rgl::toggleWidget(ids = sids5, label = "Population 5")
     }
     if (interactive()) widgets
