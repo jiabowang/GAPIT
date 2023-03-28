@@ -1,0 +1,74 @@
+---
+title: "Installing GAPIT"
+output: rmarkdown::html_vignette
+description: >
+  Steps to follow to successfully use all of GAPIT's functionality./ 
+vignette: >
+  %\VignetteIndexEntry{dplyr <-> base R}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+options(tibble.print_min = 4, tibble.print_max = 4)
+
+knitr::opts_chunk$set(eval=FALSE)
+```
+
+
+A few tips and tricks for installing GAPIT. You can skip these steps and try to run this:
+
+```{r}
+remotes::install_github("jiabowang/GAPIT", force=TRUE)
+library(GAPIT)
+```
+
+If you do not have {remotes} installed, then install it first: 
+```{r}
+install.packages("remotes")
+```
+
+If you are able to load the GAPIT library, congratulations! If not, read and implment the following instructions.
+
+
+## Windows Users
+
+Install [RTools](https://cran.r-project.org/bin/windows/Rtools/). 
+
+GAPIT needs to be compiled. Mac and Linux systems already have C compilers installed on their systems, but Windows systems often do not. You may need to install [RTools](https://cran.r-project.org/bin/windows/Rtools/) to access a C compiler (that is configured to work with R). RTools is a program, not a package, so follow the link and read the instructions for download and installation. 
+
+## Everyone 
+
+
+Several accessory packages are used by GAPIT that must be downloaded from [Bioconductor](https://www.bioconductor.org/) and GitHub. 
+
+### Install Bioconductor Packages
+
+
+1. Install Bioconductor:
+```{r}
+install.packages("BiocManager")
+```
+
+1. Install [snpStats](https://www.bioconductor.org/packages/release/bioc/html/snpStats.html) & [multtest](https://www.bioconductor.org/packages/release/bioc/html/multtest.html) from Bioconductor: 
+```{r}
+BiocManager::install("snpStats")
+BiocManager::install("multtest")
+```
+
+### Install GitHub packages
+
+The package {LDheatmap} must be installed from [GitHub](https://github.com/SFUStatgen/LDheatmap) since it is currently not on CRAN. 
+```{r}
+remotes::install_github("SFUStatgen/LDheatmap")
+```
+
+## Install GAPIT
+
+```{r}
+remotes::install_github("jpiaskowski/GAPIT",force=TRUE)
+library(GAPIT)
+```
+
+

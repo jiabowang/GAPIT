@@ -1,0 +1,88 @@
+---
+title: "Frequently Asked Questions"
+bibliography: ["citations.bib"]
+biblio-style: "apalike"
+link-citations: true
+output: rmarkdown::html_vignette
+description: >
+  Some of the most   
+vignette: >
+  %\VignetteIndexEntry{dplyr <-> base R}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+
+---
+
+```{r, echo = FALSE, message = FALSE}
+knitr::opts_chunk$set(collapse = T, comment = "#>")
+options(tibble.print_min = 4, tibble.print_max = 4)
+
+knitr::opts_chunk$set(eval=FALSE)
+```
+
+#### How to cite GAPIT?
+
+Citation may vary based on the usage of versions (the first version1 ,the second version2, or the third version3), and methods involved, such as the regular MLM20 methods, CMLM6, ECMLM8, SUPER9, P3D6, FarmCPU31, and BLINK13. Here is an example: “The GWAS was conducted using the BLINK model17 implemented in GAPIT R Software package (version 3)3”.
+
+#### What do I do if I get frustrated?
+
+Please read through the GAPIT documentation if you encounter an error. Also, read the error message R is producing and attempt to troubleshoot based on what it is telling you. If you are still stuck, please file an [issue](https://github.com/jiabowang/GAPIT/issues) and include a [reproducible example](http://adv-r.had.co.nz/Reproducibility.html) to help us understand your situation. 
+
+If you need to contact GAPIT team, email to [Dr. Xiaolei Liu](mailto:xll19870827@hotmail.com) on questions related to FarmCPU, [Dr. Meng Huang](mailto:meng.huang.cn@gmail.com) for questions related to BLINK, or [Dr. Jiabo Wang](mailto:wangjiaboyifeng@163.com) on other questions.  In all cases (Forum or Emails), please state your names and your institutions. 
+
+#### Why does GAPIT have different results from other software?
+
+The most common reasons to have different results is that these software packages use different genetic models (e.g. additive vs. additive + dominant), statistical models (e.g. GLM, MLM, CMLM, and ECMLM), and processing of missing data. The GAPIT Bioinformatics paper demonstrated that GAPIT and TASSEL gave identical results for inbred (additive only) without missing values for using MLM. 
+
+#### There are many methods implemented in GAPIT, which one should I use?
+
+Literature demonstrated the order of statistical power: BLINK > FarmCPU> MLMM > SUPER > ECMLM > CMLM > MLM > GLM. 
+
+#### What is the ideal number of PCs to include?
+
+There no clear answer for this question. However, here are the two ways most of people do. 1) The number of principal components (PCs) included in the GWAS models can be adjusted in GAPIT. To help determine the number of PCs that adequately explain population structure, a screen plot is provided in the GAPIT output (if at least one PC is selected for inclusion into the final model). Once the ideal number of PCs is determined, GAPIT should be reran with this number PCs included in the GWAS models; 2) Use BIC-based model selection (activated by writing Model.selection = TRUE in the GAPIT() function) to determine the “optimal” number of PCs. The optimal is in quotations because no evidence has been found for optimum statistical power.
+
+#### Is it feasible I compare different models on my data? 
+
+Yes, you can compare different models implemented in GAPIT or other software packages through simulation. All you need is a genotype file. The demo source code is amiable at the Workshop of Assessment of Statistical Power in GWAS (http://zzlab.net/WorkshopISU).
+
+#### How do I report an error?
+
+In order to fix the problem, please copy and paste the error message from the R environment and attach your R source code and the dataset that allow us to repeat the error.
+
+#### What should I do with “Error in file (file, "rt") : cannot open the connection”?
+
+In most cases this error is caused by incorrect file name or number of file specific is more than exist.
+
+#### What should I do with `error in GAPIT (... : unused argument(s) ...`?
+
+In most cases this error is caused by incorrect spelling of GAPIT key word such as upper or lower case, or missing a comma.
+
+#### What should I do when I get this error message: `error in solve.default(crossprod(X, X)) : system is computationally singular`?
+
+Check covariate variables and remove the ones that are linear dependent with others.
+
+#### How to fix the error of using covariates from STRUCTURE as fixed effects?
+
+This error is occurring because the covariates from STRUCTURE are linearly dependent. In particular, for a given individual/taxa, these covariates sum to 1. To circumvent this error, remove one of the STRUCTURE covariates from the corresponding input file. 
+
+### Should I remove SNPs with MAF below 5%?  
+
+It depends.  Rare SNPs with low MAF (Minor Allele Frequency) usually cause false positives, especially for small samples and traits that are not normally distributed. However, many causal genetic variants are rare. A recommended practice is to not remove them, but interpret them with caution. 
+
+#### My trait was measured in multiple environments, how do I use them simultaneously?  
+
+They can be averaged across environments, and use means by GAPIT. The genetic and environmental interaction was implemented in a separated software package: [GEMT](http://zzlab.net/GEMT).
+
+#### Is it OK to analyze binary traits (e.g. case-control) with GAPIT?  
+
+Yes, there are many applications. 
+
+#### Does normality transformation help?  
+
+Yes, non-normality, rare variants and small samples jointly cause false positives. The transformation helps in case of small samples and SNPs with low MAF. 
+
+#### Should I use PCs or Q matrix? 
+
+Zhao et al ([PLoS Genetics, 2007]([@10.1371/journal.pgen.0030004])) compared the two methods and demonstrated that they had similar statistical power. 
+
