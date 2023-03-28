@@ -1,19 +1,19 @@
 `GAPIT.Validation` <-function(K=NULL,Y=NULL, G=NULL,GD=NULL,GM=NULL,PCA.total=3,KI=NULL,CV=NULL,nfold=NULL,nrep=30){
 # Object: Genetic Prediction one time by cross validation and cMLM,result:a pdf of the scree plot
-# myK:Kinship
+# K:Kinship
 # Y: phenotype with columns of taxa,Y1,Y2...
 # num:folders number
 # Authors: Jiabo Wang and You Tang
 # Last update: December 31, 2014 
 ############################################################################################## 
-if(is.null(myK)||is.null(y)){stop("Validation Invalid. Please select read valid flies !")}
+if(is.null(K)||is.null(Y)){stop("Validation Invalid. Please select read valid flies !")}
 if(is.null(num))
   {
 	num=5  #not input num value,default folders number is 5
   }
 
-y=y[,1:2]
-m=nrow(y)
+Y=Y[,1:2]
+m=nrow(Y)
 m.sample=round(m/num)
 
 
@@ -25,25 +25,25 @@ cali<-matrix(nrow = m-m.sample, ncol = num-1)
 #vali<-list(v1=unique(as.character(sample(y$Taxa, m.sample))))
 #cali<-list(c1=y[!(y$Taxa %in% as.matrix(as.data.frame(vali[1]))), 'Taxa'])
 
-vali[,1]<-unique(as.character(sample(y$Taxa, m.sample)))
-cali[,1]<-unique(as.character(y[!(y$Taxa %in% vali[,1]), 'Taxa']))
+vali[,1]<-unique(as.character(sample(Y$Taxa, m.sample)))
+cali[,1]<-unique(as.character(Y[!(Y$Taxa %in% vali[,1]), 'Taxa']))
 
 for(j in 2:num)
 {
 	if(j!=num)
 	{
-	 vali[,j]<-unique(as.character(sample(y[!(y$Taxa %in% vali[,1:j-1]), 'Taxa'], m.sample) ))
+	 vali[,j]<-unique(as.character(sample(Y[!(Y$Taxa %in% vali[,1:j-1]), 'Taxa'], m.sample) ))
 	}
 	if(j==num)
 	{
-		valilast=unique(as.character(y[!(y$Taxa %in% vali[,1:j-1]), 'Taxa']))
+		valilast=unique(as.character(Y[!(Y$Taxa %in% vali[,1:j-1]), 'Taxa']))
 	}
 
 	if(j!=num)
-		cali[,j]<-unique(as.character(y[!(y$Taxa %in% vali[,j]), 'Taxa']))
+		cali[,j]<-unique(as.character(Y[!(Y$Taxa %in% vali[,j]), 'Taxa']))
 	if(j==num)
 		#calilast <<- y[!(y$Taxa %in% valilast), 'Taxa']
-  	calilast <- y[!(y$Taxa %in% valilast), 'Taxa']
+  	calilast <- Y[!(Y$Taxa %in% valilast), 'Taxa']
 }
 
 	i=sample(1:num, size = 1)
@@ -54,8 +54,8 @@ for(j in 2:num)
 	 	lines.vali<-valilast
 	 }
 	 #use only genotypes that were genotyped and phenotyped
-	 commonGeno_v <- lines.vali[lines.vali %in% myK[,1]]	               
-	 yvali<- y[match(commonGeno_v,y$Taxa),]
+	 commonGeno_v <- lines.vali[lines.vali %in% K[,1]]	               
+	 yvali<- Y[match(commonGeno_v,Y$Taxa),]
     
 	 if(i!=num){
 		lines.cali<-cali[,i]
@@ -63,13 +63,13 @@ for(j in 2:num)
 		lines.cali<-calilast
 	  }
 	 #use only genotypes that were genotyped and phenotyped
-	 commonGeno_c <- lines.cali[lines.cali %in% myK[,1]]
-	 ycali<- y[match(commonGeno_c,y$Taxa),]                
+	 commonGeno_c <- lines.cali[lines.cali %in% K[,1]]
+	 ycali<- Y[match(commonGeno_c,Y$Taxa),]                
 	
 	Y.raw=ycali[,c(1,2)]#choos a trait
 
 	myY=Y.raw
-	myKI=myK
+	myKI=K
 	max.groups=m
 #Run GAPIT
 #############################################
@@ -97,8 +97,8 @@ for(j in 2:num)
 	inf_all<-cbind(blup_prediction.inf,inf_pred)
 	ref_all<-cbind(blup_prediction.ref,ref_pred)
     # print(head(inf_all))
-	inf_Y_all<-merge(y,inf_all,by.x=colnames(y)[1],by.y=colnames(inf_all)[1])
-	ref_Y_all<-merge(y,ref_all,by.x=colnames(y)[1],by.y=colnames(ref_all)[1])
+	inf_Y_all<-merge(Y,inf_all,by.x=colnames(Y)[1],by.y=colnames(inf_all)[1])
+	ref_Y_all<-merge(Y,ref_all,by.x=colnames(Y)[1],by.y=colnames(ref_all)[1])
 
 	name.of.trait=noquote(names(Y.raw)[2])
 

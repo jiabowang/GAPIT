@@ -92,8 +92,8 @@ for(i in 1:num){
 
 #Run GAPIT
 #############################################
-	print(dim(myKI))
-	print(dim(myY))
+	# print(dim(myKI))
+	# print(dim(myY))
 	myGAPIT <- GAPIT(
 	Y=myY,
 	KI=myKI,
