@@ -1,4 +1,5 @@
-`GAPIT.Power.compare` <-function(G=NULL,GD=NULL,GM=NULL,PCA.total=3,KI=NULL,CV=NULL,nrep=10,h2=0.85,NQTN=5,maxOut=100,model=c("GLM","FarmCPU"),seed=99163){
+`GAPIT.Power.compare` <-function(G=NULL,GD=NULL,GM=NULL,PCA.total=3,KI=NULL,CV=NULL,nrep=10,h2=0.85,NQTN=5,maxOut=100,model=c("GLM","FarmCPU"),seed=99163,WS=c(1e0,1e3,1e4,1e5,1e6,1e7),
+myalpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1)){
 # Object: compare to Power against FDR for GLM,MLM,CMLM,ECMLM,SUPER
 # nrep:repetition times
 # Authors: You Tang & Jiabo Wang
@@ -6,8 +7,7 @@
 ############################################################################################## 
 if(is.null(GD)&is.null(GM)&is.null(G)){stop("Read data Invalid. Please select read valid flies !")}
 
-myWS=c(1e0,1e3,1e4,1e5,1e6,1e7)
-myalpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1)
+
 all.method=model
 ##simulation phyenotype
 ##-------------------------##
@@ -18,9 +18,9 @@ rep.FDR.store<-list()
 rep.Power.Alpha.store<-list()
 for(j in 1:length(all.method))
 {
-	rep.power.store[[j]]=data.frame(matrix(0,maxOut,length(myWS)))
-	rep.FDR.store[[j]]<-data.frame(matrix(0,maxOut,length(myWS)))
-    rep.Power.Alpha.store[[j]]<-data.frame(matrix(0,length(myalpha),length(myWS)))
+	rep.power.store[[j]]=data.frame(matrix(0,maxOut,length(WS)))
+	rep.FDR.store[[j]]<-data.frame(matrix(0,maxOut,length(WS)))
+    rep.Power.Alpha.store[[j]]<-data.frame(matrix(0,length(myalpha),length(WS)))
 }
 
 for(i in 1:nrep)
@@ -46,7 +46,7 @@ colnames(Y)=c("Taxa","Simu")
        memo=all.method[j],
        QTN.position=QTN.position
        ) 
-       power_store<-GAPIT.Power(WS=myWS, alpha=myalpha, maxOut=maxOut,seqQTN=QTN.position,GM=myGM,GWAS=myGAPIT$GWAS)
+       power_store<-GAPIT.Power(WS=WS, alpha=myalpha, maxOut=maxOut,seqQTN=QTN.position,GM=myGM,GWAS=myGAPIT$GWAS)
        rep.power.store[[j]]<-rep.power.store[[j]]+power_store$Power
        rep.FDR.store[[j]]<-rep.FDR.store[[j]]+power_store$FDR
        rep.Power.Alpha.store[[j]]<-rep.Power.Alpha.store[[j]]+power_store$Power.Alpha
@@ -61,9 +61,9 @@ rep.power.store[[j]]<-rep.power.store[[j]]/nrep
 rep.FDR.store[[j]]<-rep.FDR.store[[j]]/nrep
 rep.Power.Alpha.store[[j]]<-rep.Power.Alpha.store[[j]]/nrep
 
-colnames(rep.FDR.store[[j]])=  paste("FDR(",myWS,")",sep="")
-colnames(rep.power.store[[j]])=paste("Power(",myWS,")",sep="")
-colnames(rep.Power.Alpha.store[[j]])=paste("Power(",myWS,")",sep="")
+colnames(rep.FDR.store[[j]])=  paste("FDR(",WS,")",sep="")
+colnames(rep.power.store[[j]])=paste("Power(",WS,")",sep="")
+colnames(rep.Power.Alpha.store[[j]])=paste("Power(",WS,")",sep="")
 
 utils::write.csv(cbind(rep.FDR.store[[j]],rep.power.store[[j]]),paste(h2,"_",NQTN,".Power.by.FDR.",all.method[j],".",nrep,".csv",sep=""))
 utils::write.csv(cbind(myalpha,rep.Power.Alpha.store[[j]]),paste(h2,"_",NQTN,".Power.by.TypeI.",all.method[j],".",nrep,".csv",sep=""))
@@ -75,13 +75,13 @@ graphics::par(mar = c(5,6,5,3))
 	#win.graph(width=6, height=4, pointsize=9)
 	#palette(c("blue","red","green4","brown4","orange",rainbow(5)))
 	plot.color=rainbow(length(all.method))
-	# grDevices::palette(c(plot.color,grDevices::rainbow(length(all.method))))
+# print(head(rep.FDR.store[[j]]))
 kkt=NULL
 for(j in 1:length(all.method))
 {	
-	if(j==1)plot(as.numeric(rep.FDR.store[[j]][,6]),as.numeric(rep.power.store[[j]][,6]),bg="lightgray",xlab="FDR",ylab="Power",ylim=c(0,1),xlim=c(0,1),main="Power against FDR",type="o",pch=20,col=plot.color[j],cex=1.0,cex.lab=1.3, cex.axis=1, lwd=2,las=1)
-   if(j!=1) graphics::lines(rep.power.store[[j]][,6]~rep.FDR.store[[j]][,6], lwd=2,type="o",pch=20,col=plot.color[j])
-	kkt<-cbind(kkt,rep.Power.Alpha.store[[j]][,1])
+	if(j==1)plot(as.numeric(as.matrix(rep.FDR.store[[j]])),as.numeric(as.matrix(rep.power.store[[j]])),bg="lightgray",xlab="FDR",ylab="Power",ylim=c(0,1),xlim=c(0,1),main="Power against FDR",type="o",pch=20,col=plot.color[j],cex=1.0,cex.lab=1.3, cex.axis=1, lwd=2,las=1)
+   if(j!=1) graphics::lines(as.numeric(as.matrix(rep.power.store[[j]]))~as.numeric(as.matrix(rep.FDR.store[[j]])), lwd=2,type="o",pch=20,col=plot.color[j])
+	kkt<-cbind(kkt,as.numeric(as.matrix(rep.Power.Alpha.store[[j]])))
 
 }
 	graphics::legend("bottomright",c(all.method), pch = 20, lty =1,col=plot.color,lwd=2,cex=1.0,bty="n")

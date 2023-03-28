@@ -1,4 +1,4 @@
-`GAPIT.cross_validation.compare` <-function(myGD=NULL,y=NULL, rel=NULL,tc=NULL){
+`GAPIT.cross_validation.compare` <-function(GD=NULL,Y=NULL, nrep=NULL,tc=NULL){
 # Object: GAPIT.cross validation compare to different folders by replicate Times,result:a pdf of the scree barplot and .cvs
 # myGD:numeric SNP
 # Y: phenotype with columns of taxa,Y1,Y2...
@@ -7,54 +7,53 @@
 # Authors: You Tang,Jiabo Wang and You Zhou
 # Last update: December 31, 2014 
 ##############################################################################################
-if(is.null(myGD)||is.null(y)){stop("Validation Invalid. Please select read valid flies !")}
-if(is.null(rel))
+if(is.null(GD)||is.null(Y)){stop("Validation Invalid. Please select read valid flies !")}
+if(is.null(nrep))
   {
-	rel=10  #not input rel value,default replications number is 10
+	nrep=10  #not input rel value,default replications number is 10
   }
 
-if(rel<2){stop("Validation Invalid. Please select replications >1 !")}
+if(nrep<2){stop("Validation Invalid. Please select replications >1 !")}
 #rel<-2 ##replications
 #t<-2
-y<-y[!is.na(y[,2]),] 
-y<-y[,c(1,2)]
-y<- stats::na.omit(y)
+Y<-Y[!is.na(Y[,2]),] 
+Y<-Y[,c(1,2)]
+y<- stats::na.omit(Y)
 #############
 commonGeno <- unique(as.character(y[,1]))[unique(as.character(y[,1])) %in% myGD[,1]]
 cG<-data.frame(commonGeno)
 names(cG)<-"Taxa"
 colnames(y)<-c("Taxa","pheno")
 y2<-merge(y,cG,all.x=FALSE, all.y=TRUE, by = c("Taxa"))
-Z1 <- myGD[match(y2$Taxa,myGD[,1]),]
-myGD<- Z1
+GD=GD[match(y2$Taxa,GD[,1]),]
 y<-y2
 ##############
-X<-myGD[,-1]
+X<-GD[,-1]
 k1<-as.matrix(X)
 k2=GAPIT.kinship.VanRaden(snps=k1)
 myKI<-as.data.frame(k2)
-myKI<-cbind(myGD[,1],myKI)
-utils::write.table(y,"Y.txt",quote=F,sep="\t",row.names=F,col.names=T)
-utils::write.table(myKI,"K.txt",quote=F,row.names=F,col.names=F,sep="\t")
+myKI<-cbind(GD[,1],myKI)
+# utils::write.table(y,"Y.txt",quote=F,sep="\t",row.names=F,col.names=T)
+# utils::write.table(myKI,"K.txt",quote=F,row.names=F,col.names=F,sep="\t")
 gc()
-myK<- utils::read.table("K.txt",head=F)
-y = utils::read.table("Y.txt",head=T)
-
+# myK<- utils::read.table("K.txt",head=F)
+# y = utils::read.table("Y.txt",head=T)
+myK=myKI
 y <- stats::na.omit(y)
 y=y[(y[,1] %in% myK[,1]),]
 m=nrow(y)
 if(is.null(tc))
 	tc<-c(2,5,10,20,50)  ##default compare to folders num
 tc1<-as.matrix(tc)
-	allstorage.ref=matrix(0,rel,nrow(tc1))
-	allstorage.inf=matrix(0,rel,nrow(tc1))
+	allstorage.ref=matrix(0,nrep,nrow(tc1))
+	allstorage.inf=matrix(0,nrep,nrow(tc1))
 for(w in 1:nrow(tc1)){
 num<-tc1[w,]
 m.sample=floor(m/num)
-	storage.ref=matrix(0,rel,num)
-	storage.inf=matrix(0,rel,num)
+	storage.ref=matrix(0,nrep,num)
+	storage.inf=matrix(0,nrep,num)
 	#storage.REML=matrix(0,rel,num)
-for(k in 1:rel)
+for(k in 1:nrep)
 {
    #################Rand group method 1############
  sets=sample(cut(1:nrow(y),num,labels=FALSE),nrow(y))
@@ -93,7 +92,8 @@ for(i in 1:num){
 
 #Run GAPIT
 #############################################
-	
+	print(dim(myKI))
+	print(dim(myY))
 	myGAPIT <- GAPIT(
 	Y=myY,
 	KI=myKI,
