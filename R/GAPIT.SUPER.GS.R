@@ -528,7 +528,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    all_gs=cbind(BB,prediction)
    colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
    # print(head(all_gs))
-   if(GAPIT3.output)utils::write.csv(all_gs,paste("GAPIT.Association.Prediction_results.",model,".",name.of.trait,".csv",sep=""), row.names = FALSE,col.names = TRUE)
+   if(GAPIT3.output)utils::write.csv(all_gs,paste("GAPIT.Association.Prediction_results.",model,".",name.of.trait,".csv",sep=""), row.names = FALSE)
   
   print("GAPIT SUPER GS completed successfully for multiple traits. Results are saved")
   return (list(GPS=BB,Pred=all_gs,Compression=Compression,kinship=my_allKI,SUPER_kinship=SUPER_myKI,SUPER_GD=SUPER_optimum_GD ,PC=my_allCV,Timmer=Timmer,Memory=Memory,GWAS=NULL,h2=optimum_h2 ))

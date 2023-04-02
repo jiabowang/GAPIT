@@ -622,6 +622,7 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="after LD plot")
 
 
 ###output Marker density and decade of linkage disequilibrium over distance
+if(nrow(GI)<100)Geno.View.output=FALSE
 if(!is.null(GI) & !is.null(GD) & file.output & Geno.View.output)
 {
 ViewGenotype<-GAPIT.Genotype.View(

@@ -185,7 +185,7 @@ if(DP$SNP.test)
         }#if lmpred
         if(DP$file.output) 
         {
-          utils::write.csv(Pred,paste("GAPIT.Association.Prediction_results.",DP$name.of.trait,".",memo,".csv",sep=""), row.names = FALSE,col.names = TRUE)
+          utils::write.csv(Pred,paste("GAPIT.Association.Prediction_results.",DP$name.of.trait,".",memo,".csv",sep=""), row.names = FALSE)
         }
         }#lmpred0
      }#buspred
