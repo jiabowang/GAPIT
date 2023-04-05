@@ -410,7 +410,7 @@ if(!is.null(Y))
              print(paste("Processing trait: ",traitname,sep=""))
              if(!is.null(Y) & file.output&Phenotype.View&m==1)ViewPhenotype<-GAPIT.Phenotype.View(myY=Y[,c(1,trait)],traitname=traitname)
              if(!is.null(memo0)) traitname=paste(memo0,".",traitname,sep="")
-             if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","BLINK","BLINKC")&is.null(DP$KI))
+             if(!DP$kinship.algorithm%in%c("FarmCPU","MLMM","BLINK","BLINKC")&is.null(DP$KI)&!is.null(DP$GD))
              {
                 myKI_test=GAPIT.kinship.VanRaden(snps=as.matrix(DP$GD[,-1]))     #  build kinship
                 colnames(myKI_test)=as.character(DP$GD[,1])

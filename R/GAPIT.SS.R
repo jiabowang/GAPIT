@@ -311,7 +311,7 @@ if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut
 gapitMain <- GAPIT.Main(Y=IC$Y,
                         GD=DP$GD[,-1],
                         GM=DP$GM,
-                        KI=DP$KI,
+                        KI=IC$KI,
                         Z=DP$Z,
                         CV=DP$CV,
                         CV.Inheritance=DP$CV.Inheritance,

@@ -33,6 +33,35 @@ print("GAPIT.DP in process...")
 #print(file.from)
 #print(kinship.algorithm)
 # print(WS0)
+geno.pass=FALSE
+if(!SNP.test&is.null(G)&is.null(GD)) geno.pass=TRUE
+
+if(geno.pass)
+{
+  print("GAPIT.DP accomplished successfully without G, GD!!")
+  return (list(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=KI,Z=Z,CV=CV,CV.Inheritance= CV.Inheritance,GP=GP,GK=GK,PC=NULL,GI=NULL,
+                group.from= group.from ,group.to= group.to,group.by= group.by,DPP= DPP, name.of.trait=NULL,
+                kinship.cluster= kinship.cluster, kinship.group= kinship.group,kinship.algorithm= kinship.algorithm,NJtree.group=NJtree.group,NJtree.type=NJtree.type,PCA.col=PCA.col,PCA.3d=PCA.3d,                                              
+                bin.from= bin.from,bin.to= bin.to,bin.by= bin.by,inclosure.from= inclosure.from,inclosure.to= inclosure.to,inclosure.by= inclosure.by,opt=opt,
+                SNP.P3D= SNP.P3D,SNP.effect= SNP.effect,SNP.impute= SNP.impute,PCA.total= PCA.total, SNP.fraction = SNP.fraction, seed = seed, 
+                BINS = BINS,SNP.test=SNP.test, SNP.MAF= SNP.MAF,FDR.Rate = FDR.Rate, SNP.FDR= SNP.FDR,SNP.permutation= SNP.permutation,
+                SNP.CV= SNP.CV,SNP.robust= SNP.robust, file.from= file.from, file.to=file.to, file.total= file.total, file.fragment = file.fragment,file.path= file.path, 
+                file.G= file.G, file.Ext.G= file.Ext.G,file.GD= file.GD, file.GM= file.GM, file.Ext.GD= file.Ext.GD,file.Ext.GM= file.Ext.GM, 
+                ngrid = ngrid, llim = llim, ulim = ulim, esp = esp,Inter.Plot=Inter.Plot,Inter.type=Inter.type,
+                LD.chromosome= LD.chromosome,LD.location= LD.location,LD.range= LD.range,Multi_iter=Multi_iter,
+                sangwich.top= sangwich.top,sangwich.bottom= sangwich.bottom,QC= QC,GTindex= GTindex,LD= LD,GT=NULL,
+                file.output= file.output,cutOff=cutOff, Model.selection = Model.selection,output.numerical = output.numerical,
+                output.hapmap = output.hapmap, Create.indicator = Create.indicator,Random.model=Random.model,
+                 QTN= QTN, QTN.round= QTN.round,QTN.limit= QTN.limit, QTN.update= QTN.update, QTN.method= QTN.method, Major.allele.zero = Major.allele.zero,
+               method.GLM= method.GLM,method.sub= method.sub,method.sub.final= method.sub.final,
+               method.bin= method.bin,bin.size= bin.size,bin.selection= bin.selection,FDRcut=FDRcut,
+                memo= memo,Prior= Prior,ncpus=1,maxLoop= maxLoop,threshold.output= threshold.output,
+                WS= WS,alpha= alpha,maxOut= maxOut,QTN.position= QTN.position, converge=1,iteration.output= iteration.output,acceleration=0,
+                iteration.method= iteration.method,PCA.View.output= PCA.View.output, 
+                p.threshold=p.threshold,QTN.threshold=QTN.threshold,N.sig=N.sig,
+                maf.threshold=maf.threshold,chor_taxa=NULL,num_regwas=num_regwas,model=model,
+                Geno.View.output= Geno.View.output,plot.style= plot.style,SUPER_GD= SUPER_GD,SUPER_GS= SUPER_GS,CG=CG,plot.bin=plot.bin))
+}
 myGenotype<-GAPIT.Genotype(G=G,GD=GD,GM=GM,KI=KI,PCA.total=PCA.total,kinship.algorithm=kinship.algorithm,SNP.fraction=SNP.fraction,SNP.test=FALSE,
                 file.path=file.path,file.from=file.from, file.to=file.to, file.total=file.total, file.fragment = file.fragment, file.G=file.G, 
                 file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,

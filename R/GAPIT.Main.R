@@ -633,61 +633,61 @@ function(Y,
       for (inc in inclosure){
 
         #Grill: update KI if GK or GP is provided
-        if(!byPass & (!is.null(GK) | !is.null(GP))){  
-          print("Grilling KI...")
+        # if(!byPass & (!is.null(GK) | !is.null(GP))){  
+        #   print("Grilling KI...")
 
-          myGenotype<-GAPIT.Genotype(G=NULL,
-                                     GD=cbind(as.data.frame(GT),as.data.frame(GD)),
-                                     GM=GI,
-                                     KI=NULL,
-                                     kinship.algorithm=kinship.algorithm,
-                                     PCA.total=0,
-                                     SNP.fraction=SNP.fraction,
-                                     SNP.test=SNP.test,
-                                     file.path=file.path,
-                                     file.from=file.from, 
-                                     file.to=file.to,
-                                     file.total=file.total, 
-                                     file.fragment = file.fragment, 
-                                     file.G=file.G,
-                                     file.Ext.G=file.Ext.G,
-                                     file.GD=file.GD, 
-                                     file.GM=file.GM, 
-                                     file.Ext.GD=file.Ext.GD,
-                                     file.Ext.GM=file.Ext.GM,
-                                     SNP.MAF=SNP.MAF,
-                                     FDR.Rate = FDR.Rate,
-                                     SNP.FDR=SNP.FDR,
-                                     SNP.effect=SNP.effect,
-                                     SNP.impute=SNP.impute,
-                                     kinship.cluster=kinship.cluster,
-                                     NJtree.group=NJtree.group,
-                                     NJtree.type=NJtree.type,
-                                     LD.chromosome=LD.chromosome,
-                                     LD.location=LD.location,
-                                     LD.range=LD.range,
-                                     GP=GP,
-                                     GK=GK,
-                                     bin.size=bin,
-                                     inclosure.size=inc,
-                                     SNP.CV=SNP.CV,
-                                     Timmer = Timmer, 
-                                     Memory = Memory,
-                                     GTindex=GTindex,
-                                     sangwich.top=NULL,
-                                     sangwich.bottom=sangwich.bottom,
-                                     file.output=file.output,
-                                     Create.indicator = Create.indicator,
-                                     Major.allele.zero = Major.allele.zero)
+        #   myGenotype<-GAPIT.Genotype(G=NULL,
+        #                              GD=cbind(as.data.frame(GT),as.data.frame(GD)),
+        #                              GM=GI,
+        #                              KI=NULL,
+        #                              kinship.algorithm=kinship.algorithm,
+        #                              PCA.total=0,
+        #                              SNP.fraction=SNP.fraction,
+        #                              SNP.test=SNP.test,
+        #                              file.path=file.path,
+        #                              file.from=file.from, 
+        #                              file.to=file.to,
+        #                              file.total=file.total, 
+        #                              file.fragment = file.fragment, 
+        #                              file.G=file.G,
+        #                              file.Ext.G=file.Ext.G,
+        #                              file.GD=file.GD, 
+        #                              file.GM=file.GM, 
+        #                              file.Ext.GD=file.Ext.GD,
+        #                              file.Ext.GM=file.Ext.GM,
+        #                              SNP.MAF=SNP.MAF,
+        #                              FDR.Rate = FDR.Rate,
+        #                              SNP.FDR=SNP.FDR,
+        #                              SNP.effect=SNP.effect,
+        #                              SNP.impute=SNP.impute,
+        #                              kinship.cluster=kinship.cluster,
+        #                              NJtree.group=NJtree.group,
+        #                              NJtree.type=NJtree.type,
+        #                              LD.chromosome=LD.chromosome,
+        #                              LD.location=LD.location,
+        #                              LD.range=LD.range,
+        #                              GP=GP,
+        #                              GK=GK,
+        #                              bin.size=bin,
+        #                              inclosure.size=inc,
+        #                              SNP.CV=SNP.CV,
+        #                              Timmer = Timmer, 
+        #                              Memory = Memory,
+        #                              GTindex=GTindex,
+        #                              sangwich.top=NULL,
+        #                              sangwich.bottom=sangwich.bottom,
+        #                              file.output=file.output,
+        #                              Create.indicator = Create.indicator,
+        #                              Major.allele.zero = Major.allele.zero)
    
-          Timmer=myGenotype$Timmer
-          Memory=myGenotype$Memory
+        #   Timmer=myGenotype$Timmer
+        #   Memory=myGenotype$Memory
 
-          KI=myGenotype$KI
-          #update group set by new KI
-          nk=nrow(KI)
-          GROUP=GROUP[GROUP<=nk]
-        }
+        #   KI=myGenotype$KI
+        #   #update group set by new KI
+        #   nk=nrow(KI)
+        #   GROUP=GROUP[GROUP<=nk]
+        # }
         
         
         for (ca in kinship.cluster){
@@ -717,7 +717,6 @@ function(Y,
               if(!byPass){
                 if(count==1)print("-------Mixed model with Kinship-----------------------------")
                 if(group<ncol(X0)+1) group=1 # the emma function (emma.delta.REML.dLL.w.Z) does not allow K has dim less then CV. turn to GLM (group=1)
-
                 cp <- GAPIT.Compress(KI=KI,kinship.cluster=ca,kinship.group=kt,GN=group,Timmer=Timmer,Memory=Memory)
                 Timmer=cp$Timmer
                 Memory=cp$Memory

@@ -29,8 +29,6 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="cp distance")
 
 #print(paste("The value of kinship.cluster is ", kinship.cluster, sep = ""))
 
-
-
 # hclust() will perform the hiearchical cluster analysis
 #cluster.distance.matrix <- hclust(distance.matrix.as.dist, method = kinship.cluster)
 #cluster.distance.matrix <- hclust(as.dist(2 - KI), method = kinship.cluster)

@@ -8,10 +8,11 @@ function(Y=Y,G=NULL,GD=NULL,KI=NULL,GM=NULL,group.to=group.to,group.from=group.f
 print("--------------------Phenotype and Genotype ----------------------------------")
 if(ncol(Y)<2)  stop ("Phenotype should have taxa name and one trait at least. Please correct phenotype file!")
 print(kinship.algorithm)
-if(is.null(KI)&is.null(GD) & kinship.algorithm!="SUPER"&is.null(G)) stop ("GAPIT says: Kinship is required. As genotype is not provided, kinship can not be created.")
-if(kinship.algorithm=="FarmCPU"&SNP.test==FALSE)stop("FarmCPU is only for GWAS, plase set: SNP.test= TRUE")
+print(SNP.test)
+if(is.null(KI)&is.null(GD) & kinship.algorithm!="SUPER"&is.null(G)&SNP.test) stop ("GAPIT says: Kinship is required. As genotype is not provided, kinship can not be created.")
+# if(kinship.algorithm=="FarmCPU"&!SNP.test)stop("FarmCPU is only for GWAS, plase set: SNP.test= TRUE")
 #if((!is.null(GD))&(!is.null(G))) stop("GAPIT Says:Please put in only one type of geno data.")
-if(is.null(GD)&is.null(G)&is.null(KI))stop ("GAPIT Says:GAPIT need genotype!!!")
+if(is.null(GD)&is.null(G)&is.null(KI)&SNP.test)stop ("GAPIT Says:GAPIT need genotype!!!")
 if(!is.null(GD) & is.null(GM) & (is.null(G)) &SNP.test) stop("GAPIT Says: Genotype data and map files should be in pair")
 if(is.null(GD) & !is.null(GM) & (is.null(G)) &SNP.test) stop("GAPIT Says: Genotype data and map files should be in pair")
 
@@ -42,11 +43,6 @@ print("--------------------GAPIT Logical Done----------------------------------"
 if(!is.null(sangwich.top) & is.null(sangwich.bottom) ) stop("GAPIT Says: SUPER method need sangwich.top and bottom")
 if(is.null(sangwich.top) & !is.null(sangwich.bottom) ) stop("GAPIT Says: SUPER method need sangwich.top and bottom")
  if(kinship.algorithm=="Separation"&PCA.total==0) stop ("GAPIT Says: Separation kinship need PCA.total>0")
-
-
-
-
-
 
 
 return (list(group.to=group.to,group.from=group.from))

@@ -28,6 +28,7 @@ print("GAPIT.IC in process...")
      Y=Y[!is.na(Y[,2]),]
      taxa_Y=as.character(Y[,1])
      # print(head(Y))
+     # print(head(DP$CV))
      if(DP$PCA.total>0&!is.null(DP$CV))CV=GAPIT.CVMergePC(DP$CV,PC)
      if(DP$PCA.total>0&is.null(DP$CV))CV=PC
      if(!is.null(GD))
@@ -61,16 +62,32 @@ print("GAPIT.IC in process...")
        }
      }else{
        # taxa_GD=as.character(GD[,1])
-       taxa_KI=as.character(DP$KI[,1])
-       taxa_CV=as.character(CV[,1])
-       taxa_comall=intersect(intersect(taxa_KI,taxa_Y),taxa_CV)
+       if(!is.null(DP$KI))
+       {
+        taxa_KI=as.character(DP$KI[,1])
+        taxa_CV=as.character(CV[,1])
+        taxa_comall=intersect(intersect(taxa_KI,taxa_Y),taxa_CV)
      # print(length(taxa_comall))
-       comCV=CV[taxa_CV%in%taxa_comall,]
-       comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
-       comY=Y[taxa_Y%in%taxa_comall,]
-       comY <- comY[match(taxa_comall,as.character(comY[,1])),]
-       comGD=NULL
+        comCV=CV[taxa_CV%in%taxa_comall,]
+        comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
+        comY=Y[taxa_Y%in%taxa_comall,]
+        comY <- comY[match(taxa_comall,as.character(comY[,1])),]
+        comGD=NULL
+        }else{
+        # taxa_KI=as.character(DP$KI[,1])
+        taxa_CV=as.character(CV[,1])
+        taxa_comall=intersect(taxa_Y,taxa_CV)
+     # print(length(taxa_comall))
+        comCV=CV[taxa_CV%in%taxa_comall,]
+        comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
+        comY=Y[taxa_Y%in%taxa_comall,]
+        comY <- comY[match(taxa_comall,as.character(comY[,1])),]
+        DP$KI=cbind(as.character(taxa_comall),as.data.frame(matrix(rnorm(length(taxa_comall)^2),length(taxa_comall),length(taxa_comall))))
+        colnames(DP$KI)=c("taxa",as.character(taxa_comall)[-1])
+        comGD=NULL
+        }
      }
+     # print(DP$KI[1:5,1:5])
      GT=as.matrix(as.character(taxa_comall))
      print(paste("There are ",length(GT)," common individuals in genotype , phenotype and CV files.",sep=""))
      if(nrow(comCV)!=length(GT))stop ("GAPIT says: The number of individuals in CV does not match to the number of individuals in genotype files.")
@@ -79,9 +96,9 @@ print("GAPIT.IC in process...")
      
      print("GAPIT.IC accomplished successfully for multiple traits. Results are saved")
      if(DP$kinship.algorithm%in%c("FarmCPU","BLINK","MLMM")){ 
-        return (list(Y=comY,GT=GT,PCA=comCV,K=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=GD))
+        return (list(Y=comY,GT=GT,PCA=comCV,KI=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=GD))
      }else{
-        return (list(Y=comY,GT=GT,PCA=comCV,K=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=GD,myallY=Y))
+        return (list(Y=comY,GT=GT,PCA=comCV,KI=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=GD,myallY=Y))
      }
 }  #end of GAPIT IC function
 #=============================================================================================

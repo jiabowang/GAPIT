@@ -112,7 +112,8 @@ if(is.null(Y)) stop ("GAPIT says: Phenotypes must exist.")
 if(is.null(KI)&missing(GD) & kinship.algorithm!="SUPER") stop ("GAPIT says: Kinship is required. As genotype is not provided, kinship can not be created.")
 if(is.null(GD) & is.null(GT)) {
 	GT=as.matrix(Y[,1])
-	GD=matrix(1,nrow(Y),1)	
+	GD=matrix(1,nrow(Y),1)
+  rownames(GD)=as.character(GT)
   GI=as.data.frame(matrix(0,1,3) )
   colnames(GI)=c("SNP","Chromosome","Position")
 }
@@ -137,7 +138,7 @@ if(is.null(CV)){
   if(!is.null(GD))
   {
     taxa.gd=as.character(rownames(GD))
-    CV=cbind(as.data.frame(taxa.gd),GD[,1])
+    CV=cbind(as.character(taxa.gd),as.data.frame(GD[,1]))
     }else{
       if(!is.null(KI))
       {
