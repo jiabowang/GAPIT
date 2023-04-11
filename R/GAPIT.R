@@ -68,7 +68,7 @@
 #' @param model model type to run, (options: "MLM", "GLM", "CMLM", "MMLM", "SUPER", "FarmCPU", "gBLUP",  "cBLUP", and "sBLUP"
 #' @param Predict.type option to display which type predicted factor again real phenotype in the GAPIT.Association.Prediction pdf file.(options: "GEBV","BLUP" and "BLUE")
 #' @param SNP.test logical, whether to do GWAS or GS.
-
+#' @param seq.cutoff numeric value, the threshold for filtering significant markers from all. It would be transfor as Bornferrni cutoff in GGS.
 #' @details 
 #' Genome Association and Prediction Integrated Tools
 #' Available models: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, cBLUP
@@ -215,6 +215,7 @@
   Random.model = TRUE, #Random.model to calculate PVE
   sangwich.top = NULL, #SUPER
   sangwich.bottom = NULL,#SUPER
+  seq.cutoff=NULL,
   # seed = NULL, 
   SNP.P3D = TRUE,
   SNP.effect = "Add",
@@ -525,14 +526,14 @@ if(!is.null(Y))
         GMM=GAPIT.Multiple.Manhattan(model_store=all.memo,
                 Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,
                 cutOff=DP$cutOff,plot.type=c("s"))
-        print("GAPIT has been output Multiple Manhattan figure with Symphysic type!!!")
+        print("GAPIT has output Multiple Manhattan figure with Symphysic type!!!")
         if(length(all.memo)*(ncol(Y)-1)>1&length(all.memo)*(ncol(Y)-1)<9)
           {
             print(all.memo)
             GMM=GAPIT.Multiple.Manhattan(model_store=all.memo,Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=QTN.position,cutOff=cutOff,plot.type=c("w","h"))
-            print("GAPIT has been output Multiple Manhattan figures with Wide and High types!!!")
+            print("GAPIT has output Multiple Manhattan figures with Wide and High types!!!")
             GAPIT.Circle.Manhattan.Plot(band=1,r=3,GMM$multip_mapP,plot.type=c("c","q"),signal.line=1,xz=GMM$xz,threshold=cutOff)
-            print("GAPIT has been output Multiple Manhattan and QQ figures with Circle types!!!")
+            print("GAPIT has output Multiple Manhattan and QQ figures with Circle types!!!")
           }
       } 
     if(!SNP.test|buspred)

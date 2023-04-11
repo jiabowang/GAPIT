@@ -3,7 +3,7 @@ function(Y=NULL,CV=NULL,Z=NULL,GT=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,
          WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
          method=NULL,delta=NULL,vg=NULL,ve=NULL,LD=0.01,GTindex=NULL,name.of.trait=NULL,
          cutOff=0.01,Multi_iter=FALSE,num_regwas=10,Random.model=FALSE,FDRcut=FALSE,N.sig=NULL,
-         p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,
+         p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,seq.cutoff=NULL,
          method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",
          DPP=1000000,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
 		 file.output=TRUE,opt="extBIC"){
@@ -658,6 +658,8 @@ GWAS=GWAS[order(GWAS[,2]),]
 if(Random.model&file.output)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
 
 }
+if(!is.null(seq.cutoff)) seqQTN=which(GWAS[,4]<(seq.cutoff/nrow(GWAS)))
+
 # print(head(GWAS))
 #print("GAPIT.Bus succeed!")  
 return (list(GWAS=GWAS, GPS=GPS,REMLs=REMLs,vg=vg,ve=ve,delta=delta,GVs=GR$GVs,seqQTN=seqQTN))
