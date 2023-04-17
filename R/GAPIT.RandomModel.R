@@ -157,6 +157,12 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
         do_color = grDevices::colorRampPalette(c("green", "red"))(n)
             # graphics::par(mar=c(4,5,4,4),cex=1)
             x=as.numeric(gene_list$maf)
+            if(min(x)<0)
+            {
+                print("The MAF present negative values!!!")
+                print("GAPIT will not output PVE against MAF plots!!!")
+                return(list(GVs=var_gene/sum(var_gene+var_res),PVEs=gene_list))
+            } 
             y=as.numeric(gene_list$effect)
             x.lim=max(x)+max(x)/10
             y.lim=max(y)+max(y)/10
@@ -180,8 +186,8 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
             cex=1.2,xlim =c(0,x.lim) ,main="a",
             ylab=expression(-log[10](italic(p))))
             # par(mar = c(5, 5, 2, 1))
-            print(min(y))
-            print(max(y))
+            # print(min(y))
+            # print(max(y))
             plot(gene_list$maf,gene_list$effect,cex=1.2,main="b",
             xlab="MAF",ylim=c(min(y), max(y)), xlim =c(0,x.lim) ,las=1,
             ylab="Estimated Effect")

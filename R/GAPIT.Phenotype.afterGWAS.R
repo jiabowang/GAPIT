@@ -62,7 +62,7 @@ if(hapmap)
   map=G[-1,c(1,3,4)]
 }else{
   X=GD[,-1]
-  taxa=as.character(myGD[,1])
+  taxa=as.character(GD[,1])
   map=GM
 }
 

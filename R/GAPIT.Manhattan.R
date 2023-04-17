@@ -13,7 +13,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     #print(cutOff)
     #do nothing if null input
     if(is.null(GI.MP)) return
-  #Handler of lable paosition only indicated by negatie position
+  #Handler of lable position only indicated by negatie position
     position.only=F
     if(!is.null(seqQTN)){
       if(seqQTN[1]<0){

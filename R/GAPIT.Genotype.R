@@ -335,6 +335,15 @@ if(!is.null(GD))
   { 
   #maf=apply(as.matrix(GD),2,function(one) abs(1-sum(one)/(2*nrow(GD))))
   #maf[maf>0.5]=1-maf[maf>0.5]
+  uni.GD=unique(as.numeric(as.matrix(GD[sample(1:nrow(GD),5),])))
+  uni.GD=sort(uni.GD)
+  if(sum(!uni.GD%in%c(0,1,2))>0)
+  {
+  print(paste("The data set include un-0,1,2 values !!!"))
+  print(paste("GAPIT will not perform MAF filtering !!!"))
+
+  }else{
+
   ss=apply(GD,2,sum)
   maf=apply(cbind(.5*ss/(nrow(GD)),1-.5*ss/(nrow(GD))),1,min)
 #print(max(maf))
@@ -350,7 +359,8 @@ if(!is.null(GD))
   GI=as.data.frame(GI[maf_index,])
   # GM=as.data.frame(GM[maf_index,])
   #GI=GM
-  }
+  }# end of uni.GD
+  }# end of !is.null(GD)
 #print("file loaded")
 
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Sampling genotype")
