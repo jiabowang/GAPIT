@@ -1,4 +1,4 @@
-`GAPIT.Multiple.QQ`<-function(mapP,DPP=5000,cutOff=0.01, wd=2, ratio=1,
+`GAPIT.Multiple.QQ`<-function(mapP,DPP=50000,cutOff=0.01, wd=2, ratio=1,
     allpch=NULL,memo=NULL)
     #Object: Make a Multiple QQ Plot
     #Output: pdfs of the Multiple Manhattan Plot
@@ -15,11 +15,13 @@
  P=mapP[,-c(1:3)]
  values=apply(P,1,min)
  values=-log10(values)
- cut0=ceiling(-log10(0.01/length(values))/2)
+ cut0=ceiling(-log10(cutOff/length(values))/2)
  rv=runif(length(values))
  values=values+rv*(values-5+cut0)
  index=values>cut0
- print(table(index))
+ index=GAPIT.Pruning(values,DPP=DPP)
+
+ # print(table(index))
  # if(nrow(mapP)>DPP) mapP=mapP[index,]
  
  P=mapP[,-c(1:3)]
@@ -60,7 +62,7 @@
  	type="l",lty=5, lwd = 2, las=1,
  	ylab=expression(Observed~~-log[10](italic(p))), xlab=expression(Expected~~-log[10](italic(p))),
  	col="gray")
- index=length(c95):1        
+ # index=length(c95):1        
  graphics::polygon(c(log.Quantiles0[index],log.Quantiles0),c(-log10(c05)[index],-log10(c95)),col='gray',border=NA)
  graphics::abline(a = 0, b = 1, col = "red",lwd=2)
  step.vals0=NULL  
