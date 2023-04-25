@@ -75,6 +75,8 @@
     P.values <- P.values[order(P.values)]
     step.vals=ceiling(i/length(allpch0))-1
     mypch=allpch0[i-step.vals*length(allpch0)]
+    # mycol=c("lightblue","mistyrose","lavender","lightgreen","lightgray","lightgoldenrod2","coral2","royalblue3")
+    mycol=c("black","darkred","darkblue","golden")
 
     #Set up the p-value quantiles
     #print("Setting p_value_quantiles...")
@@ -94,7 +96,7 @@
         par(new=T)
         plot(log.Quantiles, log.P.values, xlim = c(0,max(log.Quantiles0)), 
         	ylim = c(0,themax.y0), cex.axis=1, cex.lab=1.3, axes=FALSE, 
-        	lty = 1,  lwd = 2, col = step.vals+1 ,xlab ="",
+        	lty = 1,  lwd = 2, col = mycol[step.vals+1] ,xlab ="",
         	ylab ="", pch=mypch,
         	)
     #     if(step.vals!=0)
@@ -105,7 +107,7 @@
 
  }# end of Nenviron
 
-graphics::legend("topleft",taxa,pch=yourpch,col=step.vals0+1,pt.lwd=3,text.font=6,box.col=NA)
+graphics::legend("topleft",taxa,pch=yourpch,col=mycol[step.vals0+1],pt.lwd=3,text.font=6,box.col=NA)
 
 grDevices::dev.off()
 

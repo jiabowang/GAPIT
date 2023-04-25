@@ -373,8 +373,7 @@ myGM=read.table("http://zzlab.net/GAPIT/data/mdp_SNP_information.txt",head=T)
 #myG=read.table(file="http://zzlab.net/GAPIT/data/mdp_genotype_test.hmp.txt", head = FALSE)
 # performing simulation phenotype
 set.seed(198521)
-Para=list(h2=0.7,NQTN=20)
-mysimulation<-GAPIT(Para=Para,GD=myGD,GM=myGM)
+mysimulation<-GAPIT(h2=0.7,NQTN=20,GD=myGD,GM=myGM)
 myY=mysimulation$Y
 
 
