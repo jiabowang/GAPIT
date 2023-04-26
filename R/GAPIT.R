@@ -308,14 +308,14 @@ if(!is.null(Y))
           {
             group.from=1000000
             group.to=1000000
-            kinship.algorithm="Zhang"
+            if(is.null(kinship.algorithm))kinship.algorithm="Zhang"
           }
         if(model=="CMLM"|model=="cBLUP")
           {
             if(group.from>=group.to)group.from=1
             print(group.from)
             print(group.to)
-            kinship.algorithm="Zhang"
+            if(is.null(kinship.algorithm))kinship.algorithm="Zhang"
           }
         if(model=="SUPER"|model=="sBLUP")
           {
@@ -327,7 +327,7 @@ if(!is.null(Y))
             if(is.null(bin.by))bin.by=10000
             if(is.null(sangwich.top))sangwich.top="MLM"
             if(is.null(sangwich.bottom))sangwich.bottom="SUPER"
-            kinship.algorithm="Zhang"
+            if(is.null(kinship.algorithm))kinship.algorithm="Zhang"
             group.from=1000000
             group.to=1000000
             group.by=nrow(Y)/10

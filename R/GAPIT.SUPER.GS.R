@@ -212,7 +212,6 @@ print("-------------------start SUPER BREAD-----------------------------------")
   GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=FALSE)$GWAS
   # file.output=file.output.temp
 #  print(memory.size())
-
   GK=NULL
 
 if(inclosure.to>nrow(Y))   ##########removed by Jiabo Wang ,unlimited number of inclosures
@@ -298,7 +297,10 @@ SUPER_X=SUPER_optimum_GD[,-1]
 colnames(SUPER_myKI_test)=SUPER_taxa
 SUPER_myKI=cbind(SUPER_taxa,as.data.frame(SUPER_myKI_test))
 print("select optimum number of marker effect in GD")
-print(dim(SUPER_optimum_GD))
+# print(dim(SUPER_optimum_GD))
+# print(kinship.algorithm)
+# 
+# print(SUPER_myKI_test[1:5,1:5])
 #print(SUPER_optimum_GD[1:5,1:5])
 ######################################GOIN TO NEW CBLUP
 Z=NULL
@@ -434,8 +436,10 @@ j=1
   XX=GAPIT.Licols(X0)
   X=XX$Xsub
   X.idx=XX$idx
-
-# print(as.numeric(aa))
+  # print(head(X))
+  # # print(head(ys))
+  # print(K[1:5,1:5])
+  # print(dim(Z))
    emma_test <- EMMREML::emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
    # emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
 

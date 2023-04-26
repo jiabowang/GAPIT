@@ -20,10 +20,11 @@ compiler::cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
     deltaExpStart = -5
     deltaExpEnd = 5
     snp.pool=snp.pool[,]
-    if( !is.null(snp.pool) && any(stats::var(snp.pool) == 0) ){
+    if( !is.null(snp.pool) && any(apply(snp.pool,2,var) == 0) ){
+    # # if(!is.null(snp.pool)&&var(snp.pool)==0){
         deltaExpStart = 100
         deltaExpEnd = deltaExpStart
-        #print("deltaExp change here")
+    #     #print("deltaExp change here")
     }
     if(is.null(X0)) {
         X0 = matrix(1, nrow(snp.pool), 1)
