@@ -10,6 +10,9 @@ Genome Association and Prediction Integrated Tools Version III
 Citation
 =====
 
+The DOI of GAPIT GitHub repository is:
+DOI: 10.5281/zenodo.7931838
+
 If you use GAPIT and publish your analysis, please report the program version and cite the appropriate article:
 
   
