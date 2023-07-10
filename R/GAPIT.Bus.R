@@ -18,21 +18,20 @@ GR=NULL
 seqQTN=NULL
 
 #print(head(CV))
-if(method=="GLM"){
+if(method%in%c("GLM","MLM","CMLM","SUPER")){
 #print("---------------screening by GLM----------------------------------")
 
-  myGAPIT <- GAPIT(
-  Y=Y,			
+   myGAPIT <- GAPIT(
+  Y=Y,      
   CV=CV,
   Z=Z,
   KI=KI,
   GD=GD,
   GM=GM,
-  group.from=0,			
-  group.to=0,
-  QC=FALSE,
+  model=method,
+  # QC=FALSE,
   GTindex=GTindex,
-  file.output=F				
+  file.output=F       
   )
   GWAS=myGAPIT$GWAS 
   GPS=myGAPIT$GPS 
@@ -43,77 +42,95 @@ if(method=="GLM"){
 }
 
 #Performing first screening with MLM
-if(method=="MLM"){
-#print("---------------screening by MLM----------------------------------")
+# if(method=="MLM"){
+# #print("---------------screening by MLM----------------------------------")
 
-  myGAPIT <- GAPIT(
-  Y=Y,			
-  CV=CV,
-  Z=Z,
-  KI=KI,
-  GD=GD,
-  GM=GM,
-  group.from=nrow(Y),			
-  group.to=nrow(Y),
-  QC=FALSE,
-  GTindex=GTindex,
-  file.output=F				
-  )
-  GWAS=myGAPIT$GWAS 
-  GPS=myGAPIT$GPS 
-  REMLs=myGAPIT$REMLs  
-  delta=myGAPIT$ve/myGAPIT$va
-  vg=myGAPIT$vg
-  ve=myGAPIT$ve
-}
+#   myGAPIT <- GAPIT(
+#   Y=Y,			
+#   CV=CV,
+#   Z=Z,
+#   KI=KI,
+#   GD=GD,
+#   GM=GM,
+#   model=method,
+#   # QC=FALSE,
+#   GTindex=GTindex,
+#   file.output=F				
+#   )
+#   GWAS=myGAPIT$GWAS 
+#   GPS=myGAPIT$GPS 
+#   REMLs=myGAPIT$REMLs  
+#   delta=myGAPIT$ve/myGAPIT$va
+#   vg=myGAPIT$vg
+#   ve=myGAPIT$ve
+# }
 
-#Performing first screening with Compressed MLM
-if(method=="CMLM"){
-#print("---------------screening by CMLM----------------------------------")
-  myGAPIT <- GAPIT(
-  Y=Y,			
-  CV=CV,
-  Z=Z,
-  KI=KI,
-  GD=GD,
-  GM=GM,
-  group.from=1,			
-  group.to=nrow(Y),
-  QC=FALSE,
-  GTindex=GTindex,
-  file.output=F				
-  )
-  GWAS=myGAPIT$GWAS 
-  GPS=myGAPIT$GPS 
-  REMLs=myGAPIT$REMLs  
-  delta=myGAPIT$ve/myGAPIT$va
-  vg=myGAPIT$vg
-  ve=myGAPIT$ve
-}
+# #Performing first screening with Compressed MLM
+# if(method=="CMLM"){
+# #print("---------------screening by CMLM----------------------------------")
+#    myGAPIT <- GAPIT(
+#   Y=Y,      
+#   CV=CV,
+#   Z=Z,
+#   KI=KI,
+#   GD=GD,
+#   GM=GM,
+#   model=method,
+#   # QC=FALSE,
+#   GTindex=GTindex,
+#   file.output=F       
+#   )
+#   GWAS=myGAPIT$GWAS 
+#   GPS=myGAPIT$GPS 
+#   REMLs=myGAPIT$REMLs  
+#   delta=myGAPIT$ve/myGAPIT$va
+#   vg=myGAPIT$vg
+#   ve=myGAPIT$ve
+# }
 
 #Performing first screening with FaST-LMM
-if(method=="FaST" | method=="SUPER"| method=="DC")
-{
-  GWAS=NULL
-  GPS=NULL
-  if(!is.null(vg) & !is.null(vg) & is.null(delta)) delta=ve/vg
-  if(is.null(vg) & is.null(ve))
-  {
-    #print("!!!!!!!!!!!!!!!!")
-    myFaSTREML=GAPIT.get.LL(pheno=matrix(Y[,-1],nrow(Y),1),geno=NULL,snp.pool=as.matrix(GK[,-1]),X0=as.matrix(cbind(matrix(1,nrow(CV),1),CV[,-1])))
-    #print(myFaSTREML)
-#print("Transfer data...")    
-    REMLs=-2*myFaSTREML$LL  
-    delta=myFaSTREML$delta
-    vg=myFaSTREML$vg
-    ve=myFaSTREML$ve
-    #GPS=myFaSTREML$GPS
-  }
+# if(method=="FaST" | method=="SUPER"| method=="DC")
+# {
+#   GWAS=NULL
+#   GPS=NULL
+#   if(!is.null(vg) & !is.null(vg) & is.null(delta)) delta=ve/vg
+#   if(is.null(vg) & is.null(ve))
+#   {
+#     #print("!!!!!!!!!!!!!!!!")
+#     myFaSTREML=GAPIT.get.LL(pheno=matrix(Y[,-1],nrow(Y),1),geno=NULL,snp.pool=as.matrix(GK[,-1]),X0=as.matrix(cbind(matrix(1,nrow(CV),1),CV[,-1])))
+#     #print(myFaSTREML)
+# #print("Transfer data...")    
+#     REMLs=-2*myFaSTREML$LL  
+#     delta=myFaSTREML$delta
+#     vg=myFaSTREML$vg
+#     ve=myFaSTREML$ve
+#     #GPS=myFaSTREML$GPS
+#   }
 
-mySUPERFaST=GAPIT.SUPER.FastMLM(ys=matrix(Y[,-1],nrow(Y),1),X0=as.matrix(cbind(matrix(1,nrow(CV),1),CV[,-1])),snp.pool=as.matrix(GK[-1]), xs=as.matrix(GD[GTindex,-1]),vg=vg,delta=delta,LD=LD,method=method)
-GWAS=cbind(GM,mySUPERFaST$ps,mySUPERFaST$stats,mySUPERFaST$dfs,mySUPERFaST$effect)
-}#End of if(method=="FaST" | method=="SUPER")
-
+# mySUPERFaST=GAPIT.SUPER.FastMLM(ys=matrix(Y[,-1],nrow(Y),1),X0=as.matrix(cbind(matrix(1,nrow(CV),1),CV[,-1])),snp.pool=as.matrix(GK[-1]), xs=as.matrix(GD[GTindex,-1]),vg=vg,delta=delta,LD=LD,method=method)
+# GWAS=cbind(GM,mySUPERFaST$ps,mySUPERFaST$stats,mySUPERFaST$dfs,mySUPERFaST$effect)
+# }#End of if(method=="FaST" | method=="SUPER")
+# if(method=="SUPER")
+# {
+#    myGAPIT <- GAPIT(
+#   Y=Y,      
+#   CV=CV,
+#   Z=Z,
+#   KI=KI,
+#   GD=GD,
+#   GM=GM,
+#   model=method,
+#   # QC=FALSE,
+#   GTindex=GTindex,
+#   file.output=F       
+#   )
+#   GWAS=myGAPIT$GWAS 
+#   GPS=myGAPIT$GPS 
+#   REMLs=myGAPIT$REMLs  
+#   delta=myGAPIT$ve/myGAPIT$va
+#   vg=myGAPIT$vg
+#   ve=myGAPIT$ve
+# }
 
 if(method=="FarmCPU")
 {
