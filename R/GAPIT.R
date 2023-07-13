@@ -69,6 +69,7 @@
 #' @param Predict.type option to display which type predicted factor again real phenotype in the GAPIT.Association.Prediction pdf file.(options: "GEBV","BLUP" and "BLUE")
 #' @param SNP.test logical, whether to do GWAS or GS.
 #' @param seq.cutoff numeric value, the threshold for filtering significant markers from all. It would be transfor as Bornferrni cutoff in GGS.
+#' @param verbose decide whether show out
 #' @details 
 #' Genome Association and Prediction Integrated Tools
 #' Available models: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, cBLUP
@@ -243,7 +244,8 @@
   Predict.type="GEBV",
   # ulim = 10, 
   WS = c(1e0,1e3,1e4,1e5,1e6,1e7),
-  WS0 = 10000
+  WS0 = 10000,
+  verbose = F
 	){
 #Object: To perform GWAS and GPS (Genomic Prediction/Selection)
 #Designed by Zhiwu Zhang
@@ -558,5 +560,7 @@ if(file.output)
   print("Please find your all results in :")
   print(paste(getwd()))
 }
+	if (verbose == TRUE){
 return (out)
+		}
 }  #end of GAPIT function
