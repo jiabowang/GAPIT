@@ -1969,7 +1969,7 @@ function(GD=NULL,GM=NULL,Y=NULL,trait="",theRep=100){
     if(is.null(GD))return(NULL)
     if(is.null(GM))return(NULL)
     if(is.null(Y))return(NULL)
-    set.seed(12345)
+    # set.seed(12345)
     i=1
     for(i in 1:theRep){
         index=1:nrow(Y)

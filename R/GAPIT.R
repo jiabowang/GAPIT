@@ -155,7 +155,7 @@
   FDRcut = FALSE, # filter pseudo QTN based on cutOff in blink
   group.from = 1000000,#MLM
   group.to = 1000000,#MLM
-  group.by = 20,#MLM
+  group.by = 50,#MLM
   # GTindex = NULL,
   Geno.View.output = TRUE,#genotype analysis option
   # GP = NULL,

@@ -33,7 +33,7 @@ max.dist=max(GI[,3])
 if(is.null(MAXfregment))MAXfregment=10^nchar(max(GI[,3]))
 
 posi=as.numeric(GI[,2])*10^(nchar(max(as.numeric(GI[,3]))))+as.numeric(GI[,3])
-set.seed(99163)
+# set.seed(99163)
 
 rs.index=sample(nrow(GI),n.select)
 rs.index=sort(rs.index)

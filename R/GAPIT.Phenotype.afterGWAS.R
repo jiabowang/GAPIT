@@ -12,7 +12,7 @@ hapmap=FALSE
 if(!is.null(G)) hapmap=TRUE
 print(hapmap)
 # print(dim(G))
-set.seed(seed)
+# set.seed(seed)
 # GWAS=myGAPIT$GWAS
 # cutOff=0.01
 # Y=mysimulation$Y

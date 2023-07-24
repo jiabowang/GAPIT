@@ -86,7 +86,7 @@ pos.fix=as.numeric(GI[,2])*10^(nchar(max(as.numeric(GI[,3]))))+as.numeric(GI[,3]
 # rs.index=as.character(GI[,1])%in%rs.markers
 # print(table(rs.index))
 
-set.seed(99163)
+# set.seed(99163)
 if(is.null(n.select))n.select=10000
 if(n.select>nrow(GI))n.select=nrow(GI)-1
 rs.index=sample(nrow(GI)-1,n.select)
@@ -300,7 +300,7 @@ grDevices::dev.off()
 # # max.number=NULL,
 # Aver.Dis=Aver.Dis
 # )
-set.seed(Sys.time())
+# set.seed(Sys.time())
 print(paste("GAPIT.Genotype.View ", ". pdfs generate.","successfully!" ,sep = ""))
 
 #GAPIT.Genotype.View
