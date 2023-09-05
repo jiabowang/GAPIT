@@ -169,6 +169,7 @@ d.V0.demo=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,1000,ifelse(nc
 ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max(d.V0))<=12,3,4)))
 ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
 d.V.hist$counts=d.V0/d.V0.demo
+# ad.r2=1-(1-r^2)*()/()
 plot(r0.hist, xlab="R", las=1,ylab=ylab.store[ylab0], main="b",col="gray")
 
 plot(d.V.hist, las=1,xlab="Distance (Kb)",col="gray", ylab=ylab.store[ylab0], main="e",cex=.5,xlim=c(0,WS0/Aver.Dis))
