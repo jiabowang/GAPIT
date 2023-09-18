@@ -17,10 +17,10 @@ if(!is.null(PWI))
 {  
  
     #library(multtest)
-    
+    n.col=ncol(PWI)
     if(dim(PWI)[1] == 1){
      PWIP <- cbind(PWI, PWI[4])
-     colnames(PWIP)[9] <- "FDR_Adjusted_P-values"
+     colnames(PWIP)[n.col+1] <- "FDR_Adjusted_P-values"
     }
    
     if(dim(PWI)[1] > 1){ 
@@ -45,7 +45,7 @@ if(!is.null(PWI))
     #Sort these data by lowest to highest FDR adjusted p-value
   PWIP <- PWIP[order(PWIP[,4]),]
   
-  colnames(PWIP)[9] <- "FDR_Adjusted_P-values"
+  colnames(PWIP)[n.col+1] <- "FDR_Adjusted_P-values"
 #  number.of.significant.SNPs = temp$r
   }
   #print("GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure accomplished successfully!")

@@ -190,7 +190,7 @@
   Multi_iter = FALSE, #Multiple step for FarmCPU and BLink
   Major.allele.zero = FALSE, #convert hapmap file to numeric file, set major marker as 0
   Multiple_analysis = TRUE, #option for multiple Manhattan and QQ plots
-  num_regwas = 10,# the max number of Multiple step loops
+  num_regwas = 10,# the max number of Multiple markers 
   # ncpus = 1,
   # ngrid = 100, 
   N4=FALSE,
@@ -269,14 +269,7 @@ if(!is.null(Y))
         # print(model_store)
         model=model_store[m]
         # print(model)
-        if(model%in%c("gBLUP","cBLUP","sBLUP"))
-        {
-          SNP.test=FALSE
-          SUPER_GS=TRUE
-        }else{
-          # SNP.test=TRUE
-          SUPER_GS=FALSE
-        }
+        
         if(toupper(model)=="BLINK") model="BLINK"
         if(toupper(model)=="FARMCPU") model="FarmCPU"
         if(toupper(model)=="BLINKC") model="BLINKC"
@@ -295,7 +288,14 @@ if(!is.null(Y))
         {model="MLMM2"
          Multi_iter=TRUE
         }
-        # if(group.from<nrow(Y)) model="CMLM"
+        if(model%in%c("gBLUP","cBLUP","sBLUP"))
+        {
+          SNP.test=FALSE
+          SUPER_GS=TRUE
+        }else{
+          # SNP.test=TRUE
+          SUPER_GS=FALSE
+        }
         # if(group.to!=group.from)model="CMLM"
         # if(group.to==1&group.from==1)model="GLM"
         # if(!is.null(sangwich.bottom)&!is.null(sangwich.bottom))model="SUPER"

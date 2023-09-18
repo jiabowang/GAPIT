@@ -6,7 +6,7 @@
 # ' @export
 `GAPIT.DP` <-
 function(G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Inheritance=NULL,GP=NULL,GK=NULL,
-        group.from=30 ,group.to=1000000,group.by=10,DPP=100000, seq.cutoff=NULL,
+        group.from=30 ,group.to=1000000,group.by=10,DPP=500000, seq.cutoff=NULL,
         kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden",                                                    
         bin.from=10000,bin.to=10000,bin.by=10000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
         SNP.P3D=TRUE,SNP.effect="Add",SNP.impute="Middle",PCA.total=0, SNP.fraction = 1, seed = 123, BINS = 20,SNP.test=TRUE, 

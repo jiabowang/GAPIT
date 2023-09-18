@@ -139,6 +139,8 @@ if(!is.null(CV))
     print(paste("Candidate Genes could Phenotype_Variance_Explained(%) :",sep=""))
     print(100*var_gene/sum(var_gene+var_res))
     v_rat=100*var_gene/sum(var_gene+var_res)
+    # print(dim(geneGWAS))
+    # print(length(v_rat))
     gene_list=cbind(geneGWAS,v_rat)
     # print("!!!!")
     # print(gene_list)
@@ -149,14 +151,14 @@ if(!is.null(CV))
 if(sum(is.na(gene_list[1,c(4:8)]))==0)
 {
      
-        gene_list=gene_list[order(gene_list$effect),]
+        gene_list=gene_list[order(as.numeric(gene_list$effect)),]
 
     if(n_gd>=5)
         {
         n=10
         do_color = grDevices::colorRampPalette(c("green", "red"))(n)
             # graphics::par(mar=c(4,5,4,4),cex=1)
-            x=as.numeric(gene_list$maf)
+            x=as.numeric(gene_list$MAF)
             if(min(x)<0)
             {
                 print("The MAF present negative values!!!")
@@ -182,17 +184,20 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
                    heights = c(100,80,120), # Heights of the two rows
                    widths = c(2, 2,2)) # Widths of the two columns
             par(mar = c(5, 5, 2, 1))
-            plot(gene_list$maf,-log10(gene_list$P.value),xlab="MAF",las=1,
+            # print(head(gene_list))
+            # print(length(gene_list$maf))
+            # print(length(gene_list$P.value))
+            plot(gene_list$MAF,-log10(gene_list$P.value),xlab="MAF",las=1,
             cex=1.2,xlim =c(0,x.lim) ,main="a",
             ylab=expression(-log[10](italic(p))))
             # par(mar = c(5, 5, 2, 1))
             # print(min(y))
             # print(max(y))
-            plot(gene_list$maf,gene_list$effect,cex=1.2,main="b",
+            plot(gene_list$MAF,gene_list$effect,cex=1.2,main="b",
             xlab="MAF",ylim=c(min(y), max(y)), xlim =c(0,x.lim) ,las=1,
             ylab="Estimated Effect")
             # par(mar = c(5, 5, 2, 1))
-            plot(gene_list$maf,gene_list$Variance_Explained,cex=1.2,las=1,
+            plot(gene_list$MAF,gene_list$Variance_Explained,cex=1.2,las=1,
             xlab="MAF",xlim =c(0,x.lim) ,main="c",
             ylab="Phenotypic Variance Explained (%)")
             grDevices::dev.off()

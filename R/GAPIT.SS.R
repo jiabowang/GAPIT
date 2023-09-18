@@ -46,7 +46,7 @@ print(DP$kinship.algorithm)
      Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GAPIT.FarmCPU")
      Memory=GAPIT.Memory(Memory=Memory,Infor="GAPIT.FarmCPU")
 
-     myBus=GAPIT.Bus(Y=ic_Y,CV=ic_PCA,Z=NULL,GK=NULL,KI=ic_KI,GD=ic_GD,GM=ic_GM,GT=IC$GT,name.of.trait=DP$name.of.trait,
+     myBus=GAPIT.Bus(Y=ic_Y,CV=ic_PCA,Z=NULL,GK=NULL,KI=ic_KI,GD=ic_GD,GM=ic_GM,GT=IC$GT,name.of.trait=DP$name.of.trait,DP=DP,
                 method=DP$kinship.algorithm,GTindex=DP$GTindex,LD=DP$LD,opt=DP$opt,N.sig=DP$N.sig,
                 bin.size=DP$bin.size,bin.selection=DP$bin.selection,alpha=DP$alpha,WS=DP$WS,
                 cutOff=DP$cutOff,p.threshold=DP$p.threshold,QTN.threshold=DP$QTN.threshold,FDRcut=DP$FDRcut,

@@ -165,7 +165,7 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
       stderr=rep(NA,length(ps))
       effect.est=GI$effect
     }
-    if(is.na(maf[1]))  maf=matrix(.5,nrow(GI),1)
+    # if(is.na(maf[1]))  maf=matrix(.5,nrow(GI),1)
     if(!is.null(IC$GD)&DP$SNP.test)
     {  
       print("Filtering SNPs with MAF..." )
