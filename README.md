@@ -367,7 +367,6 @@ Example
 
 ```
 # loading packages for GAPIT and GAPIT functions
-source("http://www.zzlab.net/GAPIT/GAPIT.library.R")
 source("http://www.zzlab.net/GAPIT/gapit_functions.txt")
 # loading data set
 myY=read.table(file="http://zzlab.net/GAPIT/data/mdp_traits.txt", head = TRUE)
