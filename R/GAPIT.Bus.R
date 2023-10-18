@@ -193,7 +193,7 @@ if(nrow(sig)==0)sig_pass=FALSE
 # print(Multi_iter)
 print("Calculating Orignal GWAS result..." )
 
-if(file.output)
+if(file.output&Multi_iter)
   {  
       rsquare_base=rep(NA,nrow(GWAS))
       rsquare=rep(NA,nrow(GWAS))
@@ -496,7 +496,7 @@ if(nrow(sig)==0)sig_pass=FALSE
 # print(Multi_iter&sig_pass)
 print("Calculating Orignal GWAS result..." )
 
-if(file.output)
+if(file.output&Multi_iter)
   {  
       rsquare_base=rep(NA,nrow(GWAS))
       rsquare=rep(NA,nrow(GWAS))
