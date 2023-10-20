@@ -148,6 +148,8 @@ if(!is.null(CV))
     utils::write.csv(var_gene,paste("GAPIT.Association.Vairance_markers.", name.of.trait,".csv",sep=""),quote = FALSE,  row.names = FALSE)
     utils::write.csv(gene_list,paste("GAPIT.Association.PVE.", name.of.trait,".csv",sep=""),quote = FALSE,  row.names = FALSE)
     colnames(gene_list)[ncol(gene_list)]="Variance_Explained"
+    colnames(gene_list)[which(colnames(gene_list)%in%c("maf","MAF"))]="MAF"
+
 if(sum(is.na(gene_list[1,c(4:8)]))==0)
 {
      

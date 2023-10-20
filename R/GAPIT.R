@@ -454,7 +454,7 @@ if(!is.null(Y))
         out$Compression=SS$Compression
         if(SNP.test)names(out$GWAS$P.value)="mp"
         # if(kinship.algorithm=="FarmCPU")names(out$Pred)=c("Taxa",traitname,"Prediction")
-#return (out)
+        kinship.algorithm=NULL
         }#end of model loop
   }else{# is.null(Y)
   #print(Para$SNP.MAF)
