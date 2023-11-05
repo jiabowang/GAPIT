@@ -37,7 +37,7 @@ for(i in 1:(maxPlot-1))
 {
    for(j in (i+1):(maxPlot))
    {
-      plot(PCA.X$x[,i],PCA.X$x[,j],xlab=paste("PC",i,sep=""),ylab=paste("PC",j,sep=""),pch=19,col=PCA.col,cex.axis=1.3,cex.lab=1.4, cex.axis=1.2, lwd=2,las=1)
+      plot(PCA.X$x[,i],PCA.X$x[,j],xlab=paste("PC",i," (evp=",round(evp[i],4)*100,"%)",sep=""),ylab=paste("PC",j," (evp=",round(evp[j],4)*100,"%)",sep=""),pch=19,col=PCA.col,cex.axis=1.3,cex.lab=1.4, cex.axis=1.2, lwd=2,las=1)
       if(!is.null(PCA.legend)) legend(as.character(PCA.legend$pos),legend=PCA.legend$taxa,pch=19,col=PCA.legend$col,
            ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"),inset=-0.05)
    }
@@ -141,9 +141,9 @@ if(PCA.3d==TRUE)
     scatterplot3d::scatterplot3d(PCA.X$x[,1],
                   PCA.X$x[,2],
                   PCA.X$x[,3],
-                  xlab = paste("PC",1,sep=""),
-                  ylab = paste("PC",2,sep=""),
-                  zlab = paste("PC",3,sep=""),
+                  xlab = paste("PC",1," (evp=",round(evp[1],4)*100,"%)",sep=""),
+                  ylab = paste("PC",2," (evp=",round(evp[2],4)*100,"%)",sep=""),
+                  zlab = paste("PC",3," (evp=",round(evp[3],4)*100,"%)",sep=""),
                   pch = 20,
                   color = PCA.col,
                   col.axis = "blue",

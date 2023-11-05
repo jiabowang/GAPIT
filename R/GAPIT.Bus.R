@@ -369,7 +369,7 @@ GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
 nobs=ns
 # print(head(GWAS))
-GWAS=GWAS[,c(1:5,7,8,6)]
+GWAS=GWAS[,c(1:5,7,6)]
 GWAS[is.na(GWAS[,4]),4]=1
 # colnames(GWAS)=c("SNP","Chr","Pos","P.value","MAF","effect","nobs")
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
