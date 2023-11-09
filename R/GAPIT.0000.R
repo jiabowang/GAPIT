@@ -1,5 +1,4 @@
 if(!require(gplots)) install.packages("gplots")
-if(!require(LDheatmap)) install.packages("LDheatmap")
 if(!require(genetics)) install.packages("genetics")
 if(!require(ape)) install.packages("ape")
 if(!require(compiler)) install.packages("compiler")
