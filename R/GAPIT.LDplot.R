@@ -50,6 +50,8 @@
     # print(LDsnp)
     # print(LDdist)
     print("Calling LDheatmap...")
+    if(!require(LDheatmap)) install.packages("LDheatmap")
+
 #pdf(paste("GAPIT.LD.pdf",sep=""), width = 12, height = 12)
     grDevices::pdf(paste("GAPIT.LD.chromosom",LD.chromosome,"(",round(max(0,LD.location-LD.range2)/1000000),"_",round((LD.location+LD.range1)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
     graphics::par(mar = c(25,25,25,25))
