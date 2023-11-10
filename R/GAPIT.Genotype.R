@@ -602,25 +602,22 @@ if(!is.null(GLD) &file.output)
     print("Getting genotype object")
     LDsnp=genetics::makeGenotypes(hapmapgeno,sep="",method=genetics::as.genotype)   #This need to be converted to genotype object
     print("Caling LDheatmap...")
-#pdf(paste("GAPIT.LD.pdf",sep=""), width = 12, height = 12)
-    grDevices::pdf(paste("GAPIT.Genotype.LD_chromosom_",LD.chromosome,"(",round(max(0,LD.location-LD.range)/1000000),"_",round((LD.location+LD.range)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
-    graphics::par(mar = c(25,25,25,25))
+    # grDevices::pdf(paste("GAPIT.Genotype.LD_chromosom_",LD.chromosome,"(",round(max(0,LD.location-LD.range)/1000000),"_",round((LD.location+LD.range)/1000000),"Mb)",".pdf",sep=""), width = 12, height = 12)
+    # graphics::par(mar = c(25,25,25,25))
 
-    MyHeatmap <- try(LDheatmap::LDheatmap(LDsnp, LDdist, LDmeasure="r", add.map=TRUE,
-    SNP.name=LDsnpName,color=color.rgb(20), name="myLDgrob", add.key=TRUE,geneMapLabelY=0.1) )  
-    if(!inherits(MyHeatmap, "try-error")) 
-      {
-  #Modify the plot
-#      library(grid)
-      # LDheatmap.highlight(MyHeatmap, i = sigsnp, j=sigsnp+1, col = "red")
-      grid::grid.edit(grid::gPath("myLDgrob","heatMap","heatmap"),gp=grid::gpar(col="white",lwd=8))
-      grid::grid.edit(grid::gPath("myLDgrob", "Key", "title"), gp=grid::gpar(cex=.5, col="blue"))  #edit key title size and color
-      grid::grid.edit(grid::gPath("myLDgrob", "heatMap", "title"), gp=grid::gpar(just=c("center","bottom"), cex=0.8, col="black")) #Edit gene map title
-      grid::grid.edit(grid::gPath("myLDgrob", "geneMap","SNPnames"), gp = grid::gpar(cex=0.3,col="black")) #Edit SNP name
-      }else{
-      print("Warning: error in converting genotype. No LD plot!")
-      }
-    grDevices::dev.off()
+    # MyHeatmap <- try(LDheatmap::LDheatmap(LDsnp, LDdist, LDmeasure="r", add.map=TRUE,
+    # SNP.name=LDsnpName,color=color.rgb(20), name="myLDgrob", add.key=TRUE,geneMapLabelY=0.1) )  
+    # if(!inherits(MyHeatmap, "try-error")) 
+    #   {
+    #   grid::grid.edit(grid::gPath("myLDgrob","heatMap","heatmap"),gp=grid::gpar(col="white",lwd=8))
+    #   grid::grid.edit(grid::gPath("myLDgrob", "Key", "title"), gp=grid::gpar(cex=.5, col="blue"))  #edit key title size and color
+    #   grid::grid.edit(grid::gPath("myLDgrob", "heatMap", "title"), gp=grid::gpar(just=c("center","bottom"), cex=0.8, col="black")) #Edit gene map title
+    #   grid::grid.edit(grid::gPath("myLDgrob", "geneMap","SNPnames"), gp = grid::gpar(cex=0.3,col="black")) #Edit SNP name
+    #   }else{
+    #   print("Warning: error in converting genotype. No LD plot!")
+    #   }
+    # grDevices::dev.off()
+    print("LDheatmap function was removed ...")
     print("LD heatmap crated")
     }else{ # alternative of if(nrow(GLD)>1)
     print("Warning: There are less than two SNPs on the region you sepcified. No LD plot!")
