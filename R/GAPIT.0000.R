@@ -50,7 +50,7 @@ function(){
 #    #biocLite("multtest")
 #}
 
-GAPIT.Version="2023.9.5, GAPIT 3.4"
+GAPIT.Version="2023.11.11, GAPIT 3.4"
 return(GAPIT.Version)
 }
 #=============================================================================================
