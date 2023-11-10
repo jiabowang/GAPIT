@@ -20,7 +20,6 @@ Imports:
     grid,
     htmltools,
     lattice,
-    LDheatmap,
     magrittr,
     lme4,
     MASS,
