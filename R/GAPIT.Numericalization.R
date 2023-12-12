@@ -66,7 +66,9 @@ for(i in 1:len){
 	count[i]=length(x[(x==lev[i])])
 }
 
-#print(count)
+# print(count)
+# print(len)
+# print()
 
 if(Major.allele.zero){
   if(len>1 & len<=3){
@@ -108,18 +110,6 @@ position=order(count)
 
 #Jiabo creat this code to convert AT TA to 1 and 2.2018.5.29
 
-# lev1=lev
-# if(bit==2&len==3) 
-# {
-# lev1[1]=lev[count==sort(count)[1]]
-# lev1[2]=lev[count==sort(count)[2]]
-# lev1[3]=lev[count==sort(count)[3]]
-# position=c(1:3)
-# lev=lev1
-# }
-#print(lev)
-#print(position)
-#print(inter)
 #Jiabo code is end here
 if(bit==1){
   lev0=c("R","Y","S","W","K","M") 

@@ -512,6 +512,7 @@ if(!is.null(Y))
             out=c(out,myG_simulation)
             if(file.output)ViewPhenotype<-GAPIT.Phenotype.View(myY=myG_simulation$Y,traitname="Simulated.Phenotype",memo=memo0)
           }
+        print("Now the GAPIT is cbind taxa and numeric genotype...")
         out$GD=data.frame(cbind(as.data.frame(GT),as.data.frame(GD)))
         out$GM=GI
         out$G=myGenotype$G
