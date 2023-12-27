@@ -224,19 +224,6 @@ if(file.output&Multi_iter)
         GAPIT.Manhattan(GI.MP = GWAS[,2:4],GD=GD[,-1], CG=DP$CG,name.of.trait = paste(DP$name.of.trait,"(Orignal)",sep=""), DPP=DP$DPP, plot.type = "Chromosomewise",cutOff=DP$cutOff,plot.bin=DP$plot.bin)
         
         print("Association table...(Orignal)" )
-        # print("Joining tvalue and stderr" )
-     #    if(all.equal(as.character(DP$chor_taxa),as.character(unique(sort(as.numeric(as.matrix(GWAS[,2]))))))!=TRUE)
-     #    { 
-     #      chro=as.numeric(as.matrix(GWAS[,2]))
-     #      chor_char=unique(DP$chor_taxa)
-     # # print(chro)
-     # # print(chor_char)
-     #      for(i in 1:length(unique(chro)))
-     #      {
-     #         chro[chro==i]=chor_char[i]
-     #      }
-     #      GWAS[,2]=chro
-     #    }
         utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", DP$name.of.trait, "(Orignal)",".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
         nn.sig=nrow(sig)
         if(Random.model&file.output&nn.sig<100)
@@ -251,114 +238,104 @@ if(file.output&Multi_iter)
   }
 if(Multi_iter&sig_pass)
 {
-
-# sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
-sig=sig[!is.na(sig[,4]),]
-sig_position=as.numeric(as.matrix(sig[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(sig[,3]))
-sig=sig[order(sig_position),]
-sig_order=as.numeric(rownames(sig))
+   sig=sig[!is.na(sig[,4]),]
+   sig_position=as.numeric(as.matrix(sig[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(sig[,3]))
+   sig=sig[order(sig_position),]
+   sig_order=as.numeric(rownames(sig))
 #if(setequal(sig_order,numeric(0))) break
 
-n=nrow(sig)
-if(n!=1){
-  diff_order=abs(sig_order[-n]-sig_order[-1])
-  diff_index=diff_order<num_regwas
-  count=0
-  diff_index2=count
-  for(i in 1:length(diff_index))
-  {
-    if(!diff_index[i]) count=count+1
-    diff_index2=append(diff_index2,count)
-  }
-}else{
-  diff_order=0
-  diff_index2=0
-}
-
-sig_bins=rle(diff_index2)$lengths
-num_bins=length(sig_bins)
+   n=nrow(sig)
+   if(n!=1)
+   {
+     diff_order=abs(sig_order[-n]-sig_order[-1])
+     diff_index=diff_order<num_regwas
+     count=0
+     diff_index2=count
+     for(i in 1:length(diff_index))
+     {
+        if(!diff_index[i]) count=count+1
+        diff_index2=append(diff_index2,count)     
+     }
+   }else{
+     diff_order=0
+     diff_index2=0
+   }
+   sig_bins=rle(diff_index2)$lengths
+   num_bins=length(sig_bins)
 
 # sig_diff_index=sig_diff<windowsize
 # print(sig_bins)
 #GWAS0=GWAS
 #####################
-print("The number of significant markers is")
-print(n)
-if(n!=num_bins)
-{
-  print("The  number of significant bins is")
-  print(num_bins)
-}
+   print("The number of significant markers is")
+   print(n)
+   if(n!=num_bins)
+   {
+     print("The  number of significant bins is")
+     print(num_bins)
+   }
 # print(windowsize)
- if(num_bins>0)
- {
-  for(i in 1:num_bins)
-  { 
-    n_sig=sig_bins[i]
-    if(i==1)
-    {  j=1:n_sig
-      }else{
-       j=(sum(sig_bins[1:(i-1)])+1):sum(sig_bins[1:i])
-      }
-    aim_marker=sig[j,]
-    print(aim_marker)
-    aim_order=match(as.character(aim_marker[,1]),as.character(GM[,1]))
-    aim_area=rep(FALSE,(nrow(GWAS)))
-    # print(nrow(GWAS))
-    
-
+   if(num_bins>0)
+   {
+     for(i in 1:num_bins)
+     { 
+        n_sig=sig_bins[i]
+        if(i==1)
+        {  
+          j=1:n_sig
+        }else{
+          j=(sum(sig_bins[1:(i-1)])+1):sum(sig_bins[1:i])
+        }
+     aim_marker=sig[j,]
+     # print(aim_marker)
+     aim_order=match(as.character(aim_marker[,1]),as.character(GM[,1]))
+     aim_area=rep(FALSE,(nrow(GWAS)))
     #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
-    if(min(aim_order)<num_regwas)
-    {
+     if(min(aim_order)<num_regwas)
+     {
       aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
-    }else{
+     }else{
       aim_area[c((min(aim_order)-num_regwas):(max(aim_order)+num_regwas))]=TRUE
-    }
+     }
     # Next code can control with or without core marker in seconde model
-    aim_area[aim_order]=FALSE  # without
-    aim_area=aim_area[1:nrow(GWAS)]
-    # print(table(aim_area))
-    # print(length(seq_farm))
-    # print(seq_farm)
-    # print(seq_farm[!seq_farm%in%aim_order])
-    if(!is.null(farmcpuCV))
-    {
-      secondCV=cbind(farmcpuCV,X[,seq_farm[!seq_farm%in%aim_order]])
-
-    }else{
-      secondCV=cbind(GD[,1],X[,seq_farm[!seq_farm%in%aim_order]])
-      # secondCV=cbind(GD[,1],X[,aim_order])
-    }
-    secondCV=farmcpuCV
+     aim_area[aim_order]=FALSE  # without
+     aim_area=aim_area[1:nrow(GWAS)]
+     if(!is.null(farmcpuCV))
+     {
+       secondCV=cbind(farmcpuCV,X[,seq_farm[!seq_farm%in%aim_order]])
+     }else{
+       secondCV=cbind(GD[,1],X[,seq_farm[!seq_farm%in%aim_order]])
+     }
+     secondCV=farmcpuCV
     # print(table(aim_area))
     # print(dim(GD))
     # aim_area=aim_area[1:(nrow(GWAS))]
-    if(setequal(aim_area,logical(0))) next
+     if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
         # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
         # secondCV=NULL
-        secondGD=GD[,c(TRUE,aim_area)]
+     secondGD=GD[,c(TRUE,aim_area)]
         # print(dim(secondGD))
-        secondGM=GM[aim_area,]
-        print("Now that is multiple iteration for new farmcpu !!!")
-        myGAPIT_Second <- FarmCPU(
+     secondGM=GM[aim_area,]
+     print("Now that is multiple iteration for new farmcpu !!!")
+     myGAPIT_Second <- FarmCPU(
                         Y=Y,
                         GD=secondGD,
                         GM=secondGM,
                         CV=secondCV,
                         file.output=F
                         )
-        Second_GWAS= myGAPIT_Second$GWAS [,1:4]
-        Second_GWAS[is.na(Second_GWAS[,4]),4]=1
-        orignal_GWAS=GWAS[aim_area,]
+     Second_GWAS= myGAPIT_Second$GWAS [,1:4]
+     Second_GWAS[is.na(Second_GWAS[,4]),4]=1
+     orignal_GWAS=GWAS[aim_area,]
         # write.csv(cbind(orignal_GWAS,Second_GWAS),paste("TEST_",i,".csv",sep=""),quote=F)
         # GWAS_index=match(Second_GWAS[,1],GWAS[,1])
         #test_GWAS=GWAS
-        for(kk in 1:nrow(Second_GWAS))
-        {
+     for(kk in 1:nrow(Second_GWAS))
+     {
           GWAS_index=match(as.character(Second_GWAS[kk,1]),as.character(GWAS[,1]))
           GWAS[GWAS_index,4]=Second_GWAS[kk,4]
-        }
+     }
         # GWAS[GWAS_index,4]=Second_GWAS[,4]
    }
  }
@@ -375,7 +352,7 @@ GWAS[is.na(GWAS[,4]),4]=1
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 nn.sig=nrow(sig)
 #print(head(GWAS))
-if(Random.model&file.output&nn.sig<50)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
+if(Random.model&file.output&nn.sig<50) GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
 
 GPS=myFarmCPU$Pred
 #colnames(GPS)[3]=c("Prediction")
@@ -486,7 +463,9 @@ if(method=="BLINK")
   GWAS=cbind(GWAS,effect)
   maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
   GWAS$maf=maf
-# print(head(GWAS))
+  # print(head(GWAS))
+  GWAS=GWAS[,c(1:4,7,5,6)]
+
   GWAS[is.na(GWAS[,4]),4]=1
   sig_index=GWAS[,4]<(cutOff/(nrow(GWAS)))
   sig=GWAS[sig_index,1:5]
@@ -503,21 +482,21 @@ if(file.output&Multi_iter)
       tvalue=rep(NA,nrow(GWAS))
       stderr=rep(NA,nrow(GWAS))
       print("Filtering SNPs with MAF...(Orignal)" )
-      PWI.Filtered=cbind(GWAS,rsquare_base,rsquare)
-      colnames(PWI.Filtered)[c((ncol(PWI.Filtered)-1),ncol(PWI.Filtered))]=c("Rsquare.of.Model.without.SNP","Rsquare.of.Model.with.SNP")
+      PWI.Filtered=cbind(GWAS,rsquare)
+      colnames(PWI.Filtered)[8]=c("Rsquare.of.Model.with.SNP")
   #Run the BH multiple correction procedure of the results
   #Create PWIP, which is a table of SNP Names, Chromosome, bp Position, Raw P-values, FDR Adjusted P-values
       print("Calculating FDR...(Orignal)" )
       # print(head(PWI.Filtered))
       PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
-  # print(str(PWIP)) 
+      # print(str(PWIP)) 
 
-      GWAS=merge(GWAS,PWIP$PWIP[,c(1,9)],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1])  
+      GWAS=merge(GWAS,PWIP$PWIP[,c(1,ncol(PWIP$PWIP))],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1])  
       # print(head(GWAS))
       # GWAS=GWAS[,c(1:6,8,7)]
       GWAS=GWAS[order(as.numeric(GWAS[,3])),]
       GWAS=GWAS[order(as.numeric(GWAS[,2])),]
-      colnames(GWAS)=c("SNP","Chr","Pos","P.value", "MAF", "nobs", "H&B.P.Value","Effect")
+      colnames(GWAS)=c("SNP","Chr","Pos","P.value", "MAF", "nobs", "effect","H&B.P.Value")
       # print(head(GWAS))
         print("QQ plot...(Orignal)" )      
         GAPIT.QQ(P.values = GWAS[,4], name.of.trait = paste(name.of.trait,"(Orignal)",sep=""),DPP=DP$DPP)
@@ -527,69 +506,55 @@ if(file.output&Multi_iter)
         GAPIT.Manhattan(GI.MP = GWAS[,2:4],GD=GD[,-1], CG=DP$CG,name.of.trait = paste(DP$name.of.trait,"(Orignal)",sep=""), DPP=DP$DPP, plot.type = "Chromosomewise",cutOff=DP$cutOff,plot.bin=DP$plot.bin)
         
         print("Association table...(Orignal)" )
-        print("Joining tvalue and stderr" )
-        if(all.equal(as.character(DP$chor_taxa),as.character(unique(sort(as.numeric(as.matrix(GWAS[,2]))))))!=TRUE)
-        { 
-          chro=as.numeric(as.matrix(GWAS[,2]))
-          chor_char=unique(DP$chor_taxa)
-     # print(chro)
-     # print(chor_char)
-          for(i in 1:length(unique(chro)))
-          {
-             chro[chro==i]=chor_char[i]
-          }
-          GWAS[,2]=chro
-        }
         utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", DP$name.of.trait, "(Orignal)",".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-        if(Random.model&file.output)GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=paste(name.of.trait,"(Orignal)",sep=""),N.sig=N.sig,GT=GT)
+        nn.sig=nrow(sig)
+        if(Random.model&file.output&nn.sig<100)
+        {
+          GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=paste(name.of.trait,"(Orignal)",sep=""),N.sig=N.sig,GT=GT)
         # print(head(GWAS))
         # DTS=cbind(GWAS[,1:3],df,tvalue,stderr,GWAS[,ncol(GWAS)])
         # colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")  
         # utils::write.table(DTS, paste("GAPIT.Association.GWAS_StdErr.", DP$name.of.trait, "(Orignal)",".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
-        GAPIT.Phenotype.afterGWAS(GWAS=GWAS,GD=DP$GD,GM=DP$GM,Y=DP$Y,G=DP$G,model=DP$model,cutOff=DP$cutOff)
+          GAPIT.Phenotype.afterGWAS(GWAS=GWAS,GD=DP$GD,GM=DP$GM,Y=DP$Y,G=DP$G,model=DP$model,cutOff=DP$cutOff)
+        }
   }
 
 
 
 if(Multi_iter&sig_pass)
 {
-sig=sig[!is.na(sig[,4]),]
-sig_position=as.numeric(as.matrix(sig[,1:3])[,2])*10^10+as.numeric(as.matrix(sig[,1:3])[,3])
-sig=sig[order(sig_position),]
-sig_order=as.numeric(rownames(sig))
+  sig=sig[!is.na(sig[,4]),]
+  sig_position=as.numeric(as.matrix(sig[,1:3])[,2])*10^10+as.numeric(as.matrix(sig[,1:3])[,3])
+  sig=sig[order(sig_position),]
+  sig_order=as.numeric(rownames(sig))
 #if(setequal(sig_order,numeric(0))) break
 
-n=nrow(sig)
-if(length(sig_order)!=1){
-  diff_order=abs(sig_order[-length(sig_order)]-sig_order[-1])
-
-  diff_index=diff_order<num_regwas
-
-  count=0
-  diff_index2=count
-  for(i in 1:length(diff_index))
+  n=nrow(sig)
+  if(length(sig_order)!=1)
   {
-    if(!diff_index[i]) count=count+1
-    diff_index2=append(diff_index2,count)
+    diff_order=abs(sig_order[-length(sig_order)]-sig_order[-1])
+    diff_index=diff_order<num_regwas
+    count=0
+    diff_index2=count
+    for(i in 1:length(diff_index))
+    {
+       if(!diff_index[i]) count=count+1
+       diff_index2=append(diff_index2,count)
+    }
+  }else{
+    diff_order=0
+    diff_index2=0
   }
-}else{
-  diff_order=0
-  diff_index2=0
-}
-
-sig_bins=rle(diff_index2)$lengths
-num_bins=length(sig_bins)
-
-# sig_diff_index=sig_diff<windowsize
-#GWAS0=GWAS
+  sig_bins=rle(diff_index2)$lengths
+  num_bins=length(sig_bins)
 #####################
-print("The number of significant markers is")
-print(n)
-if(n!=num_bins)
-{
-  print("The  number of significant bins is")
-  print(num_bins)
-}
+  print("The number of significant markers is")
+  print(n)
+  if(n!=num_bins)
+  {  
+    print("The  number of significant bins is")
+    print(num_bins)
+  }
 # print(windowsize)
  if(num_bins>0)
  {
@@ -650,8 +615,8 @@ if(n!=num_bins)
         orignal_GWAS=GWAS[aim_area,]
         GWAS_index=match(Second_GWAS[,1],GWAS[,1])
         #test_GWAS=GWAS
-        print(head(GWAS[GWAS_index,]))
-        print(head(Second_GWAS))
+        # print(head(GWAS[GWAS_index,]))
+        # print(head(Second_GWAS))
         GWAS[GWAS_index,4]=Second_GWAS[,4]
    }
  }
@@ -667,7 +632,6 @@ GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 # GWAS=cbind(GWAS,effect)
 GPS=myBlink$Pred
 colnames(GWAS)[1:3]=c("SNP","Chromosome","Position")
-# GWAS=GWAS[,c(1:4,6,5,7)]
 # print(head(GWAS))
 if(Random.model&file.output)GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
 
