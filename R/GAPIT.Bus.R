@@ -314,6 +314,8 @@ if(Multi_iter&sig_pass)
         # this is used to set with sig marker in second model
         # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
         # secondCV=NULL
+     if(sum(aim_area)==0) next
+
      secondGD=GD[,c(TRUE,aim_area)]
         # print(dim(secondGD))
      secondGM=GM[aim_area,]
