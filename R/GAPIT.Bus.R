@@ -312,8 +312,6 @@ if(Multi_iter&sig_pass)
     # aim_area=aim_area[1:(nrow(GWAS))]
      if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
-        # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
-        # secondCV=NULL
      if(sum(aim_area)==0) next
 
      secondGD=GD[,c(TRUE,aim_area)]
@@ -596,8 +594,9 @@ if(Multi_iter&sig_pass)
       secondCV=cbind(GD[,1],X[,seqQTN[!seqQTN%in%aim_order]])
 
     }
-    # aim_area=aim_area[1:(nrow(GWAS))]
-    # print(table(aim_area))
+    if(setequal(aim_area,logical(0))) next
+        # this is used to set with sig marker in second model
+    if(sum(aim_area)==0) next    # print(table(aim_area))
     #if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
         # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
