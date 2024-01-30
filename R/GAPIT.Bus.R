@@ -295,7 +295,9 @@ if(Multi_iter&sig_pass)
      {
       aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
      }else{
-      aim_area[c((min(aim_order)-num_regwas):(max(aim_order)+num_regwas))]=TRUE
+      max.order=(max(aim_order)+num_regwas)
+      if(max.order>nrow(GWAS))max.order=nrow(GWAS)
+      aim_area[c((min(aim_order)-num_regwas):max.order)]=TRUE
      }
     # Next code can control with or without core marker in seconde model
      aim_area[aim_order]=FALSE  # without
@@ -568,11 +570,11 @@ if(Multi_iter&sig_pass)
        j=(sum(sig_bins[1:(i-1)])+1):sum(sig_bins[1:i])
     }
     aim_marker=sig[j,]
-    #print(aim_marker)
+    # print(dim(GWAS))
     aim_order=as.numeric(rownames(aim_marker))
     aim_area=rep(FALSE,(nrow(GWAS)))
     # print(head(sig))
-    # print(aim_order)
+    print(aim_order)
 
     #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
     if(min(aim_order)<num_regwas)
@@ -580,9 +582,11 @@ if(Multi_iter&sig_pass)
       aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
 
     }else{
-      aim_area[c((min(aim_order)-num_regwas):(max(aim_order)+num_regwas))]=TRUE
+      max.order=(max(aim_order)+num_regwas)
+      if(max.order>nrow(GWAS))max.order=nrow(GWAS)
+      aim_area[c((min(aim_order)-num_regwas):max.order)]=TRUE
     }
-    # print(table(aim_area))
+    print(table(aim_area))
     # Next code can control with or without core marker in seconde model
     aim_area[aim_order]=FALSE  # without
     if(!is.null(blink_CV))
@@ -600,7 +604,7 @@ if(Multi_iter&sig_pass)
     #if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
         # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
-        
+        print(table(aim_area))
         secondGD=GD[,c(TRUE,aim_area)]
         secondGM=GM[aim_area,]
         print("Now that is multiple iteration for new BLINK !!!")

@@ -35,8 +35,8 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     geneGWAS=GWAS[index,,drop=FALSE]
     var.gd=diag(var(geneGD))
     var.index=var.gd>0.0001
-    geneGD=geneGD[,var.index]
-    geneGWAS=geneGWAS[var.index,]
+    geneGD=geneGD[,var.index,drop=FALSE]
+    geneGWAS=geneGWAS[var.index,,drop=FALSE]
     if(ld.cut)
     {
         gene.licols=GAPIT.Licols(X=geneGD)
@@ -46,7 +46,13 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     index_T=as.matrix(table(index))
     # print(index_T)
     in_True=ncol(geneGD)
+
     print(in_True==1)
+    if(sum(var.index)==0)
+    {
+        print("There is no significant marker for VE !!")
+        return(list(GVs=NULL))
+    }
     if(in_True!=1)
     {
     	colnames(geneGD)=paste("gene_",1:in_True,sep="")
