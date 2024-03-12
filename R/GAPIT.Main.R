@@ -12,7 +12,7 @@
 #' @param KI param
 #' @param Z param
 #' @param CV param
-#' @param CV.Inheritance param
+#' @param CV.Extragenetic param
 #' @param SNP.P3D param
 #' @param GP param
 #' @param GK param
@@ -108,7 +108,7 @@ function(Y,
          KI=NULL,
          Z=NULL,
          CV=NULL,
-         CV.Inheritance=NULL,
+         CV.Extragenetic=NULL,
          SNP.P3D=TRUE,
          GP=NULL,
          GK=NULL,
@@ -273,7 +273,8 @@ function(Y,
                                     LD=LD,
                                     file.output=FALSE,
                                     GAPIT3.output=GAPIT3.output,
-                                    cutOff=cutOff
+                                    cutOff=cutOff,
+                                    CV.Extragenetic=CV.Extragenetic
                         )
 # Compression=as.matrix(SUPER_GS_GAPIT$Compression)
 # opt=
@@ -361,14 +362,14 @@ function(Y,
     #print(dim(my_allCV))
     }
 
-    #Handler of CV.Inheritance
-    if(is.null(CV) & !is.null(CV.Inheritance)){
-      stop ("GAPIT says: CV.Inheritance is more than avaiable.")
+    #Handler of CV.Extragenetic
+    if(is.null(CV) & !is.null(CV.Extragenetic)){
+      stop ("GAPIT says: CV.Extragenetic is more than avaiables.")
     }
 
-    if(!is.null(CV)& !is.null(CV.Inheritance)){  
-      if(CV.Inheritance>(ncol(CV)-1)){
-        stop ("GAPIT says: CV.Inheritance is more than avaiable.")
+    if(!is.null(CV)& !is.null(CV.Extragenetic)){  
+      if(CV.Extragenetic>(ncol(CV)-1)){
+        stop ("GAPIT says: CV.Extragenetic is more than avaiables.")
       }
     }
 
@@ -752,7 +753,7 @@ function(Y,
                                       Z=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol),
                                       X0=X0,
                                       CVI=CVI,
-                                      CV.Inheritance=CV.Inheritance,
+                                      CV.Extragenetic=CV.Extragenetic,
                                       GI=GI,
                                       SNP.P3D=SNP.P3D,
                                       Timmer=Timmer,
@@ -995,7 +996,7 @@ if(Model.selection == TRUE){
     #print(dim(X0.test))
     #print(dim(CVI))
 
-    p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[,1])),K = as.matrix(bk$KW) ,Z=Z1,X0=X0.test,CVI=CVI,CV.Inheritance=CV.Inheritance,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
+    p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[,1])),K = as.matrix(bk$KW) ,Z=Z1,X0=X0.test,CVI=CVI,CV.Extragenetic=CV.Extragenetic,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
             SNP.permutation=SNP.permutation, GP=GP,
 			      file.path=file.path,file.from=file.from,file.to=file.to,file.total=file.total, file.fragment = file.fragment, byFile=byFile, file.G=file.G,file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
             GTindex=GTindex,genoFormat=genoFormat,optOnly=TRUE,SNP.effect=SNP.effect,SNP.impute=SNP.impute,name.of.trait=name.of.trait, Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero)
@@ -1174,7 +1175,7 @@ print("--------------  Sandwich bottom with raw burger------------------------")
  print("--------------EMMAxP3D with the optimum setting-----------------------") 
  #print(dim(ys))
  #print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
-  p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[GTindex,colInclude]))   ,K = as.matrix(bk$KW) ,Z=Z1,X0=as.matrix(X0),CVI=CVI, CV.Inheritance=CV.Inheritance,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
+  p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[GTindex,colInclude]))   ,K = as.matrix(bk$KW) ,Z=Z1,X0=as.matrix(X0),CVI=CVI, CV.Extragenetic=CV.Extragenetic,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
           SNP.permutation=SNP.permutation, GP=GP,
     			 file.path=file.path,file.from=file.from,file.to=file.to,file.total=file.total, file.fragment = file.fragment, byFile=byFile, file.G=file.G,file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
            GTindex=GTindex,genoFormat=genoFormat,optOnly=optOnly,SNP.effect=SNP.effect,SNP.impute=SNP.impute,name.of.trait=name.of.trait, Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero)  
@@ -1456,41 +1457,32 @@ if((!byPass)&(!Model.selection)){
  
  if(!is.null(gs))gs.blup=gs$BLUP
  BB= merge(gs.blup, BLUE, by.x = "Taxa", by.y = "Taxa")
- if (is.null(my_allCV)){my_allX=matrix(1,length(my_taxa),1)
- }else{
+ if (is.null(my_allCV))
+   {
+     my_allX=matrix(1,length(my_taxa),1)
+   }else{
      # my_allX=as.matrix(my_allCV[,-1])
      # my_allX=cbind(1,as.matrix(my_allCV[,-1]))
      my_allX=cbind(rep(1, times = nrow(my_allCV)),as.matrix(my_allCV[,-1]))
-	}
-	
-    #print(dim(my_allX))
-    #print(head(my_allX))
-    #print(dim(BB))
-    #print(CV.Inheritance)
- if(is.null(CV.Inheritance))
+   }
+ if(is.null(CV.Extragenetic))
  
    {
-   Prediction=BB[,5]+BB[,7]
-   Pred_Heritable=Prediction
+     Prediction=BB[,5]+BB[,7]
+     Pred_Heritable=Prediction
    }
- if(!is.null(CV.Inheritance))
+ if(!is.null(CV.Extragenetic))
    {
-       #inher_CV=my_allX[,1:(1+CV.Inheritance)]
-       #beta.Inheritance=p3d$effect.cv[1:(1+CV.Inheritance)]
+      inher_CV=my_allX[,-c(1:(1+CV.Extragenetic))]
+      beta.Inheritance=p3d$effect.cv[-c(1:(1+CV.Extragenetic))]
     #print(beta.Inheritance)
     #if(length(beta)==1)CV=X
-    all_BLUE=try(my_allX%*%p3d$effect.cv,silent=T)
-    if(inherits(BLUE, "try-error")) all_BLUE = NA
-    
-
-    Pred_Heritable=BB[,5]+BB[,7]
-    Prediction=BB[,5]+all_BLUE
+    inher_BLUE=try(inher_CV%*%beta.Inheritance,silent=T)
+    if(inherits(inher_BLUE, "try-error")) inher_BLUE = 0
+    Prediction=BB[,5]+BB[,7]
+    Pred_Heritable=BB[,5]+inher_BLUE
    }
-   #print("@@@@@@@@@@")
- #print(dim(CVI))
- #print(BB)
- #CV.Inheritance
- #Pred_Heritable=p3d$effect.cv[CV.Inheritance]%*%CVI[CV.Inheritance]+BB[,7]
+
  Pred=data.frame(cbind(BB,data.frame(Prediction)),data.frame(Pred_Heritable))
  if(noCV)
     {
@@ -1499,8 +1491,8 @@ if((!byPass)&(!Model.selection)){
     }else{
     BLUE=Pred$BLUE[1]
     prediction=as.matrix(GPS$BLUP)+(BLUE)
-    Pred=cbind(GPS,BLUE,prediction)
- colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
+    Pred=cbind(GPS,BLUE,prediction,Pred_Heritable)
+ colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction","Pred_Heritable")
     }#end NOBLUP
     }#end noCV
  print("GAPIT after BLUP and BLUE")

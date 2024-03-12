@@ -132,7 +132,7 @@
   # cveff = NULL, #Simulation phenotype
   # Create.indicator = FALSE, #
   # CG = NULL, #candidate gene matrix for relationship
-  # CV.Inheritance = NULL,
+  CV.Extragenetic = NULL, # the top number of inheritance columns in CV
   # Cross.Vali=TRUE,
   # color0=NULL,
   # DPP = 100000, #content points in Manhattan Plot
@@ -373,7 +373,7 @@ if(!is.null(Y))
         # print(SNP.test)
         if(m==1)
           {
-            DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI0,Z=Z,CV=CV,
+            DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI0,Z=Z,CV=CV,CV.Extragenetic=CV.Extragenetic,
             group.from=group.from ,group.to= group.to,group.by=group.by,FDRcut=FDRcut,
             kinship.cluster=kinship.cluster, kinship.group=kinship.group,kinship.algorithm=kinship.algorithm, NJtree.group=NJtree.group,NJtree.type=NJtree.type,PCA.col=PCA.col,PCA.3d=PCA.3d,
              sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,

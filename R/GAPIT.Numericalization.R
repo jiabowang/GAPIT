@@ -114,6 +114,8 @@ position=order(count)
 if(bit==1){
   lev0=c("R","Y","S","W","K","M") 
   inter=intersect(lev,lev0)
+}else{
+  inter=lev
 }
 
 #1status other than 2 or 3

@@ -77,6 +77,7 @@ function(Y,
 				 LD = 0.05,
 				 file.output = TRUE,
          GAPIT3.output=TRUE,
+         CV.Extragenetic=NULL,
 				 cutOff = 0.01
                         ){
  
@@ -529,9 +530,27 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    
    gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
    BB= merge(gs$BLUP, emma_BLUE, by.x = "Taxa", by.y = "Taxa",sort=F)
-   prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
-   all_gs=cbind(BB,prediction)
-   colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
+   if(is.null(CV.Extragenetic))
+   {
+     Prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
+     Pred_Heritable=Prediction
+   }else{
+      inher_CV=my_allX[,-c(1:CV.Extragenetic)]
+      beta.inher=emma_REMLE$betahat[-c(1:CV.Extragenetic)]
+    #print(beta.Inheritance)
+    #if(length(beta)==1)CV=X
+    inher_BLUE=try(inher_CV%*%beta.inher,silent=T)
+    inher_names_BLUE=as.data.frame(cbind(as.character(my_allCV[,1]),inher_BLUE))
+    colnames(inher_names_BLUE)=c("Taxa","inher_BLUE")
+    BB2= merge(BB, inher_names_BLUE, by.x = "Taxa", by.y = "Taxa",sort=F)
+    # print(head(BB2))
+    Prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
+    Pred_Heritable=as.numeric(as.vector(BB[,5]))+as.numeric(as.vector(BB2[,8]))
+   }
+
+
+   all_gs=cbind(BB,Prediction,Pred_Heritable)
+   colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction","Pred_Heritable")
    # print(head(all_gs))
    if(GAPIT3.output)utils::write.csv(all_gs,paste("GAPIT.Association.Prediction_results.",model,".",name.of.trait,".csv",sep=""), row.names = FALSE)
   

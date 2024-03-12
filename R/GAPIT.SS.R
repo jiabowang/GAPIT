@@ -90,7 +90,12 @@ print(DP$kinship.algorithm)
           }
           if(!is.null(IC$myallCV)) 
           {
-            CV1 = as.matrix(IC$PCA[,-1])
+            # CV1 = as.matrix(IC$PCA[,-1])
+            CV1 = IC$myallCV[as.character(IC$myallCV[,1])%in%as.character(DP$GD[,1]),]
+            print(dim(CV1))
+            print(dim(IC$myallCV))
+            print(dim(DP$GD))
+            CV1=as.matrix(CV1[,-1])
             Group=1:nrow(DP$GD)
             RefInf=rep(2,nrow(DP$GD))
             # print(table(index))
@@ -102,9 +107,12 @@ print(DP$kinship.algorithm)
             print("The dimension of CV in lm model :")
             print(dim(CV1))
             # print(dim(GD1))
-    # print(ic_Y[!is.na(ic_Y[,2]),2])
+    # print(head(CV1))
+    # print(dim(GD1))
             mylm = stats::lm(ic_Y[,2] ~cbind(CV1, GD1))
             # print(mylm)
+            # print(dim(IC$myallCV))
+            # print(dim(ic_PCA))
             if(stats::var(IC$myallCV[,2])==0)
             {
               kk=1:2
@@ -112,7 +120,7 @@ print(DP$kinship.algorithm)
               kk=1
             }
             lm.coeff=mylm$coefficients[-kk]
-            aa=as.numeric(lm.coeff[!is.na(lm.coeff)]%*%t(as.matrix(cbind(IC$myallCV[,-kk],GD2)))[!is.na(lm.coeff),])+as.numeric(mylm$coefficients[1])
+            aa=as.numeric(lm.coeff[!is.na(lm.coeff)]%*%t(as.matrix(cbind(CV1[,-kk],GD2)))[!is.na(lm.coeff),])+as.numeric(mylm$coefficients[1])
     # print(aa)
             pred0=cbind(Group,RefInf,ID,BLUP,PEV,as.data.frame(aa),as.data.frame(aa))
             Pred = cbind(as.data.frame(DP$GD[,1]),as.matrix(pred0))
@@ -140,45 +148,60 @@ print(DP$kinship.algorithm)
           print("Linear Regression to Predict phenotype Done !!")  
         }else{
           print("ABLUP to Predict phenotype !!")
+          
           if(!is.null(IC$myallCV)) 
           {
+            com.taxa=intersect(as.character(IC$myallCV[,1]),as.character(DP$GD[,1]))
+            CV1 = IC$myallCV[as.character(IC$myallCV[,1])%in%com.taxa,]
+            ablup.GD=DP$GD[as.character(DP$GD[,1])%in%com.taxa,]
+            ablup.X=ablup.GD[,-1]
+            CV1=as.matrix(CV1[match(com.taxa,as.character(CV1[,1])),])
+            # print(dim(CV1))
+            # print(dim(ablup.GD))
+            # print(dim(ablup.X))
             if(!is.null(myBus$seqQTN))
             {
-               busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
+               busCV=cbind(CV1,ablup.X[,myBus$seqQTN])
             }else{
-               # numMarker=nrow(GWAS)
-               # sp=sort(GWAS$P.value)
-               # spd=abs(DP$cutOff-sp)
-               # index_fdr=grep(min(spd),spd)[1]
-               # FDRcutoff=DP$cutOff*index_fdr/numMarker
-               # seqQTN=as.numeric(rownames(GWAS[GWAS$P.value<FDRcutoff,]))
-               # busCV=cbind(IC$myallCV,X[,seqQTN])
-               busCV=IC$myallCV
+               busCV=CV1
             }
           }else{
-            busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
+            ablup.GD=DP$GD
+            ablup.X=ablup.GD[,-1]
+            busCV=cbind(as.data.frame(ablup.GD[,1]),ablup.X[,myBus$seqQTN])
           }
           # print(myBus$seqQTN)
           pv=GWAS$P.value
           noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
+          gene.licols=GAPIT.Licols(X=ablup.X)
+          # geneGD=gene.licols$Xsub
+          ablup.X=ablup.X[,gene.licols$idx]
+
           if(is.null(DP$KI))
           {
-            KI= GAPIT.kinship.VanRaden(snps=as.matrix(X))
-            colnames(KI)=as.character(DP$GD[,1])
-            busKI=cbind(as.data.frame(DP$GD[,1]),KI)
+            KI= GAPIT.kinship.VanRaden(snps=as.matrix(ablup.X))
+            colnames(KI)=as.character(ablup.GD[,1])
+            busKI=cbind(as.data.frame(ablup.GD[,1]),KI)
             colnames(busKI)[1]=c("Taxa")
           }else{
             busKI=DP$KI
           }
-          print("The dimension of CV in ABLUP model :")
+          cv.licols=GAPIT.Licols(X=busCV[,-1])
+          geneGD=cv.licols$Xsub
+          # print(table(cv.licols$idx))
+          busCV=as.data.frame(busCV[,cv.licols$idx])
+          busCV=cbind(as.data.frame(busCV[,1]),matrix(as.numeric(as.matrix(busCV[,-1])),nrow(busCV),ncol(busCV)-1))
+
+          print("The dimension of CV and phenotype in ABLUP model :")
           print(dim(busCV))
-   # print(dim(busKI))
-   # print(busKI[1:10,1:10])
-   # print(cor(busCV[,-1]))
+   # print(head(busCV))
+   # print(apply(busCV[,-1],2,sum))
+          print(dim(ic_Y))
           busGAPIT=GAPIT(
                   Y=ic_Y,
                   KI=busKI,
                   CV=busCV,
+                  CV.Extragenetic=DP$CV.Extragenetic,
                   model="gBLUP",
                   file.output=F)
           Pred=busGAPIT$Pred
@@ -211,7 +234,7 @@ print(DP$kinship.algorithm)
                          GM=DP$GM,
                          KI=ic_KI,
                          CV=DP$CV,
-                         CV.Inheritance=DP$CV.Inheritance,
+                         CV.Extragenetic=DP$CV.Extragenetic,
                          GP=DP$GP,
                          GK=DP$GK,
                          SNP.P3D=DP$SNP.P3D,
@@ -316,7 +339,7 @@ gapitMain <- GAPIT.Main(Y=IC$Y,
                         KI=IC$KI,
                         Z=DP$Z,
                         CV=DP$CV,
-                        CV.Inheritance=DP$CV.Inheritance,
+                        CV.Extragenetic=DP$CV.Extragenetic,
                         GP=DP$GP,
                         GK=DP$GK,
                         SNP.P3D=DP$SNP.P3D,

@@ -12,7 +12,7 @@
   Z=NULL,
   X0=NULL,
   CVI=NULL,
-  CV.Inheritance=NULL,
+  CV.Extragenetic=NULL,
   GI=NULL,
   GP=NULL,
 	file.path=NULL,
@@ -803,17 +803,17 @@
                        if(any(!is.na(CVI)))
                        {
                          XCV=as.matrix(cbind(1,data.frame(CVI[,-1])))
-      		#CV.Inheritance specified
-                         beta.Inheritance=beta
-                         if(!is.null(CV.Inheritance))
+      		#CV.Extragenetic specified
+                         beta.Extragenetic=beta
+                         if(!is.null(CV.Extragenetic))
                          {
-                           XCV=XCV[,1:(1+CV.Inheritance)]
-                           beta.Inheritance=beta[1:(1+CV.Inheritance)]
+                           XCV=XCV[,-c(1:(1+CV.Extragenetic))]
+                           beta.Extragenetic=beta[-c(1:(1+CV.Extragenetic))]
                          }
 		#Interception only
                          if(length(beta)==1)XCV=X
 		
-                         BLUE=try(XCV%*%beta.Inheritance,silent=TRUE)
+                         BLUE=try(XCV%*%beta.Extragenetic,silent=TRUE)
                          if(inherits(BLUE, "try-error")) BLUE = NA
      #print("GAPIT just after BLUE")
                          Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PEV")
@@ -840,17 +840,17 @@
         #print(paste("X row:",nrow(X)," col:",ncol(X)," beta:",length(beta),sep=""))
                        XCV=as.matrix(cbind(1,data.frame(CVI[,-1])))
 
-#CV.Inheritance specified
-                       beta.Inheritance=beta
-                       if(!is.null(CV.Inheritance))
+#CV.Extragenetic specified
+                       beta.Extragenetic=beta
+                       if(!is.null(CV.Extragenetic))
                        {
-                         XCV=XCV[,1:(1+CV.Inheritance)]
-                         beta.Inheritance=beta[1:(1+CV.Inheritance)]
+                         XCV=XCV[,-c(1:(1+CV.Extragenetic))]
+                         beta.Extragenetic=beta[-c(1:(1+CV.Extragenetic))]
                        }
 #Interception only
                        if(length(beta)==1)XCV=X
-        #BLUE=XCV%*%beta.Inheritance   modified by jiabo wang 2016.11.21
-                       BLUE=try(XCV%*%beta.Inheritance,silent=TRUE)
+        #BLUE=XCV%*%beta.Extragenetic   modified by jiabo wang 2016.11.21
+                       BLUE=try(XCV%*%beta.Extragenetic,silent=TRUE)
                        if(inherits(BLUE, "try-error")) BLUE = NA
                      }#end of i ==0 &file==file.from &frag==1 & is.null(K)
 #Clean up the BLUP stuff to save memory
