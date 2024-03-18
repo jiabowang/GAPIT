@@ -527,7 +527,6 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    emma_BLUE=as.data.frame(cbind(as.character(my_allCV[,1]),emma_BLUE))
    colnames(emma_BLUE)=c("Taxa","emma_BLUE")
-   
    gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
    BB= merge(gs$BLUP, emma_BLUE, by.x = "Taxa", by.y = "Taxa",sort=F)
    if(is.null(CV.Extragenetic))

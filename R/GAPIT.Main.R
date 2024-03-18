@@ -1358,7 +1358,9 @@ print("Genomic Breeding Values (GBV) ..." )
 gs=NULL
 if(!byPass) 
 {
-
+   print(dim(bk$KW))
+   print(dim(bk$KO))
+   print(dim(bk$KWO))
 if(length(bk$KW)>ncol(X0)) {
     gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(p3d$BLUP,p3d$PEV))
 }
