@@ -800,7 +800,7 @@
  #print(paste("The value of is.na(CVI) is", is.na(CVI),  sep = ""))
         # CVI may be > 1 element long
         #if(!is.na(CVI)){
-                       if(any(!is.NULL(CVI)))
+                       if(any(!is.null(CVI)))
                        {
                          XCV=as.matrix(cbind(1,data.frame(CVI[,-1])))
       		#CV.Extragenetic specified
@@ -822,7 +822,7 @@
                        }#end of any(!is.na(CVI))
         # CVI may be > 1 element long.
         #if(is.na(CVI)) BLUE = NA
-                       if(any(is.NULL(CVI))) BLUE = NA
+                       if(any(is.null(CVI))) BLUE = NA
                      }#end of i ==0 &file==file.from &frag==1 & !is.null(K)
 #-------------------------------------------------------------------------------------------------------------------->
 #--------------------------------------------------------------------------------------------------------------------<
