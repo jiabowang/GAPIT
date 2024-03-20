@@ -132,7 +132,7 @@
   # cveff = NULL, #Simulation phenotype
   # Create.indicator = FALSE, #
   # CG = NULL, #candidate gene matrix for relationship
-  CV.Extragenetic = NULL, # the top number of inheritance columns in CV
+  CV.Extragenetic = 0, # the top number of no-inheritance columns in CV
   # Cross.Vali=TRUE,
   # color0=NULL,
   # DPP = 100000, #content points in Manhattan Plot
@@ -210,6 +210,7 @@
   # QC = TRUE,
   QC.Y=FALSE,
   QTN.position = NULL, #Simulation phenotype, QTN position in the order of map file
+  QTN.gs = 0, # The number of QTNs in the CV file
   QTNDist = "normal",
   r = 0.25,
   Random.model = TRUE, #Random.model to calculate PVE
@@ -380,7 +381,7 @@ if(!is.null(Y))
              SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction =SNP.fraction, seed =NULL, 
              SNP.test=SNP.test, SNP.MAF=SNP.MAF,FDR.Rate =1, SNP.FDR=SNP.FDR,
              Inter.Plot=Inter.Plot,  Inter.type=Inter.type,N.sig=N.sig,
-             Multi_iter=Multi_iter,num_regwas=num_regwas,
+             Multi_iter=Multi_iter,num_regwas=num_regwas,QTN.gs=QTN.gs,
              cutOff=cutOff, Model.selection =Model.selection,output.numerical =output.numerical,Random.model=Random.model,
              PCA.legend=PCA.legend,PCA.View.output=PCA.View.output, 
              WS0=WS0,Aver.Dis=Aver.Dis,memo=memo0,WS=WS,maxOut=maxOut,QTN.position=QTN.position, 

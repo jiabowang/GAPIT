@@ -175,6 +175,7 @@ function(Y,
          sangwich.top=NULL,
          sangwich.bottom=NULL,
          QC=TRUE,
+         QTN.gs=NULL,
          GTindex=NULL,
          LD=0.05,
          file.output=TRUE,
@@ -269,6 +270,7 @@ function(Y,
                                     sangwich.top=sangwich.top,
                                     sangwich.bottom=sangwich.bottom,
                                     QC=QC,
+                                    QTN.gs=QTN.gs,
                                     GTindex=GTindex,
                                     LD=LD,
                                     file.output=FALSE,
@@ -630,66 +632,9 @@ function(Y,
     print(paste("Total iterations: ",numSetting,sep=""))
 
     #Loop to optimize cluster algorithm, group number and kinship type
+    # print(hasGenotype)
     for (bin in bin.level){
-      for (inc in inclosure){
-
-        #Grill: update KI if GK or GP is provided
-        # if(!byPass & (!is.null(GK) | !is.null(GP))){  
-        #   print("Grilling KI...")
-
-        #   myGenotype<-GAPIT.Genotype(G=NULL,
-        #                              GD=cbind(as.data.frame(GT),as.data.frame(GD)),
-        #                              GM=GI,
-        #                              KI=NULL,
-        #                              kinship.algorithm=kinship.algorithm,
-        #                              PCA.total=0,
-        #                              SNP.fraction=SNP.fraction,
-        #                              SNP.test=SNP.test,
-        #                              file.path=file.path,
-        #                              file.from=file.from, 
-        #                              file.to=file.to,
-        #                              file.total=file.total, 
-        #                              file.fragment = file.fragment, 
-        #                              file.G=file.G,
-        #                              file.Ext.G=file.Ext.G,
-        #                              file.GD=file.GD, 
-        #                              file.GM=file.GM, 
-        #                              file.Ext.GD=file.Ext.GD,
-        #                              file.Ext.GM=file.Ext.GM,
-        #                              SNP.MAF=SNP.MAF,
-        #                              FDR.Rate = FDR.Rate,
-        #                              SNP.FDR=SNP.FDR,
-        #                              SNP.effect=SNP.effect,
-        #                              SNP.impute=SNP.impute,
-        #                              kinship.cluster=kinship.cluster,
-        #                              NJtree.group=NJtree.group,
-        #                              NJtree.type=NJtree.type,
-        #                              LD.chromosome=LD.chromosome,
-        #                              LD.location=LD.location,
-        #                              LD.range=LD.range,
-        #                              GP=GP,
-        #                              GK=GK,
-        #                              bin.size=bin,
-        #                              inclosure.size=inc,
-        #                              SNP.CV=SNP.CV,
-        #                              Timmer = Timmer, 
-        #                              Memory = Memory,
-        #                              GTindex=GTindex,
-        #                              sangwich.top=NULL,
-        #                              sangwich.bottom=sangwich.bottom,
-        #                              file.output=file.output,
-        #                              Create.indicator = Create.indicator,
-        #                              Major.allele.zero = Major.allele.zero)
-   
-        #   Timmer=myGenotype$Timmer
-        #   Memory=myGenotype$Memory
-
-        #   KI=myGenotype$KI
-        #   #update group set by new KI
-        #   nk=nrow(KI)
-        #   GROUP=GROUP[GROUP<=nk]
-        # }
-        
+      for (inc in inclosure){       
         
         for (ca in kinship.cluster){
           for (group in GROUP){
@@ -746,7 +691,8 @@ function(Y,
 #Z1=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol)
 
                 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Prio PreP3D")
-                Memory=GAPIT.Memory(Memory=Memory,Infor="Prio PreP3D")                
+                Memory=GAPIT.Memory(Memory=Memory,Infor="Prio PreP3D")  
+                # print(optOnly)              
                 p3d <- GAPIT.EMMAxP3D(ys=ys,
                                       xs=as.matrix(as.data.frame(GD[GTindex,colInclude])),
                                       K = as.matrix(bk$KW),
@@ -1355,12 +1301,19 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Final")
 #genomic prediction
 print("Genomic Breeding Values (GBV) ..." )
 #print(p3d$BLUP)
+Group=1:nrow(CVI)
+RefInf=rep(1,nrow(CVI))
+# print(table(index))
+# RefInf[index]=1
+ID=1:nrow(CVI)
+BLUP=rep(0,nrow(CVI))
+PEV=rep(0,nrow(CVI))
 gs=NULL
+gs$BLUP=cbind(as.data.frame(CVI[,1]),Group,RefInf,ID,BLUP,PEV)
+colnames(gs$BLUP)=c("Taxa","Group","RefInf","ID","BLUP","PEV")
 if(!byPass) 
 {
-   print(dim(bk$KW))
-   print(dim(bk$KO))
-   print(dim(bk$KWO))
+
 if(length(bk$KW)>ncol(X0)) {
     gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(p3d$BLUP,p3d$PEV))
 }
@@ -1410,9 +1363,9 @@ nobs=p3d$nobs
 maf=p3d$maf
 rsquare_base=p3d$rsquare_base
 rsquare=p3d$rsquare
-      df=p3d$df
-      tvalue=p3d$tvalue
-      stderr=p3d$stderr
+df=p3d$df
+tvalue=p3d$tvalue
+stderr=p3d$stderr
 effect.est=p3d$effect.est
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Extract p3d results")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Extract p3d results")
@@ -1452,51 +1405,27 @@ if((!byPass)&(!Model.selection)){
  print("GAPIT before BLUP and BLUE")
  #print(dim(p3d$BLUE))
  BLUE=data.frame(cbind(data.frame(CV.taxa),data.frame(p3d$BLUE)))
- colnames(BLUE)=c("Taxa","BLUE")
- 
+ colnames(BLUE)=c("Taxa","BLUE.N","BLUE.I")
+ QTNs=rep(0,nrow(BLUE))
  #Initial BLUP as BLUe and add additional columns
- gs.blup=cbind(BLUE,NA,NA,0,NA)
- 
- if(!is.null(gs))gs.blup=gs$BLUP
- BB= merge(gs.blup, BLUE, by.x = "Taxa", by.y = "Taxa")
- if (is.null(my_allCV))
-   {
-     my_allX=matrix(1,length(my_taxa),1)
-   }else{
-     # my_allX=as.matrix(my_allCV[,-1])
-     # my_allX=cbind(1,as.matrix(my_allCV[,-1]))
-     my_allX=cbind(rep(1, times = nrow(my_allCV)),as.matrix(my_allCV[,-1]))
-   }
- if(is.null(CV.Extragenetic))
- 
-   {
-     Prediction=BB[,5]+BB[,7]
-     Pred_Heritable=Prediction
-   }
- if(!is.null(CV.Extragenetic))
-   {
-      inher_CV=my_allX[,-c(1:(1+CV.Extragenetic))]
-      beta.Inheritance=p3d$effect.cv[-c(1:(1+CV.Extragenetic))]
-    #print(beta.Inheritance)
-    #if(length(beta)==1)CV=X
-    inher_BLUE=try(inher_CV%*%beta.Inheritance,silent=T)
-    if(inherits(inher_BLUE, "try-error")) inher_BLUE = 0
-    Prediction=BB[,5]+BB[,7]
-    Pred_Heritable=BB[,5]+inher_BLUE
-   }
+ BLUE=cbind(BLUE,QTNs)
+ BB= merge( BLUE,gs$BLUP, by.x = "Taxa", by.y = "Taxa")
+ # if (is.null(my_allCV))
+ #   {
+ #     my_allX=matrix(1,length(my_taxa),1)
+ #   }else{
+ #     # my_allX=as.matrix(my_allCV[,-1])
+ #     # my_allX=cbind(1,as.matrix(my_allCV[,-1]))
+ #     my_allX=cbind(rep(1, times = nrow(my_allCV)),as.matrix(my_allCV[,-1]))
+ #   } 
+ # print(head(BB))
+  gBreedingValue=BB[,3]+BB[,4]+BB[,8]
+  Prediction=BB[,2]+BB[,3]+BB[,4]+BB[,8]
 
- Pred=data.frame(cbind(BB,data.frame(Prediction)),data.frame(Pred_Heritable))
- if(noCV)
-    {
-    if(NOBLUP)
-    {Pred=NA
-    }else{
-    BLUE=Pred$BLUE[1]
-    prediction=as.matrix(GPS$BLUP)+(BLUE)
-    Pred=cbind(GPS,BLUE,prediction,Pred_Heritable)
- colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction","Pred_Heritable")
-    }#end NOBLUP
-    }#end noCV
+ Pred=data.frame(cbind(BB,data.frame(gBreedingValue)),data.frame(Prediction))
+ # if(NOBLUP)Pred=NA
+ colnames(Pred)=c("Taxa","BLUE.N","BLUE.I","QTNs","Group","RefInf","ID","BLUP","PEV","gBreedingValue","Prediction")
+ 
  print("GAPIT after BLUP and BLUE")
 }
 

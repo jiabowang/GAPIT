@@ -53,7 +53,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
         print("There is no significant marker for VE !!")
         return(list(GVs=NULL))
     }
-    if(in_True!=1)
+    if(!is.null(geneGD))
     {
     	colnames(geneGD)=paste("gene_",1:in_True,sep="")
     }

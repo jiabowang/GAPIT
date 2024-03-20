@@ -39,6 +39,7 @@ print("GAPIT.IC in process...")
          taxa_KI=as.character(DP$KI[,1])
          taxa_CV=as.character(CV[,1])
          taxa_comall=intersect(intersect(intersect(taxa_KI,taxa_GD),taxa_Y),taxa_CV)
+         taxa_g_cv=intersect(intersect(taxa_KI,taxa_GD),taxa_CV)
      # print(length(taxa_comall))
          comCV=CV[taxa_CV%in%taxa_comall,]
          comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
@@ -52,6 +53,7 @@ print("GAPIT.IC in process...")
          taxa_GD=as.character(GD[,1])
          taxa_comGD=as.character(GD[,1])
          taxa_CV=as.character(CV[,1])
+         taxa_g_cv=intersect(taxa_GD,taxa_CV)
          taxa_comall=intersect(intersect(taxa_GD,taxa_Y),taxa_CV)
          comCV=CV[taxa_CV%in%taxa_comall,]
          comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
@@ -60,6 +62,8 @@ print("GAPIT.IC in process...")
          comY=Y[taxa_Y%in%taxa_comall,]
          comY <- comY[match(taxa_comall,as.character(comY[,1])),]
        }
+       GD=GD[taxa_GD%in%taxa_g_cv,]
+       GD=GD[match(taxa_g_cv,as.character(GD[,1])),]
      }else{
        # taxa_GD=as.character(GD[,1])
        if(!is.null(DP$KI))
@@ -67,6 +71,7 @@ print("GAPIT.IC in process...")
         taxa_KI=as.character(DP$KI[,1])
         taxa_CV=as.character(CV[,1])
         taxa_comall=intersect(intersect(taxa_KI,taxa_Y),taxa_CV)
+        taxa_g_cv=intersect(taxa_KI,taxa_CV)
      # print(length(taxa_comall))
         comCV=CV[taxa_CV%in%taxa_comall,]
         comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
@@ -76,6 +81,7 @@ print("GAPIT.IC in process...")
         }else{
         # taxa_KI=as.character(DP$KI[,1])
         taxa_CV=as.character(CV[,1])
+        taxa_g_cv=taxa_CV
         taxa_comall=intersect(taxa_Y,taxa_CV)
      # print(length(taxa_comall))
         comCV=CV[taxa_CV%in%taxa_comall,]
@@ -85,14 +91,16 @@ print("GAPIT.IC in process...")
         DP$KI=cbind(as.character(taxa_comall),as.data.frame(matrix(rnorm(length(taxa_comall)^2),length(taxa_comall),length(taxa_comall))))
         colnames(DP$KI)=c("taxa",as.character(taxa_comall)[-1])
         comGD=NULL
-        }
-     }
+        }#end of K
+     }# end of GD
      # print(DP$KI[1:5,1:5])
      GT=as.matrix(as.character(taxa_comall))
      print(paste("There are ",length(GT)," common individuals in genotype , phenotype and CV files.",sep=""))
      if(nrow(comCV)!=length(GT))stop ("GAPIT says: The number of individuals in CV does not match to the number of individuals in genotype files.")
      print("The dimension of total CV is ")
      print(dim(comCV))
+     CV=CV[taxa_CV%in%taxa_g_cv,]
+     CV=CV[match(taxa_g_cv,as.character(CV[,1])),]
      
      print("GAPIT.IC accomplished successfully for multiple traits. Results are saved")
      if(DP$kinship.algorithm%in%c("FarmCPU","BLINK","MLMM")){ 

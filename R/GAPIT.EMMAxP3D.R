@@ -12,7 +12,7 @@
   Z=NULL,
   X0=NULL,
   CVI=NULL,
-  CV.Extragenetic=NULL,
+  CV.Extragenetic=0,
   GI=NULL,
   GP=NULL,
 	file.path=NULL,
@@ -89,7 +89,7 @@
   #print("Caling emma.eigen.L...")
   if(!is.null(K)) eig.L <- emma.eigen.L(Z, K) #this function handle both NULL Z and non-NULL Z matrix
 
-  #eig.L$values[eig.L$values<0]=0
+  if(!is.null(K)) eig.L$values[eig.L$values<0]=0
   Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.L")
   Memory=GAPIT.Memory(Memory=Memory,Infor="eig.L")
 
@@ -117,6 +117,7 @@
 #-------------------------------------------------------------------------------------------------------------------->
 #print("Looping through traits...")
 #Loop on Traits
+
   for (j in 1:g)
   {
     if(optOnly)
@@ -146,16 +147,14 @@
         gc()
     }
 
-
+    # print("!!!!")
     vids <- !is.na(ys[j,])
     yv <- ys[j, vids]
-
     if(!is.null(Z) & !is.null(K))  U <- eig.L$vectors * matrix(c(sqrt(1/(eig.L$values + REMLE_delta)),rep(sqrt(1/REMLE_delta),nr - tv)),nr,((nr-tv)+length(eig.L$values)),byrow=TRUE)
     if( is.null(Z) & !is.null(K))  U <- eig.L$vectors * matrix(  sqrt(1/(eig.L$values + REMLE_delta)),nr,length(eig.L$values),byrow=TRUE)
 
     if( !is.null(Z) & !is.null(K)) eig.full.plus.delta <- as.matrix(c((eig.L$values + REMLE_delta), rep(REMLE_delta,(nr - tv))))
     if( is.null(Z) & !is.null(K))  eig.full.plus.delta <- as.matrix((eig.L$values + REMLE_delta))
-
     # if(!is.null(K))
     # {
     #   if(length(which(eig.L$values < 0)) > 0 )
@@ -255,10 +254,19 @@
   }
   Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="REMLE removed")
   Memory=GAPIT.Memory(Memory=Memory,Infor="REMLE removed")
-
-  if(!is.null(Z) & !is.null(K))  U <- eig.L$vectors * matrix(c(sqrt(1/(eig.L$values + REMLE_delta)),rep(sqrt(1/REMLE_delta),nr - tv)),nr,((nr-tv)+length(eig.L$values)),byrow=TRUE)
-  if( is.null(Z) & !is.null(K))  U <- eig.L$vectors * matrix(  sqrt(1/(eig.L$values + REMLE_delta)),nr,length(eig.L$values),byrow=TRUE)
-
+  # print(head(U))
+  # print(!is.null(Z) & !is.null(K))
+  # eig.L$values[eig.L$values<0]=0
+  if(!is.null(K))
+  {
+    if(!is.null(Z))
+    {
+      U <- eig.L$vectors * matrix(c(sqrt(1/(eig.L$values + REMLE_delta)),rep(sqrt(1/REMLE_delta),nr - tv)),nr,((nr-tv)+length(eig.L$values)),byrow=TRUE)
+    }else{
+      U <- eig.L$vectors * matrix(  sqrt(1/(eig.L$values + REMLE_delta)),nr,length(eig.L$values),byrow=TRUE)
+    }
+  }
+  
   if( !is.null(Z) & !is.null(K)) eig.full.plus.delta <- as.matrix(c((eig.L$values + REMLE_delta), rep(REMLE_delta,(nr - tv))))
   if( is.null(Z) & !is.null(K))  eig.full.plus.delta <- as.matrix((eig.L$values + REMLE_delta))
 
@@ -605,7 +613,7 @@
                        if(is.null(Z)) REMLE <- GAPIT.emma.REMLE(ys[j,], X, K, Z = NULL, ngrids, llim, ulim, esp, eig.R)
                        if(!is.null(Z) & !is.null(K)) U <- eig.L$vectors * matrix(c(sqrt(1/(eig.L$values + REMLE$delta)),rep(sqrt(1/REMLE$delta),nr - tv)),nr,((nr-tv)+length(eig.L$values)),byrow=TRUE)
                        if(is.null(Z) & !is.null(K)) U <- eig.L$vectors * matrix( sqrt(1/(eig.L$values + REMLE$delta)),nr,length(eig.L$values),byrow=TRUE)
-
+                       # print(eig.L$vectors)
                        vgs <- REMLE$vg
                        ves <- REMLE$ve
                        REMLs <- REMLE$REML
@@ -736,142 +744,142 @@
                      beta <- crossprod(iXX,XY) #Note: we can use crossprod here becase iXX is symmetric
        
 #--------------------------------------------------------------------------------------------------------------------<
-                     if(i ==0 &file==file.from &frag==1 & !is.null(K))
-                     {
-                       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="ReducedModel")
-                       Memory=GAPIT.Memory(Memory=Memory,Infor="ReducdModel")
-   
-                       XtimesBetaHat <- X%*%beta
-
-                       YminusXtimesBetaHat <- ys[j,]- XtimesBetaHat
-                       vgK <- vgs*K
-                       Dt <- crossprod(U, YminusXtimesBetaHat)
-
-                       if(!is.null(Z)) Zt <- crossprod(U, Z)
-                       if(is.null(Z)) Zt <- t(U)
+                     if(i ==0 &file==file.from &frag==1)
+                     { 
+                        if(!is.null(K))
+                        {
+                          Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="ReducedModel")
+                          Memory=GAPIT.Memory(Memory=Memory,Infor="ReducdModel")
+                          XtimesBetaHat <- X%*%beta
+                          YminusXtimesBetaHat <- ys[j,]- XtimesBetaHat
+                          vgK <- vgs*K
+                          Dt <- crossprod(U, YminusXtimesBetaHat)
+                          if(!is.null(Z)) Zt <- crossprod(U, Z)
+                          if(is.null(Z)) Zt <- t(U)
                        # print(i)
                        # print(ves)
                        # print(vgs)
-                       if(is.na(X0X0[1,1]))
-                       {
+                          if(is.na(X0X0[1,1]))
+                          {
                           # Dt[is.na(Dt)]=0
                           # Zt[is.na(Zt)]=0
-                          Dt[which(Dt=="NaN")]=0
-                          Zt[which(Zt=="NaN")]=0
-                       }
+                            Dt[which(Dt=="NaN")]=0
+                            Zt[which(Zt=="NaN")]=0
+                          }
                        # if(X0X0[1,1] == "NaN") # by Jiabo 2022.8.10
                        # {
                        #   Dt[which(Dt=="NaN")]=0
                        #   Zt[which(Zt=="NaN")]=0
                        # }
-
-                       BLUP <- K %*% crossprod(Zt, Dt) #Using K instead of vgK because using H=V/Vg
-#print("!!!!")
+                          BLUP <- K %*% crossprod(Zt, Dt) #Using K instead of vgK because using H=V/Vg
       #Clean up the BLUP starf to save memory
-                       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="before Dt clean")
-                       Memory=GAPIT.Memory(Memory=Memory,Infor="before Dt clean")
-#      rm(Dt)
-                       gc()
-                       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Dt clean")
-                       Memory=GAPIT.Memory(Memory=Memory,Infor="Dt clean")
-
-                       grand.mean.vector <- rep(beta[1], length(BLUP))
-                       BLUP_Plus_Mean <- grand.mean.vector + BLUP
-                       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="BLUP")
-                       Memory=GAPIT.Memory(Memory=Memory,Infor="BLUP")
-                       # print("!!!!")
-        #PEV
-                       C11=try(vgs*solve(crossprod(Xt,Xt)),silent=TRUE)
-                       if(inherits(C11, "try-error")) C11=vgs*MASS::ginv(crossprod(Xt,Xt))
-
-                       C21=-K%*%crossprod(Zt,Xt)%*%C11
-                       Kinv=try(solve(K)  ,silent=TRUE  ) 
-                       if(inherits(Kinv, "try-error")) Kinv=MASS::ginv(K)
-        
-                       if(!is.null(Z)) term.0=crossprod(Z,Z)/ves
-                       if(is.null(Z)) term.0=diag(1/ves,nrow(K))
-
-                       term.1=try(solve(term.0+Kinv/vgs ) ,silent=TRUE )
-                       if(inherits(term.1, "try-error")) term.1=MASS::ginv(term.0+Kinv/vgs )
-
-                       term.2=C21%*%crossprod(Xt,Zt)%*%K
-                       C22=(term.1-term.2 )
-                       PEV=as.matrix(diag(C22))
- #print(paste("The value of is.na(CVI) is", is.na(CVI),  sep = ""))
+                          Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="before Dt clean")
+                          Memory=GAPIT.Memory(Memory=Memory,Infor="before Dt clean")
+                          gc()
+                          Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Dt clean")
+                          Memory=GAPIT.Memory(Memory=Memory,Infor="Dt clean")
+                          grand.mean.vector <- rep(beta[1], length(BLUP))
+                          BLUP_Plus_Mean <- grand.mean.vector + BLUP
+                          Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="BLUP")
+                          Memory=GAPIT.Memory(Memory=Memory,Infor="BLUP")
+                          C11=try(vgs*solve(crossprod(Xt,Xt)),silent=TRUE)
+                          if(inherits(C11, "try-error")) C11=vgs*MASS::ginv(crossprod(Xt,Xt))
+                          C21=-K%*%crossprod(Zt,Xt)%*%C11
+                          Kinv=try(solve(K)  ,silent=TRUE  ) 
+                          if(inherits(Kinv, "try-error")) Kinv=MASS::ginv(K)
+                          if(!is.null(Z)) term.0=crossprod(Z,Z)/ves
+                          if(is.null(Z)) term.0=diag(1/ves,nrow(K))
+                          term.1=try(solve(term.0+Kinv/vgs ) ,silent=TRUE )
+                          if(inherits(term.1, "try-error")) term.1=MASS::ginv(term.0+Kinv/vgs )
+                          term.2=C21%*%crossprod(Xt,Zt)%*%K
+                          C22=(term.1-term.2 )
+                          PEV=as.matrix(diag(C22))
         # CVI may be > 1 element long
-        #if(!is.na(CVI)){
-                       if(any(!is.null(CVI)))
-                       {
-                         XCV=as.matrix(cbind(1,data.frame(CVI[,-1])))
+                          if(any(!is.null(CVI)))
+                          {
+                              if(var(CVI[,2])!=0)
+                              {
+                                XCV=cbind(1,as.matrix(CVI[,-1]))
+                              }else{
+                                XCV=as.matrix(CVI[,-1])                               
+                              }
       		#CV.Extragenetic specified
-                         beta.Extragenetic=beta
-                         if(!is.null(CV.Extragenetic))
-                         {
-                           XCV=XCV[,-c(1:(1+CV.Extragenetic))]
-                           beta.Extragenetic=beta[-c(1:(1+CV.Extragenetic))]
-                         }
+                            # beta.Extragenetic=beta
+                              XCVI=XCV[,-c(1:(1+CV.Extragenetic)),drop=FALSE]
+                              XCVN=XCV[,c(1:(1+CV.Extragenetic)),drop=FALSE]
+                              beta.I=as.numeric(beta)[-c(1:(1+CV.Extragenetic))]
+                              beta.N=as.numeric(beta)[c(1:(1+CV.Extragenetic))]
+                              BLUE.N=XCVN%*%beta.N
+                              BLUE.I=rep(0,length(BLUE.N))
+                              if(CV.Extragenetic!=0)BLUE.I=XCVI%*%beta.I
 		#Interception only
-                         if(length(beta)==1)XCV=X
-		
-                         BLUE=try(XCV%*%beta.Extragenetic,silent=TRUE)
-                         if(inherits(BLUE, "try-error")) BLUE = NA
+                            # if(length(beta)==1)XCV=X
+                            BLUE=cbind(BLUE.N,BLUE.I)
+                            # if(inherits(BLUE, "try-error")) BLUE = NA
      #print("GAPIT just after BLUE")
-                         Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PEV")
-                         Memory=GAPIT.Memory(Memory=Memory,Infor="PEV")
-
-                       }#end of any(!is.na(CVI))
+                            Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PEV")
+                            Memory=GAPIT.Memory(Memory=Memory,Infor="PEV")
+                          }else{
+                            BLUE.I=rep(0,length(BLUP))
+                            BLUE.N=rep(0,length(BLUP))
+                            BLUE=cbind(BLUE.N,BLUE.I)
+                          }#end of any(!is.na(CVI))
         # CVI may be > 1 element long.
         #if(is.na(CVI)) BLUE = NA
-                       if(any(is.null(CVI))) BLUE = NA
-                     }#end of i ==0 &file==file.from &frag==1 & !is.null(K)
-#-------------------------------------------------------------------------------------------------------------------->
-#--------------------------------------------------------------------------------------------------------------------<
-                     if(i ==0 &file==file.from &frag==1 & is.null(K))
-                     {
-                       YY=crossprod(yt, yt)
-                       ves=(YY-crossprod(beta,XY))/(n-q0)
-                       r=yt-X%*%iXX%*%XY
-                       REMLs=-.5*(n-q0)*log(det(ves)) -.5*n -.5*(n-q0)*log(2*pi)
+                          # if(any(is.null(CVI))) BLUE = NA
+                          Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="K normal")
+                          Memory=GAPIT.Memory(Memory=Memory,Infor="K normal")
+                          if(SNP.P3D == TRUE) K=1  #NOTE: When SNP.P3D == FALSE, this line will mess up the spectral decomposition of the kinship matrix at each SNP.
+                          rm(Zt)            
+                          rm(Kinv)
+                          rm(C11)
+                          rm(C21)
+                          rm(C22)
+                          gc()
+                          Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="K set to 1")
+                          Memory=GAPIT.Memory(Memory=Memory,Infor="K set to 1")
+                        }else{
+                          YY=crossprod(yt, yt)
+                          ves=(YY-crossprod(beta,XY))/(n-q0)
+                          r=yt-X%*%iXX%*%XY
+                          REMLs=-.5*(n-q0)*log(det(ves)) -.5*n -.5*(n-q0)*log(2*pi)
 # REMLs=-.5*n*log(det(ves)) -.5*log(det(iXX)/ves) -.5*crossprod(r,r)/ves -.5*(n-q0)*log(2*pi)
-                       vgs = 0
-                       BLUP = 0
-                       BLUP_Plus_Mean = NaN
-                       PEV = ves
+                          vgs = 0
+                          BLUP = 0
+                          BLUP_Plus_Mean = NaN
+                          PEV = ves
         #print(paste("X row:",nrow(X)," col:",ncol(X)," beta:",length(beta),sep=""))
-                       XCV=as.matrix(cbind(1,data.frame(CVI[,-1])))
-
+                          XCV=as.matrix(cbind(1,data.frame(CVI[,-1])))
 #CV.Extragenetic specified
-                       beta.Extragenetic=beta
-                       if(!is.null(CV.Extragenetic))
-                       {
-                         XCV=XCV[,-c(1:(1+CV.Extragenetic))]
-                         beta.Extragenetic=beta[-c(1:(1+CV.Extragenetic))]
-                       }
-#Interception only
-                       if(length(beta)==1)XCV=X
-        #BLUE=XCV%*%beta.Extragenetic   modified by jiabo wang 2016.11.21
-                       BLUE=try(XCV%*%beta.Extragenetic,silent=TRUE)
-                       if(inherits(BLUE, "try-error")) BLUE = NA
-                     }#end of i ==0 &file==file.from &frag==1 & is.null(K)
-#Clean up the BLUP stuff to save memory
-                     if(i ==0 &file==file.from &frag==1 & !is.null(K))
-                     {
-                       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="K normal")
-                       Memory=GAPIT.Memory(Memory=Memory,Infor="K normal")
-                       if(SNP.P3D == TRUE) K=1  #NOTE: When SNP.P3D == FALSE, this line will mess up the spectral decomposition of the kinship matrix at each SNP.
-#rm(Dt)
-                       rm(Zt)            
-                       rm(Kinv)
-                       rm(C11)
-                       rm(C21)
-                       rm(C22)
-                       gc()
-                       Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="K set to 1")
-                       Memory=GAPIT.Memory(Memory=Memory,Infor="K set to 1")
-                     }
-
-                     if(i == 0 &file==file.from & frag==1)
-                     {
+                          # beta.Extragenetic=beta
+                          if(!is.null(CV.Extragenetic))
+                            {
+                              XCVI=XCV[,-c(1:(1+CV.Extragenetic)),drop=FALSE]
+                              XCVN=XCV[,c(1:(1+CV.Extragenetic)),drop=FALSE]
+                              beta.I=as.numeric(beta)[-c(1:(1+CV.Extragenetic))]
+                              beta.N=as.numeric(beta)[c(1:(1+CV.Extragenetic))]
+                              BLUE.I=try(XCVI%*%beta.I,silent=TRUE)
+                              BLUE.N=try(XCVN%*%beta.N,silent=TRUE)
+                            }else{
+                              XCVI=as.matrix(cbind(1,data.frame(CVI[,-1])))
+                              beta.I=beta
+                              BLUE.I=try(XCVI%*%beta.I,silent=TRUE)
+                              BLUE.N=rep(0,length(BLUE.I))
+                            }
+    #Interception only
+                            # if(length(beta)==1)XCV=X
+                            BLUE=cbind(BLUE.N,BLUE.I)
+#                           if(!is.null(CV.Extragenetic))
+#                           {
+#                             XCV=XCV[,-c(1:(1+CV.Extragenetic))]
+#                             beta.Extragenetic=beta[-c(1:(1+CV.Extragenetic))]
+#                           }
+# #Interception only
+#                           if(length(beta)==1)XCV=X
+#         #BLUE=XCV%*%beta.Extragenetic   modified by jiabo wang 2016.11.21
+#                           BLUE=try(XCV%*%beta.Extragenetic,silent=TRUE)
+                          # if(inherits(BLUE, "try-error")) BLUE = NA
+                        }# end of is.null(K)
                        beta.cv=beta
                        X.beta <- X%*%beta
                        if(!is.null(K))
@@ -886,7 +894,7 @@
                        }
                        rsquare_base_intitialized <- 1-exp(-(2/length(yv))*(logLM_Base-logL0))
 
-                     }#end of i == 0 &file==file.from & frag==1
+                    }#end of i == 0 &file==file.from & frag==1
       #print(Create.indicator)
       #calculate t statistics and P-values
                      if(i > 0 | file>file.from |frag>1)
@@ -920,6 +928,9 @@
 
                        rsquare_base[i, ] <- rsquare_base_intitialized
                        rsquare[i, ] <- 1-exp(-(2/length(yv))*(logLM-logL0))
+                       # print(head(U))
+                       # print(U)
+                       # print(sum(log(eig.full.plus.delta)))
                        if(rsquare[i, ]<rsquare_base[i, ])
                        {  
                           rsquare[i, ]=NA

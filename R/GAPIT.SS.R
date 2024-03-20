@@ -39,7 +39,7 @@ if(DP$SNP.test)
   if(max(ic_PCA[,2])==min(ic_PCA[,2]))ic_PCA=NULL
 #print(head(ic_PCA))
 # print("@@@@@")
-print(DP$kinship.algorithm)
+  print(DP$kinship.algorithm)
   if(DP$kinship.algorithm%in%c("FarmCPU","BLINK","MLMM","BLINKC"))
   {
      print("The GAPIT would go into Bus...")
@@ -61,7 +61,7 @@ print(DP$kinship.algorithm)
      print(myBus$seqQTN)
      if(buspred)
      {  
-        X=DP$GD[,-1]
+        X=IC$myallGD[,-1]
         for(l in lmpred)
         {
           memo=ifelse(l,"MAS","ABLUP")
@@ -70,7 +70,7 @@ print(DP$kinship.algorithm)
           print("MAS to Predict phenotype !!")
     # colnames(busCV)[1]=c("Taxa")
     # print(length(IC$GT))
-          index=as.character(DP$GD[,1])%in%as.character(ic_Y[,1])
+          index=as.character(IC$myallGD[,1])%in%as.character(ic_Y[,1])
     # print(cbind(ic_Y,IC$PCA))
           if(!is.null(myBus$seqQTN))
           {
@@ -90,41 +90,60 @@ print(DP$kinship.algorithm)
           }
           if(!is.null(IC$myallCV)) 
           {
-            # CV1 = as.matrix(IC$PCA[,-1])
-            CV1 = IC$myallCV[as.character(IC$myallCV[,1])%in%as.character(DP$GD[,1]),]
-            print(dim(CV1))
-            print(dim(IC$myallCV))
-            print(dim(DP$GD))
-            CV1=as.matrix(CV1[,-1])
-            Group=1:nrow(DP$GD)
-            RefInf=rep(2,nrow(DP$GD))
+            CV1=as.matrix(IC$myallCV[index,-1])
+            CV2=as.matrix(IC$myallCV[,-1])
+            Group=1:nrow(IC$myallGD)
+            RefInf=rep(2,nrow(IC$myallGD))
             # print(table(index))
             RefInf[index]=1
             ID=1:nrow(IC$myallCV)
-            BLUP=rep(NA,nrow(DP$GD))
-            PEV=rep(NA,nrow(DP$GD))
-            BLUE=rep(NA,nrow(DP$GD))
+            BLUP=rep(0,nrow(IC$myallGD))
+            PEV=rep(0,nrow(IC$myallGD))
+            # BLUE=rep(NA,nrow(IC$myallGD))
             print("The dimension of CV in lm model :")
             print(dim(CV1))
             # print(dim(GD1))
     # print(head(CV1))
     # print(dim(GD1))
-            mylm = stats::lm(ic_Y[,2] ~cbind(CV1, GD1))
-            # print(mylm)
-            # print(dim(IC$myallCV))
-            # print(dim(ic_PCA))
-            if(stats::var(IC$myallCV[,2])==0)
-            {
-              kk=1:2
-            }else{
-              kk=1
-            }
-            lm.coeff=mylm$coefficients[-kk]
-            aa=as.numeric(lm.coeff[!is.na(lm.coeff)]%*%t(as.matrix(cbind(CV1[,-kk],GD2)))[!is.na(lm.coeff),])+as.numeric(mylm$coefficients[1])
-    # print(aa)
-            pred0=cbind(Group,RefInf,ID,BLUP,PEV,as.data.frame(aa),as.data.frame(aa))
-            Pred = cbind(as.data.frame(DP$GD[,1]),as.matrix(pred0))
-            colnames(Pred)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction")
+            XCV1=cbind(CV1, GD1)
+            cv.licols=GAPIT.Licols(X=XCV1)
+            XCV1=cv.licols$Xsub
+
+            mylm = stats::lm(ic_Y[,2] ~XCV1)
+            # {
+            #   kk=1:2
+            # }else{
+            #   kk=1
+            # }
+            lm.coeff=mylm$coefficients
+            if(stats::var(CV2[,1])==0)lm.coeff=lm.coeff[-2]
+            print(lm.coeff)
+            XCV=cbind(CV2, GD2)
+            XCV=XCV[,cv.licols$idx]
+            XCV=cbind(1,as.matrix(XCV))
+#CV.Extragenetic specified
+            QTN.gs=ncol(GD2)
+            CV.Extragenetic=DP$CV.Extragenetic
+            XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
+            XCVN=XCV[,c(1:(1+CV.Extragenetic))]
+            if(QTN.gs!=0)XCVqtn=XCV[,c((ncol(XCV)-QTN.gs):ncol(XCV))]
+            beta.I=lm.coeff[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
+            beta.N=lm.coeff[c(1:(1+CV.Extragenetic))]
+            if(QTN.gs!=0)beta.QTN=lm.coeff[c((ncol(XCV)-QTN.gs):ncol(XCV))]
+            BLUE.N=XCVN%*%beta.N
+            BLUE.QTN=rep(0,length(BLUE.N))    
+            if(QTN.gs!=0)BLUE.QTN=XCVqtn%*%beta.QTN
+            BLUE.I=rep(0,length(BLUE.N))
+            if(CV.Extragenetic!=0)BLUE.I=XCVI%*%beta.I
+            BLUE=cbind(BLUE.N,BLUE.I,BLUE.QTN)
+            BLUE=data.frame(cbind(data.frame(IC$myallGD[,1]),data.frame(BLUE)))
+            colnames(BLUE)=c("Taxa","BLUE.N","BLUE.I","QTNs")
+            BB= cbind(BLUE,Group,RefInf,ID,BLUP,PEV)
+            gBreedingValue=BB[,3]+BB[,4]+BB[,8]
+            Prediction=BB[,2]+BB[,3]+BB[,4]+BB[,8]
+            Pred=cbind(BB,gBreedingValue,Prediction)
+            colnames(Pred)=c("Taxa","BLUE.N","BLUE.I","QTNs","Group","RefInf","ID","BLUP","PEV","gBreedingValue","Prediction")
+
           }else{
             busCV=cbind(as.data.frame(DP$GD[,1]),X[,myBus$seqQTN])
             CV1=NULL
@@ -152,10 +171,10 @@ print(DP$kinship.algorithm)
           if(!is.null(IC$myallCV)) 
           {
             com.taxa=intersect(as.character(IC$myallCV[,1]),as.character(DP$GD[,1]))
-            CV1 = IC$myallCV[as.character(IC$myallCV[,1])%in%com.taxa,]
-            ablup.GD=DP$GD[as.character(DP$GD[,1])%in%com.taxa,]
+            CV1 = IC$myallCV
+            ablup.GD=IC$myallGD
             ablup.X=ablup.GD[,-1]
-            CV1=as.matrix(CV1[match(com.taxa,as.character(CV1[,1])),])
+            # CV1=as.matrix(CV1[match(com.taxa,as.character(CV1[,1])),])
             # print(dim(CV1))
             # print(dim(ablup.GD))
             # print(dim(ablup.X))
@@ -186,22 +205,23 @@ print(DP$kinship.algorithm)
           }else{
             busKI=DP$KI
           }
-          cv.licols=GAPIT.Licols(X=busCV[,-1])
-          geneGD=cv.licols$Xsub
+          # cv.licols=GAPIT.Licols(X=busCV[,-1])
+          # geneGD=cv.licols$Xsub
           # print(table(cv.licols$idx))
-          busCV=as.data.frame(busCV[,cv.licols$idx])
+          # busCV=as.data.frame(busCV[,cv.licols$idx])
           busCV=cbind(as.data.frame(busCV[,1]),matrix(as.numeric(as.matrix(busCV[,-1])),nrow(busCV),ncol(busCV)-1))
 
           print("The dimension of CV and phenotype in ABLUP model :")
           print(dim(busCV))
    # print(head(busCV))
    # print(apply(busCV[,-1],2,sum))
-          print(dim(ic_Y))
+          # print(dim(ic_Y))
           busGAPIT=GAPIT(
                   Y=ic_Y,
                   KI=busKI,
                   CV=busCV,
                   CV.Extragenetic=DP$CV.Extragenetic,
+                  QTN.gs=ncol(busCV)-ncol(CV1),
                   model="gBLUP",
                   file.output=F)
           Pred=busGAPIT$Pred
@@ -233,7 +253,7 @@ print(DP$kinship.algorithm)
                          GD=IC$GD[,-1],
                          GM=DP$GM,
                          KI=ic_KI,
-                         CV=DP$CV,
+                         CV=IC$myallCV,
                          CV.Extragenetic=DP$CV.Extragenetic,
                          GP=DP$GP,
                          GK=DP$GK,
@@ -338,7 +358,7 @@ gapitMain <- GAPIT.Main(Y=IC$Y,
                         GM=DP$GM,
                         KI=IC$KI,
                         Z=DP$Z,
-                        CV=DP$CV,
+                        CV=IC$myallCV,
                         CV.Extragenetic=DP$CV.Extragenetic,
                         GP=DP$GP,
                         GK=DP$GK,
@@ -382,6 +402,7 @@ gapitMain <- GAPIT.Main(Y=IC$Y,
                         DPP=DP$DPP,
                         SNP.permutation=DP$SNP.permutation,
                         LD.chromosome=DP$LD.chromosome,
+                        QTN.gs=DP$QTN.gs,
                         #LD.location=LD.location,
                         #LD.range=LD.range,
                         #SNP.CV=SNP.CV,

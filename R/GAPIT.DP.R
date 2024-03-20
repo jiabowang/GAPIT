@@ -7,7 +7,7 @@
 `GAPIT.DP` <-
 function(G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Extragenetic=NULL,GP=NULL,GK=NULL,
         group.from=30 ,group.to=1000000,group.by=10,DPP=500000, seq.cutoff=NULL,
-        kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden",                                                    
+        kinship.cluster="average", kinship.group='Mean',kinship.algorithm="VanRaden",QTN.gs=0,                                             
         bin.from=10000,bin.to=10000,bin.by=10000,inclosure.from=10,inclosure.to=10,inclosure.by=10,
         SNP.P3D=TRUE,SNP.effect="Add",SNP.impute="Middle",PCA.total=0, SNP.fraction = 1, seed = 123, BINS = 20,SNP.test=TRUE, 
         SNP.MAF=0,FDR.Rate = 1, SNP.FDR=1,SNP.permutation=FALSE,SNP.CV=NULL,SNP.robust="GLM",
@@ -40,7 +40,7 @@ if(geno.pass)
 {
   print("GAPIT.DP accomplished successfully without G, GD!!")
   return (list(Y=NULL,G=NULL,GD=NULL,GM=NULL,KI=KI,Z=Z,CV=CV,CV.Extragenetic= CV.Extragenetic,GP=GP,GK=GK,PC=NULL,GI=NULL,
-                group.from= group.from ,group.to= group.to,group.by= group.by,DPP= DPP, name.of.trait=NULL,
+                group.from= group.from ,group.to= group.to,group.by= group.by,DPP= DPP, name.of.trait=NULL,QTN.gs=QTN.gs,
                 kinship.cluster= kinship.cluster, kinship.group= kinship.group,kinship.algorithm= kinship.algorithm,NJtree.group=NJtree.group,NJtree.type=NJtree.type,PCA.col=PCA.col,PCA.3d=PCA.3d,                                              
                 bin.from= bin.from,bin.to= bin.to,bin.by= bin.by,inclosure.from= inclosure.from,inclosure.to= inclosure.to,inclosure.by= inclosure.by,opt=opt,
                 SNP.P3D= SNP.P3D,SNP.effect= SNP.effect,SNP.impute= SNP.impute,PCA.total= PCA.total, SNP.fraction = SNP.fraction, seed = seed, 
@@ -109,7 +109,7 @@ GD=cbind(as.data.frame(GT),GD)
 }
   print("GAPIT.DP accomplished successfully for multiple traits. Results are saved")
   return (list(Y=NULL,G=G,GD=GD,GM=GI,KI=KI,Z=Z,CV=CV,CV.Extragenetic= CV.Extragenetic,GP=GP,GK=GK,PC=PC,GI=GI,
-                group.from= group.from ,group.to= group.to,group.by= group.by,DPP= DPP, name.of.trait=NULL,seq.cutoff=seq.cutoff,
+                group.from= group.from ,group.to= group.to,group.by= group.by,DPP= DPP, name.of.trait=NULL,seq.cutoff=seq.cutoff,QTN.gs=QTN.gs,
                 kinship.cluster= kinship.cluster, kinship.group= kinship.group,kinship.algorithm= kinship.algorithm,NJtree.group=NJtree.group,NJtree.type=NJtree.type,PCA.col=PCA.col,PCA.3d=PCA.3d,                                              
                 bin.from= bin.from,bin.to= bin.to,bin.by= bin.by,inclosure.from= inclosure.from,inclosure.to= inclosure.to,inclosure.by= inclosure.by,opt=opt,
                 SNP.P3D= SNP.P3D,SNP.effect= SNP.effect,SNP.impute= SNP.impute,PCA.total= PCA.total, SNP.fraction = SNP.fraction, seed = seed, 

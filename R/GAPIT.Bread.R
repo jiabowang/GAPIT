@@ -1,5 +1,5 @@
 `GAPIT.Bread` <-
-function(Y=NULL,CV=NULL,Z=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,
+function(Y=NULL,CV=NULL,Z=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,CV.Extragenetic=0,
               method=NULL,delta=NULL,vg=NULL,ve=NULL,LD=0.01,GTindex=NULL,
               file.output=TRUE,opt="extBIC"){
 #Object: To calculate p-values of SNPs by using method of GLM, MLM, CMLM, FaST, SUPER and DC  
@@ -30,6 +30,7 @@ if(method=="GLM"){
   GM=GM,
   model=("GLM"),
   QC=FALSE,
+  CV.Extragenetic=CV.Extragenetic,
   # GTindex=GTindex,
   file.output=file.output				
   )
@@ -54,7 +55,8 @@ if(method=="MLM"){
   GM=GM,
   model="MLM",
   QC=FALSE,
-  # GTindex=GTindex,
+    CV.Extragenetic=CV.Extragenetic,
+# GTindex=GTindex,
   file.output=file.output				
   )
   GWAS=myGAPIT$GWAS 
@@ -77,7 +79,8 @@ if(method=="CMLM"){
   GM=GM,
   model="CMLM",
   QC=FALSE,
-  # GTindex=GTindex,
+    CV.Extragenetic=CV.Extragenetic,
+# GTindex=GTindex,
   file.output=file.output				
   )
   GWAS=myGAPIT$GWAS 

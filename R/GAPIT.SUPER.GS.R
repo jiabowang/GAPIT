@@ -73,11 +73,12 @@ function(Y,
 				 sangwich.top = NULL,
 				 sangwich.bottom = NULL,
 				 QC = TRUE,
+         QTN.gs=NULL,
 				 GTindex = NULL,
 				 LD = 0.05,
 				 file.output = TRUE,
          GAPIT3.output=TRUE,
-         CV.Extragenetic=NULL,
+         CV.Extragenetic=0,
 				 cutOff = 0.01
                         ){
  
@@ -210,7 +211,7 @@ print("-------------------start SUPER BREAD-----------------------------------")
   # file.output.temp=file.output
   # file.output=FALSE
 #  print(memory.size())
-  GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=FALSE)$GWAS
+  GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=FALSE,CV.Extragenetic=CV.Extragenetic)$GWAS
   # file.output=file.output.temp
 #  print(memory.size())
   GK=NULL
@@ -520,36 +521,46 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   }else{
     my_allX=cbind(1,as.matrix(my_allCV[,-1]))
   }
-
-   my_allX=my_allX[,X.idx]
+  # print(dim(my_allX))
+  XCV=my_allX[,X.idx]
+  # print(emma_REMLE$betahat)
+  # print(QTN.gs)
+  # print(dim(XCV))
+  # print(CV.Extragenetic)
+#CV.Extragenetic specified
+    XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs)),drop=FALSE]
+    XCVN=XCV[,c(1:(1+CV.Extragenetic)),drop=FALSE]
+    if(QTN.gs!=0)XCVqtn=XCV[,c((ncol(XCV)-QTN.gs):ncol(XCV)),drop=FALSE]
+    beta.I=emma_REMLE$betahat[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
+    beta.N=emma_REMLE$betahat[c(1:(1+CV.Extragenetic))]
+    if(QTN.gs!=0)beta.QTN=emma_REMLE$betahat[c((ncol(XCV)-QTN.gs):ncol(XCV))]
+    # print(dim(XCVN))
+    # print(length(beta.N))
+    BLUE.N=XCVN%*%beta.N
+    BLUE.QTN=rep(0,length(BLUE.N))    
+    if(QTN.gs!=0)BLUE.QTN=XCVqtn%*%beta.QTN
+    BLUE.I=rep(0,length(BLUE.N))
+    if(CV.Extragenetic!=0)BLUE.I=XCVI%*%beta.I
+    #Interception only
    # print(dim(my_allX))
    # print(length(emma_REMLE$betahat))
-   emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
-   emma_BLUE=as.data.frame(cbind(as.character(my_allCV[,1]),emma_BLUE))
-   colnames(emma_BLUE)=c("Taxa","emma_BLUE")
+   BLUE=cbind(BLUE.N,BLUE.I,BLUE.QTN)
+   BLUE=data.frame(cbind(data.frame(my_allCV[,1]),data.frame(BLUE)))
+   colnames(BLUE)=c("Taxa","BLUE.N","BLUE.I","QTNs")
+   # print(head(BLUE))
+   # emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
+   # emma_BLUE=as.data.frame(cbind(as.character(my_allCV[,1]),emma_BLUE))
+   # colnames(emma_BLUE)=c("Taxa","emma_BLUE")
    gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
-   BB= merge(gs$BLUP, emma_BLUE, by.x = "Taxa", by.y = "Taxa",sort=F)
-   if(is.null(CV.Extragenetic))
-   {
-     Prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
-     Pred_Heritable=Prediction
-   }else{
-      inher_CV=my_allX[,-c(1:CV.Extragenetic)]
-      beta.inher=emma_REMLE$betahat[-c(1:CV.Extragenetic)]
-    #print(beta.Inheritance)
-    #if(length(beta)==1)CV=X
-    inher_BLUE=try(inher_CV%*%beta.inher,silent=T)
-    inher_names_BLUE=as.data.frame(cbind(as.character(my_allCV[,1]),inher_BLUE))
-    colnames(inher_names_BLUE)=c("Taxa","inher_BLUE")
-    BB2= merge(BB, inher_names_BLUE, by.x = "Taxa", by.y = "Taxa",sort=F)
-    # print(head(BB2))
-    Prediction=as.numeric(as.matrix(BB[,5]))+as.numeric(as.vector(BB[,7]))
-    Pred_Heritable=as.numeric(as.vector(BB[,5]))+as.numeric(as.vector(BB2[,8]))
-   }
+   BB= merge(BLUE,gs$BLUP, by.x = "Taxa", by.y = "Taxa",sort=F)
+   # print(head(BB)) 
+   gBreedingValue=BB[,3]+BB[,4]+BB[,8]
+   Prediction=BB[,2]+BB[,3]+BB[,4]+BB[,8]
 
 
-   all_gs=cbind(BB,Prediction,Pred_Heritable)
-   colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction","Pred_Heritable")
+   all_gs=cbind(BB,gBreedingValue,Prediction)
+   colnames(all_gs)=c("Taxa","BLUE.N","BLUE.I","QTNs","Group","RefInf","ID","BLUP","PEV","gBreedingValue","Prediction")
+   # colnames(all_gs)=c("Taxa","Group","RefInf","ID","BLUP","PEV","BLUE","Prediction","Pred_Heritable")
    # print(head(all_gs))
    if(GAPIT3.output)utils::write.csv(all_gs,paste("GAPIT.Association.Prediction_results.",model,".",name.of.trait,".csv",sep=""), row.names = FALSE)
   
