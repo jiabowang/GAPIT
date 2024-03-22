@@ -27,7 +27,7 @@ print("GAPIT.IC in process...")
      }
      Y=Y[!is.na(Y[,2]),]
      taxa_Y=as.character(Y[,1])
-     # print(head(Y))
+     # print(head(PC))
      # print(head(DP$CV))
      if(DP$PCA.total>0&!is.null(DP$CV))CV=GAPIT.CVMergePC(DP$CV,PC)
      if(DP$PCA.total>0&is.null(DP$CV))CV=PC
@@ -101,7 +101,7 @@ print("GAPIT.IC in process...")
      print(dim(comCV))
      CV=CV[taxa_CV%in%taxa_g_cv,]
      CV=CV[match(taxa_g_cv,as.character(CV[,1])),]
-     
+     # print(head(CV))
      print("GAPIT.IC accomplished successfully for multiple traits. Results are saved")
      if(DP$kinship.algorithm%in%c("FarmCPU","BLINK","MLMM")){ 
         return (list(Y=comY,GT=GT,PCA=comCV,KI=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=GD))

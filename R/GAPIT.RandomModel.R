@@ -147,8 +147,8 @@ if(!is.null(CV))
     var_res=as.data.frame(summary(dflme)$varcor)[nrow(as.data.frame(summary(dflme)$varcor)),4]
 
     print(paste("Candidate Genes could Phenotype_Variance_Explained(%) :",sep=""))
-    print(100*var_gene/sum(var_gene+var_res))
-    v_rat=100*var_gene/sum(var_gene+var_res)
+    print(100*var_gene/sum(var_gene,var_res))
+    v_rat=100*var_gene/sum(var_gene,var_res)
     # print(dim(geneGWAS))
     # print(length(v_rat))
     gene_list=cbind(geneGWAS,v_rat)

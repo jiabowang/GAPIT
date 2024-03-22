@@ -30,7 +30,7 @@ mysimulation<-GAPIT(h2=h2,NQTN=NQTN,G=G,GD=GD,GM=GM,PCA.total=PCA.total,file.out
 QTN.position=mysimulation$QTN.position
 Y=mysimulation$Y
 colnames(Y)=c("Taxa","Simu")
-
+# print(head(Y))
 # max.groups=nrow(myY)
     for(j in 1:length(all.method))
     {

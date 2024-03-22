@@ -352,8 +352,8 @@ function(Y,
 #print("@@@@@@@@")
 #print(GD)
 #merge CV with PC: Put CV infront of PC
-    if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
-    if(PCA.total>0&is.null(CV))CV=PC
+    # if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
+    # if(PCA.total>0&is.null(CV))CV=PC
     #for GS merge CV with GD name
     if (is.null(CV)){
       my_allCV=CV
@@ -692,7 +692,8 @@ function(Y,
 
                 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Prio PreP3D")
                 Memory=GAPIT.Memory(Memory=Memory,Infor="Prio PreP3D")  
-                # print(optOnly)              
+                # print(optOnly)   
+                # print(head(CVI))           
                 p3d <- GAPIT.EMMAxP3D(ys=ys,
                                       xs=as.matrix(as.data.frame(GD[GTindex,colInclude])),
                                       K = as.matrix(bk$KW),
