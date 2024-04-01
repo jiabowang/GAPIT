@@ -212,8 +212,25 @@
     X.beta <- X%*%beta
       
     beta.cv=beta
-    BLUE=X.beta
-      
+    # BLUE=X.beta
+    # if(var(CVI[,2])!=0)
+    # {
+    #   XCV=cbind(1,as.matrix(CVI[,-1]))
+    # }else{
+    #   XCV=as.matrix(CVI[,-1])                               
+    # }
+    #CV.Extragenetic specified
+    # beta.Extragenetic=beta
+    XCVI=X[,-c(1:(1+CV.Extragenetic)),drop=FALSE]
+    XCVN=X[,c(1:(1+CV.Extragenetic)),drop=FALSE]
+    beta.I=as.numeric(beta)[-c(1:(1+CV.Extragenetic))]
+    beta.N=as.numeric(beta)[c(1:(1+CV.Extragenetic))]
+    BLUE.N=XCVN%*%beta.N
+    BLUE.I=rep(0,length(BLUE.N))
+    if(CV.Extragenetic!=0)BLUE.I=XCVI%*%beta.I
+    #Interception only
+    # if(length(beta)==1)XCV=X
+    BLUE=cbind(BLUE.N,BLUE.I)
     if(!is.null(K))
     {
       U.times.yv.minus.X.beta <- crossprod(U,(yv-X.beta))
@@ -858,17 +875,24 @@
                               XCVN=XCV[,c(1:(1+CV.Extragenetic)),drop=FALSE]
                               beta.I=as.numeric(beta)[-c(1:(1+CV.Extragenetic))]
                               beta.N=as.numeric(beta)[c(1:(1+CV.Extragenetic))]
-                              BLUE.I=try(XCVI%*%beta.I,silent=TRUE)
-                              BLUE.N=try(XCVN%*%beta.N,silent=TRUE)
+                              # print(is.null(beta.I))
+                              BLUE.I=rep(0,nrow(XCVI))
+                              BLUE.N=rep(0,nrow(XCVN))
+                              if(length(beta.I)>0)BLUE.I=try(XCVI%*%beta.I,silent=TRUE)
+                              if(length(beta.N)>0)BLUE.N=try(XCVN%*%beta.N,silent=TRUE)
                             }else{
                               XCVI=as.matrix(cbind(1,data.frame(CVI[,-1])))
                               beta.I=beta
-                              BLUE.I=try(XCVI%*%beta.I,silent=TRUE)
+                              BLUE.I=rep(0,length(BLUE.I))
+                              if(length(beta.I)>0)BLUE.I=try(XCVI%*%beta.I,silent=TRUE)
                               BLUE.N=rep(0,length(BLUE.I))
                             }
     #Interception only
                             # if(length(beta)==1)XCV=X
+                            # print(head(BLUE.N))
+                            # print(head(BLUE.I))
                             BLUE=cbind(BLUE.N,BLUE.I)
+                            # print(head(BLUE))
 #                           if(!is.null(CV.Extragenetic))
 #                           {
 #                             XCV=XCV[,-c(1:(1+CV.Extragenetic))]
@@ -987,7 +1011,7 @@
   Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GWAS done for this Trait")
   Memory=GAPIT.Memory(Memory=Memory,Infor="GWAS done for this Trait")
   #print("GAPIT.EMMAxP3D accomplished successfully!")
-
+  # print(head(BLUE))
     return(list(ps = ps, REMLs = -2*REMLs, stats = stats, effect.est = effect.est, rsquare_base = rsquare_base, rsquare = rsquare, dfs = dfs, df = df, tvalue = tvalue, stderr = stderr,maf=maf,nobs = nobs,Timmer=Timmer,Memory=Memory,
         vgs = vgs, ves = ves, BLUP = BLUP, BLUP_Plus_Mean = BLUP_Plus_Mean,
         PEV = PEV, BLUE=BLUE, logLM = logLM,effect.snp=effect.est,effect.cv=beta.cv))

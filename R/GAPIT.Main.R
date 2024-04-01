@@ -733,7 +733,7 @@ function(Y,
 
                 Timmer=p3d$Timmer
                 Memory=p3d$Memory
-
+                # print(head(p3d$BLUE))
                 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Post PreP3D")
                 Memory=GAPIT.Memory(Memory=Memory,Infor="Post PreP3D")
 
@@ -1311,6 +1311,7 @@ BLUP=rep(0,nrow(CVI))
 PEV=rep(0,nrow(CVI))
 gs=NULL
 gs$BLUP=cbind(as.data.frame(CVI[,1]),Group,RefInf,ID,BLUP,PEV)
+# print(head(gs$BLUP))
 colnames(gs$BLUP)=c("Taxa","Group","RefInf","ID","BLUP","PEV")
 if(!byPass) 
 {
@@ -1406,6 +1407,7 @@ if((!byPass)&(!Model.selection)){
  print("GAPIT before BLUP and BLUE")
  #print(dim(p3d$BLUE))
  BLUE=data.frame(cbind(data.frame(CV.taxa),data.frame(p3d$BLUE)))
+ print(head(BLUE))
  colnames(BLUE)=c("Taxa","BLUE.N","BLUE.I")
  QTNs=rep(0,nrow(BLUE))
  #Initial BLUP as BLUe and add additional columns
