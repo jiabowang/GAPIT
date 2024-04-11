@@ -55,9 +55,14 @@ if(DP$SNP.test)
 				        DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter,num_regwas=DP$num_regwas )
      GWAS=myBus$GWAS
      Pred=myBus$Pred
-
+     p=GWAS[,4]
+     # print(head(GWAS))
+     # print(head(ic_GM))
+     myBus$seqQTN=match(as.character(GWAS[p<(DP$cutOff/length(p)),1]),as.character(ic_GM[,1]))
+     myBus$seqQTN=myBus$seqQTN[!is.na(myBus$seqQTN)]
  # BUS Prediction with gBLUP
 # lmpred=TRUE
+
      print(myBus$seqQTN)
      if(buspred)
      {  
@@ -207,7 +212,8 @@ if(DP$SNP.test)
           }
           # cv.licols=GAPIT.Licols(X=busCV[,-1])
           # geneGD=cv.licols$Xsub
-          # print(table(cv.licols$idx))
+          # print(dim(busCV))
+          # print(head(busCV))
           # busCV=as.data.frame(busCV[,cv.licols$idx])
           busCV=cbind(as.data.frame(busCV[,1]),matrix(as.numeric(as.matrix(busCV[,-1])),nrow(busCV),ncol(busCV)-1))
 

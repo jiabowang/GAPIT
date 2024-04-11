@@ -506,14 +506,14 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   X.idx=XX$idx
   if (is.null(Z)) Z=diag(x=1,nrow(K),ncol(K))
   
-  # print(my_allCV)
+  # print(head(X))
   
    emma_REMLE <- EMMREML::emmreml(y=as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
   }else{
    emma_REMLE=emma_test
    print("gBLUP with only one time emma")
   } 
-  # print(dim(X))
+  # print(dim(my_allCV))
 
   if (is.null(my_allCV))
   {
@@ -534,13 +534,13 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
     beta.I=emma_REMLE$betahat[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
     beta.N=emma_REMLE$betahat[c(1:(1+CV.Extragenetic))]
     if(QTN.gs!=0)beta.QTN=emma_REMLE$betahat[c((ncol(XCV)-QTN.gs):ncol(XCV))]
-    # print(dim(XCVN))
-    # print(length(beta.N))
+    # print(dim(XCVI))
+    # print(length(beta.I))
     BLUE.N=XCVN%*%beta.N
     BLUE.QTN=rep(0,length(BLUE.N))    
     if(QTN.gs!=0)BLUE.QTN=XCVqtn%*%beta.QTN
     BLUE.I=rep(0,length(BLUE.N))
-    if(CV.Extragenetic!=0)BLUE.I=XCVI%*%beta.I
+    if(CV.Extragenetic!=(ncol(XCV)))BLUE.I=XCVI%*%beta.I
     #Interception only
    # print(dim(my_allX))
    # print(length(emma_REMLE$betahat))

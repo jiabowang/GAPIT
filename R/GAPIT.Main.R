@@ -1407,7 +1407,7 @@ if((!byPass)&(!Model.selection)){
  print("GAPIT before BLUP and BLUE")
  #print(dim(p3d$BLUE))
  BLUE=data.frame(cbind(data.frame(CV.taxa),data.frame(p3d$BLUE)))
- print(head(BLUE))
+ # print(head(BLUE))
  colnames(BLUE)=c("Taxa","BLUE.N","BLUE.I")
  QTNs=rep(0,nrow(BLUE))
  #Initial BLUP as BLUe and add additional columns
