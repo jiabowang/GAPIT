@@ -55,7 +55,7 @@ if(method=="MLM"){
   GM=GM,
   model="MLM",
   QC=FALSE,
-    CV.Extragenetic=CV.Extragenetic,
+  CV.Extragenetic=CV.Extragenetic,
 # GTindex=GTindex,
   file.output=file.output				
   )
@@ -110,7 +110,7 @@ if(method=="FaST" | method=="SUPER"| method=="DC")
     #GPS=myFaSTREML$GPS
   }
 
-mySUPERFaST=GAPIT.SUPER.FastMLM(ys=matrix(Y[,-1],nrow(Y),1),X0=as.matrix(cbind(matrix(1,nrow(CV),1),CV[,-1])),snp.pool=as.matrix(GK[-1]), xs=as.matrix(GD[GTindex,-1]),vg=vg,delta=delta,LD=LD,method=method)
+mySUPERFaST=GAPIT.SUPER.FastMLM(ys=matrix(Y[,-1],nrow(Y),1),X0=as.matrix(cbind(matrix(1,nrow(CV),1),CV[,-1])),snp.pool=as.matrix(GK[-1]), xs=as.matrix(GD[,-1]),vg=vg,delta=delta,LD=LD,method=method)
 
 GWAS=cbind(GM,mySUPERFaST$ps,mySUPERFaST$stats,mySUPERFaST$dfs,mySUPERFaST$effect)
 }#End of if(method=="FaST" | method=="SUPER")

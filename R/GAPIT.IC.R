@@ -12,6 +12,7 @@ print("GAPIT.IC in process...")
      CV=DP$CV
      GD=DP$GD
      noCV=FALSE
+     # print(dim(CV))
      if(is.null(CV))
      {
        noCV=TRUE
@@ -38,16 +39,21 @@ print("GAPIT.IC in process...")
          taxa_GD=as.character(GD[,1])
          taxa_KI=as.character(DP$KI[,1])
          taxa_CV=as.character(CV[,1])
+         # print(Y)
+         # print(tail(taxa_Y))
+         # print(tail(taxa_GD))
+         # print(tail(taxa_CV))
+
          taxa_comall=intersect(intersect(intersect(taxa_KI,taxa_GD),taxa_Y),taxa_CV)
          taxa_g_cv=intersect(intersect(taxa_KI,taxa_GD),taxa_CV)
      # print(length(taxa_comall))
+     # print(length(taxa_g_cv))
          comCV=CV[taxa_CV%in%taxa_comall,]
          comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
          comY=Y[taxa_Y%in%taxa_comall,]
          comY <- comY[match(taxa_comall,as.character(comY[,1])),]
          comGD=GD[taxa_GD%in%taxa_comall,]
          comGD <- comGD[match(taxa_comall,as.character(comGD[,1])),]# comGD=NULL
-
        }else{
      # print("@@@@")
          taxa_GD=as.character(GD[,1])
@@ -94,6 +100,10 @@ print("GAPIT.IC in process...")
         }#end of K
      }# end of GD
      # print(DP$KI[1:5,1:5])
+         # print(tail(comY[,1]))
+         # print(tail(comGD[,1]))
+         # print(tail(comCV[,1]))
+         # print(tail(GD[,1]))
      GT=as.matrix(as.character(taxa_comall))
      print(paste("There are ",length(GT)," common individuals in genotype , phenotype and CV files.",sep=""))
      if(nrow(comCV)!=length(GT))stop ("GAPIT says: The number of individuals in CV does not match to the number of individuals in genotype files.")

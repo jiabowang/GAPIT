@@ -129,10 +129,10 @@ if(DP$SNP.test)
 #CV.Extragenetic specified
             QTN.gs=ncol(GD2)
             CV.Extragenetic=DP$CV.Extragenetic
-            XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
+            if(CV.Extragenetic!=0)XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
             XCVN=XCV[,c(1:(1+CV.Extragenetic))]
             if(QTN.gs!=0)XCVqtn=XCV[,c((ncol(XCV)-QTN.gs):ncol(XCV))]
-            beta.I=lm.coeff[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
+            if(CV.Extragenetic!=0)beta.I=lm.coeff[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
             beta.N=lm.coeff[c(1:(1+CV.Extragenetic))]
             if(QTN.gs!=0)beta.QTN=lm.coeff[c((ncol(XCV)-QTN.gs):ncol(XCV))]
             BLUE.N=XCVN%*%beta.N
@@ -257,9 +257,11 @@ if(DP$SNP.test)
     if(DP$PCA.total==0) ic_PCA=NULL
     gapitMain <- GAPIT.Main(Y=ic_Y,
                          GD=IC$GD[,-1],
+                         allGD=IC$myallGD[,-1],
+                         allCV=IC$myallCV,
                          GM=DP$GM,
                          KI=ic_KI,
-                         CV=IC$myallCV,
+                         CV=IC$PCA,
                          CV.Extragenetic=DP$CV.Extragenetic,
                          GP=DP$GP,
                          GK=DP$GK,
@@ -295,7 +297,7 @@ if(DP$SNP.test)
 						             SNP.impute=DP$SNP.impute,
 						             PCA.total=DP$PCA.total,
 						             #GAPIT.Version=GAPIT.Version,
-                         GT=DP$GT, 
+                         GT=IC$GT, 
 						             SNP.fraction = DP$SNP.fraction, 
 						             seed =DP$seed, 
 						             BINS = DP$BINS,
@@ -360,11 +362,13 @@ if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut
 # Here is Genomic Prediction function
   print("GAPIT will be into GS approach...")
 gapitMain <- GAPIT.Main(Y=IC$Y,
-                        GD=DP$GD[,-1],
+                        GD=IC$GD[,-1],
+                        allGD=IC$allGD[,-1],
                         GM=DP$GM,
                         KI=IC$KI,
                         Z=DP$Z,
-                        CV=IC$myallCV,
+                        CV=IC$PCA,
+                        allCV=IC$myallCV,
                         CV.Extragenetic=DP$CV.Extragenetic,
                         GP=DP$GP,
                         GK=DP$GK,

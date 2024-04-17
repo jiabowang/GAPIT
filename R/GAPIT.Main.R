@@ -104,6 +104,8 @@
 function(Y,
          G=NULL,
          GD=NULL,
+         allGD=NULL,
+         allCV=NULL,
          GM=NULL,
          KI=NULL,
          Z=NULL,
@@ -243,10 +245,12 @@ function(Y,
     #print(model)
     SUPER_GS_GAPIT = GAPIT.SUPER.GS(Y=Y,
                                     GD=GD,
+                                    allGD=allGD,
                                     GM=GM,
                                     KI=KI,
                                     Z=Z,
                                     CV=CV,
+                                    allCV=allCV,
                                     GK=GK,
                                     kinship.algorithm=kinship.algorithm,
                                     bin.from=bin.from,
@@ -271,7 +275,7 @@ function(Y,
                                     sangwich.bottom=sangwich.bottom,
                                     QC=QC,
                                     QTN.gs=QTN.gs,
-                                    GTindex=GTindex,
+                                    # GTindex=GTindex,
                                     LD=LD,
                                     file.output=FALSE,
                                     GAPIT3.output=GAPIT3.output,
@@ -347,7 +351,7 @@ function(Y,
     }
 
     if(is.null(GT)) {
-      GT=as.character(GD[,1])
+      GT=as.character(CV[,1])
     }
 #print("@@@@@@@@")
 #print(GD)
@@ -355,19 +359,19 @@ function(Y,
     # if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
     # if(PCA.total>0&is.null(CV))CV=PC
     #for GS merge CV with GD name
-    if (is.null(CV)){
-      my_allCV=CV
-    }else{
-      taxa_GD=rownames(GD)
-      my_allCV=CV[order(CV[,1]),]
-      my_allCV=my_allCV[my_allCV[,1]%in%taxa_GD,]
+    # if (is.null(CV)){
+    #   my_allCV=CV
+    # }else{
+    #   taxa_GD=rownames(GD)
+      my_allCV=allCV
+      # my_allCV=my_allCV[my_allCV[,1]%in%taxa_GD,]
     #print(dim(my_allCV))
-    }
+    # }
 
     #Handler of CV.Extragenetic
-    if(is.null(CV) & !is.null(CV.Extragenetic)){
-      stop ("GAPIT says: CV.Extragenetic is more than avaiables.")
-    }
+    # if(is.null(CV) & !is.null(CV.Extragenetic)){
+    #   stop ("GAPIT says: CV.Extragenetic is more than avaiables.")
+    # }
 
     if(!is.null(CV)& !is.null(CV.Extragenetic)){  
       if(CV.Extragenetic>(ncol(CV)-1)){
@@ -377,8 +381,8 @@ function(Y,
 
     #Create Z as identity matrix from Y if it is not provided
     if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & is.null(Z)){
-      taxa=as.character(Y[,1]) #this part will make GS without CV not present all prediction
-      Z=as.data.frame(diag(1,nrow(Y)))
+      taxa=as.character(CV[,1]) #this part will make GS without CV not present all prediction
+      Z=as.data.frame(diag(1,nrow(CV)))
 #taxa=as.character(KI[,1])
 #Z=as.data.frame(diag(1,nrow(KI)))
       Z=rbind(taxa,Z)
@@ -394,16 +398,16 @@ function(Y,
     }
 
     #Create CV with all 1's if it is not provided
-    noCV=FALSE
-    if(is.null(CV)){
-      noCV=TRUE
-      CV=Y[,1:2]
-      CV[,2]=1
-      colnames(CV)=c("taxa","overall")
-    }
+    # noCV=FALSE
+    # if(is.null(CV)){
+    #   noCV=TRUE
+    #   CV=Y[,1:2]
+    #   CV[,2]=1
+    #   colnames(CV)=c("taxa","overall")
+    # }
 
     #Remove duplicat and integragation of data
-    print("QC is in process...")
+    # print("QC is in process...")
 
     CVI <- CV
 
@@ -422,13 +426,13 @@ function(Y,
 # }
 
 # print(length(GK))
-    GTindex=match(as.character(KI[,1]),as.character(Y[,1]))
-    GTindex=GTindex[!is.na(GTindex)]
+    # GTindex=match(as.character(KI[,1]),as.character(Y[,1]))
+    # GTindex=GTindex[!is.na(GTindex)]
     # KI=KI[GTindex,GTindex+1]
-    my_taxa=as.character(KI[,1])
-    CV=CV[as.character(CV[,1])%in%as.character(Y[,1]),]
+    # my_taxa=as.character(KI[,1])
+    # CV=CV[as.character(CV[,1])%in%as.character(Y[,1]),]
     #Output phenotype
-    colnames(Y)=c("Taxa",name.of.trait)
+    # colnames(Y)=c("Taxa",name.of.trait)
     # if(file.output){
     #   try(utils::write.table(Y, paste("GAPIT.", name.of.trait,".phenotype.csv" ,sep = ""),
     #                          quote = FALSE, sep = ",", 
@@ -439,45 +443,45 @@ function(Y,
     # Default kinship.algorithm = "VanRaden".
     # This if() may be seldom used.
     #TDP
-    if( kinship.algorithm =="None" ){
-      if(min(CV[,2])==max(CV[,2])) CV=NULL
+#     if( kinship.algorithm =="None" ){
+#       if(min(CV[,2])==max(CV[,2])) CV=NULL
 	
-      # GAPIT.TDP() does not appear to exist.
-      # theTDP = GAPIT.TDP(Y=Y,
-      #                    CV=CV,
-      #                    SNP = as.data.frame(cbind(GT[GTindex],as.matrix(as.data.frame(GD[GTindex,])))),
-      #                    QTN=QTN,
-      #                    Round=QTN.round,
-      #                    QTN.limit=QTN.limit, 
-      #                    QTN.update=QTN.update, 
-      #                    Method=QTN.method
-      #                    )
-#print(dim(GM))
-#print(length(theTDP$p))
+#       # GAPIT.TDP() does not appear to exist.
+#       # theTDP = GAPIT.TDP(Y=Y,
+#       #                    CV=CV,
+#       #                    SNP = as.data.frame(cbind(GT[GTindex],as.matrix(as.data.frame(GD[GTindex,])))),
+#       #                    QTN=QTN,
+#       #                    Round=QTN.round,
+#       #                    QTN.limit=QTN.limit, 
+#       #                    QTN.update=QTN.update, 
+#       #                    Method=QTN.method
+#       #                    )
+# #print(dim(GM))
+# #print(length(theTDP$p))
 
-      #theGWAS=cbind(GM,theTDP$p,NA,NA,NA)	
-      theGWAS=cbind(GM,NA,NA,NA,NA)	
+#       #theGWAS=cbind(GM,theTDP$p,NA,NA,NA)	
+#       theGWAS=cbind(GM,NA,NA,NA,NA)	
       
-      return (list(Compression = NULL,
-                   kinship.optimum = NULL, 
-                   kinship = NULL,
-                   PC = NULL,
-                   GWAS = theGWAS, 
-                   GPS = NULL,
-                   Pred = NULL,
-                   REMLs = NULL,
-                   #QTN = theTDP$QTN,
-                   QTN = NULL,
-                   Timmer = Timmer,
-                   Memory = Memory,
-                   h2 = NULL))
-    }
+#       return (list(Compression = NULL,
+#                    kinship.optimum = NULL, 
+#                    kinship = NULL,
+#                    PC = NULL,
+#                    GWAS = theGWAS, 
+#                    GPS = NULL,
+#                    Pred = NULL,
+#                    REMLs = NULL,
+#                    #QTN = theTDP$QTN,
+#                    QTN = NULL,
+#                    Timmer = Timmer,
+#                    Memory = Memory,
+#                    h2 = NULL))
+#     }
 
 #rm(qc)
-    gc()
+    # gc()
 
-    Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="QC")
-    Memory=GAPIT.Memory(Memory=Memory,Infor="QC")
+    # Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="QC")
+    # Memory=GAPIT.Memory(Memory=Memory,Infor="QC")
 
     #Get indicator of sangwich top and bottom
     byPass.top=FALSE
@@ -509,29 +513,32 @@ function(Y,
 #print(GD[1:5,1:5])
 
       #Create GK if not provided
-      if(is.null(GK)){
+      if(is.null(GK))
+      {
 #    set.seed(1)
         nY=floor(nrow(Y)*.9)
         nG=ncol(GD)
-        if(nG>nY){
+        if(nG>nY)
+        {
           snpsam=sample(1:nG,nY)
         }else{
             snpsam=1:nG
         }
-        GK=GD[GTindex,snpsam]
+        GK=GD
     # print(dim(GK))
     # print(GK[270:279,1:5])
         SNPVar=apply(as.matrix(GK), 2, stats::var)
     # print(SNPVar)
         GK=GK[,SNPVar>0]
-        GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
+        GK=cbind(as.data.frame(GT),as.data.frame(GK)) #add taxa
       }
   
   #myGD=cbind(as.data.frame(GT),as.data.frame(GD)) 
-      # file.output.temp=file.output
-      # file.output=FALSE
-  #print(sangwich.top)[GTindex,c(1,GTindex+1)]
-      GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT[GTindex]),as.data.frame(GD[GTindex,])),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=FALSE)$GWAS
+      print(tail(Y[,1]))
+      print(tail(CV[,1]))
+      print(tail(GT))
+      # print(dim(cbind(as.data.frame(GT[GTindex]),as.data.frame(GD[GTindex,]))))
+      GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,LD=LD,file.output=FALSE)$GWAS
       # file.output=file.output.temp
   
   
@@ -695,7 +702,7 @@ function(Y,
                 # print(optOnly)   
                 # print(head(CVI))           
                 p3d <- GAPIT.EMMAxP3D(ys=ys,
-                                      xs=as.matrix(as.data.frame(GD[GTindex,colInclude])),
+                                      xs=as.matrix(as.data.frame(GD[,colInclude])),
                                       K = as.matrix(bk$KW),
                                       Z=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol),
                                       X0=X0,
@@ -721,7 +728,7 @@ function(Y,
 			                                file.GM=file.GM, 
 			                                file.Ext.GD=file.Ext.GD,
 			                                file.Ext.GM=file.Ext.GM,
-			                                GTindex=GTindex,
+			                                # GTindex=GTindex,
 			                                genoFormat=genoFormat,
 			                                optOnly=optOnly,
 			                                SNP.effect=SNP.effect,
@@ -828,16 +835,15 @@ function(Y,
                   Memory=GAPIT.Memory(Memory=Memory,Infor="Genotype for burger")
   
                   print(paste("bin---",bin,"---inc---",inc,sep=""))
-                  GK=GD[GTindex,myGenotype$SNP.QTN]
+                  GK=GD[,myGenotype$SNP.QTN]
                   SUPER_GD=GD[,myGenotype$SNP.QTN]
                   SNPVar=apply(as.matrix(GK), 2, stats::var)
-  
                   GK=GK[,SNPVar>0]
                   SUPER_GD=SUPER_GD[,SNPVar>0]
-                  GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
+                  GK=cbind(as.data.frame(GT),as.data.frame(GK)) #add taxa
   # print(length(GT))
   # print(dim(SUPER_GD))
-                  SUPER_GD=cbind(as.data.frame(GT[GTindex]),as.data.frame(SUPER_GD)) #add taxa
+                  SUPER_GD=cbind(as.data.frame(GT),as.data.frame(SUPER_GD)) #add taxa
 # print(dim(GK))
   #GP=NULL
                 }# end of if(is.null(GK)) 
@@ -946,7 +952,7 @@ if(Model.selection == TRUE){
     p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[,1])),K = as.matrix(bk$KW) ,Z=Z1,X0=X0.test,CVI=CVI,CV.Extragenetic=CV.Extragenetic,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
             SNP.permutation=SNP.permutation, GP=GP,
 			      file.path=file.path,file.from=file.from,file.to=file.to,file.total=file.total, file.fragment = file.fragment, byFile=byFile, file.G=file.G,file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
-            GTindex=GTindex,genoFormat=genoFormat,optOnly=TRUE,SNP.effect=SNP.effect,SNP.impute=SNP.impute,name.of.trait=name.of.trait, Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero)
+            genoFormat=genoFormat,optOnly=TRUE,SNP.effect=SNP.effect,SNP.impute=SNP.impute,name.of.trait=name.of.trait, Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero)
 
     
     
@@ -1122,10 +1128,10 @@ print("--------------  Sandwich bottom with raw burger------------------------")
  print("--------------EMMAxP3D with the optimum setting-----------------------") 
  #print(dim(ys))
  #print(dim(as.matrix(as.data.frame(GD[GTindex,colInclude]))))
-  p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[GTindex,colInclude]))   ,K = as.matrix(bk$KW) ,Z=Z1,X0=as.matrix(X0),CVI=CVI, CV.Extragenetic=CV.Extragenetic,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
+  p3d <- GAPIT.EMMAxP3D(ys=ys,xs=as.matrix(as.data.frame(GD[,colInclude]))   ,K = as.matrix(bk$KW) ,Z=Z1,X0=as.matrix(X0),CVI=CVI, CV.Extragenetic=CV.Extragenetic,GI=GI,SNP.P3D=SNP.P3D,Timmer=Timmer,Memory=Memory,fullGD=fullGD,
           SNP.permutation=SNP.permutation, GP=GP,
     			 file.path=file.path,file.from=file.from,file.to=file.to,file.total=file.total, file.fragment = file.fragment, byFile=byFile, file.G=file.G,file.Ext.G=file.Ext.G,file.GD=file.GD, file.GM=file.GM, file.Ext.GD=file.Ext.GD,file.Ext.GM=file.Ext.GM,
-           GTindex=GTindex,genoFormat=genoFormat,optOnly=optOnly,SNP.effect=SNP.effect,SNP.impute=SNP.impute,name.of.trait=name.of.trait, Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero)  
+           genoFormat=genoFormat,optOnly=optOnly,SNP.effect=SNP.effect,SNP.impute=SNP.impute,name.of.trait=name.of.trait, Create.indicator = Create.indicator, Major.allele.zero = Major.allele.zero)  
     
   Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="GWAS")
   Memory=GAPIT.Memory(Memory=Memory,Infor="GWAS")  
@@ -1144,7 +1150,7 @@ print("---------------Sandwich bottom: reload bins ---------------------------")
 #SUPER: Final screening
   GK=GK.save
   # print(GK)
-  myBread=GAPIT.Bread(Y=Y,CV=CV,Z=Z,GK=GK,GD=cbind(as.data.frame(GT[GTindex]),as.data.frame(GD)),GM=GI,method=sangwich.bottom,GTindex=GTindex,LD=LD,file.output=FALSE)
+  myBread=GAPIT.Bread(Y=Y,CV=CV,Z=Z,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.bottom,LD=LD,file.output=FALSE)
   
   print("SUPER saving results...")
 

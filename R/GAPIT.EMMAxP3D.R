@@ -387,7 +387,7 @@
             {
                xs=NULL
             }else{
-               xs=myFRG$GD[GTindex,]
+               xs=myFRG$GD
             }
 
             if(!is.null(myFRG$GI))

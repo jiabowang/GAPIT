@@ -46,10 +46,12 @@
 `GAPIT.SUPER.GS`<-
 function(Y,
          GD = NULL,
+         allGD=NULL,
          GM = NULL,
          KI = NULL,
          Z = NULL,
          CV = NULL,
+         allCV=NULL,
          GK = NULL,
          kinship.algorithm = NULL,
          bin.from = 10000,
@@ -110,7 +112,7 @@ print(paste("Y is empty. No GWAS/GS performed for ",name.of.trait,sep=""))
 return (list(compression=NULL,kinship.optimum=NULL, kinship=KI,PC=PC,GWAS=NULL, GPS=NULL,Pred=NULL, REMLs=NULL,Timmer=Timmer,Memory=Memory))
 }
 print("------------Examining data (QC)------------------------------------------")
-if(is.null(Y)) stop ("GAPIT says: Phenotypes must exist.")
+# if(is.null(Y)) stop ("GAPIT says: Phenotypes must exist.")
 if(is.null(KI)&missing(GD) & kinship.algorithm!="SUPER") stop ("GAPIT says: Kinship is required. As genotype is not provided, kinship can not be created.")
 if(is.null(GD) & is.null(GT)) {
 	GT=as.matrix(Y[,1])
@@ -120,8 +122,8 @@ if(is.null(GD) & is.null(GT)) {
   colnames(GI)=c("SNP","Chromosome","Position")
 }
 # print(cbind(CV,PC))
-if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
-if(PCA.total>0&is.null(CV))CV=PC
+# if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
+# if(PCA.total>0&is.null(CV))CV=PC
 
 if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & is.null(Z)){
 taxa=as.character(Y[,1])
@@ -134,52 +136,52 @@ if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & !is.null(Z))
 {
   if(nrow(Z)-1<nrow(Y)) Z=GAPIT.ZmatrixFormation(Z=Z,Y=Y)
 }
-noCV=FALSE
-if(is.null(CV)){
-  noCV=TRUE
-  if(!is.null(GD))
-  {
-    taxa.gd=as.character(rownames(GD))
-    CV=cbind(as.character(taxa.gd),as.data.frame(GD[,1]))
-    }else{
-      if(!is.null(KI))
-      {
-        CV=KI[,1:2]
-      }else{
-        CV=Y[,1:2]  
-      }
-    }
+# noCV=FALSE
+# if(is.null(CV)){
+#   noCV=TRUE
+#   if(!is.null(GD))
+#   {
+#     taxa.gd=as.character(rownames(GD))
+#     CV=cbind(as.character(taxa.gd),as.data.frame(GD[,1]))
+#     }else{
+#       if(!is.null(KI))
+#       {
+#         CV=KI[,1:2]
+#       }else{
+#         CV=Y[,1:2]  
+#       }
+#     }
   
-  CV[,2]=1
-  colnames(CV)=c("taxa","overall")
-}
+#   CV[,2]=1
+#   colnames(CV)=c("taxa","overall")
+# }
 # print(CV)
 #Remove duplicat and integragation of data
 print("QC is in process...")
 
-my_allCV=CV
+my_allCV=allCV
 
-if(QC)
-{
-# print(head(Y))
-# print(Z[,1:3])
+# if(QC)
+# {
+# # print(head(Y))
+# # print(Z[,1:3])
 
-  qc <- GAPIT.QC2(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
-  GTindex=qc$GTindex
-  Y=qc$Y
-  KI=qc$KI
-  CV=qc$CV
-  Z=qc$Z
-  GK=qc$GK
-}
+#   qc <- GAPIT.QC2(Y=Y,KI=KI, GT=GT,CV=CV,Z=Z,GK=GK)
+#   # GTindex=qc$GTindex
+#   Y=qc$Y
+#   KI=qc$KI
+#   CV=qc$CV
+#   Z=qc$Z
+#   GK=qc$GK
+# }
 
 my_taxa=as.character(KI[,1])
 my_allKI=KI
 
 
 print("The value of QC is")
-print(QC)
-rm(qc)
+# print(QC)
+# rm(qc)
 gc()
 print("------------Examining data (QC) done-------------------------------------")
 super_pass=FALSE
@@ -188,7 +190,7 @@ SUPER_optimum_GD=NULL
 if (!is.null(sangwich.top)) super_pass=TRUE
 if(super_pass)
 {
-print("-------------------start SUPER BREAD-----------------------------------")
+  print("-------------------start SUPER BREAD-----------------------------------")
 #Create GK if not provided
 #print(memory.size())
   if(is.null(GK))
@@ -197,13 +199,12 @@ print("-------------------start SUPER BREAD-----------------------------------")
     nG=ncol(GD)
     # snpsam=0
     if(nG>nY){snpsam=sample(1:nG,nY)}else{snpsam=1:nG}
-    GK=GD[GTindex,snpsam]
+    GK=GD[,snpsam]
     SNPVar=apply(as.matrix(GK), 2, stats::var)
 	#print(snpsam)
     # if(snpsam==1)stop ("GAPIT says: SUPER_GS must putin GD and GM.")
     GK=GK[,SNPVar>0]
-    GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
-    
+    GK=cbind(as.data.frame(GT),as.data.frame(GK)) #add taxa 
   }
   #print(head(CV))
   #myGD=cbind(as.data.frame(GT),as.data.frame(GD)) 
@@ -211,116 +212,108 @@ print("-------------------start SUPER BREAD-----------------------------------")
   # file.output.temp=file.output
   # file.output=FALSE
 #  print(memory.size())
-  GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,GTindex=GTindex,LD=LD,file.output=FALSE,CV.Extragenetic=CV.Extragenetic)$GWAS
+  GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,LD=LD,file.output=FALSE,CV.Extragenetic=CV.Extragenetic)$GWAS
   # file.output=file.output.temp
 #  print(memory.size())
   GK=NULL
 
-if(inclosure.to>nrow(Y))   ##########removed by Jiabo Wang ,unlimited number of inclosures
-{
-inclosure.to=nrow(Y)-1
-print("the number of choosed inclosure is more than number of individuals")
-print("Set the number of choosed incolosure max equal to individuals")
-}
-if(inclosure.from>inclosure.to)   ##########removed by Jiabo Wang ,unlimited number of inclosures
-{
-inclosure.from=inclosure.to
-}
-bin.level=seq(bin.from,bin.to,by=bin.by)
-inclosure=seq(inclosure.from,inclosure.to,by=inclosure.by)
+  if(inclosure.to>nrow(Y))   ##########removed by Jiabo Wang ,unlimited number of inclosures
+  {
+    inclosure.to=nrow(Y)-1
+    print("the number of choosed inclosure is more than number of individuals")
+    print("Set the number of choosed incolosure max equal to individuals")
+  }
+  if(inclosure.from>inclosure.to)   ##########removed by Jiabo Wang ,unlimited number of inclosures
+  {
+    inclosure.from=inclosure.to
+  }
+  bin.level=seq(bin.from,bin.to,by=bin.by)
+  inclosure=seq(inclosure.from,inclosure.to,by=inclosure.by)
 #print(inclosure)
-e=1 #################################number of bins and inclosure
-count=0
-num_selection=length(bin.level)*length(inclosure)
-SUPER_selection=matrix(,num_selection,6)
-colnames(SUPER_selection)=c("bin","pseudo_QTNs","Max_pQTNs","REML","VA","VE")
+  e=1 #################################number of bins and inclosure
+  count=0
+  num_selection=length(bin.level)*length(inclosure)
+  SUPER_selection=matrix(,num_selection,6)
+  colnames(SUPER_selection)=c("bin","pseudo_QTNs","Max_pQTNs","REML","VA","VE")
 #for (bin in bin.level){bin=bin.level[e]}
 #for (inc in inclosure){inc=inclosure[e]}
-for (bin in bin.level){
-for (inc in inclosure){
-count=count+1
-  mySpecify=GAPIT.Specify(GI=GI,GP=GP,bin.size=bin,inclosure.size=inc)
-  SNP.QTN=mySpecify$index
-  num_pseudo_QTN=length(mySpecify$CB)
-  num_bins=mySpecify$num_bins
-#print(paste("bin---",bin,"---inc---",inc,sep=""))
-  GK=GD[GTindex,SNP.QTN]
-  SUPER_GD=GD[,SNP.QTN]
-  SNPVar=apply(as.matrix(GK), 2, stats::var)
-  GK=GK[,SNPVar>0]
-  SUPER_GD=SUPER_GD[,SNPVar>0]
-  GK=cbind(as.data.frame(GT[GTindex]),as.data.frame(GK)) #add taxa
-  SUPER_GD=cbind(as.data.frame(GT),as.data.frame(SUPER_GD)) #add taxa
-  myBurger=GAPIT.Burger(Y=Y,CV=CV,GK=GK)  #modifed by Jiabo Wang
-  myREML=myBurger$REMLs
-  myVG=myBurger$vg
-  myVE=myBurger$ve
-SUPER_selection[count,1]=bin
-SUPER_selection[count,2]=num_pseudo_QTN
-SUPER_selection[count,3]=num_bins
-SUPER_selection[count,4]=myREML
-SUPER_selection[count,5]=myVG
-SUPER_selection[count,6]=myVE
+  for (bin in bin.level)
+  {
+    for (inc in inclosure)
+    {
+      count=count+1
+      mySpecify=GAPIT.Specify(GI=GI,GP=GP,bin.size=bin,inclosure.size=inc)
+      SNP.QTN=mySpecify$index
+      num_pseudo_QTN=length(mySpecify$CB)
+      num_bins=mySpecify$num_bins
+#print(paste("bin---",bin,"---inc---",inc,sep=""))      
+      GK=GD[,SNP.QTN]
+      SUPER_GD=GD[,SNP.QTN]
+      SNPVar=apply(as.matrix(GK), 2, stats::var)
+      GK=GK[,SNPVar>0]
+      SUPER_GD=SUPER_GD[,SNPVar>0]
+      GK=cbind(as.data.frame(GT),as.data.frame(GK)) #add taxa
+      SUPER_GD=cbind(as.data.frame(GT),as.data.frame(SUPER_GD)) #add taxa
+      myBurger=GAPIT.Burger(Y=Y,CV=CV,GK=GK)  #modifed by Jiabo Wang
+      myREML=myBurger$REMLs
+      myVG=myBurger$vg
+      myVE=myBurger$ve
+      SUPER_selection[count,1]=bin
+      SUPER_selection[count,2]=num_pseudo_QTN
+      SUPER_selection[count,3]=num_bins
+      SUPER_selection[count,4]=myREML
+      SUPER_selection[count,5]=myVG
+      SUPER_selection[count,6]=myVE
   #print(SUPER_selection[count,])
-  if(count==1){
-  GK.save=GK
-  LL.save=myREML
-  	SUPER_optimum_GD=SUPER_GD     ########### get SUPER GD
-}else{
-  if(myREML<LL.save){
-    GK.save=GK
-    LL.save=myREML
-	SUPER_optimum_GD=SUPER_GD     ########### get SUPER GD
-  }
-}
-  if (num_bins==num_pseudo_QTN) break
+      if(count==1)
+      {
+        GK.save=GK
+        LL.save=myREML
+        SUPER_optimum_GD=SUPER_GD     ########### get SUPER GD
+      }else{
+        if(myREML<LL.save)
+        {
+          GK.save=GK
+          LL.save=myREML
+          SUPER_optimum_GD=SUPER_GD     ########### get SUPER GD
+        }
+      }
+      if (num_bins==num_pseudo_QTN) break
+    }# inc end
   }# bin end
-  }# inc end
   SUPER_selection<-SUPER_selection[!is.na(SUPER_selection[,1]),]
   print(SUPER_selection)
   print("-----select optimum pseudo QTNs from all the bins-------")
   if(is.null(dim(SUPER_selection)))
-  {optimum_SUPER=SUPER_selection
+  {
+    optimum_SUPER=SUPER_selection
   }else{
-  optimum_SUPER=SUPER_selection[which(as.numeric(SUPER_selection[,4])==min(as.numeric(SUPER_selection[,4]))),]
+    optimum_SUPER=SUPER_selection[which(as.numeric(SUPER_selection[,4])==min(as.numeric(SUPER_selection[,4]))),]
   }
   print(optimum_SUPER)
   ########################BUILD SUPER KINSHIP
   ##########################################################
-colnames(SUPER_optimum_GD)=c("taxa",colnames(SUPER_optimum_GD)[-1])
-SUPER_taxa=as.character(SUPER_optimum_GD[,1])
-SUPER_X=SUPER_optimum_GD[,-1]
+  colnames(SUPER_optimum_GD)=c("taxa",colnames(SUPER_optimum_GD)[-1])
+  SUPER_taxa=as.character(SUPER_optimum_GD[,1])
+  SUPER_X=SUPER_optimum_GD[,-1]
   if(kinship.algorithm=="Loiselle")SUPER_myKI_test= GAPIT.kinship.loiselle(snps=t(as.matrix(.5*(SUPER_optimum_GD[,-1]))), method="additive", use="all")
  # if(kinship.algorithm=="VanRaden")SUPER_myKI_test= GAPIT.kinship.VanRaden(snps=as.matrix(SUPER_optimum_GD[,-1])) 
   if(kinship.algorithm=="Zhang")SUPER_myKI_test= GAPIT.kinship.Zhang(snps=as.matrix(SUPER_optimum_GD[,-1])) 
   if(kinship.algorithm!="Loiselle"&kinship.algorithm!="Zhang")SUPER_myKI_test= GAPIT.kinship.VanRaden(snps=as.matrix(SUPER_optimum_GD[,-1])) 
 
 # SUPER_myKI_test=GAPIT.kinship.VanRaden(snps=as.matrix(SUPER_optimum_GD[,-1]))     #  build kinship
-colnames(SUPER_myKI_test)=SUPER_taxa
-SUPER_myKI=cbind(SUPER_taxa,as.data.frame(SUPER_myKI_test))
-print("select optimum number of marker effect in GD")
-# print(dim(SUPER_optimum_GD))
-# print(kinship.algorithm)
-# 
-# print(SUPER_myKI_test[1:5,1:5])
-#print(SUPER_optimum_GD[1:5,1:5])
-######################################GOIN TO NEW CBLUP
-Z=NULL
-if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & is.null(Z)){
-# taxa=as.character(SUPER_optimum_GD[,1])
-# # Z=as.data.frame(diag(1,nrow(SUPER_optimum_GD)))
-# Z=as.data.frame(diag(1,nrow(Y)))
-
-# Z=rbind(taxa,Z)
-# taxa=c('Taxa',as.character(taxa))
-# Z=cbind(taxa,Z)
-
-taxa=as.character(Y[,1])
-Z=as.data.frame(diag(1,nrow(Y)))
-Z=rbind(taxa,Z)
-taxa=c('Taxa',as.character(taxa))
-Z=cbind(taxa,Z)
-}
+  colnames(SUPER_myKI_test)=SUPER_taxa
+  SUPER_myKI=cbind(SUPER_taxa,as.data.frame(SUPER_myKI_test))
+  print("select optimum number of marker effect in GD")
+  Z=NULL
+  if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & is.null(Z))
+  {
+  taxa=as.character(Y[,1])
+  Z=as.data.frame(diag(1,nrow(Y)))
+  Z=rbind(taxa,Z)
+  taxa=c('Taxa',as.character(taxa))
+  Z=cbind(taxa,Z)
+  }
 if(kinship.algorithm!="None" & kinship.algorithm!="SUPER" & !is.null(Z))
 {
   if(nrow(Z)-1<nrow(Y)) Z=GAPIT.ZmatrixFormation(Z=Z,Y=Y)
@@ -332,18 +325,18 @@ GK=NULL
 # print(dim(Y))
 # print(dim(SUPER_myKI))
 # print(length(GT))
-if(QC)
-{
-  qc <- GAPIT.QC2(Y=Y,KI=SUPER_myKI, GT=GT,CV=CV,Z=Z,GK=GK)
-  GTindex=qc$GTindex
-  Y=qc$Y
-  KI=qc$KI
-  CV=qc$CV
-  Z=qc$Z
-  GK=qc$GK
-}
+# if(QC)
+# {
+#   qc <- GAPIT.QC2(Y=Y,KI=SUPER_myKI, GT=GT,CV=CV,Z=Z,GK=GK)
+#   # GTindex=qc$GTindex
+#   Y=qc$Y
+#   KI=qc$KI
+#   CV=qc$CV
+#   Z=qc$Z
+#   GK=qc$GK
+# }
 
-rm(qc)
+# rm(qc)
 gc()
 }# super_pass end
 
@@ -356,12 +349,12 @@ if(!is.null(KI))
     #group.to=min(nrow(KI),length(GTindex)) #maximum of group is number of rows in KI
     group.to=nk #maximum of group is number of rows in KI
     #warning("The upper bound of groups is too high. It was set to the size of kinship!") 
-    message("The upper bound of groups is too high. It was set to the size of kinship!") 
+    print("The upper bound of groups is too high. It was set to the size of kinship!") 
   }
 	if(group.from>nk){ 
     group.from=nk
     #warning("The lower bound of groups is too high. It was set to the size of kinship!") 
-    message("The lower bound of groups is too high. It was set to the size of kinship!") 
+    print("The lower bound of groups is too high. It was set to the size of kinship!") 
   } 
 }
 
@@ -371,7 +364,7 @@ if(!is.null(CV)){
 	  group.from=ncol(CV)+2
 	  group.to=ncol(CV)+2
 	  #warning("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
-	  message("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
+	  print("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
 	}
 }
 
@@ -380,7 +373,9 @@ if(missing("kinship.cluster")) kinship.cluster=c("ward", "single", "complete", "
 if(missing("kinship.group")) kinship.group=c("Mean", "Max", "Min", "Median")
 numSetting=length(GROUP)*length(kinship.cluster)*length(kinship.group)
 ys=as.matrix(Y[2])
-X0=as.matrix(CV[,-1])
+# print(dim(CV))
+# print(dim(allCV))
+X0=as.matrix(CV[,-1,drop=FALSE])
 if(min(X0[,1])!=max(X0[,1])) X0 <- cbind(1, X0) #do not add overall mean if X0 has it already at first column
 hold_Z=Z
 
@@ -400,7 +395,7 @@ for (group in GROUP)
 #if(!optOnly) {print("Compressing and Genome screening..." )}
 order_count=order_count+1
 if(order_count==1)print("-------Mixed model with Kinship-----------------------------")
-if(group<ncol(X0)+1) group=2 # the emma function (emma.delta.REML.dLL.w.Z) does not allow K has dim less then CV. turn to GLM (group=1)
+# if(group<ncol(GD)+1) group=2 # the emma function (emma.delta.REML.dLL.w.Z) does not allow K has dim less then CV. turn to GLM (group=1)
 # print(Sys.time())
 if(nrow(KI)==group)
 {
@@ -438,9 +433,9 @@ j=1
   XX=GAPIT.Licols(X0)
   X=XX$Xsub
   X.idx=XX$idx
-  # print(head(X))
-  # # print(head(ys))
-  # print(K[1:5,1:5])
+  # print(dim(X))
+  # print(dim(K))
+  # print(dim(Z))
   # print(dim(Z))
    emma_test <- EMMREML::emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
    # emma_test <- emmreml(as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
@@ -505,9 +500,6 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   X=XX$Xsub
   X.idx=XX$idx
   if (is.null(Z)) Z=diag(x=1,nrow(K),ncol(K))
-  
-  # print(head(X))
-  
    emma_REMLE <- EMMREML::emmreml(y=as.numeric(ys), X=as.matrix(X), K=as.matrix(K), Z=Z,varbetahat=TRUE,varuhat=TRUE, PEVuhat=TRUE, test=TRUE)  
   }else{
    emma_REMLE=emma_test
@@ -515,23 +507,23 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   } 
   # print(dim(my_allCV))
 
-  if (is.null(my_allCV))
-  {
-    my_allX=matrix(1,length(my_taxa),1)
-  }else{
+  # if (is.null(my_allCV))
+  # {
+  #   my_allX=matrix(1,length(my_taxa),1)
+  # }else{
     my_allX=cbind(1,as.matrix(my_allCV[,-1]))
-  }
+  # }
   # print(dim(my_allX))
-  XCV=my_allX[,X.idx]
+  XCV=my_allX[,X.idx,drop=FALSE]
   # print(emma_REMLE$betahat)
-  # print(QTN.gs)
+  # print(head(XCV))
   # print(dim(XCV))
   # print(CV.Extragenetic)
 #CV.Extragenetic specified
-    XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs)),drop=FALSE]
+    if(CV.Extragenetic!=0)XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs)),drop=FALSE]
     XCVN=XCV[,c(1:(1+CV.Extragenetic)),drop=FALSE]
     if(QTN.gs!=0)XCVqtn=XCV[,c((ncol(XCV)-QTN.gs):ncol(XCV)),drop=FALSE]
-    beta.I=emma_REMLE$betahat[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
+    if(CV.Extragenetic!=0)beta.I=emma_REMLE$betahat[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
     beta.N=emma_REMLE$betahat[c(1:(1+CV.Extragenetic))]
     if(QTN.gs!=0)beta.QTN=emma_REMLE$betahat[c((ncol(XCV)-QTN.gs):ncol(XCV))]
     # print(dim(XCVI))
@@ -540,7 +532,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
     BLUE.QTN=rep(0,length(BLUE.N))    
     if(QTN.gs!=0)BLUE.QTN=XCVqtn%*%beta.QTN
     BLUE.I=rep(0,length(BLUE.N))
-    if(CV.Extragenetic!=(ncol(XCV)))BLUE.I=XCVI%*%beta.I
+    if(CV.Extragenetic!=0)BLUE.I=XCVI%*%beta.I
     #Interception only
    # print(dim(my_allX))
    # print(length(emma_REMLE$betahat))

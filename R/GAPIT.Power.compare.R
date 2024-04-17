@@ -40,6 +40,7 @@ colnames(Y)=c("Taxa","Simu")
        GD=GD,
        GM=GM,
        PCA.total=PCA.total,
+       cutOff=0.01,
        CV=CV,
        file.output=FALSE,
        model=all.method[j],
