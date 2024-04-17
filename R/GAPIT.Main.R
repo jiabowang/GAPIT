@@ -534,9 +534,9 @@ function(Y,
       }
   
   #myGD=cbind(as.data.frame(GT),as.data.frame(GD)) 
-      print(tail(Y[,1]))
-      print(tail(CV[,1]))
-      print(tail(GT))
+      # print(tail(Y[,1]))
+      # print(tail(CV[,1]))
+      # print(tail(GT))
       # print(dim(cbind(as.data.frame(GT[GTindex]),as.data.frame(GD[GTindex,]))))
       GP=GAPIT.Bread(Y=Y,CV=CV,Z=Z,KI=KI,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.top,LD=LD,file.output=FALSE)$GWAS
       # file.output=file.output.temp
