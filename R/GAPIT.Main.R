@@ -884,7 +884,7 @@ Compression[count,2]=bin
 Compression[count,3]=inc
 Compression[count,4]=myREML
 Compression[count,5]=myVG
-Compression[count,6]=myVG
+Compression[count,6]=myVE
 print(Compression[count,]) 
 
 #print("---------------SUPER 2nd stage: calculating LL ------------------------")

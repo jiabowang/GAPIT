@@ -221,9 +221,9 @@
     # }
     #CV.Extragenetic specified
     # beta.Extragenetic=beta
-    XCVI=X[,-c(1:(1+CV.Extragenetic)),drop=FALSE]
+    if(CV.Extragenetic!=0)XCVI=X[,-c(1:(1+CV.Extragenetic)),drop=FALSE]
     XCVN=X[,c(1:(1+CV.Extragenetic)),drop=FALSE]
-    beta.I=as.numeric(beta)[-c(1:(1+CV.Extragenetic))]
+    if(CV.Extragenetic!=0)beta.I=as.numeric(beta)[-c(1:(1+CV.Extragenetic))]
     beta.N=as.numeric(beta)[c(1:(1+CV.Extragenetic))]
     BLUE.N=XCVN%*%beta.N
     BLUE.I=rep(0,length(BLUE.N))
