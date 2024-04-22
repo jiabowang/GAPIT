@@ -515,15 +515,12 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   # }
   # print(dim(my_allX))
   XCV=my_allX[,X.idx,drop=FALSE]
-  # print(emma_REMLE$betahat)
-  # print(head(XCV))
-  # print(dim(XCV))
-  # print(CV.Extragenetic)
+  # print("!!!!")
 #CV.Extragenetic specified
-    if(CV.Extragenetic!=0)XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs)),drop=FALSE]
+    if(ncol(XCV)>1)XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs)),drop=FALSE]
     XCVN=XCV[,c(1:(1+CV.Extragenetic)),drop=FALSE]
     if(QTN.gs!=0)XCVqtn=XCV[,c((ncol(XCV)-QTN.gs):ncol(XCV)),drop=FALSE]
-    if(CV.Extragenetic!=0)beta.I=emma_REMLE$betahat[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
+    if(ncol(XCV)>1)beta.I=emma_REMLE$betahat[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
     beta.N=emma_REMLE$betahat[c(1:(1+CV.Extragenetic))]
     if(QTN.gs!=0)beta.QTN=emma_REMLE$betahat[c((ncol(XCV)-QTN.gs):ncol(XCV))]
     # print(dim(XCVI))
@@ -532,7 +529,7 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
     BLUE.QTN=rep(0,length(BLUE.N))    
     if(QTN.gs!=0)BLUE.QTN=XCVqtn%*%beta.QTN
     BLUE.I=rep(0,length(BLUE.N))
-    if(CV.Extragenetic!=0)BLUE.I=XCVI%*%beta.I
+    if(ncol(XCV)>1)BLUE.I=XCVI%*%beta.I
     #Interception only
    # print(dim(my_allX))
    # print(length(emma_REMLE$betahat))

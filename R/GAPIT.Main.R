@@ -661,47 +661,40 @@ function(Y,
                 colInclude=c(1:ncol(GD))
               }
 
-              if(!optOnly) {print("Compressing and Genome screening..." )}
-              count=count+1
-
+              if(!optOnly) 
+              {
+                print("Compressing and Genome screening..." )
+              }
+                count=count+1
 #Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PreP3D 1")
 #Memory=GAPIT.Memory(Memory=Memory,Infor="PreP3D 1")
-
-              if(!byPass){
-                if(count==1)print("-------Mixed model with Kinship-----------------------------")
-                if(group<ncol(X0)+1) group=1 # the emma function (emma.delta.REML.dLL.w.Z) does not allow K has dim less then CV. turn to GLM (group=1)
-                cp <- GAPIT.Compress(KI=KI,kinship.cluster=ca,kinship.group=kt,GN=group,Timmer=Timmer,Memory=Memory)
-                Timmer=cp$Timmer
-                Memory=cp$Memory
-
-                Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PreP3D 2_cp")
-                Memory=GAPIT.Memory(Memory=Memory,Infor="PreP3D 2_cp")
-
+                if(!byPass)
+                {
+                  if(count==1)print("-------Mixed model with Kinship-----------------------------")
+                  if(group<ncol(X0)+1) group=1 # the emma function (emma.delta.REML.dLL.w.Z) does not allow K has dim less then CV. turn to GLM (group=1)
+                  cp <- GAPIT.Compress(KI=KI,kinship.cluster=ca,kinship.group=kt,GN=group,Timmer=Timmer,Memory=Memory)
+                  Timmer=cp$Timmer
+                  Memory=cp$Memory
+                  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PreP3D 2_cp")
+                  Memory=GAPIT.Memory(Memory=Memory,Infor="PreP3D 2_cp")
 #print("BK...")
-
-                bk <- GAPIT.Block(Z=Z,GA=cp$GA,KG=cp$KG)
-
-                Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PreP3D 2_bk")
-                Memory=GAPIT.Memory(Memory=Memory,Infor="PreP3D 2 bk")
-
+                  bk <- GAPIT.Block(Z=Z,GA=cp$GA,KG=cp$KG)
+                  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PreP3D 2_bk")
+                  Memory=GAPIT.Memory(Memory=Memory,Infor="PreP3D 2 bk")
 #print("ZC...")
-                zc <- GAPIT.ZmatrixCompress(Z=Z,GAU =bk$GA)
-
-                Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PreP3D 2_zc")
-                Memory=GAPIT.Memory(Memory=Memory,Infor="PreP3D 2 zc")
-
+                  zc <- GAPIT.ZmatrixCompress(Z=Z,GAU =bk$GA)
+                  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="PreP3D 2_zc")
+                  Memory=GAPIT.Memory(Memory=Memory,Infor="PreP3D 2 zc")
 #print("wraping...")
 #Reform KW and Z into EMMA format
-
-                zrow=nrow(zc$Z)
-                zcol=ncol(zc$Z)-1
+                  zrow=nrow(zc$Z)
+                  zcol=ncol(zc$Z)-1
 #Z1=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol)
-
-                Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Prio PreP3D")
-                Memory=GAPIT.Memory(Memory=Memory,Infor="Prio PreP3D")  
+                  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Prio PreP3D")
+                  Memory=GAPIT.Memory(Memory=Memory,Infor="Prio PreP3D")  
                 # print(optOnly)   
                 # print(head(CVI))           
-                p3d <- GAPIT.EMMAxP3D(ys=ys,
+                  p3d <- GAPIT.EMMAxP3D(ys=ys,
                                       xs=as.matrix(as.data.frame(GD[,colInclude])),
                                       K = as.matrix(bk$KW),
                                       Z=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol),
@@ -737,53 +730,45 @@ function(Y,
 			                                Create.indicator = Create.indicator, 
 			                                Major.allele.zero = Major.allele.zero
 			                                )
-
-                Timmer=p3d$Timmer
-                Memory=p3d$Memory
+                  Timmer=p3d$Timmer
+                  Memory=p3d$Memory
                 # print(head(p3d$BLUE))
-                Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Post PreP3D")
-                Memory=GAPIT.Memory(Memory=Memory,Infor="Post PreP3D")
-
+                  Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Post PreP3D")
+                  Memory=GAPIT.Memory(Memory=Memory,Infor="Post PreP3D")
 #print("Cluster algorithm, kinship type, groups, VG, Ve and REML:")
-                print(paste(count, "of",numSetting,"--","Vg=",round(p3d$vgs,4), "VE=",round(p3d$ves,4),"-2LL=",round(p3d$REMLs,2), "  Clustering=",ca,"  Group number=", group ,"  Group kinship=",kt,sep = " "))
+                  print(paste(count, "of",numSetting,"--","Vg=",round(p3d$vgs,4), "VE=",round(p3d$ves,4),"-2LL=",round(p3d$REMLs,2), "  Clustering=",ca,"  Group number=", group ,"  Group kinship=",kt,sep = " "))
 #print(table(GTindex))
-
                 #Recoding the optimum KI
-                if(count==1){
-                  KI.save=KI
-                  LL.save=p3d$REMLs
-                }else{
-                  if(p3d$REMLs<LL.save){
+                  if(count==1)
+                  {
                     KI.save=KI
                     LL.save=p3d$REMLs
+                  }else{
+                    if(p3d$REMLs<LL.save)
+                    {
+                      KI.save=KI
+                      LL.save=p3d$REMLs
+                    }
                   }
-                }
-
 #print(paste("CA is ",ca))
 #print(paste("group is ",group))
 #print(paste("kt is ",kt))
-
                 #recording Compression profile on array
-                Compression[count,1]=kt
-                Compression[count,2]=ca
-                Compression[count,3]=group
-                Compression[count,4]=p3d$REMLs
-                Compression[count,5]=p3d$vgs
-                Compression[count,6]=p3d$ves
-#print("result saved")
-
-              }else{# end of if(!byPass)
-
+                  Compression[count,1]=kt
+                  Compression[count,2]=ca
+                  Compression[count,3]=group
+                  Compression[count,4]=p3d$REMLs
+                  Compression[count,5]=p3d$vgs
+                  Compression[count,6]=p3d$ves
+                }else{# end of if(!byPass)
                 #Set QTNs
                 if(count==1)print("-------The burger is SNP-----------------------------------")
   #bin.size=bin
   #inclosure.size=inc
-
- 
                 #@@@This section is not useful
-                if(!is.null(GP)){
+                if(!is.null(GP))
+                {
   #print("Being specific...")
-
                   myGenotype <- GAPIT.Genotype(
                     G=NULL,
                     GD=NULL,
@@ -835,11 +820,12 @@ function(Y,
                   Memory=GAPIT.Memory(Memory=Memory,Infor="Genotype for burger")
   
                   print(paste("bin---",bin,"---inc---",inc,sep=""))
-                  GK=GD[,myGenotype$SNP.QTN]
-                  SUPER_GD=GD[,myGenotype$SNP.QTN]
+                  print(which(myGenotype$SNP.QTN==TRUE))
+                  GK=GD[,myGenotype$SNP.QTN,drop=FALSE]
+                  SUPER_GD=GD[,myGenotype$SNP.QTN,drop=FALSE]
                   SNPVar=apply(as.matrix(GK), 2, stats::var)
-                  GK=GK[,SNPVar>0]
-                  SUPER_GD=SUPER_GD[,SNPVar>0]
+                  GK=GK[,SNPVar>0,drop=FALSE]
+                  SUPER_GD=SUPER_GD[,SNPVar>0,drop=FALSE]
                   GK=cbind(as.data.frame(GT),as.data.frame(GK)) #add taxa
   # print(length(GT))
   # print(dim(SUPER_GD))
@@ -848,13 +834,12 @@ function(Y,
   #GP=NULL
                 }# end of if(is.null(GK)) 
 
-
-if(!is.null(GK) & numSetting>1)
+# print(is.null(GK))
+if(numSetting>1)
 {
 print("-------Calculating likelihood-----------------------------------")
- # myBurger=GAPIT.Burger(Y=Y,CV=CV,GK=GK)
-    myBurger=GAPIT.Burger(Y=Y,CV=NULL,GK=GK)   #########modified by Jiabo Wang
-
+  myBurger=GAPIT.Burger(Y=Y,CV=CV,GK=GK)
+    # myBurger=GAPIT.Burger(Y=Y,CV=NULL,GK=GK)   #########modified by Jiabo Wang
   myREML=myBurger$REMLs
   myVG=myBurger$vg
   myVE=myBurger$ve
@@ -865,16 +850,17 @@ print("-------Calculating likelihood-----------------------------------")
 }
 
 #Recoding the optimum GK
-if(count==1){
+if(count==1)
+{
   GK.save=GK
   LL.save=myREML
-  	SUPER_optimum_GD=SUPER_GD     ########### get SUPER GD
-
+  SUPER_optimum_GD=SUPER_GD     ########### get SUPER GD
 }else{
-  if(myREML<LL.save){
+  if(myREML<LL.save)
+  {
     GK.save=GK
     LL.save=myREML
-	SUPER_optimum_GD=SUPER_GD     ########### get SUPER GD
+	  SUPER_optimum_GD=SUPER_GD     ########### get SUPER GD
   }
 }
   
@@ -1008,8 +994,8 @@ if(Model.selection == TRUE){
 } # where does it start: 522
 
 print("---------------------Sandwich bottom bun-------------------------------")
-print("Compression") 
-print(Compression)
+# print("Compression") 
+# print(Compression)
 
 #Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Compression")
 #Memory=GAPIT.Memory(Memory=Memory,Infor="Copmression")
@@ -1150,6 +1136,7 @@ print("---------------Sandwich bottom: reload bins ---------------------------")
 #SUPER: Final screening
   GK=GK.save
   # print(GK)
+  # print(dim(GK))
   myBread=GAPIT.Bread(Y=Y,CV=CV,Z=Z,GK=GK,GD=cbind(as.data.frame(GT),as.data.frame(GD)),GM=GI,method=sangwich.bottom,LD=LD,file.output=FALSE)
   
   print("SUPER saving results...")
@@ -1396,10 +1383,10 @@ print("p3d objects transfered")
   maf[maf>0.5]=1-maf[maf>0.5]
   rsquare_base=rep(NA,length(ps))
   rsquare=rep(NA,length(ps))
-  df=rep(NA,length(nobs))
-  tvalue=rep(NA,length(nobs))
+  df=rep(nrow(Bread_X),length(ps))
+  tvalue=myBread$GWAS[,5]
   stderr=rep(NA,length(nobs))
-  effect.est=rep(NA,length(nobs))
+  effect.est=myBread$GWAS[,7]
   
 Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Extract bread results")
 Memory=GAPIT.Memory(Memory=Memory,Infor="Extract bread results")

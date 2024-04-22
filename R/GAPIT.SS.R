@@ -129,17 +129,17 @@ if(DP$SNP.test)
 #CV.Extragenetic specified
             QTN.gs=ncol(GD2)
             CV.Extragenetic=DP$CV.Extragenetic
-            if(CV.Extragenetic!=0)XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
+            if(ncol(XCV)>1)XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
             XCVN=XCV[,c(1:(1+CV.Extragenetic))]
             if(QTN.gs!=0)XCVqtn=XCV[,c((ncol(XCV)-QTN.gs):ncol(XCV))]
-            if(CV.Extragenetic!=0)beta.I=lm.coeff[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
+            if(ncol(XCV)>1)beta.I=lm.coeff[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
             beta.N=lm.coeff[c(1:(1+CV.Extragenetic))]
             if(QTN.gs!=0)beta.QTN=lm.coeff[c((ncol(XCV)-QTN.gs):ncol(XCV))]
             BLUE.N=XCVN%*%beta.N
             BLUE.QTN=rep(0,length(BLUE.N))    
             if(QTN.gs!=0)BLUE.QTN=XCVqtn%*%beta.QTN
             BLUE.I=rep(0,length(BLUE.N))
-            if(CV.Extragenetic!=0)BLUE.I=XCVI%*%beta.I
+            if(ncol(XCV)>1)BLUE.I=XCVI%*%beta.I
             BLUE=cbind(BLUE.N,BLUE.I,BLUE.QTN)
             BLUE=data.frame(cbind(data.frame(IC$myallGD[,1]),data.frame(BLUE)))
             colnames(BLUE)=c("Taxa","BLUE.N","BLUE.I","QTNs")
