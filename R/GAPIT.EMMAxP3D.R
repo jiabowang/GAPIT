@@ -822,13 +822,13 @@
                               }
       		#CV.Extragenetic specified
                             # beta.Extragenetic=beta
-                              XCVI=XCV[,-c(1:(1+CV.Extragenetic)),drop=FALSE]
+                              if(ncol(XCV)>1)XCVI=XCV[,-c(1:(1+CV.Extragenetic)),drop=FALSE]
                               XCVN=XCV[,c(1:(1+CV.Extragenetic)),drop=FALSE]
-                              beta.I=as.numeric(beta)[-c(1:(1+CV.Extragenetic))]
+                              if(ncol(XCV)>1)beta.I=as.numeric(beta)[-c(1:(1+CV.Extragenetic))]
                               beta.N=as.numeric(beta)[c(1:(1+CV.Extragenetic))]
                               BLUE.N=XCVN%*%beta.N
                               BLUE.I=rep(0,length(BLUE.N))
-                              if(CV.Extragenetic!=0)BLUE.I=XCVI%*%beta.I
+                              if(if(ncol(XCV)>1))BLUE.I=XCVI%*%beta.I
 		#Interception only
                             # if(length(beta)==1)XCV=X
                             BLUE=cbind(BLUE.N,BLUE.I)
@@ -871,9 +871,9 @@
                           # beta.Extragenetic=beta
                           if(!is.null(CV.Extragenetic))
                             {
-                              XCVI=XCV[,-c(1:(1+CV.Extragenetic)),drop=FALSE]
+                              if(ncol(XCV)>1)XCVI=XCV[,-c(1:(1+CV.Extragenetic)),drop=FALSE]
                               XCVN=XCV[,c(1:(1+CV.Extragenetic)),drop=FALSE]
-                              beta.I=as.numeric(beta)[-c(1:(1+CV.Extragenetic))]
+                              if(ncol(XCV)>1)beta.I=as.numeric(beta)[-c(1:(1+CV.Extragenetic))]
                               beta.N=as.numeric(beta)[c(1:(1+CV.Extragenetic))]
                               # print(is.null(beta.I))
                               BLUE.I=rep(0,nrow(XCVI))
