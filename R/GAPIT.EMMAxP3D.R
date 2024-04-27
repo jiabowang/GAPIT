@@ -828,7 +828,7 @@
                               beta.N=as.numeric(beta)[c(1:(1+CV.Extragenetic))]
                               BLUE.N=XCVN%*%beta.N
                               BLUE.I=rep(0,length(BLUE.N))
-                              if(if(ncol(XCV)>1))BLUE.I=XCVI%*%beta.I
+                              if(ncol(XCV)>1)BLUE.I=XCVI%*%beta.I
 		#Interception only
                             # if(length(beta)==1)XCV=X
                             BLUE=cbind(BLUE.N,BLUE.I)
