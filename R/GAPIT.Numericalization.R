@@ -114,9 +114,9 @@ position=order(count)
 if(bit==1){
   lev0=c("R","Y","S","W","K","M") 
   inter=intersect(lev,lev0)
-}else{
-  inter=lev
-}
+}#else{
+  #inter=lev
+#}#
 
 #1status other than 2 or 3
 if(len<=1 | len> 3)x=0
@@ -124,17 +124,17 @@ if(len<=1 | len> 3)x=0
 #2 status
 if(len==2)
 {
-  
   if(!setequal(character(0),inter))
   {
     x=ifelse(x=="N",NA,ifelse(x==inter,1,0)) 
-    }else{
+  }else{
     x=ifelse(x=="N",NA,ifelse(x==lev[1],0,2))     # the most is set 0, the least is set 2
   }
 }
 
 #3 status
-if(bit==1){
+if(bit==1)
+{
 	if(len==3)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,ifelse(x==lev[3],1,2)))
 }else{
 	if(len==3)x=ifelse(x=="N",NA,ifelse(x==lev[lev!=inter][1],0,ifelse(x==inter,1,2)))

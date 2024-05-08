@@ -692,7 +692,7 @@ function(Y,
 #Z1=matrix(as.numeric(as.matrix(zc$Z[,-1])),nrow=zrow,ncol=zcol)
                   Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Prio PreP3D")
                   Memory=GAPIT.Memory(Memory=Memory,Infor="Prio PreP3D")  
-                # print(optOnly)   
+                # print(colInclude)   
                 # print(head(CVI))           
                   p3d <- GAPIT.EMMAxP3D(ys=ys,
                                       xs=as.matrix(as.data.frame(GD[,colInclude])),

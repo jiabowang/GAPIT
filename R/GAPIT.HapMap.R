@@ -29,7 +29,8 @@ function(G,SNP.effect="Add",SNP.impute="Middle",heading=TRUE, Create.indicator =
     #print(paste("Number of bits for genotype: ", bit))
     
     print("Perform numericalization")
-    
+    # Gtest=G[-1,-(1:11)]
+    # print(Gtest[1:5,1:6])
     if(heading){
         if(!Create.indicator) GD= apply(G[-1,-(1:11)],1,function(one) GAPIT.Numericalization(one,bit=bit,effect=SNP.effect,impute=SNP.impute, Major.allele.zero=Major.allele.zero))
         if(Create.indicator) GD= t(G[-1,-(1:11)])
@@ -43,9 +44,7 @@ function(G,SNP.effect="Add",SNP.impute="Middle",heading=TRUE, Create.indicator =
         GT=NULL
         GI=NULL
     }
-    
-    #print("The dimension of GD is:")
-    #print(dim(GD))
+    # print(GD[1:6,1:5])
     
     
     if(!Create.indicator) {print(paste("Succesfuly finished converting HapMap which has bits of ", bit,sep="")) }

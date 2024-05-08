@@ -421,7 +421,8 @@
             } 
             m <- ncol(xs) #number of SNPs
             t <- nrow(xs) #number of individuals
- 
+            # print(m)
+            # print(t)
             Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="Before cleaning")
             Memory=GAPIT.Memory(Memory=Memory,Infor="Before cleaning")
   #allocate spaces for SNPs
@@ -620,6 +621,7 @@
           #if(i == 1) {print("the head of X for running GWAS is")}
           #if(i == 1) {print(head(X))}
                        }
+                       # print(X)
                      } #end of i >0 | file>file.from|frag>1
        #Recalculate eig and REML if not using P3D  NOTE THIS USED TO BE BEFORE the two solid lines
                      if(SNP.P3D==FALSE & !is.null(K))
@@ -759,7 +761,9 @@
                      }
 
                      beta <- crossprod(iXX,XY) #Note: we can use crossprod here becase iXX is symmetric
-       
+                     # print(iXX)
+                     # print(XY)
+                     # print(beta)
 #--------------------------------------------------------------------------------------------------------------------<
                      if(i ==0 &file==file.from &frag==1)
                      { 
