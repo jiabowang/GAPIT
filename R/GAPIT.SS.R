@@ -130,7 +130,7 @@ if(DP$SNP.test)
             QTN.gs=ncol(GD2)
             CV.Extragenetic=DP$CV.Extragenetic
             if(ncol(XCV)>1)XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
-            XCVN=XCV[,c(1:(1+CV.Extragenetic))]
+            XCVN=XCV[,c(1:(1+CV.Extragenetic)),drop=FALSE]
             if(QTN.gs!=0)XCVqtn=XCV[,c((ncol(XCV)-QTN.gs):ncol(XCV))]
             if(ncol(XCV)>1)beta.I=lm.coeff[c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs))]
             beta.N=lm.coeff[c(1:(1+CV.Extragenetic))]
