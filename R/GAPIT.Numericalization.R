@@ -1,5 +1,5 @@
 `GAPIT.Numericalization` <-
-function(x,bit=2,effect="Add",impute="None", Create.indicator = FALSE, Major.allele.zero = FALSE, byRow=TRUE){
+function(x,bit=2,effect="Add",impute="Middle", Create.indicator = FALSE, Major.allele.zero = FALSE, byRow=TRUE){
 #Object: To convert character SNP genotpe to numerical
 #Output: Coresponding numerical value
 #Authors: Feng Tian and Zhiwu Zhang
@@ -26,20 +26,25 @@ x[x=="00"]="N"
 n=length(x)
 lev=levels(as.factor(x))
 lev=setdiff(lev,"N")
+lev=setdiff(lev,"NN")
 #print(lev)
 len=length(lev)
 #print(len)
 #Jiabo creat this code to convert AT TT to 1 and 2. 2018.5.29
-if(bit==2)
-{
-   inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC")
+
+   if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC")
+   if(bit==1)inter_store=c("R","Y","S","W","K","M") 
    inter=intersect(lev,inter_store)
-   if(length(inter)>1)
+#else{
+  #inter=lev
+#}#
+   if(length(inter)==2)
    {
      x[x==inter[2]]=inter[1]
      n=length(x)
      lev=levels(as.factor(x))
      lev=setdiff(lev,"N")
+     lev=setdiff(lev,"NN")
      #print(lev)
      len=length(lev)
    }
@@ -51,11 +56,11 @@ if(bit==2)
    #     len=len+1
    #   }
    # }
-   if(len==3&bit==2)
-   {
-     inter=intersect(lev,inter_store)
-   }
-}
+   # if(len==3&bit==2)
+   # {
+   #   inter=intersect(lev,inter_store)
+   # }
+# }
 #print(lev)
 #print(len)
 #Jiabo code is end here
@@ -71,53 +76,75 @@ for(i in 1:len){
 # print()
 
 if(Major.allele.zero){
-  if(len>1 & len<=3){
+  # if(len>1 & len<=3){
     #One bit: Make sure that the SNP with the major allele is on the top, and the SNP with the minor allele is on the second position
-    if(bit==1){ 
-      count.temp = cbind(count, seq(1:len))
-      if(len==3) count.temp = count.temp[-3,]
-      count.temp <- count.temp[order(count.temp[,1], decreasing = TRUE),]
-      if(len==3)order =  c(count.temp[,2],3)else order = count.temp[,2]
-    }
+   # if(bit==1){ 
+      count.temp = cbind(lev,count)
+      if(length(inter)!=0)count.temp = count.temp[-which(lev==inter),,drop=FALSE]
+      order.index=order(as.numeric(count.temp[,2]), decreasing = TRUE)
+      count.temp <- count.temp[order.index,]
+      # if(len==3)order =  c(count.temp[,2],3)else order = count.temp[,2]
+    # }
     #Two bit: Make sure that the SNP with the major allele is on the top, and the SNP with the minor allele is on the third position
-    if(bit==2){ 
-      count.temp = cbind(count, seq(1:len))
-      if(len==3) count.temp = count.temp[-2,]
-      count.temp <- count.temp[order(count.temp[,1], decreasing = TRUE),]
-      if(len==3) order =  c(count.temp[1,2],2,count.temp[2,2])else order = count.temp[,2]
-    }
+    # if(bit==2){ 
+    #   count.temp = cbind(count, seq(1:len))
+    #   if(len==3) count.temp = count.temp[-2,]
+    #   count.temp <- count.temp[order(count.temp[,1], decreasing = FALSE),]
+    #   if(len==3) order =  c(count.temp[1,2],2,count.temp[2,2])else order = count.temp[,2]
+    # }
 
-    count = count[order]
+    count = count[order.index]
     # print(count)
-    lev = lev[order]
+    lev = lev[order.index]
     # print(lev)
 
-  }   #End  if(len<=1 | len> 3)
+}else{
+    # if(bit==1){ 
+      count.temp = cbind(lev,count)
+      if(length(inter)!=0)
+      {
+        count.temp = count.temp[-which(lev==inter),,drop=FALSE]
+        count=count[-which(lev==inter)]
+        lev=lev[-which(lev==inter)]
+        # len=length(lev)
+      }
+      order.index=order(as.numeric(count.temp[,2]), decreasing = FALSE)
+      count.temp <- count.temp[order.index,]
+      # if(len==3)order =  c(count.temp[,2],3)else order = count.temp[,2]
+    # }
+    #Two bit: Make sure that the SNP with the major allele is on the top, and the SNP with the minor allele is on the third position
+    # if(bit==2){ 
+    #   count.temp = cbind(count, seq(1:len))
+    #   if(len==3) count.temp = count.temp[-2,]
+    #   count.temp <- count.temp[order(count.temp[,1], decreasing = FALSE),]
+    #   if(len==3) order =  c(count.temp[1,2],2,count.temp[2,2])else order = count.temp[,2]
+    # }
+
+    count = count[order.index]
+    # print(count)
+    lev = lev[order.index]
+    # print(lev)
+
 } #End  if(Major.allele.zero)
 
 #print(x)
 
 #make two  bit order genotype as AA,AT and TT, one bit as A(AA),T(TT) and X(AT)
-if(bit==1 & len==3){
-	temp=count[2]
-	count[2]=count[3]
-	count[3]=temp
-}
+# if(bit==1 & len==3){
+# 	temp=count[2]
+# 	count[2]=count[3]
+# 	count[3]=temp
+# }
 
 #print(lev)
 #print(count)
-position=order(count)
+# position=order(count)
 
 #Jiabo creat this code to convert AT TA to 1 and 2.2018.5.29
 
 #Jiabo code is end here
-if(bit==1){
-  lev0=c("R","Y","S","W","K","M") 
-  inter=intersect(lev,lev0)
-}#else{
-  #inter=lev
-#}#
 
+# x=as.character(x)
 #1status other than 2 or 3
 if(len<=1 | len> 3)x=0
 
@@ -126,34 +153,37 @@ if(len==2)
 {
   if(!setequal(character(0),inter))
   {
-    x=ifelse(x=="N",NA,ifelse(x==inter,1,0)) 
+    x=ifelse(x=="N",NA,ifelse(x==inter,1,2)) 
+    # if(bit==2)x=ifelse(x=="NN",NA,ifelse(x==inter,1,2)) 
   }else{
-    x=ifelse(x=="N",NA,ifelse(x==lev[1],0,2))     # the most is set 0, the least is set 2
+   x=ifelse(x=="N",NA,ifelse(x==lev[1],2,0))     # the most is set 0, the least is set 2
+    # if(bit==2)x=ifelse(x=="NN",NA,ifelse(x==lev[1],2,0))     # the most is set 0, the least is set 2
   }
 }
 
 #3 status
-if(bit==1)
+# print(table(x))
+if(len==3)
 {
-	if(len==3)x=ifelse(x=="N",NA,ifelse(x==lev[1],0,ifelse(x==lev[3],1,2)))
-}else{
-	if(len==3)x=ifelse(x=="N",NA,ifelse(x==lev[lev!=inter][1],0,ifelse(x==inter,1,2)))
+  x=ifelse(x=="N",NA,ifelse(x==lev[1],2,ifelse(x==inter,1,0)))
+  # if(bit==2)x=ifelse(x=="NN",NA,ifelse(x==lev[1],2,ifelse(x==inter,1,0)))
 }
-
+# print(table(x))
 #print(paste(lev,len,sep=" "))
 #print(position)
 
 #missing data imputation
-if(impute=="Middle") {x[is.na(x)]=1 }
 
-if(len==3){
-	if(impute=="Minor")  {x[is.na(x)]=position[1]  -1}
-	if(impute=="Major")  {x[is.na(x)]=position[len]-1}
+if(impute=="Middle") {x[is.na(x)]=1}
 
-}else{
-	if(impute=="Minor")  {x[is.na(x)]=2*(position[1]  -1)}
-	if(impute=="Major")  {x[is.na(x)]=2*(position[len]-1)}
-}
+# if(len==3){
+	if(impute=="Minor")  {x[is.na(x)]=lev[1]}
+	if(impute=="Major")  {x[is.na(x)]=lev[2]}
+
+# }else{
+# 	if(impute=="Minor")  {x[is.na(x)]=2*(position[1]  -1)}
+# 	if(impute=="Major")  {x[is.na(x)]=2*(position[len]-1)}
+# }
 
 #alternative genetic models
 if(effect=="Dom") x=ifelse(x==1,1,0)
