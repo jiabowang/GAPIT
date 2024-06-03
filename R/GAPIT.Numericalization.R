@@ -48,23 +48,7 @@ len=length(lev)
      #print(lev)
      len=length(lev)
    }
-   # if(len==2)
-   # { #inter=intersect(lev,inter_store)
-   #   if(!setequal(character(0),inter))
-   #   { 
-   #     lev=union(lev,"UU")
-   #     len=len+1
-   #   }
-   # }
-   # if(len==3&bit==2)
-   # {
-   #   inter=intersect(lev,inter_store)
-   # }
-# }
-#print(lev)
-#print(len)
-#Jiabo code is end here
-
+  
 #Genotype counts
 count=1:len
 for(i in 1:len){
@@ -81,7 +65,7 @@ if(Major.allele.zero){
    # if(bit==1){ 
       count.temp = cbind(lev,count)
       if(length(inter)!=0)count.temp = count.temp[-which(lev==inter),,drop=FALSE]
-      order.index=order(as.numeric(count.temp[,2]), decreasing = TRUE)
+      order.index=order(as.numeric(count.temp[,2]), decreasing = FALSE)
       count.temp <- count.temp[order.index,]
       # if(len==3)order =  c(count.temp[,2],3)else order = count.temp[,2]
     # }
@@ -108,7 +92,7 @@ if(Major.allele.zero){
         lev=lev[-which(lev==inter)]
         # len=length(lev)
       }
-      order.index=order(as.numeric(count.temp[,2]), decreasing = FALSE)
+      order.index=order(as.numeric(count.temp[,2]), decreasing = TRUE)
       count.temp <- count.temp[order.index,]
       # if(len==3)order =  c(count.temp[,2],3)else order = count.temp[,2]
     # }
@@ -127,24 +111,6 @@ if(Major.allele.zero){
 
 } #End  if(Major.allele.zero)
 
-#print(x)
-
-#make two  bit order genotype as AA,AT and TT, one bit as A(AA),T(TT) and X(AT)
-# if(bit==1 & len==3){
-# 	temp=count[2]
-# 	count[2]=count[3]
-# 	count[3]=temp
-# }
-
-#print(lev)
-#print(count)
-# position=order(count)
-
-#Jiabo creat this code to convert AT TA to 1 and 2.2018.5.29
-
-#Jiabo code is end here
-
-# x=as.character(x)
 #1status other than 2 or 3
 if(len<=1 | len> 3)x=0
 
