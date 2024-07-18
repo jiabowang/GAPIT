@@ -64,7 +64,9 @@ if(Major.allele.zero){
     #One bit: Make sure that the SNP with the major allele is on the top, and the SNP with the minor allele is on the second position
    # if(bit==1){ 
       count.temp = cbind(lev,count)
-      if(length(inter)!=0)count.temp = count.temp[-which(lev==inter),,drop=FALSE]
+      if(length(inter)!=0&lev[1]!=inter)count.temp = count.temp[-which(lev==inter),,drop=FALSE]
+      # if(nrow(count.temp)==0) return()
+      # print("!!!")
       order.index=order(as.numeric(count.temp[,2]), decreasing = FALSE)
       count.temp <- count.temp[order.index,]
       # if(len==3)order =  c(count.temp[,2],3)else order = count.temp[,2]
