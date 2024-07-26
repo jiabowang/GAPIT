@@ -113,6 +113,13 @@ Installation can also be made from GitHub when the R package `devtools` is avail
 R> install.packages("devtools")
 R> devtools::install_github("jiabowang/GAPIT", force=TRUE)
 R> library(GAPIT)
+
+or
+R> install.packages("remotes")
+R> remotes::install_github("jiabowang/GAPIT")
+R> library(GAPIT)
+
+
 ```
 
 

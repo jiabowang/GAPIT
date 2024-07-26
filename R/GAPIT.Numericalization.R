@@ -7,7 +7,7 @@ function(x,bit=2,effect="Add",impute="Middle", Create.indicator = FALSE, Major.a
 ##############################################################################################
 if(bit==1)  {
 x[x=="X"]="N"
-x[x=="-"]="N"
+# x[x=="-"]="N"
 x[x=="+"]="N"
 x[x=="/"]="N"
 x[x=="K"]="Z" #K (for GT genotype)is replaced by Z to ensure heterozygose has the largest value
@@ -15,11 +15,12 @@ x[x=="K"]="Z" #K (for GT genotype)is replaced by Z to ensure heterozygose has th
 
 if(bit==2)  {
 x[x=="XX"]="N"
-x[x=="--"]="N"
+# x[x=="--"]="N"
 x[x=="++"]="N"
 x[x=="//"]="N"
 x[x=="NN"]="N"
 x[x=="00"]="N"
+# x[x=="-"]="N"
 
 }
 
@@ -32,7 +33,7 @@ len=length(lev)
 #print(len)
 #Jiabo creat this code to convert AT TT to 1 and 2. 2018.5.29
 
-   if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC")
+   if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC","A-","-A","C-","-C","G-","-G","G-","-G")
    if(bit==1)inter_store=c("R","Y","S","W","K","M") 
    inter=intersect(lev,inter_store)
 #else{
@@ -87,12 +88,16 @@ if(Major.allele.zero){
 }else{
     # if(bit==1){ 
       count.temp = cbind(lev,count)
+      print(count.temp)
       if(length(inter)!=0)
       {
-        count.temp = count.temp[-which(lev==inter),,drop=FALSE]
-        count=count[-which(lev==inter)]
-        lev=lev[-which(lev==inter)]
-        # len=length(lev)
+        if(lev[1]!=inter)
+        {
+          count.temp = count.temp[-which(lev==inter),,drop=FALSE]
+          count=count[-which(lev==inter)]
+          lev=lev[-which(lev==inter)]
+          len=length(lev)
+        }
       }
       order.index=order(as.numeric(count.temp[,2]), decreasing = TRUE)
       count.temp <- count.temp[order.index,]
