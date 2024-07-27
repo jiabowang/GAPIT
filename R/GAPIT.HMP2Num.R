@@ -35,11 +35,6 @@ for(i in 1:n){
   #GD
   GD= GAPIT.Numericalization(x=tt2[-c(1:11)],bit=bit,effect=SNP.effect,impute=SNP.impute, Major.allele.zero=Major.allele.zero)
   
-  #Output
-  #print(i)
-  #print(tt2[12:52]) 
-  #print(GD[1:41]) 
-  #writeLines(tt2, fileNumCon,append=TRUE)
  
 }
 close.connection(fileHMPCon)
