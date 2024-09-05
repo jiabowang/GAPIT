@@ -88,7 +88,7 @@ if(Major.allele.zero){
 }else{
     # if(bit==1){ 
       count.temp = cbind(lev,count)
-      print(count.temp)
+      # print(count.temp)
       if(length(inter)!=0)
       {
         if(lev[1]!=inter)

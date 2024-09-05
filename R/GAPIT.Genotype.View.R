@@ -109,6 +109,8 @@ dist.out=GAPIT.Remove.outliers(dist,pro=0.1,size=1.1)
 # WS0=10000
 if(is.null(WS0)) WS0=((max(dist,na.rm=TRUE))%/%1000)*1000
 if(WS0==0)WS0=1
+# print(head(dist))
+# print(WS0)
 index=dist>WS0
 dist[index]=NA
 # X=myGD
@@ -149,7 +151,8 @@ axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
 axis(2,las=1)
 
 # aa=d.V[rs.index]
-
+print("The average distance between markers are ...")
+print(head(d.V))
 plot(d.V,las=1, xlab="Marker", ylab="Distance (Kb)",xlim=c(1,mm), ylim=c(0,ceiling(max(d.V,na.rm=TRUE))),
     axes=FALSE,main="d",cex=.5,col=colDisp)
 axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
