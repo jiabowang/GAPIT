@@ -76,6 +76,7 @@ Contents:
       * [GS](#gs)
    * [Result](#result)
    * [Example](#example)
+   * [Interpretation of Parameters](#interpretation) 
 
 
 Start
@@ -403,3 +404,147 @@ myGAPIT <- GAPIT(
 ```
 
 
+
+Interpretation of Parameters
+======
+
+```
+  Y = NULL, #phenotype
+  G = NULL, #hapmap genotype
+  GD = NULL, #numeric genotype
+  GM = NULL, #genotype map information
+  KI = NULL, #kinship
+  Z = NULL, #Z matrix for MLM, cMLM, encMLM
+  CV = NULL, #corvariance matrix
+  Aver.Dis=1000,
+  # a2 = 0,
+  # adim = 2,
+  # acceleration = 0,
+  # alpha = c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1), # confidence coefficient
+  buspred = FALSE, #Bus prediction
+  bin.from = 10000, #SUPER 
+  bin.to = 10000, #SUPER
+  bin.by = 10000, #SUPER
+  # bin.size = c(1000000), 
+  # bin.selection = c(10,20,50,100,200,500,1000),
+  # BINS = 20,
+  # converge = 1,
+  cutOff = 0.05, #threshold for significant
+  # category = 1, #Simulation phenotype
+  # cveff = NULL, #Simulation phenotype
+  # Create.indicator = FALSE, #
+  # CG = NULL, #candidate gene matrix for relationship
+  CV.Extragenetic = 0, # the top number of no-inheritance columns in CV
+  # Cross.Vali=TRUE,
+  # color0=NULL,
+  # DPP = 100000, #content points in Manhattan Plot
+  # DP=NULL,
+  # esp = 1e-10,
+  effectunit = 1, #Simulation phenotype
+  # file.from = 1,  #read seqarated data files
+  # file.to = 1, #read seqarated data files
+  # file.total = NULL, #read seqarated data files
+  # file.fragment = 99999,#read seqarated data files
+  # file.path = NULL, #read seqarated data files
+  # file.G = NULL, #read seqarated data files
+  # file.Ext.G = NULL,#read seqarated data files
+  # file.GD = NULL, #read seqarated data files
+  # file.GM = NULL, #read seqarated data files
+  # file.Ext.GD = NULL,#read seqarated data files
+  # file.Ext.GM = NULL, #read seqarated data files
+  file.output = TRUE, #output option
+  # FDR.Rate = 1, # filter FDR
+  FDRcut = FALSE, # filter pseudo QTN based on cutOff in blink
+  group.from = 1000000,#MLM
+  group.to = 1000000,#MLM
+  group.by = 50,#MLM
+  # GTindex = NULL,
+  Geno.View.output = TRUE,#genotype analysis option
+  # GP = NULL,
+  # GK = NULL, #group kinship
+  h2 = NULL, #simulation phenotype heritability
+  inclosure.from = 10, #SUPER
+  inclosure.to = 10, #SUPER
+  inclosure.by = 10, #SUPER
+  # iteration.output = FALSE,
+  # iteration.method = "accum",
+  # inpch=NULL, # in pch of S manhattans
+  Inter.Plot = FALSE, #Interactive plot option
+  Inter.type = c("m","q"), #Interactive plot type for Manhattan and QQ plots
+  kinship.cluster = "average", #cMLM
+  kinship.group = 'Mean',#cMLM
+  kinship.algorithm = "Zhang",#cMLM
+  # llim = -10, 
+  lmpred = FALSE, #option for linear model prediction or ABLUP prediction, that could be set as multiple parameters
+  # LD.chromosome = NULL, #LD plot of markers in significant marker region
+  # LD.location = NULL, #LD plot of markers in significant marker region
+  # LD.range = NULL, #LD plot of markers in significant marker region
+  # LD = 0.1, #SUPER
+  model = "MLM",# model or method in GWAS or GS
+  # method.GLM = "FarmCPU.LM", 
+  # method.sub = "reward",
+  # method.sub.final = "reward",
+  # method.bin = "static",
+  maxOut = 100, # power for top number of markers in the GWAS
+  memo = NULL, #label for marking
+  # maxLoop = 3,
+  Model.selection = FALSE,# optimum number of CV and PCAs
+  Multi_iter = FALSE, #Multiple step for FarmCPU and BLink
+  Major.allele.zero = FALSE, #convert hapmap file to numeric file, set major marker as 0
+  Multiple_analysis = TRUE, #option for multiple Manhattan and QQ plots
+  num_regwas = 10,# the max number of Multiple markers 
+  # ncpus = 1,
+  # ngrid = 100, 
+  N4=FALSE,
+  NQTN = NULL, #Simulation phenotype, number of QTN
+  N.sig=NULL, #Random.model, Number of significant markers
+  NJtree.group = NULL, #NJtree set number of cluster group
+  NJtree.type = c("fan","unrooted"),#NJtree type
+  # opt = "extBIC",
+  output.numerical = FALSE,# option for output numeric files
+  output.hapmap = FALSE, # option for output hapmap files
+  # outpch=NULL, # out pch of S manhattans
+  # QTN = NULL, 
+  # QTN.round = 1,
+  # QTN.limit = 0, 
+  # QTN.update = TRUE, 
+  # QTN.method = "Penalty", 
+  # QC = TRUE,
+  QC.Y=FALSE,
+  QTN.position = NULL, #Simulation phenotype, QTN position in the order of map file
+  QTN.gs = 0, # The number of QTNs in the CV file
+  QTNDist = "normal",
+  r = 0.25,
+  Random.model = TRUE, #Random.model to calculate PVE
+  sangwich.top = NULL, #SUPER
+  sangwich.bottom = NULL,#SUPER
+  seq.cutoff=NULL,
+  # seed = NULL, 
+  SNP.P3D = TRUE,
+  SNP.effect = "Add",
+  SNP.impute = "Middle",
+  SNP.fraction = 1, 
+  SNP.test = TRUE,
+  SNP.MAF = 0,
+  SNP.FDR = 1,
+  # SNP.permutation = FALSE,
+  # SNP.CV = NULL,
+  # SNP.robust = "GLM",
+  # SUPER_GD = NULL,
+  # SUPER_GS = FALSE,
+  testY = NULL,
+  # plot.style = "Oceanic",
+  plot.bin = 10^5,
+  PCA.total = 0, # PCA number
+  PCA.col = NULL, #indicater colors for individuals in PCA plot
+  PCA.3d = FALSE, #3D PCA plot option
+  PCA.legend=NULL, # PCA legend list
+  PCA.View.output = TRUE, #option for PCA plot
+  Phenotype.View= TRUE, # option for phenotype view plot
+  # Prior = NULL,
+  # Para = NULL,
+  Predict.type="GEBV",
+  # ulim = 10, 
+  WS = c(1e0,1e3,1e4,1e5,1e6,1e7),
+  WS0 = 10000
+  ```
