@@ -404,9 +404,10 @@ myGAPIT <- GAPIT(
 ```
 
 
-
+   
 Interpretation of Parameters
 ======
+
 
 ```
   Y = NULL, #phenotype
