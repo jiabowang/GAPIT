@@ -65,20 +65,19 @@ if(Major.allele.zero){
     #One bit: Make sure that the SNP with the major allele is on the top, and the SNP with the minor allele is on the second position
    # if(bit==1){ 
       count.temp = cbind(lev,count)
-      if(length(inter)!=0&lev[1]!=inter)count.temp = count.temp[-which(lev==inter),,drop=FALSE]
-      # if(nrow(count.temp)==0) return()
+    if(length(inter)!=0)
+      {
+        if(lev[1]!=inter)
+        {
+          count.temp = count.temp[-which(lev==inter),,drop=FALSE]
+          count=count[-which(lev==inter)]
+          lev=lev[-which(lev==inter)]
+          len=length(lev)
+        }
+      }      # if(nrow(count.temp)==0) return()
       # print("!!!")
       order.index=order(as.numeric(count.temp[,2]), decreasing = FALSE)
       count.temp <- count.temp[order.index,]
-      # if(len==3)order =  c(count.temp[,2],3)else order = count.temp[,2]
-    # }
-    #Two bit: Make sure that the SNP with the major allele is on the top, and the SNP with the minor allele is on the third position
-    # if(bit==2){ 
-    #   count.temp = cbind(count, seq(1:len))
-    #   if(len==3) count.temp = count.temp[-2,]
-    #   count.temp <- count.temp[order(count.temp[,1], decreasing = FALSE),]
-    #   if(len==3) order =  c(count.temp[1,2],2,count.temp[2,2])else order = count.temp[,2]
-    # }
 
     count = count[order.index]
     # print(count)
@@ -126,7 +125,7 @@ if(len==2)
 {
   if(!setequal(character(0),inter))
   {
-    x=ifelse(x=="N",NA,ifelse(x==inter,1,2)) 
+    x=ifelse(x=="N",NA,ifelse(x==inter,1,ifelse(x==lev[1],2,0))) 
     # if(bit==2)x=ifelse(x=="NN",NA,ifelse(x==inter,1,2)) 
   }else{
    x=ifelse(x=="N",NA,ifelse(x==lev[1],2,0))     # the most is set 0, the least is set 2
