@@ -375,7 +375,7 @@ if(!is.null(Y))
         if(m==1)
           {
             DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI0,Z=Z,CV=CV,CV.Extragenetic=CV.Extragenetic,
-            group.from=group.from ,group.to= group.to,group.by=group.by,FDRcut=FDRcut,
+            group.from=group.from ,group.to= group.to,group.by=group.by,FDRcut=FDRcut,Major.allele.zero=Major.allele.zero,
             kinship.cluster=kinship.cluster, kinship.group=kinship.group,kinship.algorithm=kinship.algorithm, NJtree.group=NJtree.group,NJtree.type=NJtree.type,PCA.col=PCA.col,PCA.3d=PCA.3d,
              sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,
              SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction =SNP.fraction, seed =NULL, 
