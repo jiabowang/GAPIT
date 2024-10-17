@@ -46,6 +46,7 @@ len=length(lev)
      lev=levels(as.factor(x))
      lev=setdiff(lev,"N")
      lev=setdiff(lev,"NN")
+     inter=inter[1]
      #print(lev)
      len=length(lev)
    }
