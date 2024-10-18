@@ -122,7 +122,15 @@ R> library(GAPIT)
 
 
 ```
+### In some case of the BiocManager can not be installed
 
+Installation of same packages such as multtest and biobase can not be intalled from BiocManager. These packages can be downloaded in the Bioconductor website and be installed from local source files.
+
+The website of Bioconductor is here:
+
+```
+https://bioconductor.org/packages/3.19/bioc/
+```
 
 ### Installation from an archive
 
