@@ -148,13 +148,13 @@ Once an archive has been obtained it can be installed from a shell, similar to a
 
 
 ```
-bash$ R CMD INSTALL GAPIT_3.2.0.9000.tar.gz
+bash$ R CMD INSTALL GAPIT_3.5.0.9000.tar.gz
 ```
 
 Or similarly from within R.
 
 ```
-R> install.packages("GAPIT_3.2.0.9000.tar.gz", repos = NULL, type="source")
+R> install.packages("GAPIT_3.5.0.9000.tar.gz", repos = NULL, type="source")
 ```
 
 

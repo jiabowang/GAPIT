@@ -32,7 +32,7 @@ y=myY[!is.na(myY[,2]),2]
 par(mar = c(5, 5, 2, 1))
 plot(y,xlab="Individual",las=1,ylim=c(min(y,na.rm=TRUE),max(y,na.rm=TRUE)),ylab="Observation", cex=.5,main="a")
 par(mar = c(5, 5, 2, 1))
-hist(y,xlab="Observation",las=1,ylab="Frequency",cex=.5,main="c")
+hist(as.numeric(y[!is.na(y)]),xlab="Observation",las=1,ylab="Frequency",cex=.5,main="c")
 par(mar = c(5, 4, 2, 1))
 plot(density(na.omit(y)),las=1,xlab="Observation",ylab="Density", cex=.5,main="d")
 par(mar = c(5, 4, 2, 1))
