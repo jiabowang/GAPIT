@@ -97,13 +97,18 @@ GAPIT can currently be installed in several ways.
 - From an archive
 
 
-### Installation from source at ZZlab
+### Installation from source functions at ZZlab or GitHub
 
 GAPIT can be loaded with a single funciton. 
 
 
 ```
 R> source("http://zzlab.net/GAPIT/gapit_functions.txt")
+```
+
+Or from GitHub function.
+```
+R> source("https://raw.githubusercontent.com/jiabowang/GAPIT/refs/heads/master/gapit_functions.txt", encoding = "UTF-8")
 ```
 
 ### Installation from GitHub
