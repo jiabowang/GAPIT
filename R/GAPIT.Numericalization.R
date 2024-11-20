@@ -57,7 +57,9 @@ if(Major.allele.zero){
     count.temp = cbind(lev,count)
     up=2
     if(length(inter)!=0)
-      {
+      { 
+        #print(lev[1])
+        #print(inter)
         if(lev[1]!=inter)
         {
           count.temp = count.temp[-which(lev==inter),,drop=FALSE]
@@ -75,6 +77,8 @@ if(Major.allele.zero){
       down=2
       if(length(inter)!=0)
       {
+        #print(lev[1])
+        #print(inter)
         if(lev[1]!=inter)
         {
           count.temp = count.temp[-which(lev==inter),,drop=FALSE]
@@ -117,7 +121,9 @@ if(impute=="Minor")  {x[is.na(x)]=lev[1]}
 if(impute=="Major")  {x[is.na(x)]=lev[2]}
 
 #alternative genetic models
-if(effect=="Dom") x=ifelse(x==1,1,0)
+if(effect=="Hyb") x=ifelse(x==1,1,0)
+if(effect=="Dom") x[x==2]=1
+
 if(effect=="Left") x[x==1]=0
 if(effect=="Right") x[x==1]=2
 
