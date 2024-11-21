@@ -13274,11 +13274,11 @@ if(impute=="Minor")  {x[is.na(x)]=lev[1]}
 if(impute=="Major")  {x[is.na(x)]=lev[2]}
 
 #alternative genetic models
-if(effect=="Hyb") x=ifelse(x==1,1,0)
-if(effect=="Dom") x[x==2]=1
+if(effect=="Hybrid") x=ifelse(x==1,1,0)
+# if(effect=="Dom") x[x==2]=1
 
-if(effect=="Left") x[x==1]=0
-if(effect=="Right") x[x==1]=2
+if(effect=="Recessive") x[x==1]=0
+if(effect=="Dominant") x[x==1]=2
 
 if(byRow) {
   result=matrix(x,n,1)
