@@ -10,7 +10,7 @@ x[x=="X"]="N"
 # x[x=="-"]="N"
 x[x=="+"]="N"
 x[x=="/"]="N"
-x[x=="K"]="Z" #K (for GT genotype)is replaced by Z to ensure heterozygose has the largest value
+#x[x=="K"]="Z" #K (for GT genotype)is replaced by Z to ensure heterozygose has the largest value
 }
 
 if(bit==2)  {

@@ -53,7 +53,8 @@ GI=GI2
 
 chr=as.character(as.matrix(unique(GI[,2])))
 allchr=as.character(GI[,2])
-
+print(chr)
+print(allchr)
 ## make an index for marker selection with binsize
 print("Filting marker for GAPIT.Genotype.View function ...")
 pos.fix=as.numeric(GI[,2])*10^(nchar(max(as.numeric(GI[,3]))))+as.numeric(GI[,3])
