@@ -24,7 +24,7 @@ x[x=="00"]="N"
 }
 
 n=length(x)
-lev=levels(as.factor(x))
+lev=levels(as.factor(as.character(x)))
 lev=setdiff(lev,"N")
 lev=setdiff(lev,"NN")
 #print(lev)
@@ -34,6 +34,18 @@ len=length(lev)
    if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC","A-","-A","C-","-C","G-","-G","G-","-G")
    if(bit==1)inter_store=c("R","Y","S","W","K","M") 
    inter=intersect(lev,inter_store)
+if(len<=1) 
+{   
+  if(length(inter)<1) inter="INTER"
+  x=ifelse(x=="N",NA,ifelse(x==inter,1,2)) 
+  if(impute=="Middle") {x[is.na(x)]=1}
+  if(byRow) {
+     result=matrix(as.numeric(x),n,1)
+  }else{
+     result=matrix(as.numeric(x),1,n)  
+  }
+  return(result)
+}else{
    if(length(inter)==2)
    {
      x[x==inter[2]]=inter[1]
@@ -47,13 +59,13 @@ len=length(lev)
    }
   
 #Genotype counts
-count=1:len
-for(i in 1:len){
+ count=1:len
+ for(i in 1:len){
 	count[i]=length(x[(x==lev[i])])
-}
-up=0
-down=0
-if(Major.allele.zero){
+  }
+ up=0
+ down=0
+ if(Major.allele.zero){
     count.temp = cbind(lev,count)
     up=2
     if(length(inter)!=0)
@@ -72,7 +84,7 @@ if(Major.allele.zero){
       count.temp <- count.temp[order.index,]
       count = count[order.index]
       lev = lev[order.index]
-}else{
+   }else{
       count.temp = cbind(lev,count)
       down=2
       if(length(inter)!=0)
@@ -92,48 +104,45 @@ if(Major.allele.zero){
       count = count[order.index]
       lev = lev[order.index]
     # print(lev)
-} #End  if(Major.allele.zero)
-
+   } #End  if(Major.allele.zero)
 #1status other than 2 or 3
-if(len<=1 | len> 3)    x=ifelse(x=="N",NA,ifelse(x==inter,1,ifelse(x==lev[1],down,up))) 
+ if(len==1)  x=ifelse(x=="N",NA,ifelse(x==inter,1,2)) 
+ if(len> 3)    x=ifelse(x=="N",NA,ifelse(x==inter,1,0)) 
 #2 status
-if(len==2)
-{
+ if(len==2)
+ {
   if(!setequal(character(0),inter))
   {
     x=ifelse(x=="N",NA,ifelse(x==inter,1,ifelse(x==lev[1],2,0))) 
   }else{
-   x=ifelse(x=="N",NA,ifelse(x==lev[1],2,0))     # the most is set 0, the least is set 2
+    x=ifelse(x=="N",NA,ifelse(x==lev[1],2,0))     # the most is set 0, the least is set 2
   }
-}
-
+ }
 #3 status
-if(len==3)
-{
+ if(len==3)
+ {
   x=ifelse(x=="N",NA,ifelse(x==lev[1],2,ifelse(x==inter,1,0)))
   # if(bit==2)x=ifelse(x=="NN",NA,ifelse(x==lev[1],2,ifelse(x==inter,1,0)))
-}
+ }
 
 #missing data imputation
 
-if(impute=="Middle") {x[is.na(x)]=1}
-if(impute=="Minor")  {x[is.na(x)]=lev[1]}
-if(impute=="Major")  {x[is.na(x)]=lev[2]}
-
+ if(impute=="Middle") {x[is.na(x)]=1}
+ if(impute=="Minor")  {x[is.na(x)]=lev[1]}
+ if(impute=="Major")  {x[is.na(x)]=lev[2]}
 #alternative genetic models
-if(effect=="Hybrid") x=ifelse(x==1,1,0)
+ if(effect=="Hybrid") x=ifelse(x==1,1,0)
 # if(effect=="Dom") x[x==2]=1
+ if(effect=="Recessive") x[x==1]=0
+ if(effect=="Dominant") x[x==1]=2
 
-if(effect=="Recessive") x[x==1]=0
-if(effect=="Dominant") x[x==1]=2
-
-if(byRow) {
-  result=matrix(x,n,1)
-}else{
-  result=matrix(x,1,n)  
+ if(byRow) {
+   result=matrix(as.numeric(x),n,1)
+  }else{
+   result=matrix(as.numeric(x),1,n)  
+  }
+ return(result)
 }
-
-return(result)
 }#end of GAPIT.Numericalization function
 #=============================================================================================
 

@@ -15,7 +15,7 @@
 # X=myG[-1,]
 muta=x[2]
 n.muta=nchar(muta)
-
+if(n.muta==1) return(x)
 if(n.muta==3)
   {
      map=as.character(x[c(1:11)])

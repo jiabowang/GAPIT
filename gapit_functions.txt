@@ -8233,40 +8233,13 @@ GI=GI2
 
 chr=as.character(as.matrix(unique(GI[,2])))
 allchr=as.character(GI[,2])
-print(chr)
-print(allchr)
+#print(chr)
+#print(allchr)
 ## make an index for marker selection with binsize
 print("Filting marker for GAPIT.Genotype.View function ...")
 pos.fix=as.numeric(GI[,2])*10^(nchar(max(as.numeric(GI[,3]))))+as.numeric(GI[,3])
 
-## select markers from bins
-# binsize=10000
-# bins=ceiling(pos.fix/binsize)
-# n.bins=length(unique(bins))
-# uni.bins=unique(bins)
-
-# n.markers=nrow(GI)
-
-# if(n.markers<n.select)n.select=n.markers
-# n.targ=floor(n.select/n.bins)
-# if(n.targ<1)
-# {
-#   n.targ=1
-#   uni.bins=sample(uni.bins,n.select)
-# }
-# rs.markers=NULL
-# for(i in uni.bins)
-# {
-#   map0=GI[bins==i,]
-#   n.targ0=n.targ
-#   if(nrow(map0)<n.targ)n.targ0=nrow(map0)
-#   rs.markers=append(rs.markers,as.character(map0[sample(1:(nrow(map0)),n.targ0),1]))
-# }
-
-# rs.markers=unique(rs.markers)
-# rs.index=as.character(GI[,1])%in%rs.markers
-# print(table(rs.index))
-
+##
 # set.seed(99163)
 if(is.null(n.select))n.select=10000
 if(n.select>nrow(GI))n.select=nrow(GI)-1
@@ -8513,7 +8486,7 @@ print(paste("GAPIT.Genotype.View ", ". pdfs generate.","successfully!" ,sep = ""
 # X=myG[-1,]
 muta=x[2]
 n.muta=nchar(muta)
-
+if(n.muta==1) return(x)
 if(n.muta==3)
   {
      map=as.character(x[c(1:11)])
@@ -13178,7 +13151,7 @@ x[x=="00"]="N"
 }
 
 n=length(x)
-lev=levels(as.factor(x))
+lev=levels(as.factor(as.character(x)))
 lev=setdiff(lev,"N")
 lev=setdiff(lev,"NN")
 #print(lev)
@@ -13188,6 +13161,18 @@ len=length(lev)
    if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC","A-","-A","C-","-C","G-","-G","G-","-G")
    if(bit==1)inter_store=c("R","Y","S","W","K","M") 
    inter=intersect(lev,inter_store)
+if(len<=1) 
+{   
+  if(length(inter)<1) inter="INTER"
+  x=ifelse(x=="N",NA,ifelse(x==inter,1,2)) 
+  if(impute=="Middle") {x[is.na(x)]=1}
+  if(byRow) {
+     result=matrix(as.numeric(x),n,1)
+  }else{
+     result=matrix(as.numeric(x),1,n)  
+  }
+  return(result)
+}else{
    if(length(inter)==2)
    {
      x[x==inter[2]]=inter[1]
@@ -13201,13 +13186,13 @@ len=length(lev)
    }
   
 #Genotype counts
-count=1:len
-for(i in 1:len){
+ count=1:len
+ for(i in 1:len){
 	count[i]=length(x[(x==lev[i])])
-}
-up=0
-down=0
-if(Major.allele.zero){
+  }
+ up=0
+ down=0
+ if(Major.allele.zero){
     count.temp = cbind(lev,count)
     up=2
     if(length(inter)!=0)
@@ -13226,7 +13211,7 @@ if(Major.allele.zero){
       count.temp <- count.temp[order.index,]
       count = count[order.index]
       lev = lev[order.index]
-}else{
+   }else{
       count.temp = cbind(lev,count)
       down=2
       if(length(inter)!=0)
@@ -13246,48 +13231,45 @@ if(Major.allele.zero){
       count = count[order.index]
       lev = lev[order.index]
     # print(lev)
-} #End  if(Major.allele.zero)
-
+   } #End  if(Major.allele.zero)
 #1status other than 2 or 3
-if(len<=1 | len> 3)    x=ifelse(x=="N",NA,ifelse(x==inter,1,ifelse(x==lev[1],down,up))) 
+ if(len==1)  x=ifelse(x=="N",NA,ifelse(x==inter,1,2)) 
+ if(len> 3)    x=ifelse(x=="N",NA,ifelse(x==inter,1,0)) 
 #2 status
-if(len==2)
-{
+ if(len==2)
+ {
   if(!setequal(character(0),inter))
   {
     x=ifelse(x=="N",NA,ifelse(x==inter,1,ifelse(x==lev[1],2,0))) 
   }else{
-   x=ifelse(x=="N",NA,ifelse(x==lev[1],2,0))     # the most is set 0, the least is set 2
+    x=ifelse(x=="N",NA,ifelse(x==lev[1],2,0))     # the most is set 0, the least is set 2
   }
-}
-
+ }
 #3 status
-if(len==3)
-{
+ if(len==3)
+ {
   x=ifelse(x=="N",NA,ifelse(x==lev[1],2,ifelse(x==inter,1,0)))
   # if(bit==2)x=ifelse(x=="NN",NA,ifelse(x==lev[1],2,ifelse(x==inter,1,0)))
-}
+ }
 
 #missing data imputation
 
-if(impute=="Middle") {x[is.na(x)]=1}
-if(impute=="Minor")  {x[is.na(x)]=lev[1]}
-if(impute=="Major")  {x[is.na(x)]=lev[2]}
-
+ if(impute=="Middle") {x[is.na(x)]=1}
+ if(impute=="Minor")  {x[is.na(x)]=lev[1]}
+ if(impute=="Major")  {x[is.na(x)]=lev[2]}
 #alternative genetic models
-if(effect=="Hybrid") x=ifelse(x==1,1,0)
+ if(effect=="Hybrid") x=ifelse(x==1,1,0)
 # if(effect=="Dom") x[x==2]=1
+ if(effect=="Recessive") x[x==1]=0
+ if(effect=="Dominant") x[x==1]=2
 
-if(effect=="Recessive") x[x==1]=0
-if(effect=="Dominant") x[x==1]=2
-
-if(byRow) {
-  result=matrix(x,n,1)
-}else{
-  result=matrix(x,1,n)  
+ if(byRow) {
+   result=matrix(as.numeric(x),n,1)
+  }else{
+   result=matrix(as.numeric(x),1,n)  
+  }
+ return(result)
 }
-
-return(result)
 }#end of GAPIT.Numericalization function
 #=============================================================================================
 

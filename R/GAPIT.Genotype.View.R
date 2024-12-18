@@ -53,40 +53,13 @@ GI=GI2
 
 chr=as.character(as.matrix(unique(GI[,2])))
 allchr=as.character(GI[,2])
-print(chr)
-print(allchr)
+#print(chr)
+#print(allchr)
 ## make an index for marker selection with binsize
 print("Filting marker for GAPIT.Genotype.View function ...")
 pos.fix=as.numeric(GI[,2])*10^(nchar(max(as.numeric(GI[,3]))))+as.numeric(GI[,3])
 
-## select markers from bins
-# binsize=10000
-# bins=ceiling(pos.fix/binsize)
-# n.bins=length(unique(bins))
-# uni.bins=unique(bins)
-
-# n.markers=nrow(GI)
-
-# if(n.markers<n.select)n.select=n.markers
-# n.targ=floor(n.select/n.bins)
-# if(n.targ<1)
-# {
-#   n.targ=1
-#   uni.bins=sample(uni.bins,n.select)
-# }
-# rs.markers=NULL
-# for(i in uni.bins)
-# {
-#   map0=GI[bins==i,]
-#   n.targ0=n.targ
-#   if(nrow(map0)<n.targ)n.targ0=nrow(map0)
-#   rs.markers=append(rs.markers,as.character(map0[sample(1:(nrow(map0)),n.targ0),1]))
-# }
-
-# rs.markers=unique(rs.markers)
-# rs.index=as.character(GI[,1])%in%rs.markers
-# print(table(rs.index))
-
+##
 # set.seed(99163)
 if(is.null(n.select))n.select=10000
 if(n.select>nrow(GI))n.select=nrow(GI)-1
