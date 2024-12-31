@@ -515,8 +515,8 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   # }
   # print(dim(my_allX))
   XCV=my_allX[,X.idx,drop=FALSE]
-  # print("!!!!")
-  # print(dim(XCV))
+  #print("!!!!")
+  #print(dim(XCV))
   # print(QTN.gs)
 
 #CV.Extragenetic specified

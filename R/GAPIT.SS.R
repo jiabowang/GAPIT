@@ -445,7 +445,7 @@ gapitMain <- GAPIT.Main(Y=IC$Y,
                         plot.bin=DP$plot.bin, 
                         QTN.position=DP$QTN.position,
                         plot.style=DP$plot.style,
-                        SUPER_GS=DP$SUPER_GS
+                        SUPER_GS=TRUE
                         )  
 #print(str(gapitMain))
 GWAS=gapitMain$GWAS
