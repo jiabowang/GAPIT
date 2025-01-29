@@ -24,7 +24,7 @@ print("GAPIT.IC in process...")
        }
        CV[,2]=1
        colnames(CV)=c("taxa","overall")
-       print(paste("There is 0 Covarinces.",sep=""))
+       print(paste("There is 0 Covariances.",sep=""))
      }
      Y=Y[!is.na(Y[,2]),]
      taxa_Y=as.character(Y[,1])
