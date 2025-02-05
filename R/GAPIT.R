@@ -217,6 +217,7 @@
   sangwich.top = NULL, #SUPER
   sangwich.bottom = NULL,#SUPER
   seq.cutoff=NULL,
+  seq.num=50, # number of selected sig markers into GS
   # seed = NULL, 
   SNP.P3D = TRUE,
   SNP.effect = "Add",
@@ -380,7 +381,7 @@ if(!is.null(Y))
              sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,
              SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction =SNP.fraction, seed =NULL, 
              SNP.test=SNP.test, SNP.MAF=SNP.MAF,FDR.Rate =1, SNP.FDR=SNP.FDR,
-             Inter.Plot=Inter.Plot,  Inter.type=Inter.type,N.sig=N.sig,
+             Inter.Plot=Inter.Plot,  Inter.type=Inter.type,N.sig=N.sig,seq.num=seq.num,
              Multi_iter=Multi_iter,num_regwas=num_regwas,QTN.gs=QTN.gs,
              cutOff=cutOff, Model.selection =Model.selection,output.numerical =output.numerical,Random.model=Random.model,
              PCA.legend=PCA.legend,PCA.View.output=PCA.View.output, 

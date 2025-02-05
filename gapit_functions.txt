@@ -3936,7 +3936,7 @@ function(G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Extragenetic=NULL,GP=N
         NJtree.group=NULL,NJtree.type=c("fan","unrooted"),plot.bin=10^6,PCA.col=NULL,PCA.3d=FALSE,
         file.from=1, file.to=1, file.total=NULL, file.fragment = 99999,file.path=NULL,Inter.Plot=FALSE,Inter.type=c("m","q"),
         file.G=NULL, file.Ext.G=NULL,file.GD=NULL, file.GM=NULL, file.Ext.GD=NULL,file.Ext.GM=NULL, 
-        ngrid = 100, llim = -10, ulim = 10, esp = 1e-10, Multi_iter=FALSE,num_regwas=10,FDRcut=FALSE,
+        ngrid = 100, llim = -10, ulim = 10, esp = 1e-10, Multi_iter=FALSE,num_regwas=10,FDRcut=FALSE,seq.num=50,
         LD.chromosome=NULL,LD.location=NULL,LD.range=NULL, p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,
         sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.1,opt="extBIC",N.sig=NULL,WS0=1e6,Aver.Dis=1000,
         file.output=FALSE,cutOff=0.01, Model.selection = FALSE,output.numerical = FALSE,Random.model=FALSE,PCA.legend=NULL,
@@ -3977,7 +3977,7 @@ if(geno.pass)
                  QTN= QTN, QTN.round= QTN.round,QTN.limit= QTN.limit, QTN.update= QTN.update, QTN.method= QTN.method, Major.allele.zero = Major.allele.zero,
                method.GLM= method.GLM,method.sub= method.sub,method.sub.final= method.sub.final,
                method.bin= method.bin,bin.size= bin.size,bin.selection= bin.selection,FDRcut=FDRcut,
-                memo= memo,Prior= Prior,ncpus=1,maxLoop= maxLoop,threshold.output= threshold.output,
+                memo= memo,Prior= Prior,ncpus=1,maxLoop= maxLoop,threshold.output= threshold.output,seq.num=seq.num,
                 WS= WS,alpha= alpha,maxOut= maxOut,QTN.position= QTN.position, converge=1,iteration.output= iteration.output,acceleration=0,
                 iteration.method= iteration.method,PCA.View.output= PCA.View.output, 
                 p.threshold=p.threshold,QTN.threshold=QTN.threshold,N.sig=N.sig,
@@ -4049,7 +4049,7 @@ GD=cbind(as.data.frame(GT),GD)
         		memo= memo,Prior= Prior,ncpus=1,maxLoop= maxLoop,threshold.output= threshold.output,
         		WS= WS,alpha= alpha,maxOut= maxOut,QTN.position= QTN.position, converge=1,iteration.output= iteration.output,acceleration=0,
         		iteration.method= iteration.method,PCA.View.output= PCA.View.output, 
-                p.threshold=p.threshold,QTN.threshold=QTN.threshold,N.sig=N.sig,
+                p.threshold=p.threshold,QTN.threshold=QTN.threshold,N.sig=N.sig,seq.num=DP$seq.num,
                 maf.threshold=maf.threshold,chor_taxa=chor_taxa,num_regwas=num_regwas,model=model,
         		Geno.View.output= Geno.View.output,plot.style= plot.style,SUPER_GD= SUPER_GD,SUPER_GS= SUPER_GS,CG=CG,plot.bin=plot.bin))
 }  #end of GAPIT DP function
@@ -8693,7 +8693,7 @@ print("GAPIT.IC in process...")
        }
        CV[,2]=1
        colnames(CV)=c("taxa","overall")
-       print(paste("There is 0 Covarinces.",sep=""))
+       print(paste("There is 0 Covariances.",sep=""))
      }
      Y=Y[!is.na(Y[,2]),]
      taxa_Y=as.character(Y[,1])
@@ -15445,6 +15445,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
   sangwich.top = NULL, #SUPER
   sangwich.bottom = NULL,#SUPER
   seq.cutoff=NULL,
+  seq.num=50, # number of selected sig markers into GS
   # seed = NULL, 
   SNP.P3D = TRUE,
   SNP.effect = "Add",
@@ -15608,7 +15609,7 @@ if(!is.null(Y))
              sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,
              SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction =SNP.fraction, seed =NULL, 
              SNP.test=SNP.test, SNP.MAF=SNP.MAF,FDR.Rate =1, SNP.FDR=SNP.FDR,
-             Inter.Plot=Inter.Plot,  Inter.type=Inter.type,N.sig=N.sig,
+             Inter.Plot=Inter.Plot,  Inter.type=Inter.type,N.sig=N.sig,seq.num=seq.num,
              Multi_iter=Multi_iter,num_regwas=num_regwas,QTN.gs=QTN.gs,
              cutOff=cutOff, Model.selection =Model.selection,output.numerical =output.numerical,Random.model=Random.model,
              PCA.legend=PCA.legend,PCA.View.output=PCA.View.output, 
@@ -16442,9 +16443,13 @@ if(DP$SNP.test)
           # print(myBus$seqQTN)
           pv=GWAS$P.value
           noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
-          gene.licols=GAPIT.Licols(X=ablup.X)
-          # geneGD=gene.licols$Xsub
-          ablup.X=ablup.X[,gene.licols$idx]
+          licols=FALSE
+          if(ncol(X)<50000)licols=TRUE
+          if(licols)
+            {
+            gene.licols=GAPIT.Licols(X=ablup.X)
+            ablup.X=ablup.X[,gene.licols$idx]
+            }
 
           if(is.null(DP$KI))
           {

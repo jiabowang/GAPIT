@@ -197,9 +197,13 @@ if(DP$SNP.test)
           # print(myBus$seqQTN)
           pv=GWAS$P.value
           noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
-          gene.licols=GAPIT.Licols(X=ablup.X)
-          # geneGD=gene.licols$Xsub
-          ablup.X=ablup.X[,gene.licols$idx]
+          licols=FALSE
+          if(ncol(X)<50000)licols=TRUE
+          if(licols)
+            {
+            gene.licols=GAPIT.Licols(X=ablup.X)
+            ablup.X=ablup.X[,gene.licols$idx]
+            }
 
           if(is.null(DP$KI))
           {
