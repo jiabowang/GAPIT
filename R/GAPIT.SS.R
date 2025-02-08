@@ -70,6 +70,10 @@ if(DP$SNP.test)
         for(l in lmpred)
         {
           memo=ifelse(l,"MAS","ABLUP")
+          if(length(myBus$seqQTN)>DP$seq.num)
+              {
+               myBus$seqQTN=order(p)[1:DP$seq.num]
+              }
         if(l)
         {
           print("MAS to Predict phenotype !!")
@@ -80,6 +84,7 @@ if(DP$SNP.test)
           if(!is.null(myBus$seqQTN))
           {
           # busCV=cbind(IC$myallCV,X[,myBus$seqQTN])
+            
             GD1 = as.matrix(X[index,myBus$seqQTN])
             GD2 = as.matrix(X[,myBus$seqQTN])
           }else{

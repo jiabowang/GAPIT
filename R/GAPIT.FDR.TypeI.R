@@ -61,11 +61,11 @@ function(WS=c(1e0,1e3,1e4,1e5), GM=NULL,seqQTN=NULL,GWAS=NULL,maxOut=100,MaxBP=1
             if(theWS==1){
                 final=false.number
                 final.fdr=false.number/(qtn.number+false.number)
-                final.t1=false.number/totalfalse[theWS]
+                final.t1=false.number/(totalfalse[theWS]-NQTN)
             }else{
                 record=false.number
                 record.fdr=false.number/(qtn.number+false.number)
-                record.t1=false.number/totalfalse[theWS]
+                record.t1=false.number/(totalfalse[theWS]-NQTN)
                 final=c(final,record)
                 final.fdr=c(final.fdr,record.fdr)
                 final.t1=c(final.t1,record.t1)
