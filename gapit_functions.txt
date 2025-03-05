@@ -38,19 +38,7 @@ function(){
 # 10. ECMLM (Li et. al. BMC Bioogy, 2014)
 # 11. SUPER (Wang et. al. PLoS One, 2014)
 
-#Designed by Zhiwu Zhang
-#Authors of paper on Bioinformatics (2012, 28:2397-2399): Alex Lipka, Feng Tian, Qishan Wang, Xiaolei Liu, Meng Li,You Tang and Zhiwu Zhang
-#Authors of paper on Plant Genome (2016, Vol 9, No. 2): You Tang, Xiaolei Liu, Jiabo Wang, Meng Li, Qishan Wang, Feng Tian, Zhongbin Su, Yuchun Pan, Di Liu, Alexander E. Lipka, Edward S. Buckler, and Zhiwu Zhang
-#if(!require(multtest)) 
-#{
-#	if (!requireNamespace("BiocManager", quietly = TRUE))
-#    install.packages("BiocManager")
-#    BiocManager::install("multtest")
-#	#source("http://www.bioconductor.org/biocLite.R")
-#    #biocLite("multtest")
-#}
-
-GAPIT.Version="2024.07.26, GAPIT 3.5"
+GAPIT.Version="2025.03.03, GAPIT 4.0"
 return(GAPIT.Version)
 }
 #=============================================================================================
@@ -13158,7 +13146,7 @@ lev=setdiff(lev,"NN")
 len=length(lev)
 #print(len)
 #Jiabo creat this code to convert AT TT to 1 and 2. 2018.5.29
-   if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC","A-","-A","C-","-C","G-","-G","G-","-G")
+   if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC","A-","-A","C-","-C","G-","-G","T-","-T")
    if(bit==1)inter_store=c("R","Y","S","W","K","M") 
    inter=intersect(lev,inter_store)
 if(len<=1) 

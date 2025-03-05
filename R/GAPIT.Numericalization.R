@@ -31,7 +31,7 @@ lev=setdiff(lev,"NN")
 len=length(lev)
 #print(len)
 #Jiabo creat this code to convert AT TT to 1 and 2. 2018.5.29
-   if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC","A-","-A","C-","-C","G-","-G","G-","-G")
+   if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC","A-","-A","C-","-C","G-","-G","T-","-T")
    if(bit==1)inter_store=c("R","Y","S","W","K","M") 
    inter=intersect(lev,inter_store)
 if(len<=1) 
