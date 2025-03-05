@@ -1,7 +1,7 @@
 Package: GAPIT
 Type: Package
 Title: GAPIT (Genomic Association and Prediction Integrated Tool)
-Version: 3.4.0
+Version: 3.5.0
 Authors@R: c(
           person(given = "Jiabo", family = "Wang", middle = NULL, 
                  email = "wangjiaboyifeng@163.com",
