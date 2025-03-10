@@ -54,11 +54,11 @@ wangjiaboyifeng@163.com (Jiabo)
 Source:
 -----
 
-[User manual](http://zzlab.net/GAPIT/gapit_help_document.pdf)
+[User manual](https://github.com/jiabowang/GAPIT/raw/refs/heads/master/Documents/gapit_help_document.pdf)
 
-[Demo Data](http://zzlab.net/GAPIT/GAPIT_Tutorial_Data.zip)
+[Demo Data](https://github.com/jiabowang/GAPIT/raw/refs/heads/master/Documents/GAPIT_Tutorial_Data.zip)
 
-[Source code](http://zzlab.net/GAPIT/gapit_functions.txt)
+[Source code](https://raw.githubusercontent.com/jiabowang/GAPIT/refs/heads/master/gapit_functions.txt)
 
 Contents:
 -----
