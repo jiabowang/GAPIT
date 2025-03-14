@@ -26,7 +26,7 @@ layout.matrix <- matrix(c(1,2,1,3,4,5), nrow = 2, ncol = 3)
 # print("!!!!")
 layout(mat = layout.matrix,
        heights = c(100,100), # Heights of the two rows
-       widths = c(2, 2,2)) # Widths of the two columns
+       widths = c(2,2,2)) # Widths of the two columns
 # print(head(myY))
 y=myY[!is.na(myY[,2]),2]
 par(mar = c(5, 5, 2, 1))
