@@ -148,7 +148,7 @@ R> install.packages("GAPIT_3.5.0.9000.tar.gz", repos = NULL, type="source")
 
 ## In some case of the BiocManager can not be installed
 
-Installation of same packages such as multtest and biobase can not be intalled from BiocManager. These packages can be downloaded in the Bioconductor website and be installed from local source files.
+Installation of same packages such as “multtest” and “biobase” can not be intalled from BiocManager directly. These packages can be downloaded in the Bioconductor website and be installed from local source files.
 
 The website of Bioconductor is here:
 
@@ -167,7 +167,7 @@ GWAS methods include: General Linear Model(GLM),Mixed Linear Model(MLM),compress
 
 GS
 -----
-GS methods include: gBLUP, cBLUP, sBLUP, and GAGBLUP. Besides GAGBLUP, all GS methods could be seleted by using model="gBLUP"
+GS methods include: gBLUP, cBLUP, sBLUP, and GAGBLUP. Besides GAGBLUP, all GS methods could be seleted by using model="gBLUP".
 
    
 Example
