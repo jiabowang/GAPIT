@@ -16096,8 +16096,8 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
             grDevices::pdf(paste("GAPIT.Association.Significant_SNPs.", name.of.trait,".pdf" ,sep = ""), width =10, height = 3.5)      
             layout.matrix <- matrix(c(1,2,3), nrow = 1, ncol = 3)
             layout(mat = layout.matrix,
-                   heights = c(100,80,120), # Heights of the two rows
-                   widths = c(2, 2,2)) # Widths of the two columns
+                   heights = c(100), # Heights of the two rows
+                   widths = c(2,2,2)) # Widths of the two columns
             par(mar = c(5, 5, 2, 1))
             # print(head(gene_list))
             # print(length(gene_list$maf))
