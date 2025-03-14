@@ -65,7 +65,9 @@ Contents:
 
    
    * [Start](#start)
-      * [Installing GAPIT](#installing-gapit)
+      * [Installing GAPIT from source functions](#installation-from-source-functions)
+      * [Installing GAPIT from GitHub](#installation-from-github)
+      * [Installing GAPIT from archive](#installation-from-an-archive)
    * [Analysis](#analysis)
       * [GWAS](#gwas)
       * [GS](#gs)
@@ -81,8 +83,6 @@ R can be freely downloaded from [http://www.r-project.org](http://www.r-project.
 We also recommend the integrated development environment RStudio which is also freely available at [http://www.rstudio.com](http://www.rstudio.com).
 
 
-## Installing GAPIT
-
 GAPIT can currently be installed in several ways.
 
 - From source on the internet
@@ -90,7 +90,7 @@ GAPIT can currently be installed in several ways.
 - From an archive
 
 
-### Installation from source functions at ZZlab or GitHub
+## Installation from source functions
 
 GAPIT can be loaded with a single funciton. 
 
@@ -104,7 +104,7 @@ Or from GitHub function.
 R> source("https://raw.githubusercontent.com/jiabowang/GAPIT/refs/heads/master/gapit_functions.txt", encoding = "UTF-8")
 ```
 
-### Installation from GitHub
+## Installation from GitHub
 
 Installation can also be made from GitHub when the R package `devtools` is available.
 
@@ -120,17 +120,8 @@ R> library(GAPIT)
 
 
 ```
-### In some case of the BiocManager can not be installed
 
-Installation of same packages such as multtest and biobase can not be intalled from BiocManager. These packages can be downloaded in the Bioconductor website and be installed from local source files.
-
-The website of Bioconductor is here:
-
-```
-https://bioconductor.org/packages/3.19/bioc/
-```
-
-### Installation from an archive
+## Installation from an archive
 
 
 GAPIT can be installed from an archive such as \*.tar.gz or \*.zip archive.
@@ -153,6 +144,16 @@ Or similarly from within R.
 
 ```
 R> install.packages("GAPIT_3.5.0.9000.tar.gz", repos = NULL, type="source")
+```
+
+## In some case of the BiocManager can not be installed
+
+Installation of same packages such as multtest and biobase can not be intalled from BiocManager. These packages can be downloaded in the Bioconductor website and be installed from local source files.
+
+The website of Bioconductor is here:
+
+```
+https://bioconductor.org/packages/3.19/bioc/
 ```
 
 Analysis
