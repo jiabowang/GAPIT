@@ -176,7 +176,7 @@ Example
 
 ```
 # loading packages for GAPIT and GAPIT functions
-source("http://www.zzlab.net/GAPIT/gapit_functions.txt")
+source("https://raw.githubusercontent.com/jiabowang/GAPIT/refs/heads/master/gapit_functions.txt")
 # loading data set
 myY=read.table(file="https://github.com/jiabowang/GAPIT/raw/refs/heads/master/Documents/mdp_traits.txt", head = TRUE)
 myGD=read.table("https://github.com/jiabowang/GAPIT/raw/refs/heads/master/Documents/mdp_numeric.txt",head=T)
