@@ -202,4 +202,5 @@ myGAPIT <- GAPIT(
   file.output=T
 )
 ```
+More details please check and ref user manual.
 
