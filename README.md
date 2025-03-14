@@ -66,17 +66,10 @@ Contents:
    
    * [Start](#start)
       * [Installing GAPIT](#installing-gapit)
-      * [Data Preparation](#data-preparation)
-         * [Phenotype Data](#phenotype-data)
-         * [Genotype Data](#genotype-data)
-            * [Hapmap Format](#hapmap-format)
-            * [Numeric Format](#numeric-format)
    * [Analysis](#analysis)
       * [GWAS](#gwas)
       * [GS](#gs)
-   * [Result](#result)
    * [Example](#example)
-   * [Interpretation of Parameters](#interpretation) 
 
 
 Start
@@ -162,224 +155,18 @@ Or similarly from within R.
 R> install.packages("GAPIT_3.5.0.9000.tar.gz", repos = NULL, type="source")
 ```
 
-
-Data Preparation
--------
-
-
-### Phenotype Data
-
-The user has the option of performing GWAS on multiple phenotypes in GAPIT. This is achieved by including all phenotypes in the text file of phenotypic data. Taxa names should be in the first column of the phenotypic data file and the remaining columns should contain the observed phenotype from each individual. Missing data should be indicated by either “NaN” or “NA”. 
-
-<img width="200" height="300" src="man/figures/phenotype.png">
-
-### Genotype Data
-
-#### Hapmap Format
-Hapmap is a commonly used format for storing sequence data where SNP information is stored in the rows and taxa information is stored in the columns. This format allows the SNP information (chromosome and position) and genotype of each taxa to be stored in one file.
-
-
-#### Numeric Format
-GAPIT also accepts the numeric format. Homozygotes are denoted by “0” and “2” and heterozygotes are denoted by “1” in the “GD” file.  Any numeric value between “0” and “2” can represent imputed SNP genotypes. The first row is a header file with SNP names, and the first column is the taxa name.
-The “GM” file contains the name and location of each SNP. The first column is the SNP id, the second column is the chromosome, and the third column is the base pair position. As seen in the example, the first row is a header file.
-
-
 Analysis
 ======
+
+The taxa and order of individual among genotype file and phenotype files could be different. The GAPIT can automaticly filter and order the common taxa among among genotype file and phenotype files.
+
 GWAS
 -----
-
-* GLM
-
-The GAPIT uses Least Squares to solve the model.
-The GAPIT code for running a GLM is:
-      
-      myGAPIT_GLM <- GAPIT(
-      Y=myY[,c(1,2)],
-      GD=myGD,
-      GM=myGM,
-      model="GLM",
-      PCA.total=5,
-      file.output=T
-      )
-
-
-* MLM
-
-EMMA method is used in GAPIT, the code of MLM is:
-
-      myGAPIT_MLM <- GAPIT(
-      Y=myY[,c(1,2)],
-      GD=myGD,
-      GM=myGM,
-      model="MLM",
-      PCA.total=5,
-      file.output=T
-      )
-
-
-* CMLM
-
-Compress Mixed Linear Model is published by Zhang in 2010. The code of CMLM is:
-
-      myGAPIT_CMLM <- GAPIT(
-      Y=myY[,c(1,2)],
-      GD=myGD,
-      GM=myGM,
-      model="CMLM",
-      PCA.total=5,
-      file.output=T
-      )
-
-* MLMM
-
-Multiple Loci Mixied linear Model is published by Segura in 2012. The code of MLMM in GAPIT is:
-
-      myGAPIT_MLMM <- GAPIT(
-      Y=myY[,c(1,2)],
-      GD=myGD,
-      GM=myGM,
-      model="MLMM",
-      PCA.total=5,
-      file.output=T
-      )
-
-* SUPER
-
-Settlement of MLM Under Progressively Exclusive Relation- ship is published by Qishan in 2014. The code of SUPER is:
-
-      myGAPIT_SUPER <- GAPIT(
-      Y=myY[,c(1,2)],
-      GD=myGD,
-      GM=myGM,
-      model="SUPER",
-      PCA.total=5,
-      file.output=T
-      )
-
-
-* Farm-CPU
-
-Fixed and random model Circulating Probability Unification (FarmCPU) is published by Xiaolei in 2016. The code of Farm-CPU in GAPIT is:
-
-      myGAPIT_FarmCPU <- GAPIT(
-      Y=myY[,c(1,2)],
-      GD=myGD,
-      GM=myGM,
-      model="FarmCPU",
-      PCA.total=5,
-      file.output=T
-      )
-
-
+GWAS methods include: General Linear Model(GLM),Mixed Linear Model(MLM),compressed Mixed Linear Model(CMLM),SUPER, FarmCPU, MLMM, and BLINK. Users can use model="GLM" to select method. 
 
 GS
 -----
-
-* gBLUP
-
-gBLUP used marker kinship to replace the pedgree relationship matrix. The code is:
-
-      myGAPIT_gBLUP <- GAPIT(
-      Y=myY[,c(1,2)],
-      GD=myGD,
-      GM=myGM,
-      model="gBLUP",
-      PCA.total=5,
-      file.output=T
-      )
-
-
-
-* cBLUP
-
-cBLUP used group kinship to replace the individual matrix. The code is:
-
-      myGAPIT_cBLUP <- GAPIT(
-      Y=myY[,c(1,2)],
-      GD=myGD,
-      GM=myGM,
-      model="cBLUP",
-      PCA.total=5,
-      file.output=T
-      )
-
-* sBLUP
-
-sBLUP used SUPER method to build psedue QTN kinship matrix. The code is:
-
-      myGAPIT_sBLUP <- GAPIT(
-      Y=myY[,c(1,2)],
-      GD=myGD,
-      GM=myGM,
-      model="sBLUP",
-      PCA.total=5,
-      file.output=T
-      )
-
-* MABLUP
-
-MABLUP (Markers Assisted BLUP) used significant markers as fixed effect in the mixed linear model after GWAS. The GWAS method could be selected following model="". The buspred is used to predict GEBV after GWAS. The lmpred is used to select linear model or GBLUP method. The code is:
-
-      myGAPIT_MABLUP <- GAPIT(
-      Y=myY[,c(1,2)],
-      GD=myGD,
-      GM=myGM,
-      model="BLINK",
-      buspred=TRUE,
-      lmpred=FALSE,
-      PCA.total=5,
-      file.output=TRUE
-      )
-
-Result
-=====
-
-<div align=center><img width="400" height="300" src="man/figures/Phenotype.View.png">
-
-<div align=center><img width="400" height="300" src="man/figures/Genotype.Distance_R_Chro.png">
-
-<div align=center><img width="400" height="200" src="man/figures/Genotype.Frequency.png">
-
-<div align=center><img width="450" height="280" src="man/figures/Genotype.MAF_Heterozosity.png">
-
-<div align=center><img width="450" height="400" src="man/figures/kinship_heatmap.png">
-
-<div align=center><img width="450" height="400" src="man/figures/2D_PCA.png">
-
-<div align=center><img width="450" height="400" src="man/figures/3D_PCA.png">
-
-<div align=center><img width="450" height="380" src="man/figures/PCA_eigenvalue.png">
-
-<div align=center><img width="800" height="350" src="man/figures/Manhattan.png">
-
-<div align=center><img width="450" height="400" src="man/figures/QQ.png">
-
-<div align=center><img width="450" height="290" src="man/figures/Optimum.png">
-
-<div align=center><img width="450" height="400" src="man/figures/ROC.png">
-
-<div align=center><img width="450" height="650" src="man/figures/Figure_S01.Rectangle.Manhattan.Plot.6_methods.png">
-
-<div align=center><img width="450" height="400" src="man/figures/Figure_S02.Circular.Manhattan.Plot.6_methods.png">
-
-<div align=center><img width="450" height="400" src="man/figures/Figure_S03.QQ.Multiple.Plot.6_methods.png">
-
-<div align=center><img width="450" height="400" src="man/figures/Figure_S07.Kin.NJtree.fan.png">
-
-<div align=left>
-
-
-<div align=left> 
-
-
-Interactive Plots (links):
-
-- [Interactive.Manhattan](http://www.zzlab.net/GAPIT/material/Figure%20S15.Manhattan%20FarmCPU.V1.html)
-- [Interactive.QQ](http://www.zzlab.net/GAPIT/material/Figure%20S21.QQ%20FarmCPU.V1.html)
-- [Interactive.3D.PCAs](http://www.zzlab.net/GAPIT/material/Figure%20S09.PCA.html)
-- [Interactive.GS](http://www.zzlab.net/GAPIT/material/Figure%20S23.GS.html)
-
+GS methods include: gBLUP, cBLUP, sBLUP, and GAGBLUP. Besides GAGBLUP, all GS methods could be seleted by using model="gBLUP"
 
    
 Example
@@ -390,10 +177,10 @@ Example
 # loading packages for GAPIT and GAPIT functions
 source("http://www.zzlab.net/GAPIT/gapit_functions.txt")
 # loading data set
-myY=read.table(file="http://zzlab.net/GAPIT/data/mdp_traits.txt", head = TRUE)
-myGD=read.table("http://zzlab.net/GAPIT/data/mdp_numeric.txt",head=T)
-myGM=read.table("http://zzlab.net/GAPIT/data/mdp_SNP_information.txt",head=T)
-#myG=read.table(file="http://zzlab.net/GAPIT/data/mdp_genotype_test.hmp.txt", head = FALSE)
+myY=read.table(file="https://github.com/jiabowang/GAPIT/raw/refs/heads/master/Documents/mdp_traits.txt", head = TRUE)
+myGD=read.table("https://github.com/jiabowang/GAPIT/raw/refs/heads/master/Documents/mdp_numeric.txt",head=T)
+myGM=read.table("https://github.com/jiabowang/GAPIT/raw/refs/heads/master/Documents/mdp_SNP_information.txt",head=T)
+#myG=read.table(file="https://github.com/jiabowang/GAPIT/raw/refs/heads/master/Documents/mdp_genotype_test.hmp.txt", head = FALSE)
 # performing simulation phenotype
 set.seed(198521)
 mysimulation<-GAPIT(h2=0.7,NQTN=20,GD=myGD,GM=myGM)
@@ -416,72 +203,3 @@ myGAPIT <- GAPIT(
 )
 ```
 
-
-   
-Interpretation of Parameters
-======
-
-
-```
-  Y = NULL, #phenotype
-  G = NULL, #hapmap genotype
-  GD = NULL, #numeric genotype
-  GM = NULL, #genotype map information
-  KI = NULL, #kinship
-  Z = NULL, #Z matrix for MLM, cMLM, encMLM
-  CV = NULL, #corvariance matrix
-  Aver.Dis=1000,
-  buspred = FALSE, #Prediction option for after GWAS MABLUP
-  bin.from = 10000, #SUPER 
-  bin.to = 10000, #SUPER
-  bin.by = 10000, #SUPER
-  cutOff = 0.05, #threshold for significant
-  CV.Extragenetic = 0, # the top number of no-inheritance columns in CV
-  effectunit = 1, #Simulation phenotype
-  file.output = TRUE, #output option
-  FDRcut = FALSE, # filter pseudo QTN based on cutOff in blink
-  group.from = 1000000,#MLM
-  group.to = 1000000,#MLM
-  group.by = 50,#MLM
-  Geno.View.output = TRUE,#genotype analysis option
-  h2 = NULL, #simulation phenotype heritability
-  inclosure.from = 10, #SUPER
-  inclosure.to = 10, #SUPER
-  inclosure.by = 10, #SUPER
-  Inter.Plot = FALSE, #Interactive plot option
-  Inter.type = c("m","q"), #Interactive plot type for Manhattan and QQ plots
-  kinship.cluster = "average", #cMLM
-  kinship.group = 'Mean',#cMLM
-  kinship.algorithm = "Zhang",#cMLM
-  lmpred = FALSE, #option for linear model prediction or MABLUP prediction, that could be set as multiple parameters
-  model = "MLM",# model or method in GWAS or GS
-  maxOut = 100, # power for top number of markers in the GWAS
-  memo = NULL, #label for marking
-  Model.selection = FALSE,# optimum number of CV and PCAs
-  Multi_iter = FALSE, #Multiple step for FarmCPU and BLink
-  Major.allele.zero = FALSE, #convert hapmap file to numeric file, set major marker as 0
-  Multiple_analysis = TRUE, #option for multiple Manhattan and QQ plots
-  num_regwas = 10,# the max number of  markers in second GWAS
-  NQTN = NULL, #Simulation phenotype, number of QTN
-  N.sig=NULL, #Random.model, Number of significant markers
-  NJtree.group = NULL, #NJtree set number of cluster group
-  NJtree.type = c("fan","unrooted"),#NJtree type
-  output.numerical = FALSE,# option for output numeric files
-  output.hapmap = FALSE, # option for output hapmap files
-  QTN.position = NULL, #Simulation phenotype, QTN position in the order of map file
-  QTNDist = "normal",
-  Random.model = TRUE, #Random.model to calculate PVE
-  sangwich.top = NULL, #SUPER
-  sangwich.bottom = NULL,#SUPER
-  SNP.P3D = TRUE,
-  SNP.effect = "Add",
-  SNP.impute = "Middle",
-  SNP.test = TRUE,
-  SNP.MAF = 0,
-  SNP.FDR = 1,  
-  PCA.total = 0, # PCA number
-  PCA.col = NULL, #indicater colors for individuals in PCA plot
-  PCA.3d = FALSE, #3D PCA plot option
-  PCA.View.output = TRUE, #option for PCA plot
-  Phenotype.View= TRUE, # option for phenotype view plot
-  ```
