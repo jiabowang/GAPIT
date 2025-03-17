@@ -252,7 +252,7 @@
 #Writen by Jiabo Wang
 #Last update: Mar 8, 2023
 ##############################################################################################
-print("--------------------- Welcome to GAPIT ----------------------------")
+print("--------------------- Welcome to GAPIT @----------------------------")
 all.memo=NULL
 GAPIT.Version=GAPIT.0000()
 #Allow either KI or K, but not both
