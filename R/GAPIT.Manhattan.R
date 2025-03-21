@@ -30,7 +30,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     #Inicial as 0   
     if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1   
     if(!is.null(GD))
-    {  if(ncol(GD)!=nrow(GI.MP))print("GD does not mach GM in Manhattan !!!")
+    {  if(ncol(GD)!=nrow(GI.MP))print("GD does not match GM in Manhattan !!!")
     }
     #Remove all SNPs that do not have a choromosome, bp position and p value(NA)
     GI.MP <- GI.MP[!is.na(GI.MP[,1]),]
