@@ -371,8 +371,7 @@ if(!is.null(Y))
         if(ncol(Y)<2)  stop ("Phenotype should have taxa name and one trait at least. Please correct phenotype file!")
         print(paste("The ",m," model in all.",sep=""))
         print(model)
-        # print(SUPER_GS)
-        # print(SNP.test)
+        ##print(group.to)
         if(m==1)
           {
             DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI0,Z=Z,CV=CV,CV.Extragenetic=CV.Extragenetic,

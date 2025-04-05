@@ -109,6 +109,7 @@ print("GAPIT.IC in process...")
      if(nrow(comCV)!=length(GT))stop ("GAPIT says: The number of individuals in CV does not match to the number of individuals in genotype files.")
      print("The dimension of total CV is ")
      print(dim(comCV))
+     print(dim(CV))
      CV=CV[taxa_CV%in%taxa_g_cv,]
      CV=CV[match(taxa_g_cv,as.character(CV[,1])),]
      # print(head(CV))

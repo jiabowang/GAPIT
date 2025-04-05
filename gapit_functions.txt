@@ -8766,6 +8766,7 @@ print("GAPIT.IC in process...")
      if(nrow(comCV)!=length(GT))stop ("GAPIT says: The number of individuals in CV does not match to the number of individuals in genotype files.")
      print("The dimension of total CV is ")
      print(dim(comCV))
+     print(dim(CV))
      CV=CV[taxa_CV%in%taxa_g_cv,]
      CV=CV[match(taxa_g_cv,as.character(CV[,1])),]
      # print(head(CV))
@@ -11542,7 +11543,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     #Inicial as 0   
     if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1   
     if(!is.null(GD))
-    {  if(ncol(GD)!=nrow(GI.MP))print("GD does not mach GM in Manhattan !!!")
+    {  if(ncol(GD)!=nrow(GI.MP))print("GD does not match GM in Manhattan !!!")
     }
     #Remove all SNPs that do not have a choromosome, bp position and p value(NA)
     GI.MP <- GI.MP[!is.na(GI.MP[,1]),]
@@ -15587,8 +15588,7 @@ if(!is.null(Y))
         if(ncol(Y)<2)  stop ("Phenotype should have taxa name and one trait at least. Please correct phenotype file!")
         print(paste("The ",m," model in all.",sep=""))
         print(model)
-        # print(SUPER_GS)
-        # print(SNP.test)
+        ##print(group.to)
         if(m==1)
           {
             DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI0,Z=Z,CV=CV,CV.Extragenetic=CV.Extragenetic,
@@ -17380,7 +17380,8 @@ if(!is.null(CV)){
 	  print("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
 	}
 }
-
+# print(group.to)
+# print(group.from)
   GROUP=seq(group.to,group.from,by=-group.by)#The reverse order is to make sure to include full model
 if(missing("kinship.cluster")) kinship.cluster=c("ward", "single", "complete", "average", "mcquitty", "median", "centroid")
 if(missing("kinship.group")) kinship.group=c("Mean", "Max", "Min", "Median")
@@ -17518,19 +17519,10 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    emma_REMLE=emma_test
    print("gBLUP with only one time emma")
   } 
-  # print(dim(my_allCV))
-
-  # if (is.null(my_allCV))
-  # {
-  #   my_allX=matrix(1,length(my_taxa),1)
-  # }else{
-    my_allX=cbind(1,as.matrix(my_allCV[,-1]))
-  # }
-  # print(dim(my_allX))
+  my_allX=cbind(1,as.matrix(my_allCV[,-1]))
   XCV=my_allX[,X.idx,drop=FALSE]
   #print("!!!!")
-  #print(dim(XCV))
-  # print(QTN.gs)
+  # print(dim(XCV))
 
 #CV.Extragenetic specified
     if(ncol(XCV)>1&(ncol(XCV)-QTN.gs)!=1)XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs)),drop=FALSE]
@@ -17552,13 +17544,15 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    BLUE=cbind(BLUE.N,BLUE.I,BLUE.QTN)
    BLUE=data.frame(cbind(data.frame(my_allCV[,1]),data.frame(BLUE)))
    colnames(BLUE)=c("Taxa","BLUE.N","BLUE.I","QTNs")
-   # print(head(BLUE))
+   # print(dim(BLUE))
    # emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    # emma_BLUE=as.data.frame(cbind(as.character(my_allCV[,1]),emma_BLUE))
    # colnames(emma_BLUE)=c("Taxa","emma_BLUE")
    gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
-   BB= merge(BLUE,gs$BLUP, by.x = "Taxa", by.y = "Taxa",sort=F)
-   # print(head(BB)) 
+   BB= merge(BLUE,gs$BLUP, by.x = "Taxa", by.y = "Taxa",all.x=T,sort=F)
+   # print(dim(gs$BLUP))
+   #print(dim(BB)) 
+   BB[is.na(BB)]=0
    gBreedingValue=BB[,3]+BB[,4]+BB[,8]
    Prediction=BB[,2]+BB[,3]+BB[,4]+BB[,8]
 

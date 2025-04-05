@@ -367,7 +367,8 @@ if(!is.null(CV)){
 	  print("The upper bound of groups (group.to) is not sufficient. both boundries were set to their minimum and GLM is performed!")
 	}
 }
-
+# print(group.to)
+# print(group.from)
   GROUP=seq(group.to,group.from,by=-group.by)#The reverse order is to make sure to include full model
 if(missing("kinship.cluster")) kinship.cluster=c("ward", "single", "complete", "average", "mcquitty", "median", "centroid")
 if(missing("kinship.group")) kinship.group=c("Mean", "Max", "Min", "Median")
@@ -505,19 +506,10 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    emma_REMLE=emma_test
    print("gBLUP with only one time emma")
   } 
-  # print(dim(my_allCV))
-
-  # if (is.null(my_allCV))
-  # {
-  #   my_allX=matrix(1,length(my_taxa),1)
-  # }else{
-    my_allX=cbind(1,as.matrix(my_allCV[,-1]))
-  # }
-  # print(dim(my_allX))
+  my_allX=cbind(1,as.matrix(my_allCV[,-1]))
   XCV=my_allX[,X.idx,drop=FALSE]
   #print("!!!!")
-  #print(dim(XCV))
-  # print(QTN.gs)
+  # print(dim(XCV))
 
 #CV.Extragenetic specified
     if(ncol(XCV)>1&(ncol(XCV)-QTN.gs)!=1)XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs)),drop=FALSE]
@@ -539,13 +531,15 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
    BLUE=cbind(BLUE.N,BLUE.I,BLUE.QTN)
    BLUE=data.frame(cbind(data.frame(my_allCV[,1]),data.frame(BLUE)))
    colnames(BLUE)=c("Taxa","BLUE.N","BLUE.I","QTNs")
-   # print(head(BLUE))
+   # print(dim(BLUE))
    # emma_BLUE=as.matrix(my_allX)%*%as.matrix(emma_REMLE$betahat)
    # emma_BLUE=as.data.frame(cbind(as.character(my_allCV[,1]),emma_BLUE))
    # colnames(emma_BLUE)=c("Taxa","emma_BLUE")
    gs <- GAPIT.GS(KW=bk$KW,KO=bk$KO,KWO=bk$KWO,GAU=bk$GAU,UW=cbind(emma_REMLE$uhat,emma_REMLE$PEVuhat))
-   BB= merge(BLUE,gs$BLUP, by.x = "Taxa", by.y = "Taxa",sort=F)
-   # print(head(BB)) 
+   BB= merge(BLUE,gs$BLUP, by.x = "Taxa", by.y = "Taxa",all.x=T,sort=F)
+   # print(dim(gs$BLUP))
+   #print(dim(BB)) 
+   BB[is.na(BB)]=0
    gBreedingValue=BB[,3]+BB[,4]+BB[,8]
    Prediction=BB[,2]+BB[,3]+BB[,4]+BB[,8]
 
