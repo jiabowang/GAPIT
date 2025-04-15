@@ -15992,14 +15992,17 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     	    return(list(GVs=NULL))
     	    }
     	colnames(CV)=c("Taxa",paste("CV",1:(ncol(CV)-1),sep=""))
-    	taxa_Y=as.character(Y[,1])
+        CV.matrix=matrix(as.numeric(CV[,-1,drop=FALSE]),nrow(CV),ncol(CV)-1)
+        colnames(CV.matrix)=c(paste("CV",1:(ncol(CV.matrix)),sep=""))
+        taxa_Y=as.character(Y[,1])
     	taxa_CV=as.character(CV[,1])
         geneGD=geneGD[GT%in%taxa_Y,]
         Y=Y[taxa_Y%in%GT,]
         CV=CV[taxa_CV%in%GT,]
-    	tree2=cbind(Y,CV[,-1,drop=FALSE],geneGD) # thanks jeremyde 2022.9.14
+    	tree2=cbind(Y,CV.matrix,geneGD) # thanks jeremyde 2022.9.14
         }
     }
+    
     if(in_True==1)colnames(tree2)[ncol(tree2)]=paste("gene_",1,sep="")
     n_cv=ncol(CV)-1
     n_gd=in_True
