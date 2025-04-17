@@ -15906,7 +15906,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     #Object: To calculate the genetics variance ratio of Candidate Genes
     #Output: The genetics variance raito between CG and total
     #Authors: Jiabo Wang and Zhiwu Zhang
-    # Last update: Nov 6, 2019
+    # Last update: Apr 15, 2025
     ##############################################################################################
     if(!require(lme4))  install.packages("lme4")
     library("lme4")
@@ -15992,7 +15992,9 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     	    return(list(GVs=NULL))
     	    }
     	colnames(CV)=c("Taxa",paste("CV",1:(ncol(CV)-1),sep=""))
-        CV.matrix=matrix(as.numeric(CV[,-1,drop=FALSE]),nrow(CV),ncol(CV)-1)
+        #print(head(CV))
+        CV.matrix=matrix(as.numeric(as.matrix(CV[,-1,drop=FALSE])),nrow(CV),ncol(CV)-1)
+        #print(head(CV.matrix))
         colnames(CV.matrix)=c(paste("CV",1:(ncol(CV.matrix)),sep=""))
         taxa_Y=as.character(Y[,1])
     	taxa_CV=as.character(CV[,1])
