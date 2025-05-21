@@ -187,12 +187,12 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
 
       if(DP$file.output)
       {
-        print("QQ plot..." )      
-        GAPIT.QQ(P.values = GWAS[,4], name.of.trait = DP$name.of.trait,DPP=DP$DPP)
-        print("Manhattan plot (Genomewise)..." )
-        GAPIT.Manhattan(GI.MP = GWAS[,2:4], name.of.trait = DP$name.of.trait, DPP=DP$DPP, plot.type = "Genomewise",cutOff=DP$cutOff,seqQTN=DP$QTN.position,plot.style=DP$plot.style,plot.bin=DP$plot.bin,chor_taxa=DP$chor_taxa)
-        print("Manhattan plot (Chromosomewise)..." )
-        GAPIT.Manhattan(GI.MP = GWAS[,2:4],GD=IC$GD[,-1], CG=DP$CG,name.of.trait = DP$name.of.trait, DPP=DP$DPP, plot.type = "Chromosomewise",cutOff=DP$cutOff,plot.bin=DP$plot.bin)
+        print("QQ plot...(NYC)" )      
+        GAPIT.QQ(P.values = GWAS[,4], name.of.trait = paste(DP$name.of.trait,"(NYC)",sep=""),DPP=DP$DPP)
+        print("Manhattan plot (Genomewise)...(NYC)" )
+        GAPIT.Manhattan(GI.MP = GWAS[,2:4], name.of.trait = paste(DP$name.of.trait,"(NYC)",sep=""), DPP=DP$DPP, plot.type = "Genomewise",cutOff=DP$cutOff,seqQTN=DP$QTN.position,plot.style=DP$plot.style,plot.bin=DP$plot.bin,chor_taxa=DP$chor_taxa)
+        print("Manhattan plot (Chromosomewise)...(NYC)" )
+        GAPIT.Manhattan(GI.MP = GWAS[,2:4],GD=IC$GD[,-1], CG=DP$CG,name.of.trait = paste(DP$name.of.trait,"(NYC)",sep=""), DPP=DP$DPP, plot.type = "Chromosomewise",cutOff=DP$cutOff,plot.bin=DP$plot.bin)
         
         print("Association table..." )
         print("Joining tvalue and stderr" )
@@ -208,10 +208,10 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
           }
           GWAS[,2]=chro
         }
-        utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", DP$name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+        utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", DP$name.of.trait,"(NYC)", ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
         DTS=cbind(GWAS[,1:3],df,tvalue,stderr,GWAS[,ncol(GWAS)])
         colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")  
-        utils::write.table(DTS, paste("GAPIT.Association.GWAS_StdErr.", DP$name.of.trait, ".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
+        utils::write.table(DTS, paste("GAPIT.Association.GWAS_StdErr.", DP$name.of.trait, "(NYC)",".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
         GAPIT.Phenotype.afterGWAS(GWAS=GWAS,GD=DP$GD,GM=DP$GM,Y=DP$Y,G=DP$G,model=DP$model,cutOff=DP$cutOff)
 
         if(DP$Inter.Plot)

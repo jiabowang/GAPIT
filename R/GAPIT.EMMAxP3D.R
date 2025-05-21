@@ -260,7 +260,6 @@
     gc()
     Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.R removed")
     Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R removed")
-
     vgs <- REMLE$vg
     ves <- REMLE$ve
     REMLs <- REMLE$REML
@@ -808,6 +807,8 @@
                           C21=-K%*%crossprod(Zt,Xt)%*%C11
                           Kinv=try(solve(K)  ,silent=TRUE  ) 
                           if(inherits(Kinv, "try-error")) Kinv=MASS::ginv(K)
+                          #print(ves)
+                          #print(REMLE)
                           if(!is.null(Z)) term.0=crossprod(Z,Z)/ves
                           if(is.null(Z)) term.0=diag(1/ves,nrow(K))
                           term.1=try(solve(term.0+Kinv/vgs ) ,silent=TRUE )
