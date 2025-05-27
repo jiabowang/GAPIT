@@ -11987,8 +11987,7 @@ for(i in 1:length(environ_name))
        max.x=c(min(as.numeric(map_store[,2])),max.x)
        store.x=c(store.x,as.numeric(map_store[,2]))
 }
-print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
-print(new_xz)
+# print(new_xz)
 # setup colors
 # print(head(result))
 # chm.to.analyze <- unique(result[,2])
