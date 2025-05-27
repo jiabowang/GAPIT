@@ -180,7 +180,9 @@ if(n.select>500)
 {
   if(max(ns)>1000)
     {
-    ns.bin=c(seq(0,90,10),seq(100,max(ns)/4,100),seq(max(ns)/4+200,max(ns)/3,200),seq(max(ns)/3+500,max(ns)/2,500),seq(max(ns)/2+1000,max(ns),1000))
+      # print(max(ns))
+    # ns.bin=c(seq(0,90,10),seq(100,max(ns)/4,100),seq((max(ns))/4+200,max(ns)/3,200),seq((max(ns)/3)+500,max(ns)/2,500),seq((max(ns)/2)+1000,max(ns),1000))
+    ns.bin=seq(0,max(ns),100)
     }else{
     ns.bin=c(seq(0,max(ns),10))    
     }

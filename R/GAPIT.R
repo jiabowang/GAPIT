@@ -191,6 +191,7 @@
   Major.allele.zero = FALSE, #convert hapmap file to numeric file, set major marker as 0
   Multiple_analysis = TRUE, #option for multiple Manhattan and QQ plots
   num_regwas = 10,# the max number of Multiple markers 
+  bin.regwas = 10000,
   # ncpus = 1,
   # ngrid = 100, 
   N4=FALSE,
@@ -252,7 +253,7 @@
 #Writen by Jiabo Wang
 #Last update: Mar 8, 2023
 ##############################################################################################
-print("--------------------- Welcome to GAPIT @----------------------------")
+print("--------------------- Welcome to GAPIT ----------------------------")
 all.memo=NULL
 GAPIT.Version=GAPIT.0000()
 #Allow either KI or K, but not both
@@ -381,7 +382,7 @@ if(!is.null(Y))
              SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction =SNP.fraction, seed =NULL, 
              SNP.test=SNP.test, SNP.MAF=SNP.MAF,FDR.Rate =1, SNP.FDR=SNP.FDR,
              Inter.Plot=Inter.Plot,  Inter.type=Inter.type,N.sig=N.sig,seq.num=seq.num,
-             Multi_iter=Multi_iter,num_regwas=num_regwas,QTN.gs=QTN.gs,
+             Multi_iter=Multi_iter,num_regwas=num_regwas,QTN.gs=QTN.gs,bin.regwas=bin.regwas,
              cutOff=cutOff, Model.selection =Model.selection,output.numerical =output.numerical,Random.model=Random.model,
              PCA.legend=PCA.legend,PCA.View.output=PCA.View.output, 
              WS0=WS0,Aver.Dis=Aver.Dis,memo=memo0,WS=WS,maxOut=maxOut,QTN.position=QTN.position, 

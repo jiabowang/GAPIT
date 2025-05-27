@@ -2,7 +2,7 @@
 function(Y=NULL,CV=NULL,Z=NULL,GT=NULL,KI=NULL,GK=NULL,GD=NULL,GM=NULL,DP=NULL,
          WS=c(1e0,1e3,1e4,1e5,1e6,1e7),alpha=c(.01,.05,.1,.2,.3,.4,.5,.6,.7,.8,.9,1),
          method=NULL,delta=NULL,vg=NULL,ve=NULL,LD=0.01,GTindex=NULL,name.of.trait=NULL,
-         cutOff=0.01,Multi_iter=FALSE,num_regwas=10,Random.model=FALSE,FDRcut=FALSE,N.sig=NULL,
+         cutOff=0.01,Multi_iter=FALSE,num_regwas=10,bin.regwas=10000,Random.model=FALSE,FDRcut=FALSE,N.sig=NULL,
          p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,seq.cutoff=NULL,
          method.GLM="FarmCPU.LM",method.sub="reward",method.sub.final="reward",method.bin="static",
          DPP=1000000,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
@@ -41,96 +41,6 @@ if(method%in%c("GLM","MLM","CMLM","SUPER")){
   ve=myGAPIT$ve
 }
 
-#Performing first screening with MLM
-# if(method=="MLM"){
-# #print("---------------screening by MLM----------------------------------")
-
-#   myGAPIT <- GAPIT(
-#   Y=Y,			
-#   CV=CV,
-#   Z=Z,
-#   KI=KI,
-#   GD=GD,
-#   GM=GM,
-#   model=method,
-#   # QC=FALSE,
-#   GTindex=GTindex,
-#   file.output=F				
-#   )
-#   GWAS=myGAPIT$GWAS 
-#   GPS=myGAPIT$GPS 
-#   REMLs=myGAPIT$REMLs  
-#   delta=myGAPIT$ve/myGAPIT$va
-#   vg=myGAPIT$vg
-#   ve=myGAPIT$ve
-# }
-
-# #Performing first screening with Compressed MLM
-# if(method=="CMLM"){
-# #print("---------------screening by CMLM----------------------------------")
-#    myGAPIT <- GAPIT(
-#   Y=Y,      
-#   CV=CV,
-#   Z=Z,
-#   KI=KI,
-#   GD=GD,
-#   GM=GM,
-#   model=method,
-#   # QC=FALSE,
-#   GTindex=GTindex,
-#   file.output=F       
-#   )
-#   GWAS=myGAPIT$GWAS 
-#   GPS=myGAPIT$GPS 
-#   REMLs=myGAPIT$REMLs  
-#   delta=myGAPIT$ve/myGAPIT$va
-#   vg=myGAPIT$vg
-#   ve=myGAPIT$ve
-# }
-
-#Performing first screening with FaST-LMM
-# if(method=="FaST" | method=="SUPER"| method=="DC")
-# {
-#   GWAS=NULL
-#   GPS=NULL
-#   if(!is.null(vg) & !is.null(vg) & is.null(delta)) delta=ve/vg
-#   if(is.null(vg) & is.null(ve))
-#   {
-#     #print("!!!!!!!!!!!!!!!!")
-#     myFaSTREML=GAPIT.get.LL(pheno=matrix(Y[,-1],nrow(Y),1),geno=NULL,snp.pool=as.matrix(GK[,-1]),X0=as.matrix(cbind(matrix(1,nrow(CV),1),CV[,-1])))
-#     #print(myFaSTREML)
-# #print("Transfer data...")    
-#     REMLs=-2*myFaSTREML$LL  
-#     delta=myFaSTREML$delta
-#     vg=myFaSTREML$vg
-#     ve=myFaSTREML$ve
-#     #GPS=myFaSTREML$GPS
-#   }
-
-# mySUPERFaST=GAPIT.SUPER.FastMLM(ys=matrix(Y[,-1],nrow(Y),1),X0=as.matrix(cbind(matrix(1,nrow(CV),1),CV[,-1])),snp.pool=as.matrix(GK[-1]), xs=as.matrix(GD[GTindex,-1]),vg=vg,delta=delta,LD=LD,method=method)
-# GWAS=cbind(GM,mySUPERFaST$ps,mySUPERFaST$stats,mySUPERFaST$dfs,mySUPERFaST$effect)
-# }#End of if(method=="FaST" | method=="SUPER")
-# if(method=="SUPER")
-# {
-#    myGAPIT <- GAPIT(
-#   Y=Y,      
-#   CV=CV,
-#   Z=Z,
-#   KI=KI,
-#   GD=GD,
-#   GM=GM,
-#   model=method,
-#   # QC=FALSE,
-#   GTindex=GTindex,
-#   file.output=F       
-#   )
-#   GWAS=myGAPIT$GWAS 
-#   GPS=myGAPIT$GPS 
-#   REMLs=myGAPIT$REMLs  
-#   delta=myGAPIT$ve/myGAPIT$va
-#   vg=myGAPIT$vg
-#   ve=myGAPIT$ve
-# }
 
 if(method=="FarmCPU")
 {
@@ -148,11 +58,6 @@ if(!is.null(CV))
   }else{
         farmcpuCV=NULL
 }
-#print(head(farmcpuCV))
-# print(dim(GD))
-# print(dim(farmcpuCV))
-#print(Y)
-# colnames(GD)[-1]=as.character(GM[,1])
 
 myFarmCPU=FarmCPU(
         Y=Y,#Phenotype
@@ -226,29 +131,25 @@ if(file.output&Multi_iter)
         print("Association table...(Kansas)" )
         utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", DP$name.of.trait, "(Kansas)",".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
         nn.sig=nrow(sig)
-        if(Random.model&file.output&nn.sig<100)
+        if(Random.model&file.output&nn.sig<50)
         {
           GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=paste(name.of.trait,"(Kansas)",sep=""),N.sig=N.sig,GT=GT)
-        # print(head(GWAS))
-        # DTS=cbind(GWAS[,1:3],df,tvalue,stderr,GWAS[,ncol(GWAS)])
-        # colnames(DTS)=c("SNP","Chromosome","Position","DF","t Value","std Error","effect")  
-        # utils::write.table(DTS, paste("GAPIT.Association.GWAS_StdErr.", DP$name.of.trait, "(Kansas)",".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
           GAPIT.Phenotype.afterGWAS(GWAS=GWAS,GD=DP$GD,GM=DP$GM,Y=DP$Y,G=DP$G,model=DP$model,cutOff=DP$cutOff)
         }
   }
 if(Multi_iter&sig_pass)
 {
    sig=sig[!is.na(sig[,4]),]
+   sig=sig[order(sig[,2]),]
+   sig=sig[order(sig[,3]),]
    sig_position=as.numeric(as.matrix(sig[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(sig[,3]))
-   sig=sig[order(sig_position),]
    sig_order=as.numeric(rownames(sig))
 #if(setequal(sig_order,numeric(0))) break
-
    n=nrow(sig)
    if(n!=1)
    {
-     diff_order=abs(sig_order[-n]-sig_order[-1])
-     diff_index=diff_order<num_regwas
+     diff_order=abs(sig_position[-n]-sig_position[-1])
+     diff_index=diff_order<bin.regwas
      count=0
      diff_index2=count
      for(i in 1:length(diff_index))
@@ -286,22 +187,40 @@ if(Multi_iter&sig_pass)
         }else{
           j=(sum(sig_bins[1:(i-1)])+1):sum(sig_bins[1:i])
         }
-     aim_marker=sig[j,]
-     # print(aim_marker)
-     aim_order=match(as.character(aim_marker[,1]),as.character(GM[,1]))
-     aim_area=rep(FALSE,(nrow(GWAS)))
+    aim_marker=sig[j,]
+    aim.index=aim_marker[,4]==min(aim_marker[,4])
+    aim_marker=aim_marker[aim.index,]
+    aim_posi=sig_position[j]
+    aim_posi=aim_posi[aim.index]
+    aim_order=as.numeric(rownames(aim_marker))
+    aim_min=as.numeric(min(aim_posi)-bin.regwas)
+    aim_max=as.numeric(max(aim_posi)+bin.regwas)
+    aim_area=rep(FALSE,(nrow(GWAS)))
+    posi.gwas=as.numeric(as.matrix(GWAS[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(GWAS[,3]))
+    distan.gwas=abs(posi.gwas-aim_posi)
+    # print(tail(GWAS))
+    # posi.gwas
     #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
-     if(min(aim_order)<num_regwas)
-     {
-      aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
-     }else{
-      max.order=(max(aim_order)+num_regwas)
-      if(max.order>nrow(GWAS))max.order=nrow(GWAS)
-      aim_area[c((min(aim_order)-num_regwas):max.order)]=TRUE
-     }
+    # if(min(aim_order)<num_regwas)
+    # {
+    #   aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
+    # }else{
+    #   max.order=(max(aim_order)+num_regwas)
+    #   if(max.order>nrow(GWAS))max.order=nrow(GWAS)
+    #   aim_area[c((min(aim_order)-num_regwas):max.order)]=TRUE
+    # }
+    # print(bin.regwas)
+    # print(head(posi.gwas))
+    # print(aim_marker)
+    # print(table(posi.gwas<aim_max))
+    # print(table(posi.gwas>aim_min))
+    # print(GWAS[(aim_order-2):(aim_order+2),])
+    aim_area[posi.gwas<aim_max&posi.gwas>aim_min]=TRUE
+    # print(aim_marker)
+    print(table(aim_area))
     # Next code can control with or without core marker in seconde model
-     aim_area[aim_order]=FALSE  # without
-     aim_area=aim_area[1:nrow(GWAS)]
+    aim_area[posi.gwas==aim_posi]=FALSE  # without FALSE
+     # aim_area=aim_area[1:nrow(GWAS)]
      if(!is.null(farmcpuCV))
      {
        secondCV=cbind(farmcpuCV,X[,seq_farm[!seq_farm%in%aim_order]])
@@ -354,7 +273,7 @@ GWAS[is.na(GWAS[,4]),4]=1
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 nn.sig=nrow(sig)
 #print(head(GWAS))
-if(Random.model&file.output&nn.sig<50) GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
+if(Random.model&file.output&nn.sig<50) GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=cbind(Y[,1],farmcpuCV),cutOff=cutOff,name.of.trait=paste(name.of.trait,"(NYC)",sep=""),N.sig=N.sig,GT=GT)
 
 GPS=myFarmCPU$Pred
 #colnames(GPS)[3]=c("Prediction")
@@ -453,7 +372,7 @@ if(method=="BLINK")
   seqQTN=myBlink$seqQTN
   taxa=names(blink_Y)[2]
   GWAS=myBlink$GWAS[,1:4]
-  #print(dim(blink_GD))
+  posi.gwas=as.numeric(as.matrix(GWAS[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(GWAS[,3]))
   X=GD[,-1]
   ss=apply(X,2,sum)
   ns=nrow(GD)
@@ -510,7 +429,7 @@ if(file.output&Multi_iter)
         print("Association table...(Kansas)" )
         utils::write.table(GWAS, paste("GAPIT.Association.GWAS_Results.", DP$name.of.trait, "(Kansas)",".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
         nn.sig=nrow(sig)
-        if(Random.model&file.output&nn.sig<100)
+        if(Random.model&file.output&nn.sig<50)
         {
           GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=paste(name.of.trait,"(Kansas)",sep=""),N.sig=N.sig,GT=GT)
         # print(head(GWAS))
@@ -525,17 +444,18 @@ if(file.output&Multi_iter)
 
 if(Multi_iter&sig_pass)
 {
-  sig=sig[!is.na(sig[,4]),]
-  sig_position=as.numeric(as.matrix(sig[,1:3])[,2])*10^10+as.numeric(as.matrix(sig[,1:3])[,3])
-  sig=sig[order(sig_position),]
-  sig_order=as.numeric(rownames(sig))
+   sig=sig[!is.na(sig[,4]),]
+   sig=sig[order(sig[,2]),]
+   sig=sig[order(sig[,3]),]
+   sig_position=as.numeric(as.matrix(sig[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(sig[,3]))
+   sig_order=as.numeric(rownames(sig))
 #if(setequal(sig_order,numeric(0))) break
 
   n=nrow(sig)
   if(length(sig_order)!=1)
   {
-    diff_order=abs(sig_order[-length(sig_order)]-sig_order[-1])
-    diff_index=diff_order<num_regwas
+    diff_order=abs(sig_position[-length(sig_position)]-sig_position[-1])
+    diff_index=diff_order<bin.regwas
     count=0
     diff_index2=count
     for(i in 1:length(diff_index))
@@ -557,7 +477,7 @@ if(Multi_iter&sig_pass)
     print("The  number of significant bins is")
     print(num_bins)
   }
-# print(windowsize)
+# select aim markers within bin
  if(num_bins>0)
  {
   for(i in 1:num_bins)
@@ -570,30 +490,42 @@ if(Multi_iter&sig_pass)
        j=(sum(sig_bins[1:(i-1)])+1):sum(sig_bins[1:i])
     }
     aim_marker=sig[j,]
-    # print(dim(GWAS))
+    aim.index=aim_marker[,4]==min(aim_marker[,4])
+    aim_marker=aim_marker[aim.index,]
+    aim_posi=sig_position[j]
+    aim_posi=aim_posi[aim.index]
     aim_order=as.numeric(rownames(aim_marker))
+    aim_min=as.numeric(min(aim_posi)-bin.regwas)
+    aim_max=as.numeric(max(aim_posi)+bin.regwas)
     aim_area=rep(FALSE,(nrow(GWAS)))
-    # print(head(sig))
-    print(aim_order)
-
+    posi.gwas=as.numeric(as.matrix(GWAS[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(GWAS[,3]))
+    distan.gwas=abs(posi.gwas-aim_posi)
+    # print(tail(GWAS))
+    # posi.gwas
     #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
-    if(min(aim_order)<num_regwas)
-    {
-      aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
-
-    }else{
-      max.order=(max(aim_order)+num_regwas)
-      if(max.order>nrow(GWAS))max.order=nrow(GWAS)
-      aim_area[c((min(aim_order)-num_regwas):max.order)]=TRUE
-    }
+    # if(min(aim_order)<num_regwas)
+    # {
+    #   aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
+    # }else{
+    #   max.order=(max(aim_order)+num_regwas)
+    #   if(max.order>nrow(GWAS))max.order=nrow(GWAS)
+    #   aim_area[c((min(aim_order)-num_regwas):max.order)]=TRUE
+    # }
+    # print(bin.regwas)
+    # print(head(posi.gwas))
+    # print(aim_marker)
+    # print(table(posi.gwas<aim_max))
+    # print(table(posi.gwas>aim_min))
+    # print(GWAS[(aim_order-2):(aim_order+2),])
+    aim_area[posi.gwas<aim_max&posi.gwas>aim_min]=TRUE
     print(table(aim_area))
     # Next code can control with or without core marker in seconde model
-    aim_area[aim_order]=FALSE  # without
+    aim_area[posi.gwas==aim_posi]=FALSE  # without FALSE
     if(!is.null(blink_CV))
     {
-      # secondCV=cbind(blink_CV,X[seqQTN[!seqQTN%in%aim_order]])
+      secondCV=cbind(blink_CV,X[seqQTN[!seqQTN%in%aim_order]])
       # secondCV=cbind(blink_CV,X[,seqQTN])
-      secondCV=blink_CV
+      # secondCV=blink_CV
     }else{
       secondCV=cbind(GD[,1],X[,seqQTN[!seqQTN%in%aim_order]])
 
@@ -605,6 +537,7 @@ if(Multi_iter&sig_pass)
         # this is used to set with sig marker in second model
         # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
         print(table(aim_area))
+        # print(dim(secondCV))
         secondGD=GD[,c(TRUE,aim_area)]
         secondGM=GM[aim_area,]
         print("Now that is multiple iteration for new BLINK !!!")
@@ -630,7 +563,8 @@ if(Multi_iter&sig_pass)
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
-
+sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
+nn.sig=nrow(sig)
 # effect=rep(NA,nrow(GWAS))
 # effect=myBlink$Beta
 # effect[effect=="NaN"]=0
@@ -638,7 +572,7 @@ GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 GPS=myBlink$Pred
 colnames(GWAS)[1:3]=c("SNP","Chromosome","Position")
 # print(head(GWAS))
-if(Random.model&file.output)GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
+if(Random.model&file.output&nn.sig<50)GR=GAPIT.RandomModel(Y=blink_Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=paste(name.of.trait,"(NYC)",sep=""),N.sig=N.sig,GT=GT)
 
 
 h2=NULL
@@ -771,7 +705,7 @@ GWAS=GWAS[order(GWAS[,3]),]
 GWAS=GWAS[order(GWAS[,2]),]
 # print(head(GWAS))
 
-if(Random.model&file.output)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
+if(Random.model&file.output&nn.sig<50)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
 
 }
 if(!is.null(seq.cutoff)) seqQTN=which(GWAS[,4]<(seq.cutoff/nrow(GWAS)))

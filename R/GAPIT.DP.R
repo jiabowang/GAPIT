@@ -14,7 +14,7 @@ function(G=NULL,GD=NULL,GM=NULL,KI=NULL,Z=NULL,CV=NULL,CV.Extragenetic=NULL,GP=N
         NJtree.group=NULL,NJtree.type=c("fan","unrooted"),plot.bin=10^6,PCA.col=NULL,PCA.3d=FALSE,
         file.from=1, file.to=1, file.total=NULL, file.fragment = 99999,file.path=NULL,Inter.Plot=FALSE,Inter.type=c("m","q"),
         file.G=NULL, file.Ext.G=NULL,file.GD=NULL, file.GM=NULL, file.Ext.GD=NULL,file.Ext.GM=NULL, 
-        ngrid = 100, llim = -10, ulim = 10, esp = 1e-10, Multi_iter=FALSE,num_regwas=10,FDRcut=FALSE,seq.num=50,
+        ngrid = 100, llim = -10, ulim = 10, esp = 1e-10, Multi_iter=FALSE,num_regwas=10,FDRcut=FALSE,seq.num=50,bin.regwas=10000,
         LD.chromosome=NULL,LD.location=NULL,LD.range=NULL, p.threshold=NA,QTN.threshold=0.01,maf.threshold=0.03,
         sangwich.top=NULL,sangwich.bottom=NULL,QC=TRUE,GTindex=NULL,LD=0.1,opt="extBIC",N.sig=NULL,WS0=1e6,Aver.Dis=1000,
         file.output=FALSE,cutOff=0.01, Model.selection = FALSE,output.numerical = FALSE,Random.model=FALSE,PCA.legend=NULL,
@@ -55,7 +55,7 @@ if(geno.pass)
                  QTN= QTN, QTN.round= QTN.round,QTN.limit= QTN.limit, QTN.update= QTN.update, QTN.method= QTN.method, Major.allele.zero = Major.allele.zero,
                method.GLM= method.GLM,method.sub= method.sub,method.sub.final= method.sub.final,
                method.bin= method.bin,bin.size= bin.size,bin.selection= bin.selection,FDRcut=FDRcut,
-                memo= memo,Prior= Prior,ncpus=1,maxLoop= maxLoop,threshold.output= threshold.output,seq.num=seq.num,
+                memo= memo,Prior= Prior,ncpus=1,maxLoop= maxLoop,threshold.output= threshold.output,seq.num=seq.num,bin.regwas=bin.regwas,
                 WS= WS,alpha= alpha,maxOut= maxOut,QTN.position= QTN.position, converge=1,iteration.output= iteration.output,acceleration=0,
                 iteration.method= iteration.method,PCA.View.output= PCA.View.output, 
                 p.threshold=p.threshold,QTN.threshold=QTN.threshold,N.sig=N.sig,
@@ -127,7 +127,7 @@ GD=cbind(as.data.frame(GT),GD)
         		memo= memo,Prior= Prior,ncpus=1,maxLoop= maxLoop,threshold.output= threshold.output,
         		WS= WS,alpha= alpha,maxOut= maxOut,QTN.position= QTN.position, converge=1,iteration.output= iteration.output,acceleration=0,
         		iteration.method= iteration.method,PCA.View.output= PCA.View.output, 
-                p.threshold=p.threshold,QTN.threshold=QTN.threshold,N.sig=N.sig,seq.num=seq.num,
+                p.threshold=p.threshold,QTN.threshold=QTN.threshold,N.sig=N.sig,seq.num=seq.num,bin.regwas=bin.regwas,
                 maf.threshold=maf.threshold,chor_taxa=chor_taxa,num_regwas=num_regwas,model=model,
         		Geno.View.output= Geno.View.output,plot.style= plot.style,SUPER_GD= SUPER_GD,SUPER_GS= SUPER_GS,CG=CG,plot.bin=plot.bin))
 }  #end of GAPIT DP function

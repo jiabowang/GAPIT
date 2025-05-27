@@ -99,11 +99,6 @@ print("GAPIT.IC in process...")
         comGD=NULL
         }#end of K
      }# end of GD
-     # print(DP$KI[1:5,1:5])
-         # print(tail(comY[,1]))
-         # print(tail(comGD[,1]))
-         # print(tail(comCV[,1]))
-         # print(tail(GD[,1]))
      GT=as.matrix(as.character(taxa_comall))
      print(paste("There are ",length(GT)," common individuals in genotype , phenotype and CV files.",sep=""))
      if(nrow(comCV)!=length(GT))stop ("GAPIT says: The number of individuals in CV does not match to the number of individuals in genotype files.")

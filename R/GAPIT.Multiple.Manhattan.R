@@ -17,7 +17,7 @@ function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,byT
        for(j in 1:length(model_store))
        {
       # environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],sep=""))
-          environ_name=c(environ_name,paste(model_store[j],".",Y.names[i],sep=""))
+          environ_name=c(environ_name,paste(model_store[j],".",Y.names[i],"(NYC)", sep=""))
        }
     }
   }else{
@@ -26,7 +26,7 @@ function(model_store,DPP=50000,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,byT
        for(j in 1:length(Y.names))
        {
       # environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],sep=""))
-          environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],sep=""))
+          environ_name=c(environ_name,paste(model_store[i],".",Y.names[j],"(NYC)", sep=""))
        }
     }
   }
@@ -146,8 +146,8 @@ for(i in 1:length(environ_name))
        max.x=c(min(as.numeric(map_store[,2])),max.x)
        store.x=c(store.x,as.numeric(map_store[,2]))
 }
-
-# print(new_xz)
+print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+print(new_xz)
 # setup colors
 # print(head(result))
 # chm.to.analyze <- unique(result[,2])

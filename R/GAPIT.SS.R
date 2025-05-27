@@ -52,7 +52,7 @@ if(DP$SNP.test)
                 cutOff=DP$cutOff,p.threshold=DP$p.threshold,QTN.threshold=DP$QTN.threshold,FDRcut=DP$FDRcut,
                 maf.threshold=DP$maf.threshold,method.GLM=DP$method.GLM,method.sub=DP$method.sub,seq.cutoff=DP$seq.cutoff,
                 method.sub.final=DP$method.sub.final,method.bin=DP$method.bin,Random.model=DP$Random.model,
-				        DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter,num_regwas=DP$num_regwas )
+				        DPP=DP$DPP,file.output=DP$file.output,Multi_iter=DP$Multi_iter,num_regwas=DP$num_regwas,bin.regwas= DP$bin.regwas)
      GWAS=myBus$GWAS
      Pred=myBus$Pred
      p=GWAS[,4]
