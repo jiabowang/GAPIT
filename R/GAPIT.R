@@ -191,7 +191,7 @@
   Major.allele.zero = FALSE, #convert hapmap file to numeric file, set major marker as 0
   Multiple_analysis = TRUE, #option for multiple Manhattan and QQ plots
   num_regwas = 10,# the max number of Multiple markers 
-  bin.regwas = 10000,
+  bin.regwas = 100000,
   # ncpus = 1,
   # ngrid = 100, 
   N4=FALSE,
