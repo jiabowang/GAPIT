@@ -1611,6 +1611,7 @@ if(Multi_iter&sig_pass)
     print(table(aim_area))
     # Next code can control with or without core marker in seconde model
     aim_area[posi.gwas==aim_posi]=FALSE  # without FALSE
+    if(sum(aim_area)<3) next
      # aim_area=aim_area[1:nrow(GWAS)]
      if(!is.null(farmcpuCV))
      {
@@ -1909,9 +1910,10 @@ if(Multi_iter&sig_pass)
     # print(table(posi.gwas>aim_min))
     # print(GWAS[(aim_order-2):(aim_order+2),])
     aim_area[posi.gwas<aim_max&posi.gwas>aim_min]=TRUE
-    print(table(aim_area))
+    # print(table(aim_area))
     # Next code can control with or without core marker in seconde model
     aim_area[posi.gwas==aim_posi]=FALSE  # without FALSE
+    if(sum(aim_area)<3) next
     if(!is.null(blink_CV))
     {
       secondCV=cbind(blink_CV,X[seqQTN[!seqQTN%in%aim_order]])
@@ -1923,7 +1925,6 @@ if(Multi_iter&sig_pass)
     }
     if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
-    if(sum(aim_area)==0) next    # print(table(aim_area))
     #if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
         # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
