@@ -2095,7 +2095,8 @@ colnames(GWAS)=c("SNP","Chr","Pos","P.value","maf","nobs","effect")
 GWAS=GWAS[order(GWAS[,3]),]
 GWAS=GWAS[order(GWAS[,2]),]
 # print(head(GWAS))
-
+sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
+nn.sig=nrow(sig)
 if(Random.model&file.output&nn.sig<50)GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=name.of.trait,N.sig=N.sig,GT=GT)
 
 }
