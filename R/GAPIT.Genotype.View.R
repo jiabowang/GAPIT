@@ -76,6 +76,7 @@ X2=X[,rs.index]
 x1=X2
 x2=X[,rs.index+1]
 if(N4) x3=X[,rs.index+4]
+# print(head(GI))
 dist1=abs(as.numeric(GI[rs.index,3])-as.numeric(GI[rs.index+1,3]))
 if(N4) dist2=abs(as.numeric(GI[rs.index,3])-as.numeric(GI[rs.index+4,3]))
 dist=c(dist1,dist2)

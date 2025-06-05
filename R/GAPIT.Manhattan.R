@@ -203,7 +203,11 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         #palette(rainbow(ncolor+1))
         cycle1=seq(1,nchr,by= ncycle)
         thecolor=cycle1
-        for(i in 2:ncycle){thecolor=c(thecolor,cycle1+(i-1))}
+        if(nchr!=1)
+        {for(i in 2:ncycle){thecolor=c(thecolor,cycle1+(i-1))}
+        }else{
+        thecolor=1:chm.to.analyze
+        }
         col.Rainbow=rainbow(ncolor+1)[thecolor]         
           col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
           col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
