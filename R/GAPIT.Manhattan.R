@@ -290,7 +290,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         }
             par(mar = c(3,6,5,1))
             plot(y~x,xlab="",ylab=expression(-log[10](italic(p))) ,las=1,
-            cex.axis=1, cex.lab=1.3 ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=wd,cex=s+.3,main = paste(name.of.trait,sep="             "),cex.main=2.5)
+            cex.axis=1, cex.lab=1.3 ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=wd,cex=s+.3,main = gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE),cex.main=2.5)
         
         #Label QTN positions
         if(is.vector(QTN)){

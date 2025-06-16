@@ -873,10 +873,11 @@ GAPIT.Circle.Manhattan.Plot <- function(
 			}
 		}
 		taxa=append("Centre",taxa,)
+		# taxa=gsub("\\(NYC)\\","",gsub("\\(Kansas)\\","",taxa))
 		taxa_col=rep("black",R)
 		taxa_col=append("red",taxa_col)
 		for(j in 1:(R+1)){
-            graphics::text(r/5,0.4*(j-1),taxa[j],adj=1,col=taxa_col[j],cex=cir.legend.cex,font=2)
+            graphics::text(r/5,0.4*(j-1),gsub("(NYC)","",gsub("(Kansas)","",taxa[j],fixed=TRUE),fixed=TRUE),adj=1,col=taxa_col[j],cex=cir.legend.cex,font=2)
 				    
 		}
 		taxa=taxa[-1]
@@ -935,7 +936,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				}
 				
 				YlimMax <- max(floor(max(max(-log10(c05)), max(-log10(c95)))+1), floor(max(log.P.values)+1))
-				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0,YlimMax),xlab ="", ylab="", main = taxa[i])
+				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0,YlimMax),xlab ="", ylab="", main = gsub("(NYC)","",gsub("(Kansas)","",taxa[i],fixed=TRUE),fixed=TRUE))
 				graphics::axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
 				graphics::axis(2, at=seq(0,YlimMax,ceiling(YlimMax/10)), labels=seq(0,YlimMax,ceiling(YlimMax/10)), cex.axis=cex.axis)
 				
@@ -1022,7 +1023,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				YlimMax <- max(floor(max(max(-log10(c05)), max(-log10(c95)))+1), -log10(min(Pmap.min[Pmap.min > 0])))
 				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0, floor(YlimMax+1)),xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = "QQ plot")
 				#legend("topleft",taxa,col=t(col)[1:R],pch=1,pt.lwd=2,text.font=6,box.col=NA)			
-				graphics::legend("topleft",taxa,col=qq_col[1:R],pch=1,pt.lwd=3,text.font=6,box.col=NA)
+				graphics::legend("topleft",gsub("(NYC)","",gsub("(Kansas)","",taxa,fixed=TRUE),fixed=TRUE),col=qq_col[1:R],pch=1,pt.lwd=3,text.font=6,box.col=NA)
 				graphics::axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
 				graphics::axis(2, at=seq(0,floor(YlimMax+1),ceiling((YlimMax+1)/10)), labels=seq(0,floor((YlimMax+1)),ceiling((YlimMax+1)/10)), cex.axis=cex.axis)
 				#print(log.Quantiles[index])
@@ -1138,7 +1139,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				#print(max(log.Quantiles))
 				#print("@@@@@")
 				YlimMax <- max(floor(max(max(-log10(c05)), max(-log10(c95)))+1), floor(max(log.P.values)+1))
-				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0,YlimMax),xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = paste("QQplot of",taxa[i]))
+				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0,YlimMax),xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = paste("QQplot of",gsub("(NYC)","",gsub("(Kansas)","",taxa[i],fixed=TRUE),fixed=TRUE)))
 				graphics::axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
 				graphics::axis(2, at=seq(0,YlimMax,ceiling(YlimMax/10)), labels=seq(0,YlimMax,ceiling(YlimMax/10)), cex.axis=cex.axis)
 				

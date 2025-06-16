@@ -310,7 +310,7 @@ if("h"%in%plot.type)
        axis(2, yaxp=c(0,themax2,4),cex.axis=2.3,tick=T,las=1,lwd=2.5)
        if(k==Nenviron)axis(1, at=max.x,cex.axis=2.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
        if(k==Nenviron)axis(1, at=ticks,cex.axis=2.5,labels=chm.to.analyze,tick=F,line=1)
-       mtext(side=4,paste(environ_name[k],sep=""),line=3.2,cex=2)
+       mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=3.2,cex=2)
     }#end of environ_name
        dev.off()
 }#end of plot.type
@@ -457,7 +457,9 @@ if("w"%in%plot.type)
         abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
         axis(2, yaxp=c(0,themax2,bamboo),cex.axis=1.5,las=1,tick=F)
         if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,line=0.001,labels=chm.to.analyze,tick=F)
-        mtext(side=4,paste(environ_name[k],sep=""),line=2,cex=1,base_family="Arial")
+        # mtext(side=4,paste(environ_name[k],sep=""),line=2,cex=1,base_family="Arial")
+        mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=2,cex=1,base_family="Arial")
+
  box()
  }#end of environ_name
  dev.off()
@@ -685,23 +687,9 @@ if("s"%in%plot.type)
     # x.di=0.52*n.col.pch
     x.di=(0.1*(ceiling(nchar0/5)-1)+(n.col.pch-1)*0.1)*ceiling(nchar0/5)#*n.col.pch
   }
-  # print(x.di)
- # if(Nenviron>5){
- #  cex.Ne=3
- #  cex.di=1.5
- #  text.di=.02
- #  high.Ne=10
- #  cex.betw=0.9
- #  }else{
- #  cex.Ne=1
- #  cex.di=0.3
- #  high.Ne=Nenviron/2 
- #  text.di=.02
- #  cex.betw=0.9
- #  }
+  
 
-
- write.csv(environ_name,"GAPIT.Association.Manhattans_Symphysic_Traitsnames.csv",quote=FALSE)
+ write.csv(paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name,fixed=TRUE),fixed=TRUE),sep=""),"GAPIT.Association.Manhattans_Symphysic_Traitsnames.csv",quote=FALSE)
  pdf(paste("GAPIT.Association.Manhattans_Symphysic_Legend",".pdf" ,sep = ""), width = 4+(x.di*(n.col.pch+1)),height=high.Ne)
  par(mfrow=c(1,1))
  par(mar = c(cex.Ne+1,2,cex.Ne+1,2))
@@ -726,7 +714,8 @@ if("s"%in%plot.type)
   if(Nenviron>5) points(rep(0,max.pch2),((max.pch):(max.pch-max.pch2+1))*cex.betw,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
   pch=yourpch2[((kk-1)*max.row+1):Nenviron])
-  text(rep((0+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=environ_name[((kk-1)*max.row+1):Nenviron],pos=4,cex=cex.Ne-c.t.d)
+  text(rep((0+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=gsub("(NYC)","",gsub("(Kansas)","",environ_name[((kk-1)*max.row+1):Nenviron],fixed=TRUE),fixed=TRUE),pos=4,cex=cex.Ne-c.t.d)
+  
   }else{
   # print(kk)
   max.pch2=Nenviron-(n.col.pch-1)*max.row
@@ -737,7 +726,7 @@ if("s"%in%plot.type)
   if(Nenviron>5) points(rep((kk-1)*x.di,max.pch2),((max.pch):(max.pch-max.pch2+1))*cex.betw,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
   pch=yourpch2[((kk-1)*max.row+1):Nenviron])
-  text(rep(((kk-1)*x.di+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=environ_name[((kk-1)*max.row+1):Nenviron],pos=4,cex=cex.Ne-c.t.d)
+  text(rep(((kk-1)*x.di+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=gsub("(NYC)","",gsub("(Kansas)","",environ_name[((kk-1)*max.row+1):Nenviron],fixed=TRUE),fixed=TRUE),pos=4,cex=cex.Ne-c.t.d)
     
   }
  }else{

@@ -3009,10 +3009,11 @@ GAPIT.Circle.Manhattan.Plot <- function(
 			}
 		}
 		taxa=append("Centre",taxa,)
+		# taxa=gsub("\\(NYC)\\","",gsub("\\(Kansas)\\","",taxa))
 		taxa_col=rep("black",R)
 		taxa_col=append("red",taxa_col)
 		for(j in 1:(R+1)){
-            graphics::text(r/5,0.4*(j-1),taxa[j],adj=1,col=taxa_col[j],cex=cir.legend.cex,font=2)
+            graphics::text(r/5,0.4*(j-1),gsub("(NYC)","",gsub("(Kansas)","",taxa[j],fixed=TRUE),fixed=TRUE),adj=1,col=taxa_col[j],cex=cir.legend.cex,font=2)
 				    
 		}
 		taxa=taxa[-1]
@@ -3071,7 +3072,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				}
 				
 				YlimMax <- max(floor(max(max(-log10(c05)), max(-log10(c95)))+1), floor(max(log.P.values)+1))
-				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0,YlimMax),xlab ="", ylab="", main = taxa[i])
+				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0,YlimMax),xlab ="", ylab="", main = gsub("(NYC)","",gsub("(Kansas)","",taxa[i],fixed=TRUE),fixed=TRUE))
 				graphics::axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
 				graphics::axis(2, at=seq(0,YlimMax,ceiling(YlimMax/10)), labels=seq(0,YlimMax,ceiling(YlimMax/10)), cex.axis=cex.axis)
 				
@@ -3158,7 +3159,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				YlimMax <- max(floor(max(max(-log10(c05)), max(-log10(c95)))+1), -log10(min(Pmap.min[Pmap.min > 0])))
 				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0, floor(YlimMax+1)),xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = "QQ plot")
 				#legend("topleft",taxa,col=t(col)[1:R],pch=1,pt.lwd=2,text.font=6,box.col=NA)			
-				graphics::legend("topleft",taxa,col=qq_col[1:R],pch=1,pt.lwd=3,text.font=6,box.col=NA)
+				graphics::legend("topleft",gsub("(NYC)","",gsub("(Kansas)","",taxa,fixed=TRUE),fixed=TRUE),col=qq_col[1:R],pch=1,pt.lwd=3,text.font=6,box.col=NA)
 				graphics::axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
 				graphics::axis(2, at=seq(0,floor(YlimMax+1),ceiling((YlimMax+1)/10)), labels=seq(0,floor((YlimMax+1)),ceiling((YlimMax+1)/10)), cex.axis=cex.axis)
 				#print(log.Quantiles[index])
@@ -3274,7 +3275,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				#print(max(log.Quantiles))
 				#print("@@@@@")
 				YlimMax <- max(floor(max(max(-log10(c05)), max(-log10(c95)))+1), floor(max(log.P.values)+1))
-				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0,YlimMax),xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = paste("QQplot of",taxa[i]))
+				plot(NULL, xlim = c(0,floor(max(log.Quantiles)+1)), axes=FALSE, cex.axis=cex.axis, cex.lab=1.2,ylim=c(0,YlimMax),xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = paste("QQplot of",gsub("(NYC)","",gsub("(Kansas)","",taxa[i],fixed=TRUE),fixed=TRUE)))
 				graphics::axis(1, at=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), labels=seq(0,floor(max(log.Quantiles)+1),ceiling((max(log.Quantiles)+1)/10)), cex.axis=cex.axis)
 				graphics::axis(2, at=seq(0,YlimMax,ceiling(YlimMax/10)), labels=seq(0,YlimMax,ceiling(YlimMax/10)), cex.axis=cex.axis)
 				
@@ -11738,7 +11739,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         }
             par(mar = c(3,6,5,1))
             plot(y~x,xlab="",ylab=expression(-log[10](italic(p))) ,las=1,
-            cex.axis=1, cex.lab=1.3 ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=wd,cex=s+.3,main = paste(name.of.trait,sep="             "),cex.main=2.5)
+            cex.axis=1, cex.lab=1.3 ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=wd,cex=s+.3,main = gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE),cex.main=2.5)
         
         #Label QTN positions
         if(is.vector(QTN)){
@@ -12158,7 +12159,7 @@ if("h"%in%plot.type)
        axis(2, yaxp=c(0,themax2,4),cex.axis=2.3,tick=T,las=1,lwd=2.5)
        if(k==Nenviron)axis(1, at=max.x,cex.axis=2.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
        if(k==Nenviron)axis(1, at=ticks,cex.axis=2.5,labels=chm.to.analyze,tick=F,line=1)
-       mtext(side=4,paste(environ_name[k],sep=""),line=3.2,cex=2)
+       mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=3.2,cex=2)
     }#end of environ_name
        dev.off()
 }#end of plot.type
@@ -12305,7 +12306,9 @@ if("w"%in%plot.type)
         abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
         axis(2, yaxp=c(0,themax2,bamboo),cex.axis=1.5,las=1,tick=F)
         if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,line=0.001,labels=chm.to.analyze,tick=F)
-        mtext(side=4,paste(environ_name[k],sep=""),line=2,cex=1,base_family="Arial")
+        # mtext(side=4,paste(environ_name[k],sep=""),line=2,cex=1,base_family="Arial")
+        mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=2,cex=1,base_family="Arial")
+
  box()
  }#end of environ_name
  dev.off()
@@ -12533,23 +12536,9 @@ if("s"%in%plot.type)
     # x.di=0.52*n.col.pch
     x.di=(0.1*(ceiling(nchar0/5)-1)+(n.col.pch-1)*0.1)*ceiling(nchar0/5)#*n.col.pch
   }
-  # print(x.di)
- # if(Nenviron>5){
- #  cex.Ne=3
- #  cex.di=1.5
- #  text.di=.02
- #  high.Ne=10
- #  cex.betw=0.9
- #  }else{
- #  cex.Ne=1
- #  cex.di=0.3
- #  high.Ne=Nenviron/2 
- #  text.di=.02
- #  cex.betw=0.9
- #  }
+  
 
-
- write.csv(environ_name,"GAPIT.Association.Manhattans_Symphysic_Traitsnames.csv",quote=FALSE)
+ write.csv(paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name,fixed=TRUE),fixed=TRUE),sep=""),"GAPIT.Association.Manhattans_Symphysic_Traitsnames.csv",quote=FALSE)
  pdf(paste("GAPIT.Association.Manhattans_Symphysic_Legend",".pdf" ,sep = ""), width = 4+(x.di*(n.col.pch+1)),height=high.Ne)
  par(mfrow=c(1,1))
  par(mar = c(cex.Ne+1,2,cex.Ne+1,2))
@@ -12574,7 +12563,8 @@ if("s"%in%plot.type)
   if(Nenviron>5) points(rep(0,max.pch2),((max.pch):(max.pch-max.pch2+1))*cex.betw,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
   pch=yourpch2[((kk-1)*max.row+1):Nenviron])
-  text(rep((0+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=environ_name[((kk-1)*max.row+1):Nenviron],pos=4,cex=cex.Ne-c.t.d)
+  text(rep((0+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=gsub("(NYC)","",gsub("(Kansas)","",environ_name[((kk-1)*max.row+1):Nenviron],fixed=TRUE),fixed=TRUE),pos=4,cex=cex.Ne-c.t.d)
+  
   }else{
   # print(kk)
   max.pch2=Nenviron-(n.col.pch-1)*max.row
@@ -12585,7 +12575,7 @@ if("s"%in%plot.type)
   if(Nenviron>5) points(rep((kk-1)*x.di,max.pch2),((max.pch):(max.pch-max.pch2+1))*cex.betw,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
   pch=yourpch2[((kk-1)*max.row+1):Nenviron])
-  text(rep(((kk-1)*x.di+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=environ_name[((kk-1)*max.row+1):Nenviron],pos=4,cex=cex.Ne-c.t.d)
+  text(rep(((kk-1)*x.di+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=gsub("(NYC)","",gsub("(Kansas)","",environ_name[((kk-1)*max.row+1):Nenviron],fixed=TRUE),fixed=TRUE),pos=4,cex=cex.Ne-c.t.d)
     
   }
  }else{
@@ -15128,10 +15118,10 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
         #data
         graphics::par(new=T)
         if(plot.style=="FarmCPU"){
-            plot(log.Quantiles, log.P.values, cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Black" ,bty='l', xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = paste(name.of.trait,sep=""),pch=20)
+            plot(log.Quantiles, log.P.values, cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Black" ,bty='l', xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main =gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE),pch=20)
         }
         if(plot.style=="rainbow"){
-            plot(log.Quantiles, log.P.values, xlim = c(0,max(log.Quantiles)), ylim = c(0,max(log.P.values)), cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Blue" ,xlab =expression(Expected~~-log[10](italic(p))),ylab = expression(Observed~~-log[10](italic(p))), main = paste(name.of.trait,sep=""))
+            plot(log.Quantiles, log.P.values, xlim = c(0,max(log.Quantiles)), ylim = c(0,max(log.P.values)), cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Blue" ,xlab =expression(Expected~~-log[10](italic(p))),ylab = expression(Observed~~-log[10](italic(p))), main = gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE))
         }
         
         grDevices::dev.off()
@@ -15145,7 +15135,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
         stats::qqplot(p_value_quantiles, P.values, xlim = c(0,1),
         ylim = c(0,1), type = "l" , xlab = "Uniform[0,1] Theoretical Quantiles", 
         lty = 1, lwd = 1, ylab = "Quantiles of P-values from GWAS", col = "Blue",
-        main = paste(name.of.trait,sep=" "))
+        main = gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE))
         graphics::abline(a = 0, b = 1, col = "red")
         grDevices::dev.off()   
     }

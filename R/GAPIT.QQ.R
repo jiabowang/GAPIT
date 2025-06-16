@@ -70,10 +70,10 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
         #data
         graphics::par(new=T)
         if(plot.style=="FarmCPU"){
-            plot(log.Quantiles, log.P.values, cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Black" ,bty='l', xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main = paste(name.of.trait,sep=""),pch=20)
+            plot(log.Quantiles, log.P.values, cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Black" ,bty='l', xlab =expression(Expected~~-log[10](italic(p))), ylab = expression(Observed~~-log[10](italic(p))), main =gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE),pch=20)
         }
         if(plot.style=="rainbow"){
-            plot(log.Quantiles, log.P.values, xlim = c(0,max(log.Quantiles)), ylim = c(0,max(log.P.values)), cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Blue" ,xlab =expression(Expected~~-log[10](italic(p))),ylab = expression(Observed~~-log[10](italic(p))), main = paste(name.of.trait,sep=""))
+            plot(log.Quantiles, log.P.values, xlim = c(0,max(log.Quantiles)), ylim = c(0,max(log.P.values)), cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Blue" ,xlab =expression(Expected~~-log[10](italic(p))),ylab = expression(Observed~~-log[10](italic(p))), main = gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE))
         }
         
         grDevices::dev.off()
@@ -87,7 +87,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
         stats::qqplot(p_value_quantiles, P.values, xlim = c(0,1),
         ylim = c(0,1), type = "l" , xlab = "Uniform[0,1] Theoretical Quantiles", 
         lty = 1, lwd = 1, ylab = "Quantiles of P-values from GWAS", col = "Blue",
-        main = paste(name.of.trait,sep=" "))
+        main = gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE))
         graphics::abline(a = 0, b = 1, col = "red")
         grDevices::dev.off()   
     }
