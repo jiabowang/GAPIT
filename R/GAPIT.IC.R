@@ -18,9 +18,19 @@ print("GAPIT.IC in process...")
        noCV=TRUE
        if(is.null(GD))
        {
-         CV=Y[,1:2]
+         if(nrow(Y)>=nrow(DP$KI))
+         {
+          CV=Y[,1:2]
+          }else{
+          CV=DP$KI[,1:2]
+          }
        }else{
-         CV=GD[,1:2]
+         if(nrow(GD)>=nrow(DP$KI))
+         {
+          CV=GD[,1:2]
+          }else{
+          CV=DP$KI[,1:2]
+          }
        }
        CV[,2]=1
        colnames(CV)=c("taxa","overall")

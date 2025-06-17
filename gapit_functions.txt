@@ -8616,9 +8616,19 @@ print("GAPIT.IC in process...")
        noCV=TRUE
        if(is.null(GD))
        {
-         CV=Y[,1:2]
+         if(nrow(Y)>=nrow(DP$KI))
+         {
+          CV=Y[,1:2]
+          }else{
+          CV=DP$KI[,1:2]
+          }
        }else{
-         CV=GD[,1:2]
+         if(nrow(GD)>=nrow(DP$KI))
+         {
+          CV=GD[,1:2]
+          }else{
+          CV=DP$KI[,1:2]
+          }
        }
        CV[,2]=1
        colnames(CV)=c("taxa","overall")
@@ -15517,7 +15527,7 @@ if(!is.null(Y))
         if(ncol(Y)<2)  stop ("Phenotype should have taxa name and one trait at least. Please correct phenotype file!")
         print(paste("The ",m," model in all.",sep=""))
         print(model)
-        ##print(group.to)
+        # print(dim(KI0))
         if(m==1)
           {
             DP=GAPIT.DP(G=G,GD=GD,GM=GM,KI=KI0,Z=Z,CV=CV,CV.Extragenetic=CV.Extragenetic,
@@ -15572,7 +15582,7 @@ if(!is.null(Y))
              DP$group.from=Judge$group.from
              DP$group.to=Judge$group.to
              DP$name.of.trait=traitname
-             DP$Y=Y[!is.na(Y[,trait]),c(1,trait)]
+             DP$Y=Y[,c(1,trait)]
              if(QC.Y) DP$Y[,2]=GAPIT.Remove.outliers(DP$Y[,2])
              DP$model=model
 # print(DP$name.of.trait)
