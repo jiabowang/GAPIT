@@ -8623,11 +8623,17 @@ print("GAPIT.IC in process...")
           CV=DP$KI[,1:2]
           }
        }else{
-         if(nrow(GD)>=nrow(DP$KI))
+         if(!is.null(DP$KI))
          {
-          CV=GD[,1:2]
+           if(nrow(GD)>=nrow(DP$KI))
+           {
+             CV=GD[,1:2]
+           }else{
+             CV=DP$KI[,1:2]
+           }
           }else{
-          CV=DP$KI[,1:2]
+            CV=GD[,1:2]
+
           }
        }
        CV[,2]=1
