@@ -11,6 +11,8 @@ print("GAPIT.IC in process...")
      PC=DP$PC
      CV=DP$CV
      GD=DP$GD
+     # print(dim(GD))
+     # print(dim(DP$GM))
      noCV=FALSE
      # print(dim(CV))
      if(is.null(CV))

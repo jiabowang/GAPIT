@@ -52,9 +52,9 @@ grDevices::pdf(paste("GAPIT.Phenotype.Distribution_Significantmarkers.",model,".
 
 par(mfrow=c(y.layout,x.layout),mar = c(5,5,2,2))
 
-# y=Y[,2]
-y.min=round(min(Y[,2],rm.na=T),1)
-y.max=round(max(Y[,2],rm.na=T),1)
+# print(Y[,2])
+y.min=round(min(Y[,2],na.rm=T),1)
+y.max=round(max(Y[,2],na.rm=T),1)
 if(hapmap)
 {
   X=t(G[-1,-c(1:11)])
@@ -80,6 +80,8 @@ for(i in 1:N.sigs)
   yall=merge(Y,marker.genotype,by.x="Taxa",by.y="taxa")
   colnames(yall)=c("Taxa","Values","Genotype")
   marker.taxa=paste(marker.name,":",marker[,2],":",marker[,3],sep="")
+  # print(y.min)
+  # print(y.max)
   boxplot(Values~Genotype,data=yall,xlab="",ylab="",
     las=1,ylim=c(y.min,y.max),main=letter[i],
     space=0.2,axes=F,outline=FALSE)

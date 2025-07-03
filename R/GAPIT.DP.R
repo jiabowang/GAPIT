@@ -81,8 +81,11 @@ genoFormat=myGenotype$genoFormat
 hasGenotype=myGenotype$hasGenotype
 byFile=myGenotype$byFile
 fullGD=myGenotype$fullGD
-GD=myGenotype$GD
-GI=myGenotype$GI
+GD=myGenotype$GD[,!is.na(myGenotype$GI[,1])]
+GI=myGenotype$GI[!is.na(myGenotype$GI[,1]),]
+# print(dim(GD))
+# print(dim(GI))
+# print(table(is.na(GI[,1])))
 
 GT=myGenotype$GT
 G=myGenotype$G

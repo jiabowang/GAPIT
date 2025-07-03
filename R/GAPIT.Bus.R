@@ -58,7 +58,8 @@ if(!is.null(CV))
   }else{
         farmcpuCV=NULL
 }
-
+# print(dim(GD))
+# print(dim(GM))
 myFarmCPU=FarmCPU(
         Y=Y,#Phenotype
         GD=GD,#Genotype
@@ -69,6 +70,7 @@ myFarmCPU=FarmCPU(
         method.sub.final=method.sub.final,method.bin=method.bin,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
         file.output=FALSE
         )
+# print(dim(myFarmCPU$GWAS))
 # print(head(myFarmCPU$GWAS))
 seqQTN=myFarmCPU$seqQTN
 seq_farm=myFarmCPU$seqQTN
@@ -76,6 +78,7 @@ seq_farm=myFarmCPU$seqQTN
 taxa=names(Y)[2]
 #print(taxa)
 GWAS=myFarmCPU$GWAS
+# GWAS=GWAS[!is.na(GWAS[,2]),]
 #print(head(GWAS))
  X=GD[,-1]
  ss=apply(X,2,sum)
@@ -267,10 +270,17 @@ GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
 nobs=ns
-# print(head(GWAS))
+GWAS=GWAS[!is.na(GWAS[,2]),]
+# print(dim(GM))
+# print(dim(GD))
+# print(table(is.na(GM[,1])))
+
 GWAS=GWAS[,c(1:5,7,6)]
+GWAS=merge(GM,GWAS[,-c(2,3)],by.x=colnames(GM)[1],by.y=colnames(GWAS)[1],all.x=T)
+# print(head(GWAS))
+# print(tail(GWAS))
 GWAS[is.na(GWAS[,4]),4]=1
-# colnames(GWAS)=c("SNP","Chr","Pos","P.value","MAF","effect","nobs")
+
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 nn.sig=nrow(sig)
 #print(head(GWAS))

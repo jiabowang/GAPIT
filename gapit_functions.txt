@@ -1449,7 +1449,8 @@ if(!is.null(CV))
   }else{
         farmcpuCV=NULL
 }
-
+# print(dim(GD))
+# print(dim(GM))
 myFarmCPU=FarmCPU(
         Y=Y,#Phenotype
         GD=GD,#Genotype
@@ -1460,6 +1461,7 @@ myFarmCPU=FarmCPU(
         method.sub.final=method.sub.final,method.bin=method.bin,bin.size=c(5e5,5e6,5e7),bin.selection=seq(10,100,10),
         file.output=FALSE
         )
+# print(dim(myFarmCPU$GWAS))
 # print(head(myFarmCPU$GWAS))
 seqQTN=myFarmCPU$seqQTN
 seq_farm=myFarmCPU$seqQTN
@@ -1467,6 +1469,7 @@ seq_farm=myFarmCPU$seqQTN
 taxa=names(Y)[2]
 #print(taxa)
 GWAS=myFarmCPU$GWAS
+# GWAS=GWAS[!is.na(GWAS[,2]),]
 #print(head(GWAS))
  X=GD[,-1]
  ss=apply(X,2,sum)
@@ -1658,10 +1661,17 @@ GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
 #rint(head(GWAS))
 nobs=ns
-# print(head(GWAS))
+GWAS=GWAS[!is.na(GWAS[,2]),]
+# print(dim(GM))
+# print(dim(GD))
+# print(table(is.na(GM[,1])))
+
 GWAS=GWAS[,c(1:5,7,6)]
+GWAS=merge(GM,GWAS[,-c(2,3)],by.x=colnames(GM)[1],by.y=colnames(GWAS)[1],all.x=T)
+# print(head(GWAS))
+# print(tail(GWAS))
 GWAS[is.na(GWAS[,4]),4]=1
-# colnames(GWAS)=c("SNP","Chr","Pos","P.value","MAF","effect","nobs")
+
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 nn.sig=nrow(sig)
 #print(head(GWAS))
@@ -3928,8 +3938,11 @@ genoFormat=myGenotype$genoFormat
 hasGenotype=myGenotype$hasGenotype
 byFile=myGenotype$byFile
 fullGD=myGenotype$fullGD
-GD=myGenotype$GD
-GI=myGenotype$GI
+GD=myGenotype$GD[,!is.na(myGenotype$GI[,1])]
+GI=myGenotype$GI[!is.na(myGenotype$GI[,1]),]
+# print(dim(GD))
+# print(dim(GI))
+# print(table(is.na(GI[,1])))
 
 GT=myGenotype$GT
 G=myGenotype$G
@@ -8609,6 +8622,8 @@ print("GAPIT.IC in process...")
      PC=DP$PC
      CV=DP$CV
      GD=DP$GD
+     # print(dim(GD))
+     # print(dim(DP$GM))
      noCV=FALSE
      # print(dim(CV))
      if(is.null(CV))
@@ -8860,7 +8875,7 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
     GWAS=SS$GWAS
     GVs=SS$GVs
     Pred=SS$Pred
-# print(head(GWAS))
+# print(dim(GWAS))
     GI=GWAS
     GI=GI[order(GI[,3]),]
     GI=GI[order(GI[,2]),]
@@ -8908,10 +8923,9 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
   #Create PWIP, which is a table of SNP Names, Chromosome, bp Position, Raw P-values, FDR Adjusted P-values
       print("Calculating FDR..." )
       PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
-  # print(str(PWIP)) 
-
-      GWAS=merge(GWAS[,c(1:6,ncol(GWAS))],PWIP$PWIP[,c(1,9)],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1])  
-      # print(head(GWAS))
+      GWAS=merge(GWAS[,c(1:6,ncol(GWAS))],PWIP$PWIP[,c(1,9)],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1],all.x=T)  
+      
+      # print(dim(GWAS))
       GWAS=GWAS[,c(1:6,8,7)]
       GWAS=GWAS[order(as.numeric(GWAS[,3])),]
       GWAS=GWAS[order(as.numeric(GWAS[,2])),]
@@ -11495,7 +11509,11 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     #Inicial as 0   
     if(!is.null(seqQTN))GI.MP[seqQTN,borrowSlot]=1   
     if(!is.null(GD))
-    {  if(ncol(GD)!=nrow(GI.MP))print("GD does not match GM in Manhattan !!!")
+    {  if(ncol(GD)!=nrow(GI.MP))
+        {print("GD does not match GM in Manhattan !!!")
+         print(dim(GD))
+         print(dim(GI.MP))
+        }
     }
     #Remove all SNPs that do not have a choromosome, bp position and p value(NA)
     GI.MP <- GI.MP[!is.na(GI.MP[,1]),]
@@ -13679,11 +13697,14 @@ if(!is.null(PWI))
     if(dim(PWI)[1] > 1){ 
     #mt.rawp2adjp Performs the Simes procedure.  The output should be two columns, Left column: originial p-value
     #Right column: Simes corrected p-value
+    # print(table(is.na(PWI[,4])))
+    # PWI[is.na(PWI[,4]),4]=1
     res <- multtest::mt.rawp2adjp(PWI[,4], FDR.Procedure)
-
+    # print(dim(PWI))
+    # print(str(res))
     #This command should order the p-values in the order of the SNPs in the data set
   adjp <- res$adjp[order(res$index), ]
-
+  # print(dim(adjp))
   #round(adjp[1:7,],4)
     #Logical statment: 0, if Ho is not rejected; 1, if  Ho is rejected, by the Simes corrected p-value
 #  temp <- mt.reject(adjp[,2], FDR.Rate)
@@ -13692,12 +13713,12 @@ if(!is.null(PWI))
   #temp$r
 
     #Attach the FDR adjusted p-values to AS_Results
-
+  # print(dim(PWI))
   PWIP <- cbind(PWI, adjp[,2])
 
     #Sort these data by lowest to highest FDR adjusted p-value
-  PWIP <- PWIP[order(PWIP[,4]),]
-  
+  # PWIP <- PWIP[order(PWIP[,4]),]
+  # print(dim(PWIP))
   colnames(PWIP)[n.col+1] <- "FDR_Adjusted_P-values"
 #  number.of.significant.SNPs = temp$r
   }
@@ -14030,9 +14051,9 @@ grDevices::pdf(paste("GAPIT.Phenotype.Distribution_Significantmarkers.",model,".
 
 par(mfrow=c(y.layout,x.layout),mar = c(5,5,2,2))
 
-# y=Y[,2]
-y.min=round(min(Y[,2],rm.na=T),1)
-y.max=round(max(Y[,2],rm.na=T),1)
+# print(Y[,2])
+y.min=round(min(Y[,2],na.rm=T),1)
+y.max=round(max(Y[,2],na.rm=T),1)
 if(hapmap)
 {
   X=t(G[-1,-c(1:11)])
@@ -14058,6 +14079,8 @@ for(i in 1:N.sigs)
   yall=merge(Y,marker.genotype,by.x="Taxa",by.y="taxa")
   colnames(yall)=c("Taxa","Values","Genotype")
   marker.taxa=paste(marker.name,":",marker[,2],":",marker[,3],sep="")
+  # print(y.min)
+  # print(y.max)
   boxplot(Values~Genotype,data=yall,xlab="",ylab="",
     las=1,ylim=c(y.min,y.max),main=letter[i],
     space=0.2,axes=F,outline=FALSE)

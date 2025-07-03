@@ -127,7 +127,7 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
     GWAS=SS$GWAS
     GVs=SS$GVs
     Pred=SS$Pred
-# print(head(GWAS))
+# print(dim(GWAS))
     GI=GWAS
     GI=GI[order(GI[,3]),]
     GI=GI[order(GI[,2]),]
@@ -175,10 +175,9 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
   #Create PWIP, which is a table of SNP Names, Chromosome, bp Position, Raw P-values, FDR Adjusted P-values
       print("Calculating FDR..." )
       PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
-  # print(str(PWIP)) 
-
-      GWAS=merge(GWAS[,c(1:6,ncol(GWAS))],PWIP$PWIP[,c(1,9)],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1])  
-      # print(head(GWAS))
+      GWAS=merge(GWAS[,c(1:6,ncol(GWAS))],PWIP$PWIP[,c(1,9)],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1],all.x=T)  
+      
+      # print(dim(GWAS))
       GWAS=GWAS[,c(1:6,8,7)]
       GWAS=GWAS[order(as.numeric(GWAS[,3])),]
       GWAS=GWAS[order(as.numeric(GWAS[,2])),]

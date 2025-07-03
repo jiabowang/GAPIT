@@ -26,11 +26,14 @@ if(!is.null(PWI))
     if(dim(PWI)[1] > 1){ 
     #mt.rawp2adjp Performs the Simes procedure.  The output should be two columns, Left column: originial p-value
     #Right column: Simes corrected p-value
+    # print(table(is.na(PWI[,4])))
+    # PWI[is.na(PWI[,4]),4]=1
     res <- multtest::mt.rawp2adjp(PWI[,4], FDR.Procedure)
-
+    # print(dim(PWI))
+    # print(str(res))
     #This command should order the p-values in the order of the SNPs in the data set
   adjp <- res$adjp[order(res$index), ]
-
+  # print(dim(adjp))
   #round(adjp[1:7,],4)
     #Logical statment: 0, if Ho is not rejected; 1, if  Ho is rejected, by the Simes corrected p-value
 #  temp <- mt.reject(adjp[,2], FDR.Rate)
@@ -39,12 +42,12 @@ if(!is.null(PWI))
   #temp$r
 
     #Attach the FDR adjusted p-values to AS_Results
-
+  # print(dim(PWI))
   PWIP <- cbind(PWI, adjp[,2])
 
     #Sort these data by lowest to highest FDR adjusted p-value
-  PWIP <- PWIP[order(PWIP[,4]),]
-  
+  # PWIP <- PWIP[order(PWIP[,4]),]
+  # print(dim(PWIP))
   colnames(PWIP)[n.col+1] <- "FDR_Adjusted_P-values"
 #  number.of.significant.SNPs = temp$r
   }
