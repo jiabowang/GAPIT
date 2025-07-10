@@ -574,7 +574,7 @@ GWAS=GWAS[,c(1:7)]
 
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
-print(head(GWAS))
+# print(head(GWAS))
 # GWAS=GWAS[,c(1:5,7,6)]
 # GWAS=merge(GM,GWAS[,-c(2,3)],by.x=colnames(GM)[1],by.y=colnames(GWAS)[1],all.x=T)
 # print(head(GWAS))
