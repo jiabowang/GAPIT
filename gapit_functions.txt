@@ -1787,7 +1787,7 @@ if(method=="BLINK")
   maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
   GWAS$maf=maf
   # print(head(GWAS))
-  GWAS=GWAS[,c(1:4,7,5,6)]
+  # GWAS=GWAS[,c(1:4,7,5,6)]
 
   GWAS[is.na(GWAS[,4]),4]=1
   sig_index=GWAS[,4]<(cutOff/(nrow(GWAS)))
@@ -1960,11 +1960,18 @@ if(Multi_iter&sig_pass)
         GWAS[GWAS_index,4]=Second_GWAS[,4]
    }
  }
+GWAS=GWAS[,c(1:7)]
 }
 
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
-#rint(head(GWAS))
+print(head(GWAS))
+# GWAS=GWAS[,c(1:5,7,6)]
+# GWAS=merge(GM,GWAS[,-c(2,3)],by.x=colnames(GM)[1],by.y=colnames(GWAS)[1],all.x=T)
+# print(head(GWAS))
+# print(tail(GWAS))
+GWAS[is.na(GWAS[,4]),4]=1
+
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 nn.sig=nrow(sig)
 # effect=rep(NA,nrow(GWAS))
@@ -8925,11 +8932,11 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
       PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
       GWAS=merge(GWAS[,c(1:6,ncol(GWAS))],PWIP$PWIP[,c(1,9)],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1],all.x=T)  
       
-      # print(dim(GWAS))
-      GWAS=GWAS[,c(1:6,8,7)]
+      print(head(GWAS))
+      # GWAS=GWAS[,c(1:6,8,7)]
       GWAS=GWAS[order(as.numeric(GWAS[,3])),]
       GWAS=GWAS[order(as.numeric(GWAS[,2])),]
-      colnames(GWAS)=c("SNP","Chr","Pos","P.value", "MAF", "nobs", "H&B.P.Value","Effect")
+      colnames(GWAS)=c("SNP","Chr","Pos","P.value", "MAF", "nobs", "Effect","H&B.P.Value")
       # print(head(GWAS))
 
       if(DP$file.output)
@@ -17494,11 +17501,11 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   } 
   my_allX=cbind(1,as.matrix(my_allCV[,-1]))
   XCV=my_allX[,X.idx,drop=FALSE]
-  QTN.gs=QTN.gs-length(X.idx)
+  QTN.gs=QTN.gs-(ncol(my_allX)-length(X.idx))
   #print("!!!!")
   # print(table(X.idx))
-  # print(dim(XCV))
-  # print(QTN.gs)
+  print(dim(XCV))
+  print(QTN.gs)
 
 #CV.Extragenetic specified
     if(ncol(XCV)>1&(ncol(XCV)-QTN.gs)!=1) XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs)),drop=FALSE]

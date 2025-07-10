@@ -177,11 +177,11 @@ if(is.null(DP)&is.null(IC))#inputdata is other method result
       PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
       GWAS=merge(GWAS[,c(1:6,ncol(GWAS))],PWIP$PWIP[,c(1,9)],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1],all.x=T)  
       
-      # print(dim(GWAS))
-      GWAS=GWAS[,c(1:6,8,7)]
+      print(head(GWAS))
+      # GWAS=GWAS[,c(1:6,8,7)]
       GWAS=GWAS[order(as.numeric(GWAS[,3])),]
       GWAS=GWAS[order(as.numeric(GWAS[,2])),]
-      colnames(GWAS)=c("SNP","Chr","Pos","P.value", "MAF", "nobs", "H&B.P.Value","Effect")
+      colnames(GWAS)=c("SNP","Chr","Pos","P.value", "MAF", "nobs", "Effect","H&B.P.Value")
       # print(head(GWAS))
 
       if(DP$file.output)

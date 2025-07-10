@@ -396,7 +396,7 @@ if(method=="BLINK")
   maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
   GWAS$maf=maf
   # print(head(GWAS))
-  GWAS=GWAS[,c(1:4,7,5,6)]
+  # GWAS=GWAS[,c(1:4,7,5,6)]
 
   GWAS[is.na(GWAS[,4]),4]=1
   sig_index=GWAS[,4]<(cutOff/(nrow(GWAS)))
@@ -569,11 +569,18 @@ if(Multi_iter&sig_pass)
         GWAS[GWAS_index,4]=Second_GWAS[,4]
    }
  }
+GWAS=GWAS[,c(1:7)]
 }
 
 GWAS[,2]=as.numeric(as.character(GWAS[,2]))
 GWAS[,3]=as.numeric(as.character(GWAS[,3]))
-#rint(head(GWAS))
+print(head(GWAS))
+# GWAS=GWAS[,c(1:5,7,6)]
+# GWAS=merge(GM,GWAS[,-c(2,3)],by.x=colnames(GM)[1],by.y=colnames(GWAS)[1],all.x=T)
+# print(head(GWAS))
+# print(tail(GWAS))
+GWAS[is.na(GWAS[,4]),4]=1
+
 sig=GWAS[GWAS[,4]<(cutOff/(nrow(GWAS))),1:5]
 nn.sig=nrow(sig)
 # effect=rep(NA,nrow(GWAS))
