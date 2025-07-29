@@ -187,7 +187,7 @@
   memo = NULL, #label for marking
   # maxLoop = 3,
   Model.selection = FALSE,# optimum number of CV and PCAs
-  Multi_iter = TRUE, #Multiple step for FarmCPU and BLink
+  Multi_iter = FALSE, #Multiple step for FarmCPU and BLink
   Major.allele.zero = FALSE, #convert hapmap file to numeric file, set major marker as 0
   Multiple_analysis = TRUE, #option for multiple Manhattan and QQ plots
   num_regwas = 10,# the max number of Multiple markers 

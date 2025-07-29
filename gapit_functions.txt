@@ -15378,7 +15378,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
   memo = NULL, #label for marking
   # maxLoop = 3,
   Model.selection = FALSE,# optimum number of CV and PCAs
-  Multi_iter = TRUE, #Multiple step for FarmCPU and BLink
+  Multi_iter = FALSE, #Multiple step for FarmCPU and BLink
   Major.allele.zero = FALSE, #convert hapmap file to numeric file, set major marker as 0
   Multiple_analysis = TRUE, #option for multiple Manhattan and QQ plots
   num_regwas = 10,# the max number of Multiple markers 
@@ -17501,11 +17501,15 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   } 
   my_allX=cbind(1,as.matrix(my_allCV[,-1]))
   XCV=my_allX[,X.idx,drop=FALSE]
-  QTN.gs=QTN.gs-(ncol(my_allX)-length(X.idx))
-  #print("!!!!")
-  # print(table(X.idx))
-  print(dim(XCV))
-  print(QTN.gs)
+  
+  # print(length(X.idx))
+  # print(head(X.idx))
+  QTN.gs=length(X.idx[QTN.gs>=X.idx])
+  # print("!!!!")
+  # print(dim(XCV))
+  # print(2+CV.Extragenetic)
+  # print(ncol(XCV)-QTN.gs)
+
 
 #CV.Extragenetic specified
     if(ncol(XCV)>1&(ncol(XCV)-QTN.gs)!=1) XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs)),drop=FALSE]

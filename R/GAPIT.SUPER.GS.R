@@ -508,11 +508,15 @@ if(is.null(X0)) X0 <- matrix(1, ncol(ys), 1)
   } 
   my_allX=cbind(1,as.matrix(my_allCV[,-1]))
   XCV=my_allX[,X.idx,drop=FALSE]
-  QTN.gs=QTN.gs-(ncol(my_allX)-length(X.idx))
-  #print("!!!!")
-  # print(table(X.idx))
-  print(dim(XCV))
-  print(QTN.gs)
+  
+  # print(length(X.idx))
+  # print(head(X.idx))
+  QTN.gs=length(X.idx[QTN.gs>=X.idx])
+  # print("!!!!")
+  # print(dim(XCV))
+  # print(2+CV.Extragenetic)
+  # print(ncol(XCV)-QTN.gs)
+
 
 #CV.Extragenetic specified
     if(ncol(XCV)>1&(ncol(XCV)-QTN.gs)!=1) XCVI=XCV[,c((2+CV.Extragenetic):(ncol(XCV)-QTN.gs)),drop=FALSE]
