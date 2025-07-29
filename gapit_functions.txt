@@ -8746,9 +8746,9 @@ print("GAPIT.IC in process...")
      # print(head(CV))
      print("GAPIT.IC accomplished successfully for multiple traits. Results are saved")
      if(DP$kinship.algorithm%in%c("FarmCPU","BLINK","MLMM")){ 
-        return (list(Y=comY,GT=GT,PCA=comCV,KI=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=GD))
+        return (list(Y=comY,GT=GT,PCA=comCV,KI=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=DP$GD))
      }else{
-        return (list(Y=comY,GT=GT,PCA=comCV,KI=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=GD,myallY=Y))
+        return (list(Y=comY,GT=GT,PCA=comCV,KI=DP$KI,GD=comGD,GM=DP$GM,myallCV=CV,myallGD=DP$GD,myallY=Y))
      }
 }  #end of GAPIT IC function
 #=============================================================================================
@@ -10113,7 +10113,6 @@ function(Y,
     QTN=NULL
     Timmer=GAPIT.Timmer(Infor="GAPIT.SUPER.GS")
     Memory=GAPIT.Memory(Infor="GAPIT.SUPER.GS")
-    #print(model)
     SUPER_GS_GAPIT = GAPIT.SUPER.GS(Y=Y,
                                     GD=GD,
                                     allGD=allGD,
@@ -10280,7 +10279,7 @@ function(Y,
     #Remove duplicat and integragation of data
     # print("QC is in process...")
 
-    CVI <- CV
+    CVI <- allCV
 
 # print(dim(Z))
 # print("!!!!!")
@@ -16586,7 +16585,7 @@ if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut
   print("GAPIT will be into GS approach...")
 gapitMain <- GAPIT.Main(Y=IC$Y,
                         GD=IC$GD[,-1],
-                        allGD=IC$allGD[,-1],
+                        allGD=IC$myallGD[,-1],
                         GM=DP$GM,
                         KI=IC$KI,
                         Z=DP$Z,
@@ -17114,6 +17113,9 @@ if(is.null(GD) & is.null(GT)) {
   GI=as.data.frame(matrix(0,1,3) )
   colnames(GI)=c("SNP","Chromosome","Position")
 }
+# print(dim(GD))
+# print(dim(allGD))
+if(nrow(GD)<nrow(allGD))GD=allGD
 # print(cbind(CV,PC))
 # if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
 # if(PCA.total>0&is.null(CV))CV=PC
@@ -17247,6 +17249,12 @@ if(super_pass)
       SUPER_GD=SUPER_GD[,SNPVar>0]
       GK=cbind(as.data.frame(GT),as.data.frame(GK)) #add taxa
       SUPER_GD=cbind(as.data.frame(GT),as.data.frame(SUPER_GD)) #add taxa
+        taxa_Y=as.character(Y[,1])
+        taxa_CV=as.character(CV[,1])
+        taxa_GK=as.character(GK[,1])
+        taxa_com=intersect(intersect(taxa_GK,taxa_Y),taxa_CV)
+     # print(length(taxa_comall))
+        GK=GK[taxa_GK%in%taxa_com,]
       myBurger=GAPIT.Burger(Y=Y,CV=CV,GK=GK)  #modifed by Jiabo Wang
       myREML=myBurger$REMLs
       myVG=myBurger$vg

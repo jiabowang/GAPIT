@@ -121,6 +121,9 @@ if(is.null(GD) & is.null(GT)) {
   GI=as.data.frame(matrix(0,1,3) )
   colnames(GI)=c("SNP","Chromosome","Position")
 }
+# print(dim(GD))
+# print(dim(allGD))
+if(nrow(GD)<nrow(allGD))GD=allGD
 # print(cbind(CV,PC))
 # if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
 # if(PCA.total>0&is.null(CV))CV=PC
@@ -254,6 +257,12 @@ if(super_pass)
       SUPER_GD=SUPER_GD[,SNPVar>0]
       GK=cbind(as.data.frame(GT),as.data.frame(GK)) #add taxa
       SUPER_GD=cbind(as.data.frame(GT),as.data.frame(SUPER_GD)) #add taxa
+        taxa_Y=as.character(Y[,1])
+        taxa_CV=as.character(CV[,1])
+        taxa_GK=as.character(GK[,1])
+        taxa_com=intersect(intersect(taxa_GK,taxa_Y),taxa_CV)
+     # print(length(taxa_comall))
+        GK=GK[taxa_GK%in%taxa_com,]
       myBurger=GAPIT.Burger(Y=Y,CV=CV,GK=GK)  #modifed by Jiabo Wang
       myREML=myBurger$REMLs
       myVG=myBurger$vg

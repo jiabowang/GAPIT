@@ -372,7 +372,7 @@ if(!is.null(GWAS))myPower=GAPIT.Power(WS=DP$WS, alpha=DP$alpha, maxOut=DP$maxOut
   print("GAPIT will be into GS approach...")
 gapitMain <- GAPIT.Main(Y=IC$Y,
                         GD=IC$GD[,-1],
-                        allGD=IC$allGD[,-1],
+                        allGD=IC$myallGD[,-1],
                         GM=DP$GM,
                         KI=IC$KI,
                         Z=DP$Z,

@@ -242,7 +242,6 @@ function(Y,
     QTN=NULL
     Timmer=GAPIT.Timmer(Infor="GAPIT.SUPER.GS")
     Memory=GAPIT.Memory(Infor="GAPIT.SUPER.GS")
-    #print(model)
     SUPER_GS_GAPIT = GAPIT.SUPER.GS(Y=Y,
                                     GD=GD,
                                     allGD=allGD,
@@ -409,7 +408,7 @@ function(Y,
     #Remove duplicat and integragation of data
     # print("QC is in process...")
 
-    CVI <- CV
+    CVI <- allCV
 
 # print(dim(Z))
 # print("!!!!!")
