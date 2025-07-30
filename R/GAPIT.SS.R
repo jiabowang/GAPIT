@@ -177,7 +177,7 @@ if(DP$SNP.test)
           print("Linear Regression to Predict phenotype Done !!")  
         }else{
           print("ABLUP to Predict phenotype !!")
-          
+          print(is.null(IC$myallCV))
           if(!is.null(IC$myallCV)) 
           {
             com.taxa=intersect(as.character(IC$myallCV[,1]),as.character(DP$GD[,1]))
@@ -185,9 +185,6 @@ if(DP$SNP.test)
             ablup.GD=IC$myallGD
             ablup.X=ablup.GD[,-1]
             # CV1=as.matrix(CV1[match(com.taxa,as.character(CV1[,1])),])
-            # print(dim(CV1))
-            # print(dim(ablup.GD))
-            # print(dim(ablup.X))
             if(!is.null(myBus$seqQTN))
             {
                busCV=cbind(CV1,ablup.X[,myBus$seqQTN])
@@ -201,13 +198,15 @@ if(DP$SNP.test)
           }
           # print(myBus$seqQTN)
           pv=GWAS$P.value
+          threshold <- quantile(pv, 0.8)
           noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
-          licols=FALSE
-          if(ncol(X)<50000)licols=TRUE
+          
+          licols=TRUE
           if(licols)
             {
-            gene.licols=GAPIT.Licols(X=ablup.X)
-            ablup.X=ablup.X[,gene.licols$idx]
+            # gene.licols=GAPIT.Licols(X=ablup.X)
+            # ablup.X=ablup.X[,gene.licols$idx]
+            ablup.X=ablup.X[,pv<threshold]
             }
 
           if(is.null(DP$KI))
