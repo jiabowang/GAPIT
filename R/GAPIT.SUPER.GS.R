@@ -120,10 +120,12 @@ if(is.null(GD) & is.null(GT)) {
   rownames(GD)=as.character(GT)
   GI=as.data.frame(matrix(0,1,3) )
   colnames(GI)=c("SNP","Chromosome","Position")
+}else{
+  if(nrow(GD)<nrow(allGD)) GD=allGD
+
 }
 # print(dim(GD))
 # print(dim(allGD))
-if(nrow(GD)<nrow(allGD))GD=allGD
 # print(cbind(CV,PC))
 # if(PCA.total>0&!is.null(CV))CV=GAPIT.CVMergePC(CV,PC)
 # if(PCA.total>0&is.null(CV))CV=PC
