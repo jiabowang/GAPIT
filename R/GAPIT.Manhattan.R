@@ -63,7 +63,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     {print("GD does not match GM in Manhattan !!!")
     return
     }}
-    #print(ncol(GD))
+    # print(head(GI.MP))
     #print(nrow(GI.MP))
     GI.MP[,3] <-  -log10(GI.MP[,3])
     index_GI=GI.MP[,3]>0
@@ -73,7 +73,9 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     GI.MP[,5]=1:(nrow(GI.MP))
     y.lim <- ceiling(max(GI.MP[,3]))
     chm.to.analyze <- unique(GI.MP[,1])
+    # print(chm.to.analyze)
     chm.to.analyze=chm.to.analyze[order(chm.to.analyze)]
+    # print(chm.to.analyze)
     numCHR= length(chm.to.analyze)
     #GI.MP[,5]=1:(nrow(GI.MP))
      bin.mp=GI.MP[,1:3]
@@ -204,7 +206,8 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     #Set color schem            
         ncycle=ceiling(nchr/band)
         ncolor=band*ncycle
-        #palette(rainbow(ncolor+1))
+# print(nchr)
+# print(ncycle)
         cycle1=seq(1,nchr,by= ncycle)
         thecolor=cycle1
         if(nchr!=1)

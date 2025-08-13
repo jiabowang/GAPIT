@@ -427,7 +427,7 @@ if(!is.null(Y))
              DP$group.from=Judge$group.from
              DP$group.to=Judge$group.to
              DP$name.of.trait=traitname
-             DP$Y=Y[,c(1,trait)]
+             DP$Y=Judge$Y
              if(QC.Y) DP$Y[,2]=GAPIT.Remove.outliers(DP$Y[,2])
              DP$model=model
 # print(DP$name.of.trait)

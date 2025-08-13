@@ -196,19 +196,27 @@ if(DP$SNP.test)
             ablup.X=ablup.GD[,-1]
             busCV=cbind(as.data.frame(ablup.GD[,1]),ablup.X[,myBus$seqQTN])
           }
-          # print(myBus$seqQTN)
-          pv=GWAS$P.value
-          threshold <- quantile(pv, 0.8)
-          noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
+          # print(dim(GWAS))
+          pv=GWAS$effect
+          # pv=GWAS$P.value
+
+          threshold <- quantile(abs(pv), 0.26)
+          # noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
           
           licols=TRUE
           if(licols)
             {
-            # gene.licols=GAPIT.Licols(X=ablup.X)
-            # ablup.X=ablup.X[,gene.licols$idx]
-            ablup.X=ablup.X[,pv<threshold]
-            }
+              # pv.index=pv<threshold
+              pv.index=abs(pv)>threshold
+              # pv.index=pv!=0
 
+              print(table(pv.index))
+              # qtn.index=1:length(pv)%in%myBus$seqQTN
+              # print(length(pv.index))
+              # print(length(qtn.index))
+              ablup.X=ablup.X[,pv.index]
+            }
+            # print(dim(ablup.X))
           if(is.null(DP$KI))
           {
             KI= GAPIT.kinship.VanRaden(snps=as.matrix(ablup.X))
@@ -218,11 +226,6 @@ if(DP$SNP.test)
           }else{
             busKI=DP$KI
           }
-          # cv.licols=GAPIT.Licols(X=busCV[,-1])
-          # geneGD=cv.licols$Xsub
-          # print(dim(busCV))
-          # print(head(busCV))
-          # busCV=as.data.frame(busCV[,cv.licols$idx])
           busCV=cbind(as.data.frame(busCV[,1]),matrix(as.numeric(as.matrix(busCV[,-1])),nrow(busCV),ncol(busCV)-1))
 
           print("The dimension of CV and phenotype in ABLUP model :")

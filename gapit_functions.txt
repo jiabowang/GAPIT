@@ -9468,6 +9468,8 @@ if (is.null(colnames(G)[-c(1:11)]%in%Y[,1]))stop("GAPIT Says: There are no commo
 
 if (!is.null(Y)) nY=nrow(Y)
 if (!is.null(Y)) ntrait=ncol(Y)-1
+y=as.numeric(Y[,2])
+Y[,2]=y
 print(paste("There are ",ntrait," traits in phenotype data."))
 print(paste("There are ",nY," individuals in phenotype data."))
 if (!is.null(G)) nG=nrow(G)-11
@@ -9484,7 +9486,7 @@ if(is.null(sangwich.top) & !is.null(sangwich.bottom) ) stop("GAPIT Says: SUPER m
  if(kinship.algorithm=="Separation"&PCA.total==0) stop ("GAPIT Says: Separation kinship need PCA.total>0")
 
 
-return (list(group.to=group.to,group.from=group.from))
+return (list(group.to=group.to,group.from=group.from,Y=Y))
 }#end of GAPIT.Pheno.Geno.judge function
 #=============================================================================================
 
@@ -11548,7 +11550,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     {print("GD does not match GM in Manhattan !!!")
     return
     }}
-    #print(ncol(GD))
+    # print(head(GI.MP))
     #print(nrow(GI.MP))
     GI.MP[,3] <-  -log10(GI.MP[,3])
     index_GI=GI.MP[,3]>0
@@ -11558,7 +11560,9 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     GI.MP[,5]=1:(nrow(GI.MP))
     y.lim <- ceiling(max(GI.MP[,3]))
     chm.to.analyze <- unique(GI.MP[,1])
+    # print(chm.to.analyze)
     chm.to.analyze=chm.to.analyze[order(chm.to.analyze)]
+    # print(chm.to.analyze)
     numCHR= length(chm.to.analyze)
     #GI.MP[,5]=1:(nrow(GI.MP))
      bin.mp=GI.MP[,1:3]
@@ -11689,7 +11693,8 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     #Set color schem            
         ncycle=ceiling(nchr/band)
         ncolor=band*ncycle
-        #palette(rainbow(ncolor+1))
+# print(nchr)
+# print(ncycle)
         cycle1=seq(1,nchr,by= ncycle)
         thecolor=cycle1
         if(nchr!=1)
@@ -13982,7 +13987,7 @@ layout(mat = layout.matrix,
        heights = c(100,100), # Heights of the two rows
        widths = c(2,2,2)) # Widths of the two columns
 # print(head(myY))
-y=myY[!is.na(myY[,2]),2]
+y=as.numeric(myY[!is.na(as.numeric(myY[,2])),2])
 par(mar = c(5, 5, 2, 1))
 plot(y,xlab="Individual",las=1,ylim=c(min(y,na.rm=TRUE),max(y,na.rm=TRUE)),ylab="Observation", cex=.5,main="a")
 par(mar = c(5, 5, 2, 1))
@@ -15617,7 +15622,7 @@ if(!is.null(Y))
              DP$group.from=Judge$group.from
              DP$group.to=Judge$group.to
              DP$name.of.trait=traitname
-             DP$Y=Y[,c(1,trait)]
+             DP$Y=Judge$Y
              if(QC.Y) DP$Y[,2]=GAPIT.Remove.outliers(DP$Y[,2])
              DP$model=model
 # print(DP$name.of.trait)
@@ -16409,19 +16414,27 @@ if(DP$SNP.test)
             ablup.X=ablup.GD[,-1]
             busCV=cbind(as.data.frame(ablup.GD[,1]),ablup.X[,myBus$seqQTN])
           }
-          # print(myBus$seqQTN)
-          pv=GWAS$P.value
-          threshold <- quantile(pv, 0.8)
-          noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
+          # print(dim(GWAS))
+          pv=GWAS$effect
+          # pv=GWAS$P.value
+
+          threshold <- quantile(abs(pv), 0.26)
+          # noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
           
           licols=TRUE
           if(licols)
             {
-            # gene.licols=GAPIT.Licols(X=ablup.X)
-            # ablup.X=ablup.X[,gene.licols$idx]
-            ablup.X=ablup.X[,pv<threshold]
-            }
+              # pv.index=pv<threshold
+              pv.index=abs(pv)>threshold
+              # pv.index=pv!=0
 
+              print(table(pv.index))
+              # qtn.index=1:length(pv)%in%myBus$seqQTN
+              # print(length(pv.index))
+              # print(length(qtn.index))
+              ablup.X=ablup.X[,pv.index]
+            }
+            # print(dim(ablup.X))
           if(is.null(DP$KI))
           {
             KI= GAPIT.kinship.VanRaden(snps=as.matrix(ablup.X))
@@ -16431,11 +16444,6 @@ if(DP$SNP.test)
           }else{
             busKI=DP$KI
           }
-          # cv.licols=GAPIT.Licols(X=busCV[,-1])
-          # geneGD=cv.licols$Xsub
-          # print(dim(busCV))
-          # print(head(busCV))
-          # busCV=as.data.frame(busCV[,cv.licols$idx])
           busCV=cbind(as.data.frame(busCV[,1]),matrix(as.numeric(as.matrix(busCV[,-1])),nrow(busCV),ncol(busCV)-1))
 
           print("The dimension of CV and phenotype in ABLUP model :")

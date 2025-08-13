@@ -28,7 +28,7 @@ layout(mat = layout.matrix,
        heights = c(100,100), # Heights of the two rows
        widths = c(2,2,2)) # Widths of the two columns
 # print(head(myY))
-y=myY[!is.na(myY[,2]),2]
+y=as.numeric(myY[!is.na(as.numeric(myY[,2])),2])
 par(mar = c(5, 5, 2, 1))
 plot(y,xlab="Individual",las=1,ylim=c(min(y,na.rm=TRUE),max(y,na.rm=TRUE)),ylab="Observation", cex=.5,main="a")
 par(mar = c(5, 5, 2, 1))

@@ -29,6 +29,8 @@ if (is.null(colnames(G)[-c(1:11)]%in%Y[,1]))stop("GAPIT Says: There are no commo
 
 if (!is.null(Y)) nY=nrow(Y)
 if (!is.null(Y)) ntrait=ncol(Y)-1
+y=as.numeric(Y[,2])
+Y[,2]=y
 print(paste("There are ",ntrait," traits in phenotype data."))
 print(paste("There are ",nY," individuals in phenotype data."))
 if (!is.null(G)) nG=nrow(G)-11
@@ -45,7 +47,7 @@ if(is.null(sangwich.top) & !is.null(sangwich.bottom) ) stop("GAPIT Says: SUPER m
  if(kinship.algorithm=="Separation"&PCA.total==0) stop ("GAPIT Says: Separation kinship need PCA.total>0")
 
 
-return (list(group.to=group.to,group.from=group.from))
+return (list(group.to=group.to,group.from=group.from,Y=Y))
 }#end of GAPIT.Pheno.Geno.judge function
 #=============================================================================================
 
