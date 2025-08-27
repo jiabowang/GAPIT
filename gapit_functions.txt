@@ -298,6 +298,7 @@ function(x=0,h2=.5,r=.25){
               print("LD remove is working....")
               print("Number SNPs for LD remove:")
               print(length(Porder))
+              # print(dim(GDneo))#!!!
               Psort=Blink.LDRemove(Porder=Porder,GDneo=GDneo,bound=bound,LD=LD,model=model,orientation=orientation)
               seqQTN.can=seqQTN.selected[Psort]
               t2=proc.time()
@@ -688,13 +689,15 @@ function(x=0,h2=.5,r=.25){
   corr[abs(corr)<=LD]=0
   corr[abs(corr)>LD]=1
   Psort=as.numeric(matrix(1,1,ncol(corr)))
-  # print(ncol(corr))
+  if(ncol>1)
+  {
   for(i in 2:ncol(corr)){
     p.a=Psort[1:(i-1)]
     p.b=as.numeric(corr[1:(i-1),i])
     index=(p.a==p.b)
     index[(p.a==0)&(p.b==0)]=FALSE
     if(sum(index)!=0) Psort[i]=0
+  }
   }
   seqQTN=Porder[Psort==1]
   return(seqQTN)
@@ -712,6 +715,7 @@ function(x=0,h2=.5,r=.25){
     SNP.index = apply(GDneo, 2, stats::sd) != 0
     GDneo = GDneo[, SNP.index]
   }
+  # print(dim(GDneo)) #@@@
   Porder = Porder[SNP.index]
   l = block
   seqQTN=NULL
@@ -1486,6 +1490,7 @@ GWAS=GWAS[order(GWAS[,2]),]
 GWAS2=GWAS
 sig_index=GWAS[,4]<(cutOff/(nrow(GWAS)))
 sig=GWAS[sig_index,1:5]
+sig=sig[order(sig[,2]),]
 sig_pass=TRUE
 if(nrow(sig)==0)sig_pass=FALSE
 # print(Multi_iter&sig_pass)
@@ -1846,9 +1851,12 @@ if(file.output&Multi_iter)
 
 if(Multi_iter&sig_pass)
 {
+   GWAS=GWAS[order(as.numeric(GWAS[,3])),]
+   GWAS=GWAS[order(as.numeric(GWAS[,2])),]
    sig=sig[!is.na(sig[,4]),]
    sig=sig[order(sig[,2]),]
-   sig=sig[order(sig[,3]),]
+   # sig=sig[order(sig[,3]),]
+   # print(sig)
    sig_position=as.numeric(as.matrix(sig[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(sig[,3]))
    sig_order=as.numeric(rownames(sig))
 #if(setequal(sig_order,numeric(0))) break
@@ -1892,37 +1900,23 @@ if(Multi_iter&sig_pass)
        j=(sum(sig_bins[1:(i-1)])+1):sum(sig_bins[1:i])
     }
     aim_marker=sig[j,]
+    # print(aim_marker)
     aim.index=aim_marker[,4]==min(aim_marker[,4])
     aim_marker=aim_marker[aim.index,]
     aim_posi=sig_position[j]
-    aim_posi=aim_posi[aim.index]
+    # aim_posi=aim_posi[aim.index]
+    # select area within sig marker
     aim_order=as.numeric(rownames(aim_marker))
     aim_min=as.numeric(min(aim_posi)-bin.regwas)
     aim_max=as.numeric(max(aim_posi)+bin.regwas)
     aim_area=rep(FALSE,(nrow(GWAS)))
     posi.gwas=as.numeric(as.matrix(GWAS[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(GWAS[,3]))
     distan.gwas=abs(posi.gwas-aim_posi)
-    # print(tail(GWAS))
-    # posi.gwas
-    #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
-    # if(min(aim_order)<num_regwas)
-    # {
-    #   aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
-    # }else{
-    #   max.order=(max(aim_order)+num_regwas)
-    #   if(max.order>nrow(GWAS))max.order=nrow(GWAS)
-    #   aim_area[c((min(aim_order)-num_regwas):max.order)]=TRUE
-    # }
-    # print(bin.regwas)
-    # print(head(posi.gwas))
-    # print(aim_marker)
-    # print(table(posi.gwas<aim_max))
-    # print(table(posi.gwas>aim_min))
-    # print(GWAS[(aim_order-2):(aim_order+2),])
+   
     aim_area[posi.gwas<aim_max&posi.gwas>aim_min]=TRUE
     # print(table(aim_area))
     # Next code can control with or without core marker in seconde model
-    aim_area[posi.gwas==aim_posi]=FALSE  # without FALSE
+    aim_area[posi.gwas==aim_posi]=FALSE  # without sig marker -> FALSE
     if(sum(aim_area)<3) next
     if(!is.null(blink_CV))
     {
@@ -1942,6 +1936,7 @@ if(Multi_iter&sig_pass)
         # print(dim(secondCV))
         secondGD=GD[,c(TRUE,aim_area)]
         secondGM=GM[aim_area,]
+        # print(secondGM)
         print("Now that is multiple iteration for new BLINK !!!")
         myGAPIT_Second <- Blink(
                         Y=Y,
@@ -1958,6 +1953,7 @@ if(Multi_iter&sig_pass)
         # print(head(GWAS[GWAS_index,]))
         # print(head(Second_GWAS))
         GWAS[GWAS_index,4]=Second_GWAS[,4]
+        # print(GWAS[GWAS_index,])
    }
  }
 GWAS=GWAS[,c(1:7)]
@@ -4097,7 +4093,7 @@ GD=cbind(as.data.frame(GT),GD)
 
   #decomposation with fixed effect (SNP not included)
   #print("Calling emma.eigen.R.w.Z...")
-  X <-  X0 #covariate variables such as population structure
+  X <-  matrix(as.numeric(as.matrix(X0)), nrow = nrow(X0)) #covariate variables such as population structure
   if(!is.null(Z) & !is.null(K)) eig.R <- try(emma.eigen.R.w.Z(Z, K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
   if(is.null(Z)  & !is.null(K)) eig.R <- try(emma.eigen.R.wo.Z(   K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
 
@@ -4188,7 +4184,6 @@ GD=cbind(as.data.frame(GT),GD)
       # print("!!!!!")
       yt <- yt <- crossprod(U, yv)
       X0t <- crossprod(U, X0)
-
       X0X0 <- crossprod(X0t, X0t)
       X0Y <- crossprod(X0t,yt)
       XY <- X0Y
@@ -4673,6 +4668,8 @@ GD=cbind(as.data.frame(GT),GD)
 
                        if(i == 0 &file==file.from &frag==1)
                        {
+                          print(dim(X0t))
+                          print(X0t[1:5,1:5])
                           X0X0 <- crossprod(X0t, X0t)
                           # print(X0X0)
                        }
@@ -13119,6 +13116,7 @@ lev=setdiff(lev,"NN")
 #print(lev)
 len=length(lev)
 #print(len)
+# print(bit)
 #Jiabo creat this code to convert AT TT to 1 and 2. 2018.5.29
    if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC","A-","-A","C-","-C","G-","-G","T-","-T")
    if(bit==1)inter_store=c("R","Y","S","W","K","M") 
@@ -17709,9 +17707,10 @@ return (Timmer)
 }#end of GAPIT.Timmer function
 #=============================================================================================
 
-`GAPIT.Validation` <-function(Y=NULL, G=NULL,GD=NULL,GM=NULL,PCA.total=3,KI=NULL,CV=NULL,nfold=NULL,model="gBLUP",file.output=F){
+`GAPIT.Validation` <-function(Y=NULL, G=NULL,GD=NULL,GM=NULL,PCA.total=3,KI=NULL,CV=NULL,nfold=NULL,acc.type="instant",model="gBLUP",file.output=F){
 # Object: Genetic Prediction with cross validation 
 # nfold:folders number
+# acc.type: instant, hold
 # Authors: Jiabo Wang and Zhiwu Zhang
 # Last update: Mar 15, 2022 
 ############################################################################################## 
@@ -17734,6 +17733,8 @@ for(i in 1:length(all.method))
 {
 	ref_Y_all=NULL
 	inf_Y_all=NULL
+    r.in.fold.ref=NULL
+    r.in.fold.inf=NULL
 	for(j in 1:nfold)
     {
         training=Y[,c(1,2)]
@@ -17748,37 +17749,53 @@ for(i in 1:length(all.method))
 	        PCA.total=PCA.total,
 	        model=all.method[i],
 	        file.output=FALSE)
-        pridiction0=merge(Y,myBLUP$Pred[,c(1,3,5,8)],by.x="Taxa",by.y="Taxa")
+        pridiction0=merge(Y,myBLUP$Pred[,c(1,10,11)],by.x="Taxa",by.y="Taxa")
         # index=pridiction0[,3]!=2
+        r.in.fold.ref=rbind(r.in.fold.ref,cor(pridiction0[!training_index,2],pridiction0[!training_index,4]))
+        r.in.fold.inf=rbind(r.in.fold.inf,cor(pridiction0[training_index,2],pridiction0[training_index,4]))
+        
         ref_Y_all=rbind(ref_Y_all,pridiction0[!training_index,])
         inf_Y_all=rbind(inf_Y_all,pridiction0[training_index,])
         # gblup.r=cor(as.numeric(gapit[index,2]),as.numeric(gapit[index,5]))
     }#end of nfold
-    # print(round(min(ref_Y_all[,2]),0))
-    # print(round(min(ref_Y_all[,5]),0))
+
     if(File.out){
     grDevices::pdf(paste("GAPIT.Prediction.", all.method[i],".Ref.pdf", sep = ""), width =6, height = 6)
     graphics::par(mar = c(5,5,5,5))
-    plot(ref_Y_all[,2],ref_Y_all[,5],pch=1,
+    plot(ref_Y_all[,2],ref_Y_all[,4],pch=1,
         xlab="Observed(Ref)",ylab="Predicted(Ref)",
         cex.lab=1.3,cex.axis=1.2,lwd=2,main=paste(all.method[i]),
         xlim=c(round(min(ref_Y_all[,2]),0),round(max(ref_Y_all[,2]),0)),
-        ylim=c(round(min(ref_Y_all[,5]),0),round(max(ref_Y_all[,5]),0)))   #xlim=c(50,110),ylim=c(50,110),
-    kr <- stats::lm(ref_Y_all[,5]~ref_Y_all[,2])
-    graphics::abline(a = kr$coefficients[1], b = kr$coefficients[2], col = "red",lwd=4,lty=1)
-    graphics::legend("bottomright",paste("R^2=",format(kr$coefficients[2], digits = 4),seq=""), col="white",text.col="blue",lwd=2,cex=1.2,bty="n")
+        ylim=c(round(min(ref_Y_all[,4]),0),round(max(ref_Y_all[,4]),0)))   #xlim=c(50,110),ylim=c(50,110),
+    hold.r.ref <- cor(ref_Y_all[,2],ref_Y_all[,4])
+    instant.r.ref <- mean(r.in.fold.ref,na.rm=T)
+    if(acc.type=="instant")
+        {
+        rr.ref=instant.r.ref
+        }else{
+        rr.ref=hold.r.ref
+        }
+    # graphics::abline(a = kr$coefficients[1], b = kr$coefficients[2], col = "red",lwd=4,lty=1)
+    graphics::legend("bottomright",paste("R =",format(rr.ref, digits = 4),seq=""), col="white",text.col="blue",lwd=2,cex=1,bty="n")
     grDevices::dev.off()
 
     grDevices::pdf(paste("GAPIT.Prediction.",  all.method[i],".Inf.pdf", sep = ""), width = 6, height = 6)
     graphics::par(mar = c(5,5,5,5))
-    plot(inf_Y_all[,2],inf_Y_all[,5],pch=1,
+    plot(inf_Y_all[,2],inf_Y_all[,4],pch=1,
     	xlab="Observed(Inf)",ylab="Predicted(Inf)",
     	cex.lab=1.3,lwd=2,cex.axis=1.2,main=paste(all.method[i]),
     	xlim=c(round(min(inf_Y_all[,2]),0),round(max(inf_Y_all[,2]),0)),
-    	ylim=c(round(min(inf_Y_all[,5]),0),round(max(inf_Y_all[,5]),0)))
-    ki <- stats::lm(inf_Y_all[,5]~inf_Y_all[,2])
-    graphics::abline(a = ki$coefficients[1], b = ki$coefficients[2], col = "red",lwd=3,lty=1)
-    graphics::legend("bottomright",paste("R^2=",format(ki$coefficients[2], digits = 4),seq=""), col="white",text.col="blue",lwd=2,cex=1.2,bty="n")
+    	ylim=c(round(min(inf_Y_all[,4]),0),round(max(inf_Y_all[,4]),0)))
+    hold.r.inf <- cor(inf_Y_all[,2],inf_Y_all[,4])
+    instant.r.inf <- mean(r.in.fold.inf,na.rm=T)
+    if(acc.type=="instant")
+        {
+        rr.inf=instant.r.inf
+        }else{
+        rr.inf=hold.r.inf
+        }
+    # graphics::abline(a = ki$coefficients[1], b = ki$coefficients[2], col = "red",lwd=3,lty=1)
+    graphics::legend("bottomright",paste("R =",format(rr.inf, digits = 4),seq=""), col="white",text.col="blue",lwd=2,cex=1,bty="n")
     grDevices::dev.off()
 
     utils::write.csv(inf_Y_all,paste("GAPIT.Inf.Prediction.",all.method[i],".nfold",nfold,".csv",sep=""),row.names=F)
@@ -17789,7 +17806,7 @@ for(i in 1:length(all.method))
 
 
 # print(inf_Y_all)
-# return(list(inf_Y_all,ref_Y_all))
+return(list(rr.inf=rr.inf,rr.ref=rr.ref))
 }
 #end Prediction one time
 #=============================================================================================

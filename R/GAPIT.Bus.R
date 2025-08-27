@@ -95,6 +95,7 @@ GWAS=GWAS[order(GWAS[,2]),]
 GWAS2=GWAS
 sig_index=GWAS[,4]<(cutOff/(nrow(GWAS)))
 sig=GWAS[sig_index,1:5]
+sig=sig[order(sig[,2]),]
 sig_pass=TRUE
 if(nrow(sig)==0)sig_pass=FALSE
 # print(Multi_iter&sig_pass)
@@ -455,9 +456,12 @@ if(file.output&Multi_iter)
 
 if(Multi_iter&sig_pass)
 {
+   GWAS=GWAS[order(as.numeric(GWAS[,3])),]
+   GWAS=GWAS[order(as.numeric(GWAS[,2])),]
    sig=sig[!is.na(sig[,4]),]
    sig=sig[order(sig[,2]),]
-   sig=sig[order(sig[,3]),]
+   # sig=sig[order(sig[,3]),]
+   # print(sig)
    sig_position=as.numeric(as.matrix(sig[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(sig[,3]))
    sig_order=as.numeric(rownames(sig))
 #if(setequal(sig_order,numeric(0))) break
@@ -501,37 +505,23 @@ if(Multi_iter&sig_pass)
        j=(sum(sig_bins[1:(i-1)])+1):sum(sig_bins[1:i])
     }
     aim_marker=sig[j,]
+    # print(aim_marker)
     aim.index=aim_marker[,4]==min(aim_marker[,4])
     aim_marker=aim_marker[aim.index,]
     aim_posi=sig_position[j]
-    aim_posi=aim_posi[aim.index]
+    # aim_posi=aim_posi[aim.index]
+    # select area within sig marker
     aim_order=as.numeric(rownames(aim_marker))
     aim_min=as.numeric(min(aim_posi)-bin.regwas)
     aim_max=as.numeric(max(aim_posi)+bin.regwas)
     aim_area=rep(FALSE,(nrow(GWAS)))
     posi.gwas=as.numeric(as.matrix(GWAS[,2]))*10^(1+round(log10(max(as.numeric(GWAS[,3]))),0))+as.numeric(as.matrix(GWAS[,3]))
     distan.gwas=abs(posi.gwas-aim_posi)
-    # print(tail(GWAS))
-    # posi.gwas
-    #aim_area[c((aim_order-num_regwas):(aim_order-1),(aim_order+1):(aim_order+num_regwas))]=TRUE
-    # if(min(aim_order)<num_regwas)
-    # {
-    #   aim_area[c(1:(max(aim_order)+num_regwas))]=TRUE
-    # }else{
-    #   max.order=(max(aim_order)+num_regwas)
-    #   if(max.order>nrow(GWAS))max.order=nrow(GWAS)
-    #   aim_area[c((min(aim_order)-num_regwas):max.order)]=TRUE
-    # }
-    # print(bin.regwas)
-    # print(head(posi.gwas))
-    # print(aim_marker)
-    # print(table(posi.gwas<aim_max))
-    # print(table(posi.gwas>aim_min))
-    # print(GWAS[(aim_order-2):(aim_order+2),])
+   
     aim_area[posi.gwas<aim_max&posi.gwas>aim_min]=TRUE
     # print(table(aim_area))
     # Next code can control with or without core marker in seconde model
-    aim_area[posi.gwas==aim_posi]=FALSE  # without FALSE
+    aim_area[posi.gwas==aim_posi]=FALSE  # without sig marker -> FALSE
     if(sum(aim_area)<3) next
     if(!is.null(blink_CV))
     {
@@ -551,6 +541,7 @@ if(Multi_iter&sig_pass)
         # print(dim(secondCV))
         secondGD=GD[,c(TRUE,aim_area)]
         secondGM=GM[aim_area,]
+        # print(secondGM)
         print("Now that is multiple iteration for new BLINK !!!")
         myGAPIT_Second <- Blink(
                         Y=Y,
@@ -567,6 +558,7 @@ if(Multi_iter&sig_pass)
         # print(head(GWAS[GWAS_index,]))
         # print(head(Second_GWAS))
         GWAS[GWAS_index,4]=Second_GWAS[,4]
+        # print(GWAS[GWAS_index,])
    }
  }
 GWAS=GWAS[,c(1:7)]

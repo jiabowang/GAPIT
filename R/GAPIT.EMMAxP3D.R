@@ -95,7 +95,7 @@
 
   #decomposation with fixed effect (SNP not included)
   #print("Calling emma.eigen.R.w.Z...")
-  X <-  X0 #covariate variables such as population structure
+  X <-  matrix(as.numeric(as.matrix(X0)), nrow = nrow(X0)) #covariate variables such as population structure
   if(!is.null(Z) & !is.null(K)) eig.R <- try(emma.eigen.R.w.Z(Z, K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
   if(is.null(Z)  & !is.null(K)) eig.R <- try(emma.eigen.R.wo.Z(   K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
 
@@ -186,7 +186,6 @@
       # print("!!!!!")
       yt <- yt <- crossprod(U, yv)
       X0t <- crossprod(U, X0)
-
       X0X0 <- crossprod(X0t, X0t)
       X0Y <- crossprod(X0t,yt)
       XY <- X0Y
@@ -671,6 +670,8 @@
 
                        if(i == 0 &file==file.from &frag==1)
                        {
+                          print(dim(X0t))
+                          print(X0t[1:5,1:5])
                           X0X0 <- crossprod(X0t, X0t)
                           # print(X0X0)
                        }

@@ -30,6 +30,7 @@ lev=setdiff(lev,"NN")
 #print(lev)
 len=length(lev)
 #print(len)
+# print(bit)
 #Jiabo creat this code to convert AT TT to 1 and 2. 2018.5.29
    if(bit==2)inter_store=c("AT","AG","AC","TA","GA","CA","GT","TG","GC","CG","CT","TC","A-","-A","C-","-C","G-","-G","T-","-T")
    if(bit==1)inter_store=c("R","Y","S","W","K","M") 

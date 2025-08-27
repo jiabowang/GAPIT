@@ -214,6 +214,7 @@
               print("LD remove is working....")
               print("Number SNPs for LD remove:")
               print(length(Porder))
+              # print(dim(GDneo))#!!!
               Psort=Blink.LDRemove(Porder=Porder,GDneo=GDneo,bound=bound,LD=LD,model=model,orientation=orientation)
               seqQTN.can=seqQTN.selected[Psort]
               t2=proc.time()
@@ -604,13 +605,15 @@
   corr[abs(corr)<=LD]=0
   corr[abs(corr)>LD]=1
   Psort=as.numeric(matrix(1,1,ncol(corr)))
-  # print(ncol(corr))
+  if(ncol>1)
+  {
   for(i in 2:ncol(corr)){
     p.a=Psort[1:(i-1)]
     p.b=as.numeric(corr[1:(i-1),i])
     index=(p.a==p.b)
     index[(p.a==0)&(p.b==0)]=FALSE
     if(sum(index)!=0) Psort[i]=0
+  }
   }
   seqQTN=Porder[Psort==1]
   return(seqQTN)
@@ -628,6 +631,7 @@
     SNP.index = apply(GDneo, 2, stats::sd) != 0
     GDneo = GDneo[, SNP.index]
   }
+  # print(dim(GDneo)) #@@@
   Porder = Porder[SNP.index]
   l = block
   seqQTN=NULL
