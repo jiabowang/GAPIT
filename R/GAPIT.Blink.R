@@ -605,7 +605,7 @@
   corr[abs(corr)<=LD]=0
   corr[abs(corr)>LD]=1
   Psort=as.numeric(matrix(1,1,ncol(corr)))
-  if(ncol>1)
+  if(ncol(corr)>1)
   {
   for(i in 2:ncol(corr)){
     p.a=Psort[1:(i-1)]
