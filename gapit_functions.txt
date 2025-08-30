@@ -4668,8 +4668,8 @@ GD=cbind(as.data.frame(GT),GD)
 
                        if(i == 0 &file==file.from &frag==1)
                        {
-                          print(dim(X0t))
-                          print(X0t[1:5,1:5])
+                          # print(dim(X0t))
+                          # print(X0t[1:5,1:5])
                           X0X0 <- crossprod(X0t, X0t)
                           # print(X0X0)
                        }
