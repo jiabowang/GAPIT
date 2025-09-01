@@ -467,10 +467,13 @@ if(Multi_iter&sig_pass)
 #if(setequal(sig_order,numeric(0))) break
 
   n=nrow(sig)
+  # print(sig_position)
   if(length(sig_order)!=1)
   {
     diff_order=abs(sig_position[-length(sig_position)]-sig_position[-1])
+    # print(diff_order)
     diff_index=diff_order<bin.regwas
+    #prin
     count=0
     diff_index2=count
     for(i in 1:length(diff_index))
@@ -478,12 +481,14 @@ if(Multi_iter&sig_pass)
        if(!diff_index[i]) count=count+1
        diff_index2=append(diff_index2,count)
     }
+    # print(diff_index2)
   }else{
     diff_order=0
     diff_index2=0
   }
   sig_bins=rle(diff_index2)$lengths
   num_bins=length(sig_bins)
+  # print(sig_bins)
 #####################
   print("The number of significant markers is")
   print(n)
@@ -522,6 +527,7 @@ if(Multi_iter&sig_pass)
     # print(table(aim_area))
     # Next code can control with or without core marker in seconde model
     aim_area[posi.gwas==aim_posi]=FALSE  # without sig marker -> FALSE
+    print(sum(aim_area))
     if(sum(aim_area)<3) next
     if(!is.null(blink_CV))
     {
@@ -529,28 +535,29 @@ if(Multi_iter&sig_pass)
       # secondCV=cbind(blink_CV,X[,seqQTN])
       # secondCV=blink_CV
     }else{
-      secondCV=cbind(GD[,1],X[,seqQTN[!seqQTN%in%aim_order]])
-
+      # secondCV=cbind(as.data.frame(GD[,1]),matrix(as.numeric(as.matrix(X[,seqQTN[!seqQTN%in%aim_order]])),nrow(X),))
+      secondCV=X[,seqQTN[!seqQTN%in%aim_order]]
+      # secondCV=blink_CV
     }
     if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
     #if(setequal(aim_area,logical(0))) next
         # this is used to set with sig marker in second model
-        # aim_area[GM[,1]==aim_marker[,1]]=FALSE 
+        # colnames(secondCV)[1]=c("Taxa")
         print(table(aim_area))
         # print(dim(secondCV))
         secondGD=GD[,c(TRUE,aim_area)]
         secondGM=GM[aim_area,]
-        # print(secondGM)
         print("Now that is multiple iteration for new BLINK !!!")
         myGAPIT_Second <- Blink(
                         Y=Y,
                         GD=secondGD,
                         GM=secondGM,
                         CV=secondCV,
-                        maxLoop=10,time.cal=T
+                        maxLoop=1,time.cal=T
                         )
         Second_GWAS= myGAPIT_Second$GWAS [,1:4]
+        # print(Second_GWAS)
         Second_GWAS[is.na(Second_GWAS[,4]),4]=1
         orignal_GWAS=GWAS[aim_area,]
         GWAS_index=match(Second_GWAS[,1],GWAS[,1])
