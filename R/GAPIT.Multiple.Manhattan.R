@@ -498,7 +498,6 @@ if("s"%in%plot.type)
  # print(ticks)   
         #Add a horizontal line for bonferroniCutOff
  axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
- axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
  axis(2, yaxp=c(0,themax.y02,4),cex.axis=2,tick=T,las=1,lwd=2.5)
  if(!is.null(cutOff))abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
  if(plot.line)
@@ -640,7 +639,8 @@ if("s"%in%plot.type)
         }else{
         points(QTN[,2], QTN[,3], pch=20, cex=2,lwd=2.5,col="dimgrey")
        }        
-    
+    if(k==Nenviron) axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
+
  }#end of environ_name
  dev.off()
  # }
@@ -732,7 +732,7 @@ if("s"%in%plot.type)
  }else{
   if(kk==1)
   {
-  print(kk)
+  # print(kk)
   plot(rep(0,max.pch),(max.pch:1)*cex.betw,xlab="",ylab="" ,axes=FALSE,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
   pch=yourpch[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
@@ -741,7 +741,7 @@ if("s"%in%plot.type)
   pch=yourpch2[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
   text(rep((0+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
   }else{
-  print(kk)
+  # print(kk)
   plot(rep((kk-1)*x.di,max.pch),(max.pch:1)*cex.betw,xlab="",ylab="" ,axes=FALSE,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
   pch=yourpch[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])

@@ -351,7 +351,7 @@ if(DP$SNP.test)
 						             plot.style=DP$plot.style,
 						             SUPER_GS=DP$SUPER_GS)  
     GWAS=gapitMain$GWAS
-    if(DP$Random.model&DP$file.output)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=gapitMain$PC,cutOff=DP$cutOff,name.of.trait=DP$name.of.trait,N.sig=DP$N.sig,GT=IC$GT)
+    if(DP$Random.model&DP$file.output)GR=GAPIT.RandomModel(Y=ic_Y,X=IC$GD[,-1],GWAS=GWAS,CV=IC$PCA,cutOff=DP$cutOff,name.of.trait=DP$name.of.trait,N.sig=DP$N.sig,GT=IC$GT)
     Pred=gapitMain$Pred
     va=NA#gapitMain$vg
     ve=NA#gapitMain$ve
