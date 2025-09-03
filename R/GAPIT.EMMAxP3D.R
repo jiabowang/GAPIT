@@ -96,22 +96,33 @@
   #decomposation with fixed effect (SNP not included)
   #print("Calling emma.eigen.R.w.Z...")
   X <-  matrix(as.numeric(as.matrix(X0)), nrow = nrow(X0)) #covariate variables such as population structure
-  if(!is.null(Z) & !is.null(K)) eig.R <- try(emma.eigen.R.w.Z(Z, K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
-  if(is.null(Z)  & !is.null(K)) eig.R <- try(emma.eigen.R.wo.Z(   K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
-
+  # if(!is.null(Z) & !is.null(K)) eig.R <- try(emma.eigen.R.w.Z(Z, K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
+  # if(is.null(Z)  & !is.null(K)) eig.R <- try(emma.eigen.R.wo.Z(   K, X),silent=TRUE) #This will be used to get REstricted ML (REML)
+  # print(!is.null(Z))
+  # write.csv(K,"K.csv")
+  # write.csv(X,"X.csv")
+  # K=read.csv("K.csv",head=T)[,-1]
+  # X=read.csv("X.csv",head=T)[,-1]
+  # K=matrix(as.numeric(as.matrix(K)), nrow = nrow(K))
+  # X=matrix(as.numeric(as.matrix(X)), nrow = nrow(X))  
+  if(!is.null(Z) & !is.null(K)) eig.R <- try(emma.eigen.R.w.Z(Z, matrix(as.numeric(as.matrix(K)), nrow = nrow(K)), X)) #This will be used to get REstricted ML (REML)
+  if(is.null(Z)  & !is.null(K)) eig.R <- try(emma.eigen.R.wo.Z(   matrix(as.numeric(as.matrix(K)), nrow = nrow(K)), matrix(as.numeric(as.matrix(X)), nrow = nrow(X)) )) #This will be used to get REstricted ML (REML)
+  
   Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.R")
   Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R")
-
+  # print(inherits(eig.R, "try-error"))
   if(!is.null(K))
   {
     if(inherits(eig.R, "try-error"))
+       {
+       print("@@@@")
        return(list(ps = NULL, REMLs = NA, stats = NULL,
                    effect.est = NULL, dfs = NULL, maf = NULL,
                    nobs = NULL, Timmer = Timmer, Memory=Memory,
                    vgs = NA, ves = NA, BLUP = NULL, BLUP_Plus_Mean = NULL,
                    PEV = NULL, BLUE=NULL
-                   )
-              )
+                   ))
+     }
 #print("@@@@@")
   }
 #-------------------------------------------------------------------------------------------------------------------->
@@ -143,6 +154,8 @@
         REMLs <- REMLE$REML
         REMLE_delta=REMLE$delta
         # print("$$$")
+        # print(vgs)
+        # print(ves)
         rm(REMLE)
         gc()
     }

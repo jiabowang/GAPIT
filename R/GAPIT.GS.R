@@ -11,6 +11,9 @@ UO=try(t(KWO)%*%solve(KW)%*%UW,silent=TRUE)
 #print(dim(KWO)) #kinship without phenotype
 #print(dim(KW))  #kinship within phenotype
 # print(dim(UW))  #BLUP AND PEV of reference
+# write.csv(KWO,"KWO.csv")
+# write.csv(KW,"KW.csv")
+# print(UW)
 
 if(inherits(UO, "try-error")) 
 {

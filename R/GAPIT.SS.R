@@ -181,8 +181,14 @@ if(DP$SNP.test)
           if(!is.null(IC$myallCV)) 
           {
             com.taxa=intersect(as.character(IC$myallCV[,1]),as.character(DP$GD[,1]))
-            CV1 = IC$myallCV
-            ablup.GD=IC$myallGD
+            taxa_CV=as.character(IC$myallCV[,1])
+            taxa_g=as.character(DP$GD[,1])
+     # print(length(taxa_comall))
+            CV1=IC$myallCV[taxa_CV%in%com.taxa,]
+            CV1 <- CV1[match(com.taxa,as.character(CV1[,1])),]
+            # CV1 = IC$myallCV
+            ablup.GD=DP$GD[taxa_g%in%com.taxa,]
+            ablup.GD=ablup.GD[match(com.taxa,as.character(ablup.GD[,1])),]           
             ablup.X=ablup.GD[,-1]
             # CV1=as.matrix(CV1[match(com.taxa,as.character(CV1[,1])),])
             if(!is.null(myBus$seqQTN))
