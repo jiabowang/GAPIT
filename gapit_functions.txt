@@ -2190,7 +2190,7 @@ if(Multi_iter&sig_pass)
     # print(table(aim_area))
     # Next code can control with or without core marker in seconde model
     aim_area[posi.gwas==aim_posi]=FALSE  # without sig marker -> FALSE
-    print(sum(aim_area))
+    # print(sum(aim_area))
     if(sum(aim_area)<3) next
     if(!is.null(blink_CV))
     {
@@ -3322,7 +3322,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				graphics::par(xpd=TRUE)
 			}
 			for(i in 1:R){
-				print(paste("Multracks_QQ Plotting ",taxa[i],"...",sep=""))		
+				# print(paste("Multracks_QQ Plotting ",taxa[i],"...",sep=""))		
 				P.values=as.numeric(Pmap[,i+2])
 				P.values=P.values[!is.na(P.values)]
 				if(LOG10){
@@ -12223,7 +12223,7 @@ store.x=NULL
 y_filter0=NULL
 for(i in 1:length(environ_name))
 {
-  print(paste("Reading GWAS result with ",environ_name[i],sep=""))
+  # print(paste("Reading GWAS result with ",environ_name[i],sep=""))
   environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[i],".csv",sep=""),head=T)
   num.markers=nrow(environ_result)
   environ_result=environ_result[order(environ_result[,3]),]

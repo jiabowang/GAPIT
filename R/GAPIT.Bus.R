@@ -527,7 +527,7 @@ if(Multi_iter&sig_pass)
     # print(table(aim_area))
     # Next code can control with or without core marker in seconde model
     aim_area[posi.gwas==aim_posi]=FALSE  # without sig marker -> FALSE
-    print(sum(aim_area))
+    # print(sum(aim_area))
     if(sum(aim_area)<3) next
     if(!is.null(blink_CV))
     {

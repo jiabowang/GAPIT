@@ -41,7 +41,7 @@ store.x=NULL
 y_filter0=NULL
 for(i in 1:length(environ_name))
 {
-  print(paste("Reading GWAS result with ",environ_name[i],sep=""))
+  # print(paste("Reading GWAS result with ",environ_name[i],sep=""))
   environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[i],".csv",sep=""),head=T)
   num.markers=nrow(environ_result)
   environ_result=environ_result[order(environ_result[,3]),]

@@ -898,7 +898,7 @@ GAPIT.Circle.Manhattan.Plot <- function(
 				graphics::par(xpd=TRUE)
 			}
 			for(i in 1:R){
-				print(paste("Multracks_QQ Plotting ",taxa[i],"...",sep=""))		
+				# print(paste("Multracks_QQ Plotting ",taxa[i],"...",sep=""))		
 				P.values=as.numeric(Pmap[,i+2])
 				P.values=P.values[!is.na(P.values)]
 				if(LOG10){
