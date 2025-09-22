@@ -307,7 +307,7 @@ if(!is.null(Y))
             group.from=1
             group.to=1
             if(is.null(kinship.algorithm))kinship.algorithm="Zhang"
-
+            Random.model=FALSE
           }
         if(model=="MLM"|model=="gBLUP")
           {
