@@ -49,6 +49,12 @@ if(method=="FarmCPU")
 #library(bigmemory)  #for FARM-CPU
 #library(biganalytics) #for FARM-CPU
 #if(!exists('FarmCPU', mode='function'))source("http://www.zzlab.net/FarmCPU/FarmCPU_functions.txt")#web source code
+Y=Y[!is.na(Y[,2]),]
+taxa_Y=as.character(Y[,1])
+taxa_GD=as.character(GD[,1])
+taxa_CV=as.character(CV[,1])
+GD=GD[taxa_GD%in%taxa_Y,]
+CV=CV[taxa_CV%in%taxa_Y,]
 
 colnames(GM)[1]="SNP"
 
@@ -365,7 +371,12 @@ REMLs=NULL
 }
 if(method=="BLINK")
 {
- 
+  Y=Y[!is.na(Y[,2]),]
+  taxa_Y=as.character(Y[,1])
+  taxa_GD=as.character(GD[,1])
+  taxa_CV=as.character(CV[,1])
+  GD=GD[taxa_GD%in%taxa_Y,]
+  CV=CV[taxa_CV%in%taxa_Y,]
   colnames(GD)[-1]=as.character(GM[,1])
 
   blink_GD=t(GD[,-1])
