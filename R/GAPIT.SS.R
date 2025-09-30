@@ -102,8 +102,8 @@ if(DP$SNP.test)
           {
             CV1=as.matrix(IC$PCA[,-1])
             CV2=as.matrix(IC$myallCV[,-1])
-            colnames(GD1)="Taxa"
-            colnames(GD2)="Taxa"
+            colnames(GD1)[1]="Taxa"
+            colnames(GD2)[1]="Taxa"
             # BLUE=rep(NA,nrow(IC$myallGD))
             print("The dimension of CV in lm model :")
             print(dim(CV1))
