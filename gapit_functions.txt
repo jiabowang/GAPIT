@@ -16540,13 +16540,14 @@ if(DP$SNP.test)
           {
             CV1=as.matrix(IC$PCA[,-1])
             CV2=as.matrix(IC$myallCV[,-1])
-
+            colnames(GD1)="Taxa"
+            colnames(GD2)="Taxa"
             # BLUE=rep(NA,nrow(IC$myallGD))
             print("The dimension of CV in lm model :")
             print(dim(CV1))
             # print(dim(GD1))
-    # print(head(CV1))
-    # print(dim(GD1))
+    # print(colnames(IC$PCA))
+    # print(colnames(GD1))
             # XCV1=cbind(CV1, GD1)
             XCV1=merge(IC$PCA,GD1,by.x=colnames(IC$PCA)[1],by.y=colnames(GD1)[1])
             XCV1=matrix(as.numeric(as.matrix(XCV1[,-1])),nrow(XCV1))
