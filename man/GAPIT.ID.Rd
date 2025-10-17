@@ -18,6 +18,7 @@ GAPIT.ID(
   file.output = TRUE,
   SNP.MAF = 0,
   CG = NULL,
+  testY = NULL,
   plot.bin = 10^9
 )
 }

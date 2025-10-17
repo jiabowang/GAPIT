@@ -12,380 +12,211 @@ GAPIT(
   KI = NULL,
   Z = NULL,
   CV = NULL,
-  CV.Inheritance = NULL,
-  GP = NULL,
-  GK = NULL,
-  testY = NULL,
-  group.from = 1e+06,
-  group.to = 1e+06,
-  group.by = 20,
-  DPP = 1e+05,
-  kinship.cluster = "average",
-  kinship.group = "Mean",
-  kinship.algorithm = "VanRaden",
+  Aver.Dis = 1000,
   buspred = FALSE,
-  lmpred = FALSE,
-  FDRcut = FALSE,
   bin.from = 10000,
   bin.to = 10000,
   bin.by = 10000,
+  cutOff = 0.05,
+  CV.Extragenetic = 0,
+  effectunit = 1,
+  file.output = TRUE,
+  FDRcut = FALSE,
+  group.from = 1e+06,
+  group.to = 1e+06,
+  group.by = 50,
+  Geno.View.output = TRUE,
+  h2 = NULL,
   inclosure.from = 10,
   inclosure.to = 10,
   inclosure.by = 10,
+  Inter.Plot = FALSE,
+  Inter.type = c("m", "q"),
+  kinship.cluster = "average",
+  kinship.group = "Mean",
+  kinship.algorithm = "Zhang",
+  lmpred = FALSE,
+  model = "MLM",
+  maxOut = 100,
+  memo = NULL,
+  Model.selection = FALSE,
+  Multi_iter = TRUE,
+  Major.allele.zero = FALSE,
+  Multiple_analysis = TRUE,
+  num_regwas = 10,
+  bin.regwas = 1e+05,
+  N4 = FALSE,
+  NQTN = NULL,
+  N.sig = NULL,
+  NJtree.group = NULL,
+  NJtree.type = c("fan", "unrooted"),
+  output.numerical = FALSE,
+  output.hapmap = FALSE,
+  QC.Y = FALSE,
+  QTN.position = NULL,
+  QTN.gs = 0,
+  QTNDist = "normal",
+  r = 0.25,
+  Random.model = TRUE,
+  sangwich.top = NULL,
+  sangwich.bottom = NULL,
+  seq.cutoff = NULL,
+  seq.num = 50,
   SNP.P3D = TRUE,
   SNP.effect = "Add",
   SNP.impute = "Middle",
-  PCA.total = 0,
   SNP.fraction = 1,
-  seed = NULL,
-  BINS = 20,
   SNP.test = TRUE,
   SNP.MAF = 0,
-  FDR.Rate = 1,
   SNP.FDR = 1,
-  SNP.permutation = FALSE,
-  SNP.CV = NULL,
-  SNP.robust = "GLM",
-  file.from = 1,
-  file.to = 1,
-  file.total = NULL,
-  file.fragment = 99999,
-  file.path = NULL,
-  file.G = NULL,
-  file.Ext.G = NULL,
-  file.GD = NULL,
-  file.GM = NULL,
-  file.Ext.GD = NULL,
-  file.Ext.GM = NULL,
-  ngrid = 100,
-  llim = -10,
-  ulim = 10,
-  esp = 1e-10,
-  LD.chromosome = NULL,
-  LD.location = NULL,
-  LD.range = NULL,
+  testY = NULL,
+  plot.bin = 10^5,
+  PCA.total = 0,
   PCA.col = NULL,
   PCA.3d = FALSE,
-  NJtree.group = NULL,
-  NJtree.type = c("fan", "unrooted"),
-  sangwich.top = NULL,
-  sangwich.bottom = NULL,
-  QC = TRUE,
-  GTindex = NULL,
-  LD = 0.1,
-  plot.bin = 10^5,
-  file.output = TRUE,
-  cutOff = 0.05,
-  Model.selection = FALSE,
-  output.numerical = FALSE,
-  output.hapmap = FALSE,
-  Create.indicator = FALSE,
-  Multi_iter = FALSE,
-  num_regwas = 10,
-  opt = "extBIC",
-  QTN = NULL,
-  QTN.round = 1,
-  QTN.limit = 0,
-  QTN.update = TRUE,
-  QTN.method = "Penalty",
-  Major.allele.zero = FALSE,
-  Random.model = FALSE,
-  method.GLM = "FarmCPU.LM",
-  method.sub = "reward",
-  method.sub.final = "reward",
-  method.bin = "static",
-  bin.size = c(1e+06),
-  bin.selection = c(10, 20, 50, 100, 200, 500, 1000),
-  memo = NULL,
-  Prior = NULL,
-  ncpus = 1,
-  maxLoop = 3,
-  threshold.output = 0.01,
-  Inter.Plot = FALSE,
-  Inter.type = c("m", "q"),
-  WS = c(1, 1000, 10000, 1e+05, 1e+06, 1e+07),
-  alpha = c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),
-  maxOut = 100,
-  QTN.position = NULL,
-  CG = NULL,
-  converge = 1,
-  iteration.output = FALSE,
-  acceleration = 0,
-  iteration.method = "accum",
+  PCA.legend = NULL,
   PCA.View.output = TRUE,
-  Geno.View.output = TRUE,
-  plot.style = "Oceanic",
-  SUPER_GD = NULL,
-  SUPER_GS = FALSE,
-  h2 = NULL,
-  NQTN = NULL,
-  QTNDist = "normal",
-  effectunit = 1,
-  category = 1,
-  r = 0.25,
-  cveff = NULL,
-  a2 = 0,
-  adim = 2,
-  Multiple_analysis = FALSE,
-  model = "MLM",
-  Para = NULL
+  Phenotype.View = TRUE,
+  Predict.type = "GEBV",
+  WS = c(1, 1000, 10000, 1e+05, 1e+06, 1e+07),
+  WS0 = 10000
 )
 }
 \arguments{
-\item{Y}{= NULL, data.frame of phenotype data, samples in rows, traits in column, first column is sample name}
+\item{Y}{data.frame of phenotype data where each row is a sample and each column is a trait, the first column is the sample names}
 
-\item{G}{= NULL, data.frame of genotypic data, HAPMAP format}
+\item{G}{data.frame of genotypic data in HAPMAP format}
 
-\item{GD}{= NULL, data.frame of genetic data in 'numerical' format, samples in rows, variants in columns.}
+\item{GD}{data.frame of genetic data in numerical format, where each row is a sample and each column is a variant.}
 
-\item{GM}{= NULL, Genetic Map data.frame to provide genomic coordinates for GD}
+\item{GM}{a data.frame of genomic coordinates for the genetic map}
 
-\item{KI}{= NULL, Kinship matrix}
+\item{KI}{an $NxN$ matrix of kinship coefficients}
 
-\item{Z}{= NULL,}
+\item{Z}{an $NxN$ (for MLM) or an $NxN`$ (CMLM) matrix of index, which is made with 0 and 1 value to indicate indivdual belong to each group.}
 
-\item{CV}{= NULL, Covariate matrix}
+\item{CV}{Covariance matrix}
 
-\item{CV.Inheritance}{= NULL,}
+\item{buspred}{logical, option for prediction after GWAS。}
 
-\item{GP}{= NULL,}
+\item{bin.from}{integer, minimum number of bin(s) to consider in SUPER}
 
-\item{GK}{= NULL,}
+\item{bin.to}{integer, maximum number of bin(s) to consider in SUPER}
 
-\item{testY}{= NULL,}
+\item{bin.by}{integer, increment for evaluating bin size in SUPER}
 
-\item{group.from}{= 1e+06,}
+\item{cutOff}{numeric value, the threshold for filtering significant markers from all. It would be transfor as Bornferrni cutoff in Manhattan plots.}
 
-\item{group.to}{= 1e+06,}
+\item{effectunit}{numeric value, the effect unit of the first choosed marker in the simulation pheotype. default as 1}
 
-\item{group.by}{= 20,}
+\item{file.output}{logical, whether output all result files.}
 
-\item{DPP}{= 1e+05,}
+\item{FDRcut}{logical, filter pseudo QTN based on FDR cut-off in BLINK}
 
-\item{kinship.cluster}{= "average", options: complete, ward, single, mcquitty, median, and centroid}
+\item{group.from}{integer, minimum number of group(s) to consider in CMLM}
 
-\item{kinship.group}{= "Mean", options: Max, Min, and Median}
+\item{group.to}{integer, maximum number of group(s) to consider in CMLM}
 
-\item{kinship.algorithm}{= "VanRaden", options: EMMA, Loiselle, VanRaden, Zhang}
+\item{group.by}{integer, increment for evaluating group size in CMLM}
 
-\item{buspred}{= FALSE,}
+\item{Geno.View.output}{logical whether to output the Genotype analysis including MAF, heterzygosity, LD decay, and other genotype distribution output.}
 
-\item{lmpred}{= FALSE,}
+\item{h2}{numeric value, to set simulation phenotype heritability. It ranged from 0 to 1 means 0% to 100%.}
 
-\item{FDRcut}{= FALSE,}
+\item{inclosure.from}{integer, minimum number of pesudo QTNs to consider in SUPER}
 
-\item{bin.from}{= 10000,}
+\item{inclosure.to}{integer, maximum number of pesudo QTNs to consider in SUPER}
 
-\item{bin.to}{= 10000,}
+\item{inclosure.by}{integer, increment for evaluating number of pesudo QTNs in SUPER}
 
-\item{bin.by}{= 10000,}
+\item{Inter.Plot}{logical, whether to output the interactive Manhattan and QQ plots.}
 
-\item{inclosure.from}{= 10,}
+\item{Inter.type}{Interactive plot type for Manhattan and QQ plots."m" indicate manhattan plot and "q" indicate QQ plot.}
 
-\item{inclosure.to}{= 10,}
+\item{kinship.cluster}{algorithm for calculating kinship centroid (options: "average", "complete", "ward", "single", "mcquitty", "median", and "centroid")}
 
-\item{inclosure.by}{= 10,}
+\item{kinship.group}{method for calculating group membership (options: "Mean", "Max", "Min", and "Median")}
 
-\item{SNP.P3D}{= TRUE,}
+\item{kinship.algorithm}{algorithm to calculate the kinship matrix (options: "VanRaden", "EMMA", "Loiselle", and "Zhang")}
 
-\item{SNP.effect}{= "Add",}
+\item{lmpred}{logical (vector), option for seletion of linear model prediction or (and) ABLUP.}
 
-\item{SNP.impute}{= "Middle",}
+\item{model}{model type to run, (options: "MLM", "GLM", "CMLM", "MMLM", "SUPER", "FarmCPU", "gBLUP",  "cBLUP", and "sBLUP"}
 
-\item{PCA.total}{= 0,}
+\item{maxOut}{numeric, set the number of markers in the power calculation, the top maxOut number of P values markers should be selected.}
 
-\item{SNP.fraction}{= 1,}
+\item{memo}{text, from users to remark for output files.}
 
-\item{seed}{= NULL,}
+\item{Model.selection}{logical, whether evaluate optimum number of CV file. If TRUE, all likelyhood values should be evaluated for each CV combination.}
 
-\item{BINS}{= 20,}
+\item{Multi_iter}{logical, whether add more iterations for FarmCPU, BLINK.}
 
-\item{SNP.test}{= TRUE,}
+\item{Major.allele.zero}{logical, whether set major allele as 0, and minor allele as 2, if FALSE, they will be set as reverse.}
 
-\item{SNP.MAF}{= 0,}
+\item{Multiple_analysis}{logical, whether to output the mulitple mahattan and QQ plots. default as TRUE}
 
-\item{FDR.Rate}{= 1,}
+\item{num_regwas}{numeric, the maximum number of selective significant markers into re-GWAS model.}
 
-\item{SNP.FDR}{= 1,}
+\item{NQTN}{numeric value, to set simulation number of QTN. It ranged from 1 to the total markers number.}
 
-\item{SNP.permutation}{= FALSE,}
+\item{NJtree.group}{numeric, set the number of clustering groups in the NJtree plot.}
 
-\item{SNP.CV}{= NULL,}
+\item{NJtree.type}{type of neighbor joining tree (options: "fan" and "unrooted")}
 
-\item{SNP.robust}{= "GLM",}
+\item{output.numerical}{logical,whether output numerical genotype file from HapMap file.}
 
-\item{file.from}{= 1,}
+\item{output.hapmap}{logical,whether output numerical HapMap file from numerical genotype file.}
 
-\item{file.to}{= 1,}
+\item{QTN.position}{numeric vector, set where are the QTNs' position. Its maximun values should be equal to total marker number, and its length should be equal to the NQTN.}
 
-\item{file.total}{= NULL,}
+\item{QTNDist}{option for distribution of simulated QTN genetic effect in the simulation,(options: "normal" and "geometry")}
 
-\item{file.fragment}{= 99999,}
+\item{Random.model}{logical, whether ran random model to estimate PVE values for significant markers after GWAS.}
 
-\item{file.path}{= NULL,}
+\item{sangwich.top}{Model type to run in the first iteration of SUPER, (options: "MLM", "GLM", "CMLM","Fast-LMM")}
 
-\item{file.G}{= NULL,}
+\item{sangwich.bottom}{Model type to run in the last iteration of SUPER, (options: "MLM", "GLM", "CMLM","Fast-LMM")}
 
-\item{file.Ext.G}{= NULL,}
+\item{seq.cutoff}{numeric value, the threshold for filtering significant markers from all. It would be transfor as Bornferrni cutoff in GGS.}
 
-\item{file.GD}{= NULL,}
+\item{SNP.P3D}{logical, to use P3D or Not for Testing SNPs}
 
-\item{file.GM}{= NULL,}
+\item{SNP.effect}{genetic model for coding the SNP effect (options: "Add" (additive), "Dom", "Left", and "Right")}
 
-\item{file.Ext.GD}{= NULL,}
+\item{SNP.impute}{SNP imputation method (options: "Middle", "Major", and "Minor")}
 
-\item{file.Ext.GM}{= NULL,}
+\item{SNP.fraction}{numerical input between 0 and 1, fraction of SNPs Sampled to Estimate Kinship and PCs}
 
-\item{ngrid}{= 100,}
+\item{SNP.test}{logical, whether to do GWAS or GS.}
 
-\item{llim}{= -10,}
+\item{SNP.MAF}{numerical input between 0 and 1, minor allele frequency to filter SNPs in GWAS reports}
 
-\item{ulim}{= 10,}
+\item{SNP.FDR}{numerical input between 0 and 1, false discovery rate for filtering SNPs}
 
-\item{esp}{= 1e-10,}
+\item{testY}{data.frame of phenotype data in testing population, where each row is a sample and each column is a trait, the first column is the sample names.}
 
-\item{LD.chromosome}{= NULL,}
+\item{PCA.total}{integer, number of principal components to include in Q matrix (can be zero)}
 
-\item{LD.location}{= NULL,}
+\item{PCA.col}{list for points color in PCA plot. The total length of PCA.col should be equal to the number of individuals in the GD or G file.}
 
-\item{LD.range}{= NULL,}
+\item{PCA.3d}{logical, whether output 3D PCA plot.}
 
-\item{PCA.col}{= NULL,}
+\item{PCA.View.output}{logical, whether to output the PCA view}
 
-\item{PCA.3d}{= FALSE,}
+\item{Predict.type}{option to display which type predicted factor again real phenotype in the GAPIT.Association.Prediction pdf file.(options: "GEBV","BLUP" and "BLUE")}
 
-\item{NJtree.group}{= NULL,}
+\item{WS}{numeric or numeric vector, the distance between detected markers and real QTN should be recognized as a real power.}
 
-\item{NJtree.type}{= c("fan", "unrooted"),}
+\item{WS0}{numeric, the cutoff threshold for distance between markers to display in GAPIT.Genotype.Distance_R_Chro.pdf file.}
 
-\item{sangwich.top}{= NULL,}
-
-\item{sangwich.bottom}{= NULL,}
-
-\item{QC}{= TRUE,}
-
-\item{GTindex}{= NULL,}
-
-\item{LD}{= 0.1,}
-
-\item{plot.bin}{= 10^5,}
-
-\item{file.output}{= TRUE,}
-
-\item{cutOff}{= 0.05,}
-
-\item{Model.selection}{= FALSE,}
-
-\item{output.numerical}{= FALSE,}
-
-\item{output.hapmap}{= FALSE,}
-
-\item{Create.indicator}{= FALSE,}
-
-\item{Multi_iter}{= FALSE,}
-
-\item{num_regwas}{= 10,}
-
-\item{opt}{= "extBIC",}
-
-\item{QTN}{= NULL,}
-
-\item{QTN.round}{= 1,}
-
-\item{QTN.limit}{= 0,}
-
-\item{QTN.update}{= TRUE,}
-
-\item{QTN.method}{= "Penalty",}
-
-\item{Major.allele.zero}{= FALSE,}
-
-\item{Random.model}{= FALSE,}
-
-\item{method.GLM}{= "FarmCPU.LM",}
-
-\item{method.sub}{= "reward",}
-
-\item{method.sub.final}{= "reward",}
-
-\item{method.bin}{= "static",}
-
-\item{bin.size}{= c(1e+06),}
-
-\item{bin.selection}{= c(10, 20, 50, 100, 200, 500, 1000),}
-
-\item{memo}{= NULL,}
-
-\item{Prior}{= NULL,}
-
-\item{ncpus}{= 1,}
-
-\item{maxLoop}{= 3,}
-
-\item{threshold.output}{= 0.01,}
-
-\item{Inter.Plot}{= FALSE,}
-
-\item{Inter.type}{= c("m", "q"),}
-
-\item{WS}{= c(1, 1000, 10000, 1e+05, 1e+06, 1e+07),}
-
-\item{alpha}{= c(0.01, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1),}
-
-\item{maxOut}{= 100,}
-
-\item{QTN.position}{= NULL,}
-
-\item{CG}{= NULL,}
-
-\item{converge}{= 1,}
-
-\item{iteration.output}{= FALSE,}
-
-\item{acceleration}{= 0,}
-
-\item{iteration.method}{= "accum",}
-
-\item{PCA.View.output}{= TRUE,}
-
-\item{Geno.View.output}{= TRUE,}
-
-\item{plot.style}{= "Oceanic",}
-
-\item{SUPER_GD}{= NULL,}
-
-\item{SUPER_GS}{= FALSE,}
-
-\item{h2}{= NULL,}
-
-\item{NQTN}{= NULL,}
-
-\item{QTNDist}{= "normal",}
-
-\item{effectunit}{= 1,}
-
-\item{category}{= 1,}
-
-\item{r}{= 0.25,}
-
-\item{cveff}{= NULL,}
-
-\item{a2}{= 0,}
-
-\item{adim}{= 2,}
-
-\item{Multiple_analysis}{= FALSE,}
-
-\item{model}{= "MLM", options: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, or cBLUP}
-
-\item{Para}{= NULL}
+\item{Aver.Dis=1000}{numeric, average display windowsize in LD decay plot,}
 }
 \value{
 A list
 including some of the following elements:MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, cBLUP
 }
 \description{
-GAPIT analyzes phenotypic and genotypics data to infer association.
+GWAS and GS procedure using the Multiple models (General Linear Model, Mixed Linear Model, Compression Mixed Linear Model, SUPER, Multiple Loci Mixed linear Model, FarmCPU, and BLINK)
 }
 \details{
 Genome Association and Prediction Integrated Tools
@@ -394,8 +225,8 @@ Available models: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, cBLUP
 \examples{
 \dontrun{
 
-myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz", package = "GAPIT3")
-myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz", package = "GAPIT3")
+myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz", package = "GAPIT")
+myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz", package = "GAPIT")
 myPhenotypes <- read.table(myPhenoFile, header = TRUE)
 myGenotypes  <- read.table(myGenoFile, header = FALSE)
 
@@ -414,7 +245,7 @@ myGAPIT <- GAPIT(
 GAPIT.DP(), GAPIT.Phenotype.View(), GAPIT.judge(), GAPIT.IC(), GAPIT.SS(), GAPIT.ID().
 
 
-library(help = "GAPIT3")
+library(help = "GAPIT")
 }
 \author{
 Zhiwu Zhang and Jiabo Wang

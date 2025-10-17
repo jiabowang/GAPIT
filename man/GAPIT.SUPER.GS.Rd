@@ -7,10 +7,12 @@
 GAPIT.SUPER.GS(
   Y,
   GD = NULL,
+  allGD = NULL,
   GM = NULL,
   KI = NULL,
   Z = NULL,
   CV = NULL,
+  allCV = NULL,
   GK = NULL,
   kinship.algorithm = NULL,
   bin.from = 10000,
@@ -34,9 +36,12 @@ GAPIT.SUPER.GS(
   sangwich.top = NULL,
   sangwich.bottom = NULL,
   QC = TRUE,
+  QTN.gs = NULL,
   GTindex = NULL,
   LD = 0.05,
   file.output = TRUE,
+  GAPIT3.output = TRUE,
+  CV.Extragenetic = 0,
   cutOff = 0.01
 )
 }

@@ -2,6 +2,7 @@
 #  3.3.0
 Released on CRAN 202X-XX-XX
 
+* Added Lambdas[ Lambdas <= 0 ] <- 1e-9 to GAPIT.emma.REMLE
 * Changed Depends: R (<= 4.4.1) to Depends: R (>= 4.4.1)
 * updated GAPIT.Rproj
 
