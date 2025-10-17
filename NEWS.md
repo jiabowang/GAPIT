@@ -2,7 +2,7 @@
 #  3.3.0
 Released on CRAN 202X-XX-XX
 
-
+* Changed Depends: R (<= 4.4.1) to Depends: R (>= 4.4.1)
 * updated GAPIT.Rproj
 
 * Added roxygen to GAPIT.

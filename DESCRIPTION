@@ -9,7 +9,7 @@ Authors@R: c(
                  comment = c(ORCID = "0000-0002-1386-0435")))
 Description: Genome Association and Prediction Integrated Tools.
 License: GPL (>= 2)
-Depends: R (<= 4.4.1)
+Depends: R (>= 4.4.1)
 biocViews:
 Imports:
     ape,
