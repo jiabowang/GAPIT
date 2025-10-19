@@ -2,6 +2,7 @@
 #  3.3.0
 Released on CRAN 202X-XX-XX
 
+
 Addressed R CMD check GAPIT_3.5.0.tar.gz issues 2025-10
 
 Note: break used in wrong context: no loop is visible at GAPIT.R:531
@@ -58,6 +59,7 @@ GAPIT.Bread: warning in GAPIT(Y = Y, CV = CV, Z = Z, KI = KI, GD = GD,
   of 'QC' to 'QC.Y'
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.Bread.R:73-85)
 
+Added library_name:: prefix to function names.
 * checking R code for possible problems ... NOTE
 GAPIT.Bus: no visible binding for global variable ‘FDR.Rate’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.Bus.R:124)
@@ -69,7 +71,6 @@ GAPIT.EMMAxP3D: no visible global function definition for ‘var’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.EMMAxP3D.R:838-843)
 GAPIT.Genotype.View: no visible global function definition for ‘median’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.Genotype.View.R:109)
-
 GAPIT.Genotype.View: no visible global function definition for ‘par’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.Genotype.View.R:121)
 GAPIT.Genotype.View: no visible global function definition for ‘axis’
@@ -118,7 +119,6 @@ GAPIT.Genotype.View: no visible global function definition for ‘axis’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.Genotype.View.R:258)
 GAPIT.IC: no visible global function definition for ‘rnorm’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.IC.R:115)
-
 GAPIT.LD.decay: no visible binding for global variable ‘myGM’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.LD.decay.R:43)
 GAPIT.LD.decay: no visible global function definition for ‘par’
@@ -159,7 +159,6 @@ GAPIT.LD.decay: no visible global function definition for ‘legend’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.LD.decay.R:156-158)
 GAPIT.LD.decay: no visible global function definition for ‘par’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.LD.decay.R:156-158)
-
 GAPIT.Manhattan: no visible global function definition for ‘pdf’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.Manhattan.R:97)
 GAPIT.Manhattan: no visible global function definition for ‘layout’
@@ -221,7 +220,6 @@ GAPIT.Manhattan: no visible global function definition for ‘palette’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.Manhattan.R:331)
 GAPIT.Manhattan: no visible global function definition for ‘dev.off’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.Manhattan.R:332)
-
 GAPIT.Multiple.Manhattan: no visible global function definition for
   ‘read.csv’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.Multiple.Manhattan.R:45)
@@ -617,11 +615,6 @@ emmreml: no visible global function definition for ‘pchisq’
 emmreml : <anonymous>: no visible global function definition for
   ‘p.adjust’
   (/home/knausb/gits/GAPIT.Rcheck/00_pkg_src/GAPIT/R/GAPIT.emmreml.R:106-107)
-
-
-
-
-
 
 
 Addressed testthat::test_check() 2025-10
