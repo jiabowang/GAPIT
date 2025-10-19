@@ -3,6 +3,39 @@
 Released on CRAN 202X-XX-XX
 
 
+Addressed R CMD check --as-cran GAPIT_3.5.0.tar.gz issues 2025-10
+
+Found the following (possibly) invalid URLs:
+  URL: http://www.r-project.org
+    From: README.md
+    Status: 200
+    Message: OK
+    R-project URL not in canonical form
+  URL: http://www.rstudio.com (moved to https://posit.co/)
+    From: README.md
+    Status: 200
+    Message: OK
+  URL: http://zzlab.net/GEMT (moved to https://zzlab.net/GEMT)
+    From: inst/doc/FAQ.html
+    Status: 404
+    Message: Not Found
+  URL: http://zzlab.net/WorkshopISU (moved to https://zzlab.net/WorkshopISU/)
+    From: inst/doc/FAQ.html
+    Status: 200
+    Message: OK
+  Canonical www.R-project.org URLs use https.
+
+* checking package dependencies ... INFO
+Package in Depends/Imports which should probably only be in LinkingTo: ‘RcppArmadillo’
+
+
+
+* checking R code for possible problems ... [42s/42s] NOTE
+Possibly missing '()' after 'return' in the following function:
+  ‘GAPIT.Manhattan’
+
+
+
 Addressed R CMD check GAPIT_3.5.0.tar.gz issues 2025-10
 
 Note: break used in wrong context: no loop is visible at GAPIT.R:531

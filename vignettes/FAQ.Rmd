@@ -7,7 +7,7 @@ output: rmarkdown::html_vignette
 description: >
   Some of the most   
 vignette: >
-  %\VignetteIndexEntry{dplyr <-> base R}
+  %\VignetteIndexEntry{GAPIT_FAQ}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 
@@ -44,7 +44,7 @@ There no clear answer for this question. However, here are the two ways most of 
 
 #### Is it feasible I compare different models on my data? 
 
-Yes, you can compare different models implemented in GAPIT or other software packages through simulation. All you need is a genotype file. The demo source code is amiable at the Workshop of Assessment of Statistical Power in GWAS (http://zzlab.net/WorkshopISU).
+Yes, you can compare different models implemented in GAPIT or other software packages through simulation. All you need is a genotype file. The demo source code is amiable at the Workshop of Assessment of Statistical Power in GWAS (https://zzlab.net/WorkshopISU).
 
 #### How do I report an error?
 
@@ -72,7 +72,7 @@ It depends.  Rare SNPs with low MAF (Minor Allele Frequency) usually cause false
 
 #### My trait was measured in multiple environments, how do I use them simultaneously?  
 
-They can be averaged across environments, and use means by GAPIT. The genetic and environmental interaction was implemented in a separated software package: [GEMT](http://zzlab.net/GEMT).
+They can be averaged across environments, and use means by GAPIT. The genetic and environmental interaction was implemented in a separated software package: [GEMT](https://zzlab.net/GEMT).
 
 #### Is it OK to analyze binary traits (e.g. case-control) with GAPIT?  
 

@@ -12,7 +12,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     
     #print(cutOff)
     #do nothing if null input
-    if(is.null(GI.MP)) return
+    if(is.null(GI.MP)) return()
   #Handler of lable position only indicated by negatie position
     position.only=F
     if(!is.null(seqQTN)){
@@ -61,7 +61,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     if(!is.null(GD))
     {  if(ncol(GD)!=nrow(GI.MP))
     {print("GD does not match GM in Manhattan !!!")
-    return
+    return()
     }}
     # print(head(GI.MP))
     #print(nrow(GI.MP))

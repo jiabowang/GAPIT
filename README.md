@@ -79,8 +79,8 @@ Start
 
 
 GAPIT is a package that is run in the R software environment.
-R can be freely downloaded from [http://www.r-project.org](http://www.r-project.org).
-We also recommend the integrated development environment RStudio which is also freely available at [http://www.rstudio.com](http://www.rstudio.com).
+R can be freely downloaded from [https://cran.r-project.org](https://cran.r-project.org).
+We also recommend the integrated development environment RStudio which is also freely available at [RStudio at Posit](https://posit.co/).
 
 
 GAPIT can currently be installed in several ways.
