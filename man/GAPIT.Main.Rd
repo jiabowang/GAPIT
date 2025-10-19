@@ -104,6 +104,10 @@ GAPIT.Main(
 
 \item{GD}{data.frame of genotypic data}
 
+\item{allGD}{param}
+
+\item{allCV}{param}
+
 \item{GM}{genetic map for GD}
 
 \item{KI}{param}
@@ -245,6 +249,8 @@ GAPIT.Main(
 \item{sangwich.bottom}{param}
 
 \item{QC}{param}
+
+\item{QTN.gs}{param}
 
 \item{GTindex}{param}
 

@@ -97,7 +97,9 @@ GAPIT(
 
 \item{CV}{Covariance matrix}
 
-\item{buspred}{logical, option for prediction after GWAS。}
+\item{Aver.Dis}{numeric, average display windowsize in LD decay plot,}
+
+\item{buspred}{logical, option for prediction after GWAS.}
 
 \item{bin.from}{integer, minimum number of bin(s) to consider in SUPER}
 
@@ -106,6 +108,8 @@ GAPIT(
 \item{bin.by}{integer, increment for evaluating bin size in SUPER}
 
 \item{cutOff}{numeric value, the threshold for filtering significant markers from all. It would be transfor as Bornferrni cutoff in Manhattan plots.}
+
+\item{CV.Extragenetic}{param}
 
 \item{effectunit}{numeric value, the effect unit of the first choosed marker in the simulation pheotype. default as 1}
 
@@ -121,7 +125,7 @@ GAPIT(
 
 \item{Geno.View.output}{logical whether to output the Genotype analysis including MAF, heterzygosity, LD decay, and other genotype distribution output.}
 
-\item{h2}{numeric value, to set simulation phenotype heritability. It ranged from 0 to 1 means 0% to 100%.}
+\item{h2}{numeric value, to set simulation phenotype heritability. It ranged from 0 to 1 means 0\% to 100\%.}
 
 \item{inclosure.from}{integer, minimum number of pesudo QTNs to consider in SUPER}
 
@@ -157,7 +161,13 @@ GAPIT(
 
 \item{num_regwas}{numeric, the maximum number of selective significant markers into re-GWAS model.}
 
+\item{bin.regwas}{param}
+
+\item{N4}{param}
+
 \item{NQTN}{numeric value, to set simulation number of QTN. It ranged from 1 to the total markers number.}
+
+\item{N.sig}{param}
 
 \item{NJtree.group}{numeric, set the number of clustering groups in the NJtree plot.}
 
@@ -167,9 +177,15 @@ GAPIT(
 
 \item{output.hapmap}{logical,whether output numerical HapMap file from numerical genotype file.}
 
+\item{QC.Y}{param}
+
 \item{QTN.position}{numeric vector, set where are the QTNs' position. Its maximun values should be equal to total marker number, and its length should be equal to the NQTN.}
 
+\item{QTN.gs}{param}
+
 \item{QTNDist}{option for distribution of simulated QTN genetic effect in the simulation,(options: "normal" and "geometry")}
+
+\item{r}{param}
 
 \item{Random.model}{logical, whether ran random model to estimate PVE values for significant markers after GWAS.}
 
@@ -178,6 +194,8 @@ GAPIT(
 \item{sangwich.bottom}{Model type to run in the last iteration of SUPER, (options: "MLM", "GLM", "CMLM","Fast-LMM")}
 
 \item{seq.cutoff}{numeric value, the threshold for filtering significant markers from all. It would be transfor as Bornferrni cutoff in GGS.}
+
+\item{seq.num}{param}
 
 \item{SNP.P3D}{logical, to use P3D or Not for Testing SNPs}
 
@@ -195,21 +213,25 @@ GAPIT(
 
 \item{testY}{data.frame of phenotype data in testing population, where each row is a sample and each column is a trait, the first column is the sample names.}
 
+\item{plot.bin}{param}
+
 \item{PCA.total}{integer, number of principal components to include in Q matrix (can be zero)}
 
 \item{PCA.col}{list for points color in PCA plot. The total length of PCA.col should be equal to the number of individuals in the GD or G file.}
 
 \item{PCA.3d}{logical, whether output 3D PCA plot.}
 
+\item{PCA.legend}{param}
+
 \item{PCA.View.output}{logical, whether to output the PCA view}
+
+\item{Phenotype.View}{param}
 
 \item{Predict.type}{option to display which type predicted factor again real phenotype in the GAPIT.Association.Prediction pdf file.(options: "GEBV","BLUP" and "BLUE")}
 
 \item{WS}{numeric or numeric vector, the distance between detected markers and real QTN should be recognized as a real power.}
 
 \item{WS0}{numeric, the cutoff threshold for distance between markers to display in GAPIT.Genotype.Distance_R_Chro.pdf file.}
-
-\item{Aver.Dis=1000}{numeric, average display windowsize in LD decay plot,}
 }
 \value{
 A list

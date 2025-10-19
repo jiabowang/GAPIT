@@ -17,9 +17,7 @@ Imports:
     EMMREML,
     genetics,
     gplots,
-    grid,
     htmltools,
-    lattice,
     magrittr,
     lme4,
     MASS,
@@ -27,7 +25,6 @@ Imports:
     multtest,
     plotly,
     RcppArmadillo,
-    rgl,
     scatterplot3d,
     snowfall
 Encoding: UTF-8

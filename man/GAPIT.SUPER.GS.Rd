@@ -50,6 +50,8 @@ GAPIT.SUPER.GS(
 
 \item{GD}{= NULL,}
 
+\item{allGD}{param}
+
 \item{GM}{= NULL,}
 
 \item{KI}{= NULL,}
@@ -57,6 +59,8 @@ GAPIT.SUPER.GS(
 \item{Z}{= NULL,}
 
 \item{CV}{= NULL,}
+
+\item{allCV}{param}
 
 \item{GK}{= NULL,}
 
@@ -104,11 +108,17 @@ GAPIT.SUPER.GS(
 
 \item{QC}{= TRUE,}
 
+\item{QTN.gs}{param}
+
 \item{GTindex}{= NULL,}
 
 \item{LD}{= 0.05,}
 
 \item{file.output}{= TRUE,}
+
+\item{GAPIT3.output}{param}
+
+\item{CV.Extragenetic}{param}
 
 \item{cutOff}{= 0.01}
 }

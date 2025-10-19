@@ -842,7 +842,9 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A",no.cv=0
 }#The function FarmCPU.SUB ends here
 
 
-`Blink.cor`<-function(Y,GD,w=NULL,orientation="row",ms=ms,n=ny,m=nm){
+`Blink.cor`<-function(Y,GD,w=NULL,orientation="row",ms=ms,
+                      #BJK n=ny,m=nm
+                      n=nrow(Y), m=nrow(GD)){
   #Objects: calculate R value with covariates
   #Input: pheontype(nx1), ms is marker size for slicing the genotype, genotype(orientation="row", mxn or orientation="col", nxm,) and covariates(nxp)
   #   n is individual number, m is marker number, p is covariate number

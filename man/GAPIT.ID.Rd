@@ -49,6 +49,8 @@ GAPIT.ID(
 
 \item{CG}{param}
 
+\item{testY}{param}
+
 \item{plot.bin}{param}
 }
 \value{

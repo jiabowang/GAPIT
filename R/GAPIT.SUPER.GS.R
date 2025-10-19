@@ -37,6 +37,12 @@
 #' @param LD = 0.05,
 #' @param file.output = TRUE,
 #' @param cutOff = 0.01
+#' 
+#' @param allGD param
+#' @param allCV param
+#' @param QTN.gs param
+#' @param GAPIT3.output param
+#' @param CV.Extragenetic param
 #'
 #'
 #' @author Zhiwu Zhang and Jiabo Wang

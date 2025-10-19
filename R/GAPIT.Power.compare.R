@@ -47,7 +47,11 @@ colnames(Y)=c("Taxa","Simu")
        memo=all.method[j],
        QTN.position=QTN.position
        ) 
-       power_store<-GAPIT.Power(WS=WS, alpha=myalpha, maxOut=maxOut,seqQTN=QTN.position,GM=myGM,GWAS=myGAPIT$GWAS)
+       power_store<-GAPIT.Power(WS=WS, alpha=myalpha, maxOut=maxOut,
+                                seqQTN=QTN.position,
+                                #BJK GM = myGM,
+                                GM = GM,
+                                GWAS = myGAPIT$GWAS)
        rep.power.store[[j]]<-rep.power.store[[j]]+power_store$Power
        rep.FDR.store[[j]]<-rep.FDR.store[[j]]+power_store$FDR
        rep.Power.Alpha.store[[j]]<-rep.Power.Alpha.store[[j]]+power_store$Power.Alpha
@@ -78,7 +82,7 @@ grDevices::pdf(paste("GAPIT.Power.compare to multiple models ",WS[k], ".pdf", se
 graphics::par(mar = c(5,6,5,3))
 	#win.graph(width=6, height=4, pointsize=9)
 	#palette(c("blue","red","green4","brown4","orange",rainbow(5)))
-	plot.color=rainbow(length(all.method))
+	plot.color = grDevices::rainbow(length(all.method))
 # print(head(rep.FDR.store[[j]]))
 kkt=NULL
 # print(head(rep.FDR.store))

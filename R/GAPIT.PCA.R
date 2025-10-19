@@ -28,7 +28,7 @@ if(file.output) utils::write.table(eigenvalues, "GAPIT.Genotype.PCA_eigenvalues.
 print("Creating PCA graphs...")
 #Create a Scree plot 
 if(file.output & PC.number>1) {
-grDevices::pdf("GAPIT.Genotype.PCA_eigenValue.pdf", width = 12, height = 12)
+  grDevices::pdf("GAPIT.Genotype.PCA_eigenValue.pdf", width = 12, height = 12)
   graphics::par(mar=c(5,5,4,5)+.1,cex=2)
   #par(mar=c(10,9,9,10)+.1)
   plot(xout,eigenvalues[xout],type="b",col="blue",xlab="Principal components",ylab="Variance")
@@ -36,31 +36,40 @@ grDevices::pdf("GAPIT.Genotype.PCA_eigenValue.pdf", width = 12, height = 12)
   plot(xout,evp[xout]*100,type="n",col="red",xaxt="n",yaxt="n",xlab="",ylab="")
   graphics::axis(4)
   graphics::mtext("Percentage (%)",side=4,line=3,cex=2)
-grDevices::dev.off()
+  grDevices::dev.off()
 
-grDevices::pdf("GAPIT.Genotype.PCA_2D.pdf", width = 8, height = 8)
-graphics::par(mar = c(5,5,5,5),xpd=TRUE)
-maxPlot=min(as.numeric(PC.number[1]),3)
+  grDevices::pdf("GAPIT.Genotype.PCA_2D.pdf", width = 8, height = 8)
+  graphics::par(mar = c(5,5,5,5),xpd=TRUE)
+  maxPlot=min(as.numeric(PC.number[1]),3)
 
-for(i in 1:(maxPlot-1))
-{
-   for(j in (i+1):(maxPlot))
-   {
-      plot(PCA.X$x[,i],PCA.X$x[,j],xlab=paste("PC",i," (evp=",round(evp[i],4)*100,"%)",sep=""),ylab=paste("PC",j," (evp=",round(evp[j],4)*100,"%)",sep=""),pch=19,col=PCA.col,cex.axis=1.3,cex.lab=1.4, cex.axis=1.2, lwd=2,las=1)
-      if(!is.null(PCA.legend)) legend(as.character(PCA.legend$pos),legend=PCA.legend$taxa,pch=19,col=PCA.legend$col,
-           ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"),inset=-0.05)
+  for(i in 1:(maxPlot-1))
+  {
+    for(j in (i+1):(maxPlot))
+    {
+      plot(PCA.X$x[,i], PCA.X$x[,j],
+           xlab=paste("PC",i," (evp=",round(evp[i],4)*100,"%)",sep=""),
+           ylab=paste("PC",j," (evp=",round(evp[j],4)*100,"%)",sep=""),
+           pch=19,col=PCA.col,cex.axis=1.3,cex.lab=1.4, 
+           cex.axis=1.2, lwd=2,las=1)
+      if(!is.null(PCA.legend)){
+        graphics::legend(as.character(PCA.legend$pos),
+               legend=PCA.legend$taxa,
+               pch=19, col=PCA.legend$col,
+               ncol=PCA.legend$ncol, box.col="white", 
+               bty = "n", bg = graphics::par("bg"), inset=-0.05)
+      }
    }
-}
-grDevices::dev.off()
+  }
+  grDevices::dev.off()
 
-#output 3D plot
-if(PCA.3d==TRUE)
-{   
+  #output 3D plot
+  if(PCA.3d==TRUE)
+  {   
   
-        mycols=cbind(taxa,PCA.col)
-        colnames(mycols)=c("taxa","color")
-        write.csv(mycols,"color_file.csv",quote=F,row.names=F)
-        GAPIT.3D.PCA.python("color_file.csv")
+    mycols=cbind(taxa,PCA.col)
+    colnames(mycols)=c("taxa","color")
+    utils::write.csv(mycols,"color_file.csv",quote=F,row.names=F)
+    GAPIT.3D.PCA.python("color_file.csv")
 #    if(!require(scatterplot3d)) install.packages("scatterplot3d")
 #    library(scatterplot3d)
 
@@ -81,12 +90,16 @@ if(PCA.3d==TRUE)
                   lwd = 3,
                   angle = 55,
                   scale.y = 0.7)
-    if(!is.null(PCA.legend)) legend(as.character(PCA.legend$pos),legend=PCA.legend$taxa,pch=19,col=PCA.legend$col,
-      ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"),inset=-0.05)
+    if(!is.null(PCA.legend)){
+      graphics::legend(as.character(PCA.legend$pos), legend=PCA.legend$taxa, pch=19,
+             col=PCA.legend$col,
+             ncol=PCA.legend$ncol, box.col="white", bty = "n",
+             bg = graphics::par("bg"),
+             inset=-0.05)
     grDevices::dev.off()
-  }#PCA.3d==TRUE
-}#file.output & PC.number>1
-
+    }#PCA.3d==TRUE
+  }#file.output & PC.number>1
+}
 #Remove duplicate (This is taken care by QC)
 #PCs.unique <- unique(PCs[,1])
 #PCs <-PCs[match(PCs.unique, PCs[,1], nomatch = 0), ]

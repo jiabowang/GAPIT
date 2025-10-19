@@ -13,6 +13,7 @@ test_that("Blink function works", {
   
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
   myPhenotypes <- myPhenotypes[, c(1, 3)]
+  #myPhenotypes[1:3, ]
   myGD  <- read.table(myGenomeDataFile, header = TRUE)
   myGM  <- read.table(myGenomeMapFile, header = TRUE)
   
@@ -24,20 +25,27 @@ test_that("Blink function works", {
   myPhenotypes <- myPhenotypes[mySamps,]
   rownames(myGD) <- myGD$taxa
   myGD <- myGD[mySamps, ]
+  # myGD[1:3, 1:4]
   # all(myGD$taxa == myPhenotypes$Taxa)
 
 #  myBlink <- Blink(Y = myPhenotypes, GD = myGD, GM = myGM)
 
-  # myBlink <- GAPIT( Y = myPhenotypes,
-  #                   G = myGD,
-  #                   PCA.total = 3,
-  #                   file.output = FALSE,
-  #                   model = "Blink"
-  # )
+  myBlink <- GAPIT( Y = myPhenotypes,
+                    GD = myGD,
+                    GM = myGM,
+                    PCA.total = 3,
+                    file.output = FALSE,
+                    model = "Blink"
+  )
   # 
-  # expect_true(inherits(myBlink, "list"))
-  # expect_true(length(myBlink) == 4)
-  # expect_true(all(names(myBlink) == c("GWAS", "myGLM", "PEV", "seqQTN")))
+  expect_true(inherits(myBlink, "list"))
+  # myBlink$GWAS[1:3, ]
+  # myBlink$PCA[1:3, ]
+  # myBlink$GD[1:3, 1:4]
+  # myBlink$GM[1:3, 1:3]
+  # length(myBlink$h2)
+  #expect_true(length(myBlink) == 4)
+  #expect_true(all(names(myBlink) == c("GWAS", "myGLM", "PEV", "seqQTN")))
 
 })
 

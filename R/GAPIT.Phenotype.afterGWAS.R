@@ -50,7 +50,7 @@ trait.name=colnames(Y)[2]
 # y.layout
 grDevices::pdf(paste("GAPIT.Phenotype.Distribution_Significantmarkers.",model,".",trait.name,".pdf",sep=""), width =3*x.layout, height = 3*y.layout)
 
-par(mfrow=c(y.layout,x.layout),mar = c(5,5,2,2))
+graphics::par(mfrow=c(y.layout,x.layout),mar = c(5,5,2,2))
 
 # print(Y[,2])
 y.min=round(min(Y[,2],na.rm=T),1)
@@ -82,21 +82,21 @@ for(i in 1:N.sigs)
   marker.taxa=paste(marker.name,":",marker[,2],":",marker[,3],sep="")
   # print(y.min)
   # print(y.max)
-  boxplot(Values~Genotype,data=yall,xlab="",ylab="",
+  graphics::boxplot(Values~Genotype,data=yall,xlab="",ylab="",
     las=1,ylim=c(y.min,y.max),main=letter[i],
     space=0.2,axes=F,outline=FALSE)
   for(j in 1:type.num)
   {
     yj=yall[yall[,3]==marker.type[j],2]
-    points((j+runif(length(yj),min=-0.2,max=0.2) ), yj, cex=0.7,pch = 1,  col="blue")
+    graphics::points((j + stats::runif(length(yj),min=-0.2,max=0.2) ), yj, cex=0.7,pch = 1,  col="blue")
 
   }# end of j
-  axis(2,col="black",col.ticks="black",col.axis="black",tck=-0.02,las=1,cex.axis=1.5)
-  axis(1,at=1:type.num,labels=marker.type,col="black",col.ticks="black",col.axis="black",tck=-0.01,tick=F,cex.axis=1.5)
+  graphics::axis(2,col="black",col.ticks="black",col.axis="black",tck=-0.02,las=1,cex.axis=1.5)
+  graphics::axis(1,at=1:type.num,labels=marker.type,col="black",col.ticks="black",col.axis="black",tck=-0.01,tick=F,cex.axis=1.5)
     # axis(1,at=posi,labels=labels,col="black",col.ticks="black",col.axis="black",tck=-0.01,tick=F)
   # axis(3,at=posi[even],labels=labels[even],col="black",col.ticks="black",col.axis="black",tck=-0.01,tick=F)
-  mtext(paste(marker.taxa,sep=""),side=1,line=3.4,cex=1.2)
-  mtext(trait.name,side=2,line=3,cex=1.2)
+  graphics::mtext(paste(marker.taxa,sep=""),side=1,line=3.4,cex=1.2)
+  graphics::mtext(trait.name,side=2,line=3,cex=1.2)
   # legend("top", letters[i], col=c("red","black","blue"),xpd=NA,text.col = "black", pch = c(19,19,19), merge = T, bg = "white",ncol=1, cex = 1.5, lwd=-2, bty='n')
 
 }# end of i

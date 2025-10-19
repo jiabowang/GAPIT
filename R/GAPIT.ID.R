@@ -16,6 +16,7 @@
 #' @param file.output param
 #' @param SNP.MAF param
 #' @param CG param
+#' @param testY param
 #' @param plot.bin param
 #'
 #'

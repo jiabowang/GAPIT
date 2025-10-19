@@ -130,9 +130,9 @@ group.from=0,
 group.to=0,
 group.by=0,
 memo="GLM",
-QTN.position=QTN.position,
-threshold.output=0.001,
-iteration.output=TRUE,
+QTN.position=QTN.position#BJK ,
+#BJK threshold.output=0.001,
+#BJK iteration.output=TRUE,
 ) 
 
 print(paste("*****************","GWAS by GAPIT...MLM model",i," totle:",rel,sep=""))
@@ -149,9 +149,9 @@ group.from=max.groups,
 group.to=max.groups,
 group.by=10,
 memo="MLM",
-QTN.position=QTN.position,
-threshold.output=0.001,
-iteration.output=TRUE,
+QTN.position=QTN.position#BJK ,
+#BJK threshold.output=0.001,
+#BJK iteration.output=TRUE,
 ) 
 
 print(paste("*****************","GWAS by GAPIT...SUPER model",i," totle:",rel,sep=""))
@@ -165,10 +165,10 @@ CV=myCV,
 #PCA.total=3,
 sangwich.top="MLM", #options are GLM,MLM,CMLM, FaST and SUPER
 sangwich.bottom="SUPER", #options are GLM,MLM,CMLM, FaST and SUPER
-LD=0.1,
+#BJK LD=0.1,
 QTN.position=QTN.position,
-threshold.output=0.001,
-iteration.output=TRUE,
+#BJK threshold.output=0.001,
+#BJK iteration.output=TRUE,
 file.output=FALSE,
 )
 
@@ -186,9 +186,9 @@ group.from=0,
 group.to=max.groups,
 group.by=10,
 memo="CMLM",
-QTN.position=QTN.position,
-threshold.output=0.001,
-iteration.output=TRUE,
+QTN.position=QTN.position#BJK ,
+#BJK threshold.output=0.001,
+#BJK iteration.output=TRUE,
 ) 
 
 print(paste("-------------------","GWAS by GAPIT...ECMLM model",i," totle:",rel,sep=""))
@@ -209,9 +209,9 @@ group.from=0,
 group.to=max.groups,
 group.by=10,
 memo="ECMLM",
-QTN.position=QTN.position,
-threshold.output=0.001,
-iteration.output=TRUE,
+QTN.position=QTN.position#BJK ,
+#BJK threshold.output=0.001,
+#BJK iteration.output=TRUE,
 ) 
 
 ##ecmlm power

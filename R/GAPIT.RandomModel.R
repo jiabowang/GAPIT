@@ -5,8 +5,8 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     #Authors: Jiabo Wang and Zhiwu Zhang
     # Last update: Apr 15, 2025
     ##############################################################################################
-    if(!require(lme4))  install.packages("lme4")
-    library("lme4")
+#BJK    if(!require(lme4))  install.packages("lme4")
+#BJK    library("lme4")
     print("GAPIT.RandomModel beginning...")
     if(is.null(GT))GT=as.character(Y[,1])
     # name.of.trait=colnames(Y)[2]
@@ -33,7 +33,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     }
     geneGD=X[,index,drop=FALSE]
     geneGWAS=GWAS[index,,drop=FALSE]
-    var.gd=diag(var(geneGD))
+    var.gd=diag( stats::var(geneGD) )
     var.index=var.gd>0.0001
     geneGD=geneGD[,var.index,drop=FALSE]
     geneGWAS=geneGWAS[var.index,,drop=FALSE]
@@ -197,10 +197,10 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
 
             grDevices::pdf(paste("GAPIT.Association.Significant_SNPs.", name.of.trait,".pdf" ,sep = ""), width =10, height = 3.5)      
             layout.matrix <- matrix(c(1,2,3), nrow = 1, ncol = 3)
-            layout(mat = layout.matrix,
+            graphics::layout(mat = layout.matrix,
                    heights = c(100), # Heights of the two rows
                    widths = c(2,2,2)) # Widths of the two columns
-            par(mar = c(5, 5, 2, 1))
+            graphics::par(mar = c(5, 5, 2, 1))
             # print(head(gene_list))
             # print(length(gene_list$maf))
             # print(length(gene_list$P.value))

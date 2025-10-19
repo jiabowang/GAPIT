@@ -112,7 +112,7 @@ print("GAPIT.IC in process...")
         comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
         comY=Y[taxa_Y%in%taxa_comall,]
         comY <- comY[match(taxa_comall,as.character(comY[,1])),]
-        DP$KI=cbind(as.character(taxa_comall),as.data.frame(matrix(rnorm(length(taxa_comall)^2),length(taxa_comall),length(taxa_comall))))
+        DP$KI=cbind(as.character(taxa_comall),as.data.frame(matrix(stats::rnorm(length(taxa_comall)^2),length(taxa_comall),length(taxa_comall))))
         colnames(DP$KI)=c("taxa",as.character(taxa_comall)[-1])
         comGD=NULL
         }#end of K

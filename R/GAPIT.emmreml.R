@@ -11,7 +11,7 @@
     if(try.xx)
     {S <- spI - tcrossprod(X %*% solve(crossprod(X)), X)
     }else{
-     S <- spI - tcrossprod(X %*% ginv(crossprod(X)), X)
+     S <- spI - tcrossprod(X %*% MASS::ginv(crossprod(X)), X)
     }
     ZK <- Z %*% K
     offset <- log(n)
@@ -29,14 +29,14 @@
             lambda + delta
         })) + sum(log(lambda + delta))
     }
-    optimout <- optimize(minimfunc, lower = 9^(-9), upper = 9^9, 
+    optimout <- stats::optimize(minimfunc, lower = 9^(-9), upper = 9^9, 
         tol = 1e-06)
     deltahat <- optimout$minimum
     # Hinvhat <- solve(ZKZt + deltahat * spI)
     if(try.xx)
     {Hinvhat <- solve(ZKZt + deltahat * spI)
     }else{
-     Hinvhat <- ginv(ZKZt + deltahat * spI)
+     Hinvhat <- MASS::ginv(ZKZt + deltahat * spI)
     }
     XtHinvhat <- crossprod(X, Hinvhat)
 
@@ -44,7 +44,7 @@
     if(try.xx)
     {betahat <- solve(XtHinvhat %*% X, XtHinvhat %*% y)
     }else{
-     betahat <- ginv(XtHinvhat %*% X, XtHinvhat %*% y)
+     betahat <- MASS::ginv(XtHinvhat %*% X, XtHinvhat %*% y)
     }
     
     ehat <- (y - {
@@ -67,7 +67,7 @@
     {P <- Vinv - Vinv %*% X %*% solve(crossprod(X, Vinv %*% 
             X), crossprod(X, Vinv))
     }else{
-     P <- Vinv - Vinv %*% X %*% ginv(crossprod(X, Vinv %*% 
+     P <- Vinv - Vinv %*% X %*% MASS::ginv(crossprod(X, Vinv %*% 
             X), crossprod(X, Vinv))
     }
         varuhat <- sigmausqhat^2 * crossprod(ZK, P) %*% ZK
@@ -80,7 +80,7 @@
     {P <- Vinv - Vinv %*% X %*% solve(crossprod(X, Vinv %*% 
             X), crossprod(X, Vinv))
     }else{
-     P <- Vinv - Vinv %*% X %*% ginv(crossprod(X, Vinv %*% 
+     P <- Vinv - Vinv %*% X %*% MASS::ginv(crossprod(X, Vinv %*% 
             X), crossprod(X, Vinv))
     }
         }
@@ -91,19 +91,19 @@
         if(try.xx)
     {varbetahat <- solve(crossprod(X, Vinv %*% X))
     }else{
-     varbetahat <- ginv(crossprod(X, Vinv %*% X))
+     varbetahat <- MASS::ginv(crossprod(X, Vinv %*% X))
     }
     }
     if (test) {
         Xsqtestu <- uhat^2/diag(varuhat)
-        puhat <- pchisq(Xsqtestu, df = 1, lower.tail = F, log.p = F)
-        p.adjust.M <- p.adjust.methods
-        p.adjuhat <- sapply(p.adjust.M, function(meth) p.adjust(puhat, 
+        puhat <- stats::pchisq(Xsqtestu, df = 1, lower.tail = F, log.p = F)
+        p.adjust.M <- stats::p.adjust.methods
+        p.adjuhat <- sapply(p.adjust.M, function(meth) stats::p.adjust(puhat, 
             meth))
         Xsqtestbeta <- betahat^2/diag(varbetahat)
-        pbetahat <- pchisq(Xsqtestbeta, df = 1, lower.tail = F, 
+        pbetahat <- stats::pchisq(Xsqtestbeta, df = 1, lower.tail = F, 
             log.p = F)
-        p.adjbetahat <- sapply(p.adjust.M, function(meth) p.adjust(pbetahat, 
+        p.adjbetahat <- sapply(p.adjust.M, function(meth) stats::p.adjust(pbetahat, 
             meth))
     }
     if (!exists("Xsqtestbeta")) {
