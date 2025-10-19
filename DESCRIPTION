@@ -1,6 +1,6 @@
 Package: GAPIT
 Type: Package
-Title: GAPIT (Genomic Association and Prediction Integrated Tool)
+Title: Genomic Association and Prediction Integrated Tool - GAPIT
 Version: 3.5.0
 Authors@R: c(
           person(given = "Jiabo", family = "Wang", middle = NULL, 
@@ -24,7 +24,6 @@ Imports:
     methods,
     multtest,
     plotly,
-    Rcpp (>= 0.12.0),
     RcppArmadillo (>= 0.10.0.0),
     scatterplot3d,
     snowfall
