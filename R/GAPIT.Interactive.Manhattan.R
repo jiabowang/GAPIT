@@ -3,9 +3,9 @@ function(GWAS=NULL,MAF.threshold=seq(0,0.5,.1),cutOff=0.01,DPP=50000,X_fre=NULL,
   )
 {   
     if(is.null(GWAS)) stop("Please add GWAS result in here!!!")
-  if(!require(rgl)) install.packages("rgl")
-   if(!require(rglwidget)) install.packages("rglwidget")
-   library(rgl)
+#BJK  if(!require(rgl)) install.packages("rgl")
+#BJK   if(!require(rglwidget)) install.packages("rglwidget")
+#BJK   library(rgl)
 
     MP=GWAS[,2:4]
     #print(head(GWAS))
@@ -81,7 +81,7 @@ if(c("m")%in%plot.type)
 #  if(!require(plotly)) install.packages("plotly")
   #print("!!!!!")
   #print(head(Position))
- library(plotly)
+#BJK library(plotly)
   p <- plotly::plot_ly(
     type = 'scatter',
     x = ~Position,
@@ -94,7 +94,7 @@ if(c("m")%in%plot.type)
     )%>%
    plotly::add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
    plotly::add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
-   layout(title = "Interactive.Manhattan.Plot",
+   plotly::layout(title = "Interactive.Manhattan.Plot",
                   #showticklabels = FALSE,
                   #legend = list(orientation = 'h'),
                   xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),

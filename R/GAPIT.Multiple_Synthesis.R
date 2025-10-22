@@ -6,9 +6,9 @@ function(model_store,DPP=500,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y.nam
     #Authors: Zhiwu Zhang and Jiabo Wang
     # Last update: MAY 9, 2022
     ##############################################################################################
-  if(!require(rgl)) install.packages("rgl")
-  if(!require(rglwidget)) install.packages("rglwidget")
-  library(rgl)
+#BJK  if(!require(rgl)) install.packages("rgl")
+#BJK  if(!require(rglwidget)) install.packages("rglwidget")
+#BJK  library(rgl)
 
   Nenviron=length(model_store)*length(Y.names)
   environ_name=NULL
@@ -31,7 +31,7 @@ themax.y0=NULL
 for(i in 1:length(environ_name))
 {
   print(paste("Reading GWAS result with ",environ_name[i],sep=""))
-  environ_result=read.csv(paste("GAPIT.",environ_name[i],".GWAS.Results.csv",sep=""),head=T)
+  environ_result = utils::read.csv(paste("GAPIT.",environ_name[i],".GWAS.Results.csv",sep=""),head=T)
   environ_result=environ_result[order(environ_result[,3]),]
   environ_result=environ_result[order(environ_result[,2]),]
   environ_filter=environ_result[!is.na(environ_result[,4]),]
@@ -89,7 +89,7 @@ for(i in 1:length(environ_name))
 if("s"%in%plot.type)
 {
   # setup vals
-library("plotly")
+#BJK library("plotly")
 vals0=c("square","diamond","cross","x","star",
       "triangle-up","triangle-down","triangle-left","triangle-right","triangle-ne",
       "triangle-se","triangle-sw","triangle-nw","pentagon","hexagon",
@@ -119,7 +119,7 @@ print(vals)
  for(k in 1:Nenviron)
   { 
 
-    environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
+    environ_result = utils::read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
     result=environ_result[,1:4]
     result=result[order(result[,3]),]
     result=result[order(result[,2]),]
@@ -203,7 +203,7 @@ print(vals)
           # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
         cut0=ceiling(-log10(0.01/length(values))/2)
-        rv=runif(length(values))
+        rv = stats::runif(length(values))
         values=values+rv*(values+cut0)
         
         index=position[which(values>cut0)]
@@ -240,9 +240,9 @@ print(vals)
 #  if(!require(plotly)) install.packages("plotly")
   #print("!!!!!")
   #print(head(Position))
- library(plotly)
+#BJK library(plotly)
   p <- plotly::plot_ly()%>%
-   add_markers(
+   plotly::add_markers(
     # type = 'scatter',
     x = Position,
     y = P_value,
@@ -265,7 +265,7 @@ print(vals)
 
    # plotly::add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
    # plotly::add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
-   layout(title = "Interactive.Multiple_Synthesis.Manhattan.Plot",
+   plotly::layout(title = "Interactive.Multiple_Synthesis.Manhattan.Plot",
                   xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
                   yaxis = list (title = "-Log10(p)"))
   
@@ -275,7 +275,7 @@ print(vals)
    T.uni=unique(s.all)
    
    q <- plotly::plot_ly()%>%
-   add_markers(
+     plotly::add_markers(
     # type = 'scatter',
     x = 1,
     y = 1:length(S.uni),
@@ -298,7 +298,7 @@ print(vals)
 
    # plotly::add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
    # plotly::add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
-   layout(title = "Interactive.Multiple_Synthesis.Manhattan.Plot",
+   plotly::layout(title = "Interactive.Multiple_Synthesis.Manhattan.Plot",
                   xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
                   yaxis = list (title = "-Log10(p)"))
   

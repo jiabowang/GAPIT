@@ -106,7 +106,7 @@ rownames(GI2)=1:nrow(GI2)
 mm=nrow(GI2)
 for(i in 1:length(chr))
 {
-  chr.pos[i]=floor(median(as.numeric(rownames(GI2[GI2[,2]==chr[i],]))))
+  chr.pos[i]=floor(stats::median(as.numeric(rownames(GI2[GI2[,2]==chr[i],]))))
   chr.pos2[i+1]=max(as.numeric(rownames(GI2[GI2[,2]==chr[i],])))
 }
 odd=seq(1,length(chr),2)
@@ -118,30 +118,30 @@ d.V=dist/Aver.Dis
 
 grDevices::pdf("GAPIT.Genotype.Distance_R_Chro.pdf", width =10, height = 6)
 # print(summary(d.V))
-par(mfcol=c(2,3),mar = c(5,5,2,2))
+graphics::par(mfcol=c(2,3),mar = c(5,5,2,2))
 plot(r, xlab="Marker",las=1,xlim=c(1,mm),ylim=c(-1,1),
     ylab="R",axes=FALSE, main="a",cex=.5,col=colDisp)
-axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
-axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
-axis(2,las=1)
+graphics::axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
+graphics::axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
+graphics::axis(2,las=1)
 
 # aa=d.V[rs.index]
 print("The average distance between markers are ...")
-print(head(d.V))
+print(utils::head(d.V))
 plot(d.V,las=1, xlab="Marker", ylab="Distance (Kb)",xlim=c(1,mm), ylim=c(0,ceiling(max(d.V,na.rm=TRUE))),
     axes=FALSE,main="d",cex=.5,col=colDisp)
-axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
-axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
-axis(2,las=1)
+graphics::axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
+graphics::axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
+graphics::axis(2,las=1)
 # grDevices::dev.off()
 
-r0.hist=hist(r1,  plot=FALSE)
+r0.hist= graphics::hist(r1,  plot=FALSE)
 r0=r0.hist$counts
 r0.demo=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,1000,ifelse(nchar(max(r0))<=12,10000000,100000000000)))
 r0.hist$counts=r0/r0.demo
 ylab0=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,2,ifelse(nchar(max(r0))<=12,3,4)))
 ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
-d.V.hist=hist(d.V, plot=FALSE)
+d.V.hist=graphics::hist(d.V, plot=FALSE)
 d.V0=d.V.hist$counts
 d.V0.demo=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,1000,ifelse(nchar(max(d.V0))<=12,10000000,100000000000)))
 ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max(d.V0))<=12,3,4)))
@@ -156,7 +156,7 @@ plot(d.V.hist, las=1,xlab="Distance (Kb)",col="gray", ylab=ylab.store[ylab0], ma
 # par(mfcol=c(1,2),mar = c(5,5,2,2))
 plot(d.V,r,las=1,xlab="Distance (Kb)",ylim=c(-1,1),pch=16,
   ylab="R",main="c",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
-abline(h=0,col="darkred")
+graphics::abline(h=0,col="darkred")
 plot(d.V,r^2,las=1,xlab="Distance (Kb)",ylim=c(0,1),pch=16,
   ylab="R sqaure", main="f",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 
@@ -201,12 +201,12 @@ for (i in 1:(length(ns.bin)-1)){
   loc[i,2]=mean(pieceR,na.rm=T)
   loc[i,3]=length(pieceR)
 }
-lines(loc[,1]/Aver.Dis,loc[,2],col="darkred",xlim=c(0,WS0/Aver.Dis))
+graphics::lines(loc[,1]/Aver.Dis,loc[,2],col="darkred",xlim=c(0,WS0/Aver.Dis))
 
 # grDevices::dev.off()
 
 colnames(loc)=c("Distance","Rsquare","Number")
-write.csv(loc,paste("GAPIT.Genotype.Distance.Rsquare.csv",sep=""))
+utils::write.csv(loc,paste("GAPIT.Genotype.Distance.Rsquare.csv",sep=""))
 
 # grDevices::pdf("GAPIT.Genotype.Distance_R_Freq.pdf", width =10, height = 6)
 # par(mfcol=c(1,2),mar = c(5,5,2,2))
@@ -232,45 +232,45 @@ grDevices::pdf("GAPIT.Genotype.MAF_Heterozosity.pdf", width =10, height = 6)
 
 #Display
 layout.matrix <- matrix(c(1,2,3), nrow = 3, ncol = 1)
-layout(mat = layout.matrix,
+graphics::layout(mat = layout.matrix,
        heights = c(100,80,120), # Heights of the two rows
        widths = c(2, 3)) # Widths of the two columns
-par(mar = c(1, 5, 1, 1))
+graphics::par(mar = c(1, 5, 1, 1))
 plot(het.snp,  las=1,ylab="Heterozygosity", xlim=c(1,mm),axes=FALSE,
     cex=.5,col=colDisp,xaxt='n')
 # axis(1,at=chr.pos,labels=rep("",length(chr)))
 # axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
-axis(2,las=1)
-par(mar = c(1, 5, 0, 1))
+graphics::axis(2,las=1)
+graphics::par(mar = c(1, 5, 0, 1))
 plot(maf, las=1,xlab="Marker", ylab="MAF",xlim=c(1,mm),axes=FALSE,
     cex=.5,col=colDisp,xaxt='n')
 output=cbind(het.snp,maf,r1)
 colnames(output)=c("het.snp","maf","r")
-write.csv(output,"GAPIT.Genotype.Frequency_MAF.csv",quote=FALSE)
+utils::write.csv(output,"GAPIT.Genotype.Frequency_MAF.csv",quote=FALSE)
 # axis(1,at=chr.pos,labels=rep("",length(chr)))
 # axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
-axis(2,las=1)
-par(mar = c(5, 5, 0, 1))
+graphics::axis(2,las=1)
+graphics::par(mar = c(5, 5, 0, 1))
 plot((r1^2),  las=1,ylab="R Sqaure", xlab="Marker", xlim=c(1,mm),axes=FALSE,
     cex=.5,col=colDisp)
-axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
-axis(1,at=chr.pos,labels=chr,tick=FALSE)
-axis(2,las=1)
+graphics::axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
+graphics::axis(1,at=chr.pos,labels=chr,tick=FALSE)
+graphics::axis(2,las=1)
 grDevices::dev.off()
 
 
 #Display Het and MAF distribution
 grDevices::pdf("GAPIT.Genotype.Frequency.pdf", width =10, height = 3.5)
 layout.matrix <- matrix(c(1,2,3), nrow = 1, ncol = 3)
-layout(mat = layout.matrix,
+graphics::layout(mat = layout.matrix,
        heights = c(100), # Heights of the two rows
        widths = c(2, 2,2)) # Widths of the two columns
-par(mar = c(5, 5, 2, 0))
-hist(as.numeric(het.ind), las=1,xlab="Individual heterozygosity",freq=FALSE,ylab="Frequency", cex=.5,main="a")
-par(mar = c(5, 4, 2, 1))
-hist(het.snp, las=1,xlab="Marker heterozygosity", freq=FALSE,ylab="Frequency",cex=.5,main="b")
-par(mar = c(5, 4, 2, 1))
-hist(maf,  las=1,ylab="Frequency", xlab="MAF",freq=FALSE, cex=.5,main="c")
+graphics::par(mar = c(5, 5, 2, 0))
+graphics::hist(as.numeric(het.ind), las=1,xlab="Individual heterozygosity",freq=FALSE,ylab="Frequency", cex=.5,main="a")
+graphics::par(mar = c(5, 4, 2, 1))
+graphics::hist(het.snp, las=1,xlab="Marker heterozygosity", freq=FALSE,ylab="Frequency",cex=.5,main="b")
+graphics::par(mar = c(5, 4, 2, 1))
+graphics::hist(maf,  las=1,ylab="Frequency", xlab="MAF",freq=FALSE, cex=.5,main="c")
 
 grDevices::dev.off()
 

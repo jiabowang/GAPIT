@@ -16,7 +16,7 @@
  values=apply(P,1,min)
  values=-log10(values)
  cut0=ceiling(-log10(cutOff/length(values))/2)
- rv=runif(length(values))
+ rv = stats::runif(length(values))
  values=values+rv*(values-5+cut0)
  index=values>cut0
  index=GAPIT.Pruning(values,DPP=DPP)
@@ -37,10 +37,10 @@
 
  NN=nrow(P)
  themax.y0=max(-log10(P))
- pdf(paste("GAPIT.Association.QQs_Symphysic2.",memo,".pdf" ,sep = ""), width = 30,height=18)
- par(mfrow=c(1,1))
- par(mar = c(5,5,5,1))
- par(cex=1.8)
+ grDevices::pdf(paste("GAPIT.Association.QQs_Symphysic2.",memo,".pdf" ,sep = ""), width = 30,height=18)
+ graphics::par(mfrow=c(1,1))
+ graphics::par(mar = c(5,5,5,1))
+ graphics::par(cex=1.8)
  themax.y02=ceiling((ceiling(themax.y0/4))*4)
  p_value_quantiles0 <- (1:NN)/(NN+1)
  log.Quantiles0 <- -log10(p_value_quantiles0)
@@ -93,7 +93,7 @@
     # print(themax.y0)
     # print(max(log.P.values2))
     # print(max(log.P.values))
-        par(new=T)
+        graphics::par(new=T)
         plot(log.Quantiles, log.P.values, xlim = c(0,max(log.Quantiles0)), 
         	ylim = c(0,themax.y0), cex.axis=1, cex.lab=1.3, axes=FALSE, 
         	lty = 1,  lwd = 2, col = mycol[step.vals+1] ,xlab ="",

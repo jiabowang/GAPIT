@@ -1,4 +1,5 @@
-Version: 4.0
+Version: 1.0
+ProjectId: eac9918c-6f85-464a-895e-52078d85fc37
 
 RestoreWorkspace: Default
 SaveWorkspace: Default
@@ -9,9 +10,10 @@ UseSpacesForTab: Yes
 NumSpacesForTab: 2
 Encoding: UTF-8
 
-RnwWeave: knitr
+RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
 BuildType: Package
 PackageUseDevtools: Yes
 PackageInstallArgs: --no-multiarch --with-keep.source
+PackageRoxygenize: rd,collate,namespace

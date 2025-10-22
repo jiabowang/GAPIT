@@ -24,21 +24,21 @@ grDevices::pdf(paste("GAPIT.Phenotype.View.",traitname,".pdf",sep =""), width =1
 # plot(stats::ecdf(obs),col="red",bg="lightgray",xlab="Density",ylab="Accumulation",main="")
 layout.matrix <- matrix(c(1,2,1,3,4,5), nrow = 2, ncol = 3)
 # print("!!!!")
-layout(mat = layout.matrix,
+graphics::layout(mat = layout.matrix,
        heights = c(100,100), # Heights of the two rows
        widths = c(2,2,2)) # Widths of the two columns
 # print(head(myY))
 y=as.numeric(myY[!is.na(as.numeric(myY[,2])),2])
-par(mar = c(5, 5, 2, 1))
+graphics::par(mar = c(5, 5, 2, 1))
 plot(y,xlab="Individual",las=1,ylim=c(min(y,na.rm=TRUE),max(y,na.rm=TRUE)),ylab="Observation", cex=.5,main="a")
-par(mar = c(5, 5, 2, 1))
-hist(as.numeric(y[!is.na(y)]),xlab="Observation",las=1,ylab="Frequency",cex=.5,main="c")
-par(mar = c(5, 4, 2, 1))
-plot(density(na.omit(y)),las=1,xlab="Observation",ylab="Density", cex=.5,main="d")
-par(mar = c(5, 4, 2, 1))
-boxplot(y,horizontal=F,las=1,xlab="",ylab="Observation", cex=.5,main="b")
-par(mar = c(5, 4, 2, 1))
-plot(ecdf(y),xlab="Observation",las=1,ylab="Accumulative density", cex=.5,main="e",col="gray40")
+graphics::par(mar = c(5, 5, 2, 1))
+graphics::hist(as.numeric(y[!is.na(y)]),xlab="Observation",las=1,ylab="Frequency",cex=.5,main="c")
+graphics::par(mar = c(5, 4, 2, 1))
+plot( stats::density(stats::na.omit(y)), las=1,xlab="Observation",ylab="Density", cex=.5,main="d")
+graphics::par(mar = c(5, 4, 2, 1))
+graphics::boxplot(y,horizontal=F,las=1,xlab="",ylab="Observation", cex=.5,main="b")
+graphics::par(mar = c(5, 4, 2, 1))
+plot( stats::ecdf(y),xlab="Observation",las=1,ylab="Accumulative density", cex=.5,main="e",col="gray40")
 
 
 grDevices::dev.off()

@@ -40,7 +40,8 @@ rs.index=sort(rs.index)
 # print(table(rs.index))
 
 Xr=X[,rs.index]
-myGMr=myGM[rs.index,]
+#BJK myGMr=myGM[rs.index,]
+myGMr=GI[rs.index,]
 posi.rs=abs(as.numeric(myGMr[,2])*10^(nchar(max(as.numeric(myGMr[,3]))))+as.numeric(myGMr[,3]))
 # if(is.null(WS0)) WS0=(max(posi.rs)%/%1000)*1000
 # if(WS0==0)WS0=1
@@ -77,20 +78,20 @@ if(is.null(WS0)) WS0=((max(dis.all))%/%1000)*1000
 if(WS0>max.dist) WS0=max.dist
 # WS0=100000000000
 grDevices::pdf("GAPIT.Genotype.LD_decay.pdf", width =13, height = 6)
-par(mfcol=c(1,3),mar = c(5,5,2,2))
+graphics::par(mfcol=c(1,3),mar = c(5,5,2,2))
 
 for(i in 1:7)
 {
  plot(data.all[[i]][,1]/Aver.Dis,data.all[[i]][,2], las=1,xlab="", ylim=c(-1,1),
   ylab="", main="",cex=.5,axes=FALSE,col=i,xlim=c(0,WS0/Aver.Dis))
- if(i<7)par(new=T)
+ if(i<7)graphics::par(new=T)
 }
-abline(h=0,col="darkred")
-axis(2,col="black",col.ticks="black",col.axis="black",ylim=c(-1,1),las=1)
-axis(1,col="black",col.ticks="black",col.axis="black",xlim=c(0,WS0/Aver.Dis),las=1)
+graphics::abline(h=0,col="darkred")
+graphics::axis(2,col="black",col.ticks="black",col.axis="black",ylim=c(-1,1),las=1)
+graphics::axis(1,col="black",col.ticks="black",col.axis="black",xlim=c(0,WS0/Aver.Dis),las=1)
 # mtext("Distance (Kb)",side=1,line=3,cex=1.2)
 # mtext("R",side=2,line=3,cex=1.2)
-title(main="a",xlab="Distance (Kb)",ylab="R",line=3,cex=1.2)
+graphics::title(main="a",xlab="Distance (Kb)",ylab="R",line=3,cex=1.2)
 # legend("topright",legend=paste("+",freg.legend,sep=""),
 # col=1:7,pch=1,lty=0,lwd=1,cex=0.6,
 #  bty = "n", bg = par("bg"))
@@ -101,16 +102,16 @@ for(i in 1:7)
  plot(data.all[[i]][,1]/Aver.Dis,data.all[[i]][,2]^2, las=1,xlab="", ylim=c(0,1),
      ylab="", main="",axes=FALSE,cex=.5,col=i,xlim=c(0,WS0/Aver.Dis))
      # ylab="R sqaure", main="",axes=TRUE,cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
- if(i<7)par(new=T)
+ if(i<7)graphics::par(new=T)
  # write.csv(data.all[[i]],paste("Distance.R.",i,".csv",sep=""))
  # plot(as.numeric(fig.d[,1]),as.numeric(fig.d[,2]), las=1,xlab="Distance (Kb)", ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 }
 
-axis(2,col="black",col.ticks="black",col.axis="black",ylim=c(0,1),las=1)
-axis(1,col="black",col.ticks="black",col.axis="black",xlim=c(0,WS0/Aver.Dis),las=1)
+graphics::axis(2,col="black",col.ticks="black",col.axis="black",ylim=c(0,1),las=1)
+graphics::axis(1,col="black",col.ticks="black",col.axis="black",xlim=c(0,WS0/Aver.Dis),las=1)
 # mtext("Distance (Kb)",side=1,line=3,cex=1.2)
 # mtext("R sqaure",side=2,line=3,cex=1.2)
-title(main="b",xlab="Distance (Kb)",ylab="R sqaure",line=3,cex=1.2)
+graphics::title(main="b",xlab="Distance (Kb)",ylab="R sqaure",line=3,cex=1.2)
 dist2=dis.all
 dist2[dist2>WS0]=NA
 indOrder=order(dist2)
@@ -129,33 +130,33 @@ for (i in 1:floor(ns/slide)){
   loc[i,1]=mean(pieceD,na.rm=T)
   loc[i,2]=mean(pieceR,na.rm=T)
 }
-lines(loc[,1]/Aver.Dis,loc[,2],lwd=4,col="gold",xlim=c(0,WS0/Aver.Dis))
+graphics::lines(loc[,1]/Aver.Dis,loc[,2],lwd=4,col="gold",xlim=c(0,WS0/Aver.Dis))
 
 
-r0.hist=hist(R.all,  plot=FALSE)
+r0.hist=graphics::hist(R.all,  plot=FALSE)
 r0=r0.hist$counts
 r0.demo=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,1000,ifelse(nchar(max(r0))<=12,10000000,100000000000)))
 r0.hist$counts=r0/r0.demo
 
-d.V.hist=hist(dis.all, plot=FALSE)
+d.V.hist = graphics::hist(dis.all, plot=FALSE)
 d.V0=d.V.hist$counts
 d.V0.demo=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,1000,ifelse(nchar(max(d.V0))<=12,10000000,100000000000)))
 
 ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max(d.V0))<=12,3,4)))
 ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
 d.V.hist$counts=d.V0/d.V0.demo
-par(mar = c(5,2,2,5))
+graphics::par(mar = c(5,2,2,5))
 plot(r0.hist, xlab="R", las=1,ylab="",axes=FALSE, main="",col="gray")
 
-axis(4,col="black",col.ticks="black",col.axis="black")
-axis(1,col="black",col.ticks="black",col.axis="black")
+graphics::axis(4,col="black",col.ticks="black",col.axis="black")
+graphics::axis(1,col="black",col.ticks="black",col.axis="black")
 # mtext("",side=1,line=3,cex=1.2)
-mtext(ylab.store[ylab0],side=4,line=3,cex=0.8)
+graphics::mtext(ylab.store[ylab0],side=4,line=3,cex=0.8)
 # title(main="c",line=3,cex=1.2)
 # lines(loc[,1]/Aver.Dis,loc[,2],lwd=4,col="gold",xlim=c(0,WS0/Aver.Dis))
-legend("topleft",legend=paste("+",freg.legend,sep=""),
-col=1:7,pch=1,lty=0,lwd=1,cex=1,
- bty = "n", bg = par("bg"))
+graphics::legend("topleft",legend=paste("+",freg.legend,sep=""),
+                 col=1:7,pch=1,lty=0,lwd=1,cex=1,
+                 bty = "n", bg = graphics::par("bg"))
 grDevices::dev.off()
 
 

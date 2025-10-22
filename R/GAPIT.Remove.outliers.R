@@ -15,9 +15,9 @@
 # Last update: MAY 12, 2022 
 ##############################################################################################
 
-	qnt=quantile(x,probs=c(pro,1-pro),na.rm=na.rm,...)
+	qnt = stats::quantile(x,probs=c(pro,1-pro),na.rm=na.rm,...)
 	y=x
-	H=size*IQR(y,na.rm=na.rm)
+	H = size * stats::IQR(y,na.rm=na.rm)
 	y[x<=(qnt[1]-H)]=min(y,na.rm=na.rm)
 	y[x>=(qnt[2]+H)]=max(y,na.rm=na.rm)
 	idx=x<=(qnt[1]-H)|x>=(qnt[2]+H)

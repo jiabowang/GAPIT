@@ -29,7 +29,7 @@ if(method=="GLM"){
   GD=GD,
   GM=GM,
   model=("GLM"),
-  QC=FALSE,
+  QC.Y=FALSE,
   CV.Extragenetic=CV.Extragenetic,
   # GTindex=GTindex,
   file.output=file.output				
@@ -54,7 +54,7 @@ if(method=="MLM"){
   GD=GD,
   GM=GM,
   model="MLM",
-  QC=FALSE,
+  QC.Y=FALSE,
   CV.Extragenetic=CV.Extragenetic,
 # GTindex=GTindex,
   file.output=file.output				
@@ -78,8 +78,8 @@ if(method=="CMLM"){
   GD=GD,
   GM=GM,
   model="CMLM",
-  QC=FALSE,
-    CV.Extragenetic=CV.Extragenetic,
+  QC.Y=FALSE,
+  CV.Extragenetic=CV.Extragenetic,
 # GTindex=GTindex,
   file.output=file.output				
   )

@@ -1,0 +1,44 @@
+---
+title: "GAPIT_MLM"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{GAPIT_MLM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r setup}
+library(GAPIT)
+```
+
+
+```{r}
+myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+                           package = "GAPIT")
+myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
+                          package = "GAPIT")
+
+myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+myPhenotypes <- myPhenotypes[, 1:3]
+myGenotypes  <- read.table(myGenoFile, header = FALSE)
+
+myGAPIT <- GAPIT( Y = myPhenotypes,
+                  G = myGenotypes,
+                  PCA.total = 3,
+                  file.output = FALSE,
+                  model = "MLM"
+                )
+
+class(myGAPIT)
+myGAPIT$GWAS[1:3, 1:5]
+```
+

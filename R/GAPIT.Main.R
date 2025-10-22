@@ -22,6 +22,10 @@
 #' @param kinship.cluster param
 #' @param kinship.group param
 #'
+#' @param allGD param
+#' @param allCV param
+#' @param QTN.gs param
+#'
 #' @param kinship.algorithm param
 #' @param DPP param
 #' @param ngrid param
@@ -283,7 +287,7 @@ function(Y,
                         )
 # Compression=as.matrix(SUPER_GS_GAPIT$Compression)
 # opt=
-	  print("SUPER.GS function Done！！")	
+	  print("SUPER.GS function Done!!")	
 	  return (list(Compression=SUPER_GS_GAPIT$Compression,
 	               kinship.optimum=SUPER_GS_GAPIT$SUPER_kinship,
 	               kinship=SUPER_GS_GAPIT$kinship, 
