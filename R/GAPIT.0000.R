@@ -38,7 +38,7 @@ function(){
 # 10. ECMLM (Li et. al. BMC Bioogy, 2014)
 # 11. SUPER (Wang et. al. PLoS One, 2014)
 
-GAPIT.Version="2025.03.03, GAPIT 4.0"
+GAPIT.Version="2025.10.03, GAPIT 4.0"
 return(GAPIT.Version)
 }
 #=============================================================================================

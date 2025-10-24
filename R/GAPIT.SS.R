@@ -180,7 +180,7 @@ if(DP$SNP.test)
     # print(table(index))
           print("Linear Regression to Predict phenotype Done !!")  
         }else{
-          print("ABLUP to Predict phenotype !!")
+          print("GAGBLUP to Predict phenotype !!")
           print(is.null(IC$myallCV))
           if(!is.null(IC$myallCV)) 
           {
@@ -198,6 +198,8 @@ if(DP$SNP.test)
             if(!is.null(myBus$seqQTN))
             {
                busCV=cbind(CV1,ablup.X[,myBus$seqQTN])
+               # busCV=ablup.GD[,c(1,myBus$seqQTN)]
+
             }else{
                busCV=CV1
             }
@@ -210,7 +212,7 @@ if(DP$SNP.test)
           pv=GWAS$effect
           # pv=GWAS$P.value
 
-          threshold <- quantile(abs(pv), 0.26)
+          threshold <- quantile(abs(pv), 0.3)
           # noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
           
           licols=TRUE
