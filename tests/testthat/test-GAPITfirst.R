@@ -9,9 +9,9 @@
 
 test_that("GAPIT mdp (Y and X) file import works", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3")
+                             package = "GAPIT")
   myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3")
+                            package = "GAPIT")
 
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
   myPhenotypes <- myPhenotypes[, 1:3]
@@ -68,9 +68,9 @@ test_that("GAPIT mdp (Y and X) file import works", {
 
 test_that("GAPIT function works, MLM model", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3")
+                             package = "GAPIT")
   myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3")
+                            package = "GAPIT")
 
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
   myPhenotypes <- myPhenotypes[, 1:3]
@@ -97,9 +97,9 @@ test_that("GAPIT function works, MLM model", {
 
 test_that("GAPIT function works, GLM model", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3")
+                             package = "GAPIT")
   myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3")
+                            package = "GAPIT")
   
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
   myPhenotypes <- myPhenotypes[, 1:3]
@@ -127,9 +127,9 @@ test_that("GAPIT function works, GLM model", {
 
 test_that("GAPIT function works, CMLM model", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3")
+                             package = "GAPIT")
   myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3")
+                            package = "GAPIT")
 
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
   myPhenotypes <- myPhenotypes[, 1:3]
@@ -159,9 +159,9 @@ test_that("GAPIT function works, CMLM model", {
 
 test_that("GAPIT function works, MMLM model", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3")
+                             package = "GAPIT")
   myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3")
+                            package = "GAPIT")
 
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
   myPhenotypes <- myPhenotypes[, 1:3]
@@ -191,9 +191,9 @@ test_that("GAPIT function works, MMLM model", {
 
 test_that("GAPIT function works, SUPER model", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3")
+                             package = "GAPIT")
   myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3")
+                            package = "GAPIT")
 
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
   myPhenotypes <- myPhenotypes[, 1:3]
@@ -223,9 +223,9 @@ test_that("GAPIT function works, SUPER model", {
 
 test_that("GAPIT function works, FarmCPU model", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3")
+                             package = "GAPIT")
   myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3")
+                            package = "GAPIT")
 
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
   myPhenotypes <- myPhenotypes[, 1:3]

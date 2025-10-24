@@ -262,7 +262,7 @@ def main():
         fail += 1
     else:
         try:
-            title = f\"<b>Interactive 3D PCA</b> — {stem}\"
+            title = f\"<b>Interactive 3D PCA</b> - {stem}\"
             fig = make_figure(df, title)
             export_html(fig, out_html, offline=True)
             print(f\"  Saved: {out_html}\")
@@ -1194,7 +1194,9 @@ function(GM=NULL,GLM=NULL,QTN=NULL,method="mean",useapply=TRUE,model="A",no.cv=0
 }#The function FarmCPU.SUB ends here
 
 
-`Blink.cor`<-function(Y,GD,w=NULL,orientation="row",ms=ms,n=ny,m=nm){
+`Blink.cor`<-function(Y,GD,w=NULL,orientation="row",ms=ms,
+                      #BJK n=ny,m=nm
+                      n=nrow(Y), m=nrow(GD)){
   #Objects: calculate R value with covariates
   #Input: pheontype(nx1), ms is marker size for slicing the genotype, genotype(orientation="row", mxn or orientation="col", nxm,) and covariates(nxp)
   #   n is individual number, m is marker number, p is covariate number
@@ -1403,7 +1405,7 @@ if(method=="GLM"){
   GD=GD,
   GM=GM,
   model=("GLM"),
-  QC=FALSE,
+  QC.Y=FALSE,
   CV.Extragenetic=CV.Extragenetic,
   # GTindex=GTindex,
   file.output=file.output				
@@ -1428,7 +1430,7 @@ if(method=="MLM"){
   GD=GD,
   GM=GM,
   model="MLM",
-  QC=FALSE,
+  QC.Y=FALSE,
   CV.Extragenetic=CV.Extragenetic,
 # GTindex=GTindex,
   file.output=file.output				
@@ -1452,8 +1454,8 @@ if(method=="CMLM"){
   GD=GD,
   GM=GM,
   model="CMLM",
-  QC=FALSE,
-    CV.Extragenetic=CV.Extragenetic,
+  QC.Y=FALSE,
+  CV.Extragenetic=CV.Extragenetic,
 # GTindex=GTindex,
   file.output=file.output				
   )
@@ -1693,7 +1695,7 @@ if(method%in%c("GLM","MLM","CMLM","SUPER")){
   GM=GM,
   model=method,
   # QC=FALSE,
-  GTindex=GTindex,
+#BJK  GTindex=GTindex,
   file.output=F       
   )
   GWAS=myGAPIT$GWAS 
@@ -1784,7 +1786,10 @@ if(file.output&Multi_iter)
   #Create PWIP, which is a table of SNP Names, Chromosome, bp Position, Raw P-values, FDR Adjusted P-values
       print("Calculating FDR...(Kansas)" )
       # print(head(PWI.Filtered))
-      PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
+      PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, 
+                                                                 #BJK FDR.Rate = FDR.Rate,
+                                                                 FDR.Rate = 0.05,
+                                                                 FDR.Procedure = "BH")
       # print(str(PWIP)) 
 
       GWAS=merge(GWAS,PWIP$PWIP[,c(1,ncol(PWIP$PWIP))],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1])  
@@ -2095,7 +2100,10 @@ if(file.output&Multi_iter)
   #Create PWIP, which is a table of SNP Names, Chromosome, bp Position, Raw P-values, FDR Adjusted P-values
       print("Calculating FDR...(Kansas)" )
       # print(head(PWI.Filtered))
-      PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
+      PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, 
+                                                                 #BJK FDR.Rate = FDR.Rate,
+                                                                 FDR.Rate = 0.05,
+                                                                 FDR.Procedure = "BH")
       # print(str(PWIP)) 
 
       GWAS=merge(GWAS,PWIP$PWIP[,c(1,ncol(PWIP$PWIP))],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1])  
@@ -4075,7 +4083,7 @@ print("GAPIT.Compression.Visualization accomplished successfully!")
 #Writer:  Jiabo Wang
 # Last update: MAY 12, 2022 
 ##############################################################################################
-return(cor(a,b))
+return(stats::cor(a,b))
 }
 `GAPIT.Create.Indicator` <-
 function(xs, SNP.impute = "Major" ){
@@ -4552,7 +4560,8 @@ GD=cbind(as.data.frame(GT),GD)
     Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="REML")
     Memory=GAPIT.Memory(Memory=Memory,Infor="REML")
 
-    rm(eig.R)
+    #rm(eig.R)
+    if( exists("eig.R") ){ rm(eig.R) }
     gc()
     Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.R removed")
     Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R removed")
@@ -4599,7 +4608,8 @@ GD=cbind(as.data.frame(GT),GD)
   Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="U Matrix")
   Memory=GAPIT.Memory(Memory=Memory,Infor="U Matrix")
 
-  if(SNP.P3D == TRUE)rm(eig.L)
+  #if(SNP.P3D == TRUE)rm(eig.L)
+  if(SNP.P3D == TRUE & exists("eig.L") ){ rm(eig.L) } # BJK.
   gc()
 
   Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.L removed")
@@ -5117,7 +5127,7 @@ GD=cbind(as.data.frame(GT),GD)
         # CVI may be > 1 element long
                           if(any(!is.null(CVI)))
                           {
-                              if(var(CVI[,2])!=0)
+                              if(stats::var(CVI[,2])!=0)
                               {
                                 XCV=cbind(1,as.matrix(CVI[,-1]))
                               }else{
@@ -8531,7 +8541,7 @@ rownames(GI2)=1:nrow(GI2)
 mm=nrow(GI2)
 for(i in 1:length(chr))
 {
-  chr.pos[i]=floor(median(as.numeric(rownames(GI2[GI2[,2]==chr[i],]))))
+  chr.pos[i]=floor(stats::median(as.numeric(rownames(GI2[GI2[,2]==chr[i],]))))
   chr.pos2[i+1]=max(as.numeric(rownames(GI2[GI2[,2]==chr[i],])))
 }
 odd=seq(1,length(chr),2)
@@ -8543,30 +8553,30 @@ d.V=dist/Aver.Dis
 
 grDevices::pdf("GAPIT.Genotype.Distance_R_Chro.pdf", width =10, height = 6)
 # print(summary(d.V))
-par(mfcol=c(2,3),mar = c(5,5,2,2))
+graphics::par(mfcol=c(2,3),mar = c(5,5,2,2))
 plot(r, xlab="Marker",las=1,xlim=c(1,mm),ylim=c(-1,1),
     ylab="R",axes=FALSE, main="a",cex=.5,col=colDisp)
-axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
-axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
-axis(2,las=1)
+graphics::axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
+graphics::axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
+graphics::axis(2,las=1)
 
 # aa=d.V[rs.index]
 print("The average distance between markers are ...")
-print(head(d.V))
+print(utils::head(d.V))
 plot(d.V,las=1, xlab="Marker", ylab="Distance (Kb)",xlim=c(1,mm), ylim=c(0,ceiling(max(d.V,na.rm=TRUE))),
     axes=FALSE,main="d",cex=.5,col=colDisp)
-axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
-axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
-axis(2,las=1)
+graphics::axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
+graphics::axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
+graphics::axis(2,las=1)
 # grDevices::dev.off()
 
-r0.hist=hist(r1,  plot=FALSE)
+r0.hist= graphics::hist(r1,  plot=FALSE)
 r0=r0.hist$counts
 r0.demo=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,1000,ifelse(nchar(max(r0))<=12,10000000,100000000000)))
 r0.hist$counts=r0/r0.demo
 ylab0=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,2,ifelse(nchar(max(r0))<=12,3,4)))
 ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
-d.V.hist=hist(d.V, plot=FALSE)
+d.V.hist=graphics::hist(d.V, plot=FALSE)
 d.V0=d.V.hist$counts
 d.V0.demo=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,1000,ifelse(nchar(max(d.V0))<=12,10000000,100000000000)))
 ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max(d.V0))<=12,3,4)))
@@ -8581,7 +8591,7 @@ plot(d.V.hist, las=1,xlab="Distance (Kb)",col="gray", ylab=ylab.store[ylab0], ma
 # par(mfcol=c(1,2),mar = c(5,5,2,2))
 plot(d.V,r,las=1,xlab="Distance (Kb)",ylim=c(-1,1),pch=16,
   ylab="R",main="c",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
-abline(h=0,col="darkred")
+graphics::abline(h=0,col="darkred")
 plot(d.V,r^2,las=1,xlab="Distance (Kb)",ylim=c(0,1),pch=16,
   ylab="R sqaure", main="f",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 
@@ -8626,12 +8636,12 @@ for (i in 1:(length(ns.bin)-1)){
   loc[i,2]=mean(pieceR,na.rm=T)
   loc[i,3]=length(pieceR)
 }
-lines(loc[,1]/Aver.Dis,loc[,2],col="darkred",xlim=c(0,WS0/Aver.Dis))
+graphics::lines(loc[,1]/Aver.Dis,loc[,2],col="darkred",xlim=c(0,WS0/Aver.Dis))
 
 # grDevices::dev.off()
 
 colnames(loc)=c("Distance","Rsquare","Number")
-write.csv(loc,paste("GAPIT.Genotype.Distance.Rsquare.csv",sep=""))
+utils::write.csv(loc,paste("GAPIT.Genotype.Distance.Rsquare.csv",sep=""))
 
 # grDevices::pdf("GAPIT.Genotype.Distance_R_Freq.pdf", width =10, height = 6)
 # par(mfcol=c(1,2),mar = c(5,5,2,2))
@@ -8657,45 +8667,45 @@ grDevices::pdf("GAPIT.Genotype.MAF_Heterozosity.pdf", width =10, height = 6)
 
 #Display
 layout.matrix <- matrix(c(1,2,3), nrow = 3, ncol = 1)
-layout(mat = layout.matrix,
+graphics::layout(mat = layout.matrix,
        heights = c(100,80,120), # Heights of the two rows
        widths = c(2, 3)) # Widths of the two columns
-par(mar = c(1, 5, 1, 1))
+graphics::par(mar = c(1, 5, 1, 1))
 plot(het.snp,  las=1,ylab="Heterozygosity", xlim=c(1,mm),axes=FALSE,
     cex=.5,col=colDisp,xaxt='n')
 # axis(1,at=chr.pos,labels=rep("",length(chr)))
 # axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
-axis(2,las=1)
-par(mar = c(1, 5, 0, 1))
+graphics::axis(2,las=1)
+graphics::par(mar = c(1, 5, 0, 1))
 plot(maf, las=1,xlab="Marker", ylab="MAF",xlim=c(1,mm),axes=FALSE,
     cex=.5,col=colDisp,xaxt='n')
 output=cbind(het.snp,maf,r1)
 colnames(output)=c("het.snp","maf","r")
-write.csv(output,"GAPIT.Genotype.Frequency_MAF.csv",quote=FALSE)
+utils::write.csv(output,"GAPIT.Genotype.Frequency_MAF.csv",quote=FALSE)
 # axis(1,at=chr.pos,labels=rep("",length(chr)))
 # axis(1,at=chr.pos[odd],labels=chr[odd],tick=FALSE)
-axis(2,las=1)
-par(mar = c(5, 5, 0, 1))
+graphics::axis(2,las=1)
+graphics::par(mar = c(5, 5, 0, 1))
 plot((r1^2),  las=1,ylab="R Sqaure", xlab="Marker", xlim=c(1,mm),axes=FALSE,
     cex=.5,col=colDisp)
-axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
-axis(1,at=chr.pos,labels=chr,tick=FALSE)
-axis(2,las=1)
+graphics::axis(1,at=chr.pos2,labels=rep("",length(chr)+1))
+graphics::axis(1,at=chr.pos,labels=chr,tick=FALSE)
+graphics::axis(2,las=1)
 grDevices::dev.off()
 
 
 #Display Het and MAF distribution
 grDevices::pdf("GAPIT.Genotype.Frequency.pdf", width =10, height = 3.5)
 layout.matrix <- matrix(c(1,2,3), nrow = 1, ncol = 3)
-layout(mat = layout.matrix,
+graphics::layout(mat = layout.matrix,
        heights = c(100), # Heights of the two rows
        widths = c(2, 2,2)) # Widths of the two columns
-par(mar = c(5, 5, 2, 0))
-hist(as.numeric(het.ind), las=1,xlab="Individual heterozygosity",freq=FALSE,ylab="Frequency", cex=.5,main="a")
-par(mar = c(5, 4, 2, 1))
-hist(het.snp, las=1,xlab="Marker heterozygosity", freq=FALSE,ylab="Frequency",cex=.5,main="b")
-par(mar = c(5, 4, 2, 1))
-hist(maf,  las=1,ylab="Frequency", xlab="MAF",freq=FALSE, cex=.5,main="c")
+graphics::par(mar = c(5, 5, 2, 0))
+graphics::hist(as.numeric(het.ind), las=1,xlab="Individual heterozygosity",freq=FALSE,ylab="Frequency", cex=.5,main="a")
+graphics::par(mar = c(5, 4, 2, 1))
+graphics::hist(het.snp, las=1,xlab="Marker heterozygosity", freq=FALSE,ylab="Frequency",cex=.5,main="b")
+graphics::par(mar = c(5, 4, 2, 1))
+graphics::hist(maf,  las=1,ylab="Frequency", xlab="MAF",freq=FALSE, cex=.5,main="c")
 
 grDevices::dev.off()
 
@@ -9029,7 +9039,7 @@ print("GAPIT.IC in process...")
         comCV <- comCV[match(taxa_comall,as.character(comCV[,1])),]
         comY=Y[taxa_Y%in%taxa_comall,]
         comY <- comY[match(taxa_comall,as.character(comY[,1])),]
-        DP$KI=cbind(as.character(taxa_comall),as.data.frame(matrix(rnorm(length(taxa_comall)^2),length(taxa_comall),length(taxa_comall))))
+        DP$KI=cbind(as.character(taxa_comall),as.data.frame(matrix(stats::rnorm(length(taxa_comall)^2),length(taxa_comall),length(taxa_comall))))
         colnames(DP$KI)=c("taxa",as.character(taxa_comall)[-1])
         comGD=NULL
         }#end of K
@@ -9070,6 +9080,7 @@ print("GAPIT.IC in process...")
 #' @param file.output param
 #' @param SNP.MAF param
 #' @param CG param
+#' @param testY param
 #' @param plot.bin param
 #'
 #'
@@ -9562,9 +9573,9 @@ function(GWAS=NULL,MAF.threshold=seq(0,0.5,.1),cutOff=0.01,DPP=50000,X_fre=NULL,
   )
 {   
     if(is.null(GWAS)) stop("Please add GWAS result in here!!!")
-  if(!require(rgl)) install.packages("rgl")
-   if(!require(rglwidget)) install.packages("rglwidget")
-   library(rgl)
+#BJK  if(!require(rgl)) install.packages("rgl")
+#BJK   if(!require(rglwidget)) install.packages("rglwidget")
+#BJK   library(rgl)
 
     MP=GWAS[,2:4]
     #print(head(GWAS))
@@ -9640,7 +9651,7 @@ if(c("m")%in%plot.type)
 #  if(!require(plotly)) install.packages("plotly")
   #print("!!!!!")
   #print(head(Position))
- library(plotly)
+#BJK library(plotly)
   p <- plotly::plot_ly(
     type = 'scatter',
     x = ~Position,
@@ -9653,7 +9664,7 @@ if(c("m")%in%plot.type)
     )%>%
    plotly::add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
    plotly::add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
-   layout(title = "Interactive.Manhattan.Plot",
+   plotly::layout(title = "Interactive.Manhattan.Plot",
                   #showticklabels = FALSE,
                   #legend = list(orientation = 'h'),
                   xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
@@ -9837,7 +9848,8 @@ rs.index=sort(rs.index)
 # print(table(rs.index))
 
 Xr=X[,rs.index]
-myGMr=myGM[rs.index,]
+#BJK myGMr=myGM[rs.index,]
+myGMr=GI[rs.index,]
 posi.rs=abs(as.numeric(myGMr[,2])*10^(nchar(max(as.numeric(myGMr[,3]))))+as.numeric(myGMr[,3]))
 # if(is.null(WS0)) WS0=(max(posi.rs)%/%1000)*1000
 # if(WS0==0)WS0=1
@@ -9874,20 +9886,20 @@ if(is.null(WS0)) WS0=((max(dis.all))%/%1000)*1000
 if(WS0>max.dist) WS0=max.dist
 # WS0=100000000000
 grDevices::pdf("GAPIT.Genotype.LD_decay.pdf", width =13, height = 6)
-par(mfcol=c(1,3),mar = c(5,5,2,2))
+graphics::par(mfcol=c(1,3),mar = c(5,5,2,2))
 
 for(i in 1:7)
 {
  plot(data.all[[i]][,1]/Aver.Dis,data.all[[i]][,2], las=1,xlab="", ylim=c(-1,1),
   ylab="", main="",cex=.5,axes=FALSE,col=i,xlim=c(0,WS0/Aver.Dis))
- if(i<7)par(new=T)
+ if(i<7)graphics::par(new=T)
 }
-abline(h=0,col="darkred")
-axis(2,col="black",col.ticks="black",col.axis="black",ylim=c(-1,1),las=1)
-axis(1,col="black",col.ticks="black",col.axis="black",xlim=c(0,WS0/Aver.Dis),las=1)
+graphics::abline(h=0,col="darkred")
+graphics::axis(2,col="black",col.ticks="black",col.axis="black",ylim=c(-1,1),las=1)
+graphics::axis(1,col="black",col.ticks="black",col.axis="black",xlim=c(0,WS0/Aver.Dis),las=1)
 # mtext("Distance (Kb)",side=1,line=3,cex=1.2)
 # mtext("R",side=2,line=3,cex=1.2)
-title(main="a",xlab="Distance (Kb)",ylab="R",line=3,cex=1.2)
+graphics::title(main="a",xlab="Distance (Kb)",ylab="R",line=3,cex=1.2)
 # legend("topright",legend=paste("+",freg.legend,sep=""),
 # col=1:7,pch=1,lty=0,lwd=1,cex=0.6,
 #  bty = "n", bg = par("bg"))
@@ -9898,16 +9910,16 @@ for(i in 1:7)
  plot(data.all[[i]][,1]/Aver.Dis,data.all[[i]][,2]^2, las=1,xlab="", ylim=c(0,1),
      ylab="", main="",axes=FALSE,cex=.5,col=i,xlim=c(0,WS0/Aver.Dis))
      # ylab="R sqaure", main="",axes=TRUE,cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
- if(i<7)par(new=T)
+ if(i<7)graphics::par(new=T)
  # write.csv(data.all[[i]],paste("Distance.R.",i,".csv",sep=""))
  # plot(as.numeric(fig.d[,1]),as.numeric(fig.d[,2]), las=1,xlab="Distance (Kb)", ylab="R sqaure", main="d",cex=.5,col="gray60",xlim=c(0,WS0/Aver.Dis))
 }
 
-axis(2,col="black",col.ticks="black",col.axis="black",ylim=c(0,1),las=1)
-axis(1,col="black",col.ticks="black",col.axis="black",xlim=c(0,WS0/Aver.Dis),las=1)
+graphics::axis(2,col="black",col.ticks="black",col.axis="black",ylim=c(0,1),las=1)
+graphics::axis(1,col="black",col.ticks="black",col.axis="black",xlim=c(0,WS0/Aver.Dis),las=1)
 # mtext("Distance (Kb)",side=1,line=3,cex=1.2)
 # mtext("R sqaure",side=2,line=3,cex=1.2)
-title(main="b",xlab="Distance (Kb)",ylab="R sqaure",line=3,cex=1.2)
+graphics::title(main="b",xlab="Distance (Kb)",ylab="R sqaure",line=3,cex=1.2)
 dist2=dis.all
 dist2[dist2>WS0]=NA
 indOrder=order(dist2)
@@ -9926,33 +9938,33 @@ for (i in 1:floor(ns/slide)){
   loc[i,1]=mean(pieceD,na.rm=T)
   loc[i,2]=mean(pieceR,na.rm=T)
 }
-lines(loc[,1]/Aver.Dis,loc[,2],lwd=4,col="gold",xlim=c(0,WS0/Aver.Dis))
+graphics::lines(loc[,1]/Aver.Dis,loc[,2],lwd=4,col="gold",xlim=c(0,WS0/Aver.Dis))
 
 
-r0.hist=hist(R.all,  plot=FALSE)
+r0.hist=graphics::hist(R.all,  plot=FALSE)
 r0=r0.hist$counts
 r0.demo=ifelse(nchar(max(r0))<=4,1,ifelse(nchar(max(r0))<=8,1000,ifelse(nchar(max(r0))<=12,10000000,100000000000)))
 r0.hist$counts=r0/r0.demo
 
-d.V.hist=hist(dis.all, plot=FALSE)
+d.V.hist = graphics::hist(dis.all, plot=FALSE)
 d.V0=d.V.hist$counts
 d.V0.demo=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,1000,ifelse(nchar(max(d.V0))<=12,10000000,100000000000)))
 
 ylab0=ifelse(nchar(max(d.V0))<=4,1,ifelse(nchar(max(d.V0))<=8,2,ifelse(nchar(max(d.V0))<=12,3,4)))
 ylab.store=c("Frequency","Frequency (Thousands)","Frequency (Million)","Frequency (Billion)")
 d.V.hist$counts=d.V0/d.V0.demo
-par(mar = c(5,2,2,5))
+graphics::par(mar = c(5,2,2,5))
 plot(r0.hist, xlab="R", las=1,ylab="",axes=FALSE, main="",col="gray")
 
-axis(4,col="black",col.ticks="black",col.axis="black")
-axis(1,col="black",col.ticks="black",col.axis="black")
+graphics::axis(4,col="black",col.ticks="black",col.axis="black")
+graphics::axis(1,col="black",col.ticks="black",col.axis="black")
 # mtext("",side=1,line=3,cex=1.2)
-mtext(ylab.store[ylab0],side=4,line=3,cex=0.8)
+graphics::mtext(ylab.store[ylab0],side=4,line=3,cex=0.8)
 # title(main="c",line=3,cex=1.2)
 # lines(loc[,1]/Aver.Dis,loc[,2],lwd=4,col="gold",xlim=c(0,WS0/Aver.Dis))
-legend("topleft",legend=paste("+",freg.legend,sep=""),
-col=1:7,pch=1,lty=0,lwd=1,cex=1,
- bty = "n", bg = par("bg"))
+graphics::legend("topleft",legend=paste("+",freg.legend,sep=""),
+                 col=1:7,pch=1,lty=0,lwd=1,cex=1,
+                 bty = "n", bg = graphics::par("bg"))
 grDevices::dev.off()
 
 
@@ -10193,6 +10205,10 @@ print("GAPIT.MAS in process...")
 #' @param group.by param
 #' @param kinship.cluster param
 #' @param kinship.group param
+#'
+#' @param allGD param
+#' @param allCV param
+#' @param QTN.gs param
 #'
 #' @param kinship.algorithm param
 #' @param DPP param
@@ -10455,7 +10471,7 @@ function(Y,
                         )
 # Compression=as.matrix(SUPER_GS_GAPIT$Compression)
 # opt=
-	  print("SUPER.GS function Done！！")	
+	  print("SUPER.GS function Done!!")	
 	  return (list(Compression=SUPER_GS_GAPIT$Compression,
 	               kinship.optimum=SUPER_GS_GAPIT$SUPER_kinship,
 	               kinship=SUPER_GS_GAPIT$kinship, 
@@ -11798,7 +11814,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     
     #print(cutOff)
     #do nothing if null input
-    if(is.null(GI.MP)) return
+    if(is.null(GI.MP)) return()
   #Handler of lable position only indicated by negatie position
     position.only=F
     if(!is.null(seqQTN)){
@@ -11847,7 +11863,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     if(!is.null(GD))
     {  if(ncol(GD)!=nrow(GI.MP))
     {print("GD does not match GM in Manhattan !!!")
-    return
+    return()
     }}
     # print(head(GI.MP))
     #print(nrow(GI.MP))
@@ -11880,9 +11896,9 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
     {
         #print("Manhattan ploting Chromosomewise")
         GI.MP=cbind(GI.MP,bin.mp)
-        pdf(paste("GAPIT.Association.Manhattan_Chro.", name.of.trait,".pdf" ,sep = ""), width = 10)
+        grDevices::pdf(paste("GAPIT.Association.Manhattan_Chro.", name.of.trait,".pdf" ,sep = ""), width = 10)
             #par(mar = c(5,5,4,3), lab = c(8,5,7))
-        layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
+        graphics::layout(matrix(c(1,1,2,1,1,1,1,1,1),3,3,byrow=TRUE), c(2,1), c(1,1), TRUE)
         for(i in 1:numCHR)
         {
             #Extract SBP on this chromosome
@@ -11920,7 +11936,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
                     
                     for (k in 1:ncol(subGD))
                     {
-                        r2=cor(X[,candidata],subGD[,k])^2
+                        r2 = stats::cor(X[, candidata], subGD[, k])^2
                         #print(r2)
                         bin.store[k,8]=r2
                         
@@ -11943,7 +11959,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             ##print(paste("befor prune: chr: ",i, "length: ",length(x),"max p",max(y), "min p",min(y), "max x",max(x), "Min x",min(x)))
             n_col=10
             r2_color[,2]=subset[,8]
-            do_color=colorRampPalette(c("orangeRed", "blue"))(n_col)
+            do_color = grDevices::colorRampPalette(c("orangeRed", "blue"))(n_col)
             #Prune most non important SNPs off the plots
             order=order(y,decreasing = TRUE)
             y=y[order]
@@ -11958,24 +11974,24 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
             r2_color[which(r2_color[,2]<=0.6&r2_color[,2]>0.4),2]=do_color[n_col*0.6]
             r2_color[which(r2_color[,2]<=0.8&r2_color[,2]>0.6),2]=do_color[n_col*0.4]
             r2_color[which(r2_color[,2]<=1&r2_color[,2]>0.8),2]=do_color[n_col/n_col]
-            par(mar=c(0,0,0,0))
-            par(mar=c(5,5,2,1),cex=0.8)
+            graphics::par(mar=c(0,0,0,0))
+            graphics::par(mar=c(5,5,2,1),cex=0.8)
 
             plot(y~x,type="p", ylim=c(0,y.lim), xlim = c(min(x), max(x)),las=1,
             col = r2_color[,2], xlab = expression(Base~Pairs~(x10^-6)),
             ylab = expression(-log[10](italic(p))), main =           paste("Chromosome",chm.to.analyze[i],sep=" "),
             cex.lab=1.6,pch=21,bg=r2_color[,2])
             
-            abline(h=bonferroniCutOff,col="forestgreen")
-            abline(h=FDRcutoff,col="forestgreen",lty=2)
-            par(mar=c(15,5,6,5),cex=0.5)
+            graphics::abline(h=bonferroniCutOff,col="forestgreen")
+            graphics::abline(h=FDRcutoff,col="forestgreen",lty=2)
+            graphics::par(mar=c(15,5,6,5),cex=0.5)
             
-            barplot(matrix(rep(1,times=n_col),n_col,1),beside=T,col=do_color,border=do_color,axes=FALSE,)
+            graphics::barplot(matrix(rep(1,times=n_col),n_col,1),beside=T,col=do_color,border=do_color,axes=FALSE,)
         #legend(x=10,y=2,legend=expression(R^"2"),,lty=0,cex=1.3,bty="n",bg=par("bg"))
-            axis(3,seq(11,1,by=-2),seq(0,1,by=0.2),las=1)
+            graphics::axis(3,seq(11,1,by=-2),seq(0,1,by=0.2),las=1)
 
         }# end plot.type == "Chromosomewise"&!is.null(GD)
-        dev.off()
+        grDevices::dev.off()
         
         print("manhattan plot on chromosome finished")
     } #Chromosomewise plot
@@ -12001,7 +12017,7 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         }else{
         thecolor=1:chm.to.analyze
         }
-        col.Rainbow=rainbow(ncolor+1)[thecolor]         
+        col.Rainbow = grDevices::rainbow(ncolor + 1)[thecolor]         
           col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
           col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
             col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
@@ -12077,31 +12093,40 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         #print("Manhattan XY created")
        ####xiaolei update on 2016/01/09 
         if(plot.style =="FarmCPU"){
-        pdf(paste("FarmCPU.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = width0,height=height0)
+          grDevices::pdf(paste("FarmCPU.", name.of.trait,".Manhattan.Plot.Genomewise.pdf" ,sep = ""), width = width0,height=height0)
         }else{
-        pdf(paste("GAPIT.Association.Manhattan_Geno.", name.of.trait,".pdf" ,sep = ""), width = width0,height=height0)
+          grDevices::pdf(paste("GAPIT.Association.Manhattan_Geno.", name.of.trait,".pdf" ,sep = ""), width = width0,height=height0)
         }
-            par(mar = c(3,6,5,1))
-            plot(y~x,xlab="",ylab=expression(-log[10](italic(p))) ,las=1,
-            cex.axis=1, cex.lab=1.3 ,col=plot.color[z],axes=FALSE,type = "p",pch=mypch,lwd=wd,cex=s+.3,main = gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE),cex.main=2.5)
+            graphics::par(mar = c(3,6,5,1))
+            plot( y ~ x, xlab = "", ylab = expression(-log[10](italic(p))) ,
+                  las=1, cex.axis = 1, cex.lab = 1.3, col = plot.color[z],
+                  axes = FALSE, type = "p", pch = mypch, lwd = wd, cex = s+.3,
+                  main = gsub("(NYC)","", 
+                              gsub("(Kansas)", "", name.of.trait, fixed = TRUE),
+                              fixed=TRUE),
+                  cex.main = 2.5)
         
         #Label QTN positions
         if(is.vector(QTN)){
-          if(position.only){abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[2], QTN[3], type="p",pch=21, cex=2,lwd=1.5,col="dimgrey")
-          points(QTN[2], QTN[3], type="p",pch=20, cex=1,lwd=1.5,col="dimgrey")
+          if(position.only){
+              graphics::abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")
+          }else{
+            graphics::points(QTN[2], QTN[3], type="p",pch=21, cex=2,lwd=1.5,col="dimgrey")
+            graphics::points(QTN[2], QTN[3], type="p",pch=20, cex=1,lwd=1.5,col="dimgrey")
           }
         }else{
-          if(position.only){abline(v=QTN[,2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[,2], QTN[,3], type="p",pch=21, cex=2,lwd=1.5,col="dimgrey")
-          points(QTN[,2], QTN[,3], type="p",pch=20, cex=1,lwd=1.5,col="dimgrey")
+          if(position.only){
+              graphics::abline(v=QTN[,2], lty = 2, lwd=1.5, col = "grey")
+          }else{
+            graphics::points(QTN[,2], QTN[,3], type="p",pch=21, cex=2,lwd=1.5,col="dimgrey")
+            graphics::points(QTN[,2], QTN[,3], type="p",pch=20, cex=1,lwd=1.5,col="dimgrey")
           }
         }
         
         #Add a horizontal line for bonferroniCutOff
-        abline(h=bonferroniCutOff,col="forestgreen")
+        graphics::abline(h=bonferroniCutOff,col="forestgreen")
         #Add FDR line
-        abline(h=FDRcutoff,col="forestgreen",lty=2)
+        graphics::abline(h=FDRcutoff,col="forestgreen",lty=2)
         #print(bonferroniCutOff)
         #Set axises
         # jiabo creat chor_taxa
@@ -12109,13 +12134,16 @@ DPP=50000,cutOff=0.01,band=5,seqQTN=NULL,plot.style="Oceanic",CG=NULL,plot.bin=1
         if(length(chor_taxa)!=length(ticks))chor_taxa=NULL
         #print(unique(GI.MP[,1]))
         if(!is.null(chor_taxa))
-        {axis(1, at=ticks,cex.axis=1,labels=chor_taxa,tick=T,gap.axis=0.25)
-        }else{axis(1, at=ticks,cex.axis=1,labels=chm.to.analyze,tick=F)}
-        axis(2, at=1:themax,cex.axis=1,las=1,labels=1:themax,gap.axis=3,tick=F)
+        { 
+          graphics::axis(1, at=ticks,cex.axis=1,labels=chor_taxa,tick=T,gap.axis=0.25)
+        }else{
+          graphics::axis(1, at=ticks,cex.axis=1,labels=chm.to.analyze,tick=F)
+        }
+        graphics::axis(2, at=1:themax,cex.axis=1,las=1,labels=1:themax,gap.axis=3,tick=F)
 
-        box()
-        palette("default")
-        dev.off()
+        graphics::box()
+        grDevices::palette("default")
+        grDevices::dev.off()
         #print("Manhattan done Genomewise")
         
     } #Genomewise plot
@@ -12235,7 +12263,7 @@ y_filter0=NULL
 for(i in 1:length(environ_name))
 {
   # print(paste("Reading GWAS result with ",environ_name[i],sep=""))
-  environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[i],".csv",sep=""),head=T)
+  environ_result = utils::read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[i],".csv",sep=""),head=T)
   num.markers=nrow(environ_result)
   environ_result=environ_result[order(environ_result[,3]),]
   environ_result=environ_result[order(environ_result[,2]),]
@@ -12270,7 +12298,7 @@ for(i in 1:length(environ_name))
   # map_store=max.x
   sig_pos=append(sig_pos,as.numeric(rownames(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),,drop=FALSE])))
 }
-  write.csv(y_filter0,paste("GAPIT.Association.Filter_GWAS_results.csv",sep=""),quote=FALSE)
+  utils::write.csv(y_filter0,paste("GAPIT.Association.Filter_GWAS_results.csv",sep=""),quote=FALSE)
 
 # print(sig_pos)
 #if(length(sig_pos)!=0)sig_pos=sig_pos[!duplicated(sig_pos)]
@@ -12354,7 +12382,7 @@ bonferroniCutOff=-log10(cutOff/numMarker)
 ncycle=ceiling(nchr/5)
 ncolor=band*ncycle
 thecolor=seq(1,nchr,by= ncycle)
-col.Rainbow=rainbow(ncolor+1)     
+col.Rainbow = grDevices::rainbow(ncolor + 1)     
 col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
 col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
 col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
@@ -12377,21 +12405,21 @@ if("h"%in%plot.type)
 {
     Max.high=6*Nenviron
     if(Max.high>8)Max.high=40
-    pdf(paste("GAPIT.Association.Manhattans_High",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
-    par(mfrow=c(Nenviron,1))
+    grDevices::pdf(paste("GAPIT.Association.Manhattans_High",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
+    graphics::par(mfrow=c(Nenviron,1))
     mypch=1
     for(k in 1:Nenviron)
     { 
        if(k==Nenviron)
         {
-        par(mar = c(3.5,8,0,8))
+        graphics::par(mar = c(3.5,8,0,8))
          # par(pin=c(10,((8-mtext.h)/Nenviron)+mtext.h))
 
         }else{
             #par(mfrow=c(Nenviron,1))
-        par(mar = c(1.5,8,0.5,8))    
+        graphics::par(mar = c(1.5,8,0.5,8))    
         }
-       environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
+       environ_result = utils::read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
        result=environ_result[,1:4]
        result=result[order(result[,3]),]
        result=result[order(result[,2]),]
@@ -12461,7 +12489,7 @@ if("h"%in%plot.type)
           # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
         cut0=ceiling(-log10(cutOff/length(values))/2)
-        rv=runif(length(values))
+        rv = stats::runif(length(values))
         values=values+rv*(values+cut0)
         index=position[which(values>cut0)]
          }        
@@ -12481,37 +12509,41 @@ if("h"%in%plot.type)
        plot(y~x,xlab="",ylab="" ,ylim=c(0,themax2),xlim=c(min(x),max(x)),
            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
            pch=mypch,lwd=wd,cex=s+2.5,cex.main=2)
-       mtext(side=2,expression(-log[10](italic(p))),line=3.5, cex=2.5)
+       graphics::mtext(side=2,expression(-log[10](italic(p))),line=3.5, cex=2.5)
        if(!simulation)
          {
-          abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[,2], QTN[,3], pch=21, cex=2.8,lwd=1.5,col="dimgrey")
-          points(QTN[,2], QTN[,3], pch=20, cex=1.8,lwd=1.5,col="dimgrey")
+          graphics::abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
+          graphics::points(QTN[,2], QTN[,3], pch=21, cex=2.8,lwd=1.5,col="dimgrey")
+          graphics::points(QTN[,2], QTN[,3], pch=20, cex=1.8,lwd=1.5,col="dimgrey")
          }        
        if(plot.line)
          {
           if(!is.null(nrow(new_xz)))  
             {
-             abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
+              graphics::abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
             }else{
-             abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
+              graphics::abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
             }
          }
         #Add a horizontal line for bonferroniCutOff
        # print(ticks)
-       abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
-       axis(2, yaxp=c(0,themax2,4),cex.axis=2.3,tick=T,las=1,lwd=2.5)
-       if(k==Nenviron)axis(1, at=max.x,cex.axis=2.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
-       if(k==Nenviron)axis(1, at=ticks,cex.axis=2.5,labels=chm.to.analyze,tick=F,line=1)
-       mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=3.2,cex=2)
+       graphics::abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
+       graphics::axis(2, yaxp=c(0,themax2,4),cex.axis=2.3,tick=T,las=1,lwd=2.5)
+       if(k==Nenviron){
+         graphics::axis(1, at=max.x,cex.axis=2.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
+       }
+       if(k==Nenviron){
+         graphics::axis(1, at=ticks,cex.axis=2.5,labels=chm.to.analyze,tick=F,line=1)
+       }
+       graphics::mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=3.2,cex=2)
     }#end of environ_name
-       dev.off()
+       grDevices::dev.off()
 }#end of plot.type
 
 if("w"%in%plot.type)
 {
- pdf(paste("GAPIT.Association.Manhattans_Wide",".pdf" ,sep = ""), width = 16,height=8.5)
- par(mfrow=c(Nenviron,1))
+ grDevices::pdf(paste("GAPIT.Association.Manhattans_Wide",".pdf" ,sep = ""), width = 16,height=8.5)
+ graphics::par(mfrow=c(Nenviron,1))
  mtext.h=0.5
  size=2
  ratio=5
@@ -12520,16 +12552,16 @@ if("w"%in%plot.type)
   if(k==Nenviron)
         {#par(mfrow=c(Nenviron,1))
           # print(par())
-        par(mar = c(2.5,8,0,8))
+        graphics::par(mar = c(2.5,8,0,8))
          # par(pin=c(10,((8-mtext.h)/Nenviron)+mtext.h))
 
         }else{
             #par(mfrow=c(Nenviron,1))
-        par(mar = c(2,8,0.5,8))    
+        graphics::par(mar = c(2,8,0.5,8))    
          # par(pin=c(10,(8-mtext.h)/Nenviron))
 
         }
-  environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
+  environ_result = utils::read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
   #print(environ_result[as.numeric(new_xz[,1]),])
   result=environ_result[,1:4]
     result=result[order(result[,3]),]
@@ -12606,7 +12638,7 @@ if("w"%in%plot.type)
         # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
         cut0=ceiling(-log10(cutOff/length(values))/2)
-        rv=runif(length(values))
+        rv = stats::runif(length(values))
         values=values+rv*(values+cut0)
       
         index=position[which(values>cut0)]
@@ -12634,28 +12666,39 @@ if("w"%in%plot.type)
         plot(y~x,xlab="",ylab="" ,ylim=c(0,themax2),xlim=c(min(x),max(x)),
            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
            pch=mypch,lwd=wd,cex=s,cex.main=2)
-        mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
+        graphics::mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
         if(plot.line)
         {
-          if(!is.null(nrow(new_xz)))  {abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=2)
-             }else{abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=2)
-             }
-        }
-        if(!simulation){abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          # print("$$$")
-          points(QTN[,2], QTN[,3], type="p",pch=21, cex=2.8,lwd=1.5,col="dimgrey")
-          points(QTN[,2], QTN[,3], type="p",pch=20, cex=1.5,lwd=1.5,col="dimgrey")
+          if(!is.null(nrow(new_xz)))  {
+            graphics::abline( v = as.numeric(new_xz[,4]), col = "grey",
+                              lty = as.numeric(new_xz[, 2]),
+                              untf = T, lwd = 2)
+          }else{
+            graphics::abline( v = as.numeric(new_xz[1]), 
+                              col = plot.color[as.numeric(new_xz[3])],
+                              lty = as.numeric(new_xz[2]),
+                              untf = T, lwd = 2)
           }
+        }
+        if(!simulation){
+          graphics::abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")
+        }else{
+          # print("$$$")
+          graphics::points(QTN[,2], QTN[,3], type="p",pch=21, cex=2.8,lwd=1.5,col="dimgrey")
+          graphics::points(QTN[,2], QTN[,3], type="p",pch=20, cex=1.5,lwd=1.5,col="dimgrey")
+        }
         #Add a horizontal line for bonferroniCutOff
-        abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
-        axis(2, yaxp=c(0,themax2,bamboo),cex.axis=1.5,las=1,tick=F)
-        if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,line=0.001,labels=chm.to.analyze,tick=F)
+        graphics::abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
+        graphics::axis(2, yaxp=c(0,themax2,bamboo),cex.axis=1.5,las=1,tick=F)
+        if(k==Nenviron){
+          graphics::axis(1, at=ticks,cex.axis=1.5,line=0.001,labels=chm.to.analyze,tick=F)
+        }
         # mtext(side=4,paste(environ_name[k],sep=""),line=2,cex=1,base_family="Arial")
-        mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=2,cex=1,base_family="Arial")
+        graphics::mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=2,cex=1,base_family="Arial")
 
- box()
+ graphics::box()
  }#end of environ_name
- dev.off()
+ grDevices::dev.off()
 }#end of plot.type
 
 if("s"%in%plot.type)
@@ -12680,9 +12723,9 @@ if("s"%in%plot.type)
  
 
 
- pdf(paste("GAPIT.Association.Manhattans_Symphysic",".pdf" ,sep = ""), width = 30,height=18)
- par(mfrow=c(1,1))
- par(mar = c(5,8,5,1))
+ grDevices::pdf(paste("GAPIT.Association.Manhattans_Symphysic",".pdf" ,sep = ""), width = 30,height=18)
+ graphics::par(mfrow=c(1,1))
+ graphics::par(mar = c(5,8,5,1))
  themax.y02=ceiling((ceiling(themax.y0/4))*4)
 
  plot(1~1,col="white",xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(store.x,na.rm=TRUE),max(store.x,na.rm=TRUE)),yaxp=c(0,themax.y02,4),
@@ -12690,19 +12733,21 @@ if("s"%in%plot.type)
     pch=1,cex.main=4)
  # print(ticks)   
         #Add a horizontal line for bonferroniCutOff
- axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
- axis(2, yaxp=c(0,themax.y02,4),cex.axis=2,tick=T,las=1,lwd=2.5)
- if(!is.null(cutOff))abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
+ graphics::axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
+ graphics::axis(2, yaxp=c(0,themax.y02,4),cex.axis=2,tick=T,las=1,lwd=2.5)
+ if(!is.null(cutOff)){
+   graphics::abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
+ }
  if(plot.line)
     {
     if(!is.null(nrow(new_xz)))  
         {
-        abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
+        graphics::abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
         }else{
-        abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
+        graphics::abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
         }
     }
- mtext(side=2,expression(-log[10](italic(p))),line=4, cex=2.5)
+ graphics::mtext(side=2,expression(-log[10](italic(p))),line=4, cex=2.5)
  # legend("top",legend=paste(environ_name,sep=""),ncol=length(environ_name),
  #       col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
  #       bty = "o", bg = "white",box.col="white")
@@ -12712,7 +12757,7 @@ if("s"%in%plot.type)
   { 
     step.vals=ceiling(k/length(allpch0))-1
 
-    environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
+    environ_result = utils::read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
     result=environ_result[,1:4]
     result=result[order(result[,3]),]
     result=result[order(result[,2]),]
@@ -12795,7 +12840,7 @@ if("s"%in%plot.type)
           # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
         cut0=ceiling(-log10(cutOff/length(values))/2)
-        rv=runif(length(values))
+        rv = stats::runif(length(values))
         values=values+rv*(values+cut0)
 
         index=position[which(values>cut0)]
@@ -12818,24 +12863,27 @@ if("s"%in%plot.type)
     
    # if(k!=1) par(new=T)
     
-    par(new=T)
-    plot(y~x,xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(x),max(x)),yaxp=c(0,themax.y02,4),
-    cex.axis=4, cex.lab=4,col=plot.color[z],axes=FALSE,
-    pch=mypch,lwd=1,cex=s+2.5,cex.main=4)
+    graphics::par(new=T)
+    plot( y ~ x, xlab="", ylab="" , ylim=c(0,themax.y02),
+          xlim = c(min(x), max(x)), yaxp = c(0, themax.y02, 4),
+          cex.axis = 4, cex.lab = 4, col = plot.color[z], axes = FALSE,
+          pch = mypch, lwd = 1, cex = s+2.5, cex.main = 4)
     if(step.vals!=0)
     {
-      points(y~x,pch=add.pch[step.vals],col=plot.color[z],cex=s+0.5,cex.main=4)
+      graphics::points(y~x,pch=add.pch[step.vals],col=plot.color[z],cex=s+0.5,cex.main=4)
     }
     if(!simulation)
        {
-        abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")
+        graphics::abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")
         }else{
-        points(QTN[,2], QTN[,3], pch=20, cex=2,lwd=2.5,col="dimgrey")
+        graphics::points(QTN[,2], QTN[,3], pch=20, cex=2,lwd=2.5,col="dimgrey")
        }        
-    if(k==Nenviron) axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
+    if(k==Nenviron){
+      graphics::axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
+    }
 
  }#end of environ_name
- dev.off()
+ grDevices::dev.off()
  # }
  ## Plot legend
  nchar.traits=1.5
@@ -12882,17 +12930,17 @@ if("s"%in%plot.type)
   }
   
 
- write.csv(paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name,fixed=TRUE),fixed=TRUE),sep=""),"GAPIT.Association.Manhattans_Symphysic_Traitsnames.csv",quote=FALSE)
- pdf(paste("GAPIT.Association.Manhattans_Symphysic_Legend",".pdf" ,sep = ""), width = 4+(x.di*(n.col.pch+1)),height=high.Ne)
- par(mfrow=c(1,1))
- par(mar = c(cex.Ne+1,2,cex.Ne+1,2))
+ utils::write.csv(paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name,fixed=TRUE),fixed=TRUE),sep=""),"GAPIT.Association.Manhattans_Symphysic_Traitsnames.csv",quote=FALSE)
+ grDevices::pdf(paste("GAPIT.Association.Manhattans_Symphysic_Legend",".pdf" ,sep = ""), width = 4+(x.di*(n.col.pch+1)),height=high.Ne)
+ graphics::par(mfrow=c(1,1))
+ graphics::par(mar = c(cex.Ne+1,2,cex.Ne+1,2))
  # print(length(yourpch))
  # print(length(yourpch2))
  plot(0,0,xlab="",ylab="" ,axes=FALSE,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),col="white")
  for(kk in 1:n.col.pch)
  {
- par(new=T)
+ graphics::par(new=T)
 
  if(kk==n.col.pch)
  {
@@ -12901,53 +12949,85 @@ if("s"%in%plot.type)
   # print(kk)
   max.pch2=Nenviron-(n.col.pch-1)*max.row
   
-  plot(rep(0,max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,xlab="",ylab="" ,axes=FALSE,col="black",
-  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
-  pch=yourpch[((kk-1)*max.row+1):Nenviron])
-  if(Nenviron>5) points(rep(0,max.pch2),((max.pch):(max.pch-max.pch2+1))*cex.betw,
-  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
-  pch=yourpch2[((kk-1)*max.row+1):Nenviron])
-  text(rep((0+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=gsub("(NYC)","",gsub("(Kansas)","",environ_name[((kk-1)*max.row+1):Nenviron],fixed=TRUE),fixed=TRUE),pos=4,cex=cex.Ne-c.t.d)
+  plot( rep(0,max.pch2), (max.pch:(max.pch-max.pch2+1))*cex.betw,
+        xlab="", ylab="" , axes=FALSE, col="black",
+        xlim = c(0,x.di*(n.col.pch)), ylim=c(0,max.pch), lwd=1,
+        cex=cex.Ne, pch=yourpch[((kk-1)*max.row+1):Nenviron])
+  if(Nenviron>5){
+    graphics::points( rep(0,max.pch2), ((max.pch):(max.pch-max.pch2+1))*cex.betw,
+                      xlim = c(0,x.di*(n.col.pch)), ylim = c(0,max.pch),
+                      lwd = 1, cex = cex.Ne-cex.di,
+                      pch = yourpch2[((kk-1)*max.row+1):Nenviron])
+  }
+  graphics::text(rep((0+text.di),max.pch2),
+                 (max.pch:(max.pch-max.pch2+1))*cex.betw,
+                 labels=gsub("(NYC)","",gsub("(Kansas)","",environ_name[((kk-1)*max.row+1):Nenviron],
+                                             fixed=TRUE),
+                             fixed=TRUE),
+                 pos = 4, cex = cex.Ne-c.t.d)
   
   }else{
   # print(kk)
   max.pch2=Nenviron-(n.col.pch-1)*max.row
   
-  plot(rep((kk-1)*x.di,max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,xlab="",ylab="" ,axes=FALSE,col="black",
-  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
-  pch=yourpch[((kk-1)*max.row+1):Nenviron])
-  if(Nenviron>5) points(rep((kk-1)*x.di,max.pch2),((max.pch):(max.pch-max.pch2+1))*cex.betw,
-  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
-  pch=yourpch2[((kk-1)*max.row+1):Nenviron])
-  text(rep(((kk-1)*x.di+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=gsub("(NYC)","",gsub("(Kansas)","",environ_name[((kk-1)*max.row+1):Nenviron],fixed=TRUE),fixed=TRUE),pos=4,cex=cex.Ne-c.t.d)
+  plot( rep((kk-1)*x.di, max.pch2),
+        (max.pch:(max.pch-max.pch2+1))*cex.betw,
+        xlab="", ylab="" ,
+        axes=FALSE, col="black",
+        xlim=c(0,x.di*(n.col.pch)), ylim=c(0,max.pch),
+        lwd=1,cex=cex.Ne, pch=yourpch[((kk-1)*max.row+1):Nenviron])
+  if(Nenviron>5){
+    graphics::points(rep((kk-1)*x.di,max.pch2),
+                     ((max.pch):(max.pch-max.pch2+1))*cex.betw,
+                     xlim = c(0,x.di*(n.col.pch)), ylim = c(0,max.pch),
+                     lwd = 1, cex = cex.Ne-cex.di,
+                     pch = yourpch2[((kk-1)*max.row+1):Nenviron])
+  }
+  graphics::text( rep(((kk-1)*x.di+text.di),max.pch2),
+                  (max.pch:(max.pch-max.pch2+1))*cex.betw,
+                  labels=gsub("(NYC)","",
+                              gsub("(Kansas)","",
+                                   environ_name[((kk-1)*max.row+1):Nenviron],
+                                   fixed=TRUE),
+                              fixed=TRUE),
+                  pos=4,cex=cex.Ne-c.t.d)
     
   }
  }else{
   if(kk==1)
   {
   # print(kk)
-  plot(rep(0,max.pch),(max.pch:1)*cex.betw,xlab="",ylab="" ,axes=FALSE,
-  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
-  pch=yourpch[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
-  if(Nenviron>5) points(rep(0,max.pch),((max.pch):1)*cex.betw,
-  xlim=c(1,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
-  pch=yourpch2[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
-  text(rep((0+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
+  plot( rep(0,max.pch),
+        (max.pch:1)*cex.betw,
+        xlab="",ylab="" ,
+        axes=FALSE,
+        xlim=c(0,x.di*(n.col.pch)), ylim=c(0,max.pch),
+        lwd=1, cex=cex.Ne,
+        pch=yourpch[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
+  if(Nenviron>5){
+    graphics::points(rep(0,max.pch),((max.pch):1)*cex.betw,
+                     xlim=c(1,x.di*(n.col.pch)),ylim=c(0,max.pch),
+                     lwd=1,cex=cex.Ne-cex.di,
+                     pch = yourpch2[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
+  }
+    graphics::text(rep((0+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
   }else{
   # print(kk)
   plot(rep((kk-1)*x.di,max.pch),(max.pch:1)*cex.betw,xlab="",ylab="" ,axes=FALSE,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
   pch=yourpch[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
-  if(Nenviron>5) points(rep((kk-1)*x.di,max.pch),((max.pch):1)*cex.betw,
+  if(Nenviron>5){
+    graphics::points(rep((kk-1)*x.di,max.pch),((max.pch):1)*cex.betw,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
   pch=yourpch2[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
-  text(rep(((kk-1)*x.di+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
+  }
+  graphics::text(rep(((kk-1)*x.di+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
    
   }
 
  }
 }#end of plot.type
- dev.off()
+ grDevices::dev.off()
 
 }
 print("GAPIT.Association.Manhattans has done !!!")
@@ -12972,7 +13052,7 @@ return(list(multip_mapP=result0,xz=new_xz))
  values=apply(P,1,min)
  values=-log10(values)
  cut0=ceiling(-log10(cutOff/length(values))/2)
- rv=runif(length(values))
+ rv = stats::runif(length(values))
  values=values+rv*(values-5+cut0)
  index=values>cut0
  index=GAPIT.Pruning(values,DPP=DPP)
@@ -12993,10 +13073,10 @@ return(list(multip_mapP=result0,xz=new_xz))
 
  NN=nrow(P)
  themax.y0=max(-log10(P))
- pdf(paste("GAPIT.Association.QQs_Symphysic2.",memo,".pdf" ,sep = ""), width = 30,height=18)
- par(mfrow=c(1,1))
- par(mar = c(5,5,5,1))
- par(cex=1.8)
+ grDevices::pdf(paste("GAPIT.Association.QQs_Symphysic2.",memo,".pdf" ,sep = ""), width = 30,height=18)
+ graphics::par(mfrow=c(1,1))
+ graphics::par(mar = c(5,5,5,1))
+ graphics::par(cex=1.8)
  themax.y02=ceiling((ceiling(themax.y0/4))*4)
  p_value_quantiles0 <- (1:NN)/(NN+1)
  log.Quantiles0 <- -log10(p_value_quantiles0)
@@ -13049,7 +13129,7 @@ return(list(multip_mapP=result0,xz=new_xz))
     # print(themax.y0)
     # print(max(log.P.values2))
     # print(max(log.P.values))
-        par(new=T)
+        graphics::par(new=T)
         plot(log.Quantiles, log.P.values, xlim = c(0,max(log.Quantiles0)), 
         	ylim = c(0,themax.y0), cex.axis=1, cex.lab=1.3, axes=FALSE, 
         	lty = 1,  lwd = 2, col = mycol[step.vals+1] ,xlab ="",
@@ -13081,9 +13161,9 @@ function(model_store,DPP=500,chor_taxa=NULL,cutOff=0.01,band=5,seqQTN=NULL,Y.nam
     #Authors: Zhiwu Zhang and Jiabo Wang
     # Last update: MAY 9, 2022
     ##############################################################################################
-  if(!require(rgl)) install.packages("rgl")
-  if(!require(rglwidget)) install.packages("rglwidget")
-  library(rgl)
+#BJK  if(!require(rgl)) install.packages("rgl")
+#BJK  if(!require(rglwidget)) install.packages("rglwidget")
+#BJK  library(rgl)
 
   Nenviron=length(model_store)*length(Y.names)
   environ_name=NULL
@@ -13106,7 +13186,7 @@ themax.y0=NULL
 for(i in 1:length(environ_name))
 {
   print(paste("Reading GWAS result with ",environ_name[i],sep=""))
-  environ_result=read.csv(paste("GAPIT.",environ_name[i],".GWAS.Results.csv",sep=""),head=T)
+  environ_result = utils::read.csv(paste("GAPIT.",environ_name[i],".GWAS.Results.csv",sep=""),head=T)
   environ_result=environ_result[order(environ_result[,3]),]
   environ_result=environ_result[order(environ_result[,2]),]
   environ_filter=environ_result[!is.na(environ_result[,4]),]
@@ -13164,7 +13244,7 @@ for(i in 1:length(environ_name))
 if("s"%in%plot.type)
 {
   # setup vals
-library("plotly")
+#BJK library("plotly")
 vals0=c("square","diamond","cross","x","star",
       "triangle-up","triangle-down","triangle-left","triangle-right","triangle-ne",
       "triangle-se","triangle-sw","triangle-nw","pentagon","hexagon",
@@ -13194,7 +13274,7 @@ print(vals)
  for(k in 1:Nenviron)
   { 
 
-    environ_result=read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
+    environ_result = utils::read.csv(paste("GAPIT.",environ_name[k],".GWAS.Results.csv",sep=""),head=T)
     result=environ_result[,1:4]
     result=result[order(result[,3]),]
     result=result[order(result[,2]),]
@@ -13278,7 +13358,7 @@ print(vals)
           # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
         cut0=ceiling(-log10(0.01/length(values))/2)
-        rv=runif(length(values))
+        rv = stats::runif(length(values))
         values=values+rv*(values+cut0)
         
         index=position[which(values>cut0)]
@@ -13315,9 +13395,9 @@ print(vals)
 #  if(!require(plotly)) install.packages("plotly")
   #print("!!!!!")
   #print(head(Position))
- library(plotly)
+#BJK library(plotly)
   p <- plotly::plot_ly()%>%
-   add_markers(
+   plotly::add_markers(
     # type = 'scatter',
     x = Position,
     y = P_value,
@@ -13340,7 +13420,7 @@ print(vals)
 
    # plotly::add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
    # plotly::add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
-   layout(title = "Interactive.Multiple_Synthesis.Manhattan.Plot",
+   plotly::layout(title = "Interactive.Multiple_Synthesis.Manhattan.Plot",
                   xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
                   yaxis = list (title = "-Log10(p)"))
   
@@ -13350,7 +13430,7 @@ print(vals)
    T.uni=unique(s.all)
    
    q <- plotly::plot_ly()%>%
-   add_markers(
+     plotly::add_markers(
     # type = 'scatter',
     x = 1,
     y = 1:length(S.uni),
@@ -13373,7 +13453,7 @@ print(vals)
 
    # plotly::add_trace(y=bonferroniCutOff01,name = 'CutOff-0.01',color=I("red"),mode="line",width=1.4,text="")%>%
    # plotly::add_trace(y=bonferroniCutOff05,name = 'CutOff-0.05',color=I("red"),mode="line",line=list(width=1.4,dash='dot'),text="")%>%
-   layout(title = "Interactive.Multiple_Synthesis.Manhattan.Plot",
+   plotly::layout(title = "Interactive.Multiple_Synthesis.Manhattan.Plot",
                   xaxis = list(title = "Chromsome",zeroline = FALSE,showticklabels = FALSE),
                   yaxis = list (title = "-Log10(p)"))
   
@@ -13565,7 +13645,7 @@ if(file.output) utils::write.table(eigenvalues, "GAPIT.Genotype.PCA_eigenvalues.
 print("Creating PCA graphs...")
 #Create a Scree plot 
 if(file.output & PC.number>1) {
-grDevices::pdf("GAPIT.Genotype.PCA_eigenValue.pdf", width = 12, height = 12)
+  grDevices::pdf("GAPIT.Genotype.PCA_eigenValue.pdf", width = 12, height = 12)
   graphics::par(mar=c(5,5,4,5)+.1,cex=2)
   #par(mar=c(10,9,9,10)+.1)
   plot(xout,eigenvalues[xout],type="b",col="blue",xlab="Principal components",ylab="Variance")
@@ -13573,31 +13653,40 @@ grDevices::pdf("GAPIT.Genotype.PCA_eigenValue.pdf", width = 12, height = 12)
   plot(xout,evp[xout]*100,type="n",col="red",xaxt="n",yaxt="n",xlab="",ylab="")
   graphics::axis(4)
   graphics::mtext("Percentage (%)",side=4,line=3,cex=2)
-grDevices::dev.off()
+  grDevices::dev.off()
 
-grDevices::pdf("GAPIT.Genotype.PCA_2D.pdf", width = 8, height = 8)
-graphics::par(mar = c(5,5,5,5),xpd=TRUE)
-maxPlot=min(as.numeric(PC.number[1]),3)
+  grDevices::pdf("GAPIT.Genotype.PCA_2D.pdf", width = 8, height = 8)
+  graphics::par(mar = c(5,5,5,5),xpd=TRUE)
+  maxPlot=min(as.numeric(PC.number[1]),3)
 
-for(i in 1:(maxPlot-1))
-{
-   for(j in (i+1):(maxPlot))
-   {
-      plot(PCA.X$x[,i],PCA.X$x[,j],xlab=paste("PC",i," (evp=",round(evp[i],4)*100,"%)",sep=""),ylab=paste("PC",j," (evp=",round(evp[j],4)*100,"%)",sep=""),pch=19,col=PCA.col,cex.axis=1.3,cex.lab=1.4, cex.axis=1.2, lwd=2,las=1)
-      if(!is.null(PCA.legend)) legend(as.character(PCA.legend$pos),legend=PCA.legend$taxa,pch=19,col=PCA.legend$col,
-           ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"),inset=-0.05)
+  for(i in 1:(maxPlot-1))
+  {
+    for(j in (i+1):(maxPlot))
+    {
+      plot(PCA.X$x[,i], PCA.X$x[,j],
+           xlab=paste("PC",i," (evp=",round(evp[i],4)*100,"%)",sep=""),
+           ylab=paste("PC",j," (evp=",round(evp[j],4)*100,"%)",sep=""),
+           pch=19,col=PCA.col,cex.axis=1.3,cex.lab=1.4, 
+           cex.axis=1.2, lwd=2,las=1)
+      if(!is.null(PCA.legend)){
+        graphics::legend(as.character(PCA.legend$pos),
+               legend=PCA.legend$taxa,
+               pch=19, col=PCA.legend$col,
+               ncol=PCA.legend$ncol, box.col="white", 
+               bty = "n", bg = graphics::par("bg"), inset=-0.05)
+      }
    }
-}
-grDevices::dev.off()
+  }
+  grDevices::dev.off()
 
-#output 3D plot
-if(PCA.3d==TRUE)
-{   
+  #output 3D plot
+  if(PCA.3d==TRUE)
+  {   
   
-        mycols=cbind(taxa,PCA.col)
-        colnames(mycols)=c("taxa","color")
-        write.csv(mycols,"color_file.csv",quote=F,row.names=F)
-        GAPIT.3D.PCA.python("color_file.csv")
+    mycols=cbind(taxa,PCA.col)
+    colnames(mycols)=c("taxa","color")
+    utils::write.csv(mycols,"color_file.csv",quote=F,row.names=F)
+    GAPIT.3D.PCA.python("color_file.csv")
 #    if(!require(scatterplot3d)) install.packages("scatterplot3d")
 #    library(scatterplot3d)
 
@@ -13618,12 +13707,16 @@ if(PCA.3d==TRUE)
                   lwd = 3,
                   angle = 55,
                   scale.y = 0.7)
-    if(!is.null(PCA.legend)) legend(as.character(PCA.legend$pos),legend=PCA.legend$taxa,pch=19,col=PCA.legend$col,
-      ncol=PCA.legend$ncol,box.col="white",bty = "n", bg = par("bg"),inset=-0.05)
+    if(!is.null(PCA.legend)){
+      graphics::legend(as.character(PCA.legend$pos), legend=PCA.legend$taxa, pch=19,
+             col=PCA.legend$col,
+             ncol=PCA.legend$ncol, box.col="white", bty = "n",
+             bg = graphics::par("bg"),
+             inset=-0.05)
     grDevices::dev.off()
-  }#PCA.3d==TRUE
-}#file.output & PC.number>1
-
+    }#PCA.3d==TRUE
+  }#file.output & PC.number>1
+}
 #Remove duplicate (This is taken care by QC)
 #PCs.unique <- unique(PCs[,1])
 #PCs <-PCs[match(PCs.unique, PCs[,1], nomatch = 0), ]
@@ -13861,8 +13954,8 @@ if(is.null(color0))color0=c("turquoise4","indianred3","darkolivegreen3","red","a
 # if(is.null(color0))color0=c("lightblue","mistyrose","lavender")[1:n]
 grDevices::pdf(paste("GAPIT.Association.Prediction_",type,".pdf" ,sep = ""),width = 8,height=5)
 if(type=="GEBV") type.y="Breeding Values"
-par(mfrow=c(1,1))
-par(mar=c(5,7,1,1))
+graphics::par(mfrow=c(1,1))
+graphics::par(mar=c(5,7,1,1))
 hx=seq(x.min,x.max,abs(x.max-x.min)/5)
 hy=seq(y.min,y.max,abs(y.max-y.min)/5)
 
@@ -13870,12 +13963,12 @@ plot(gs_store[1,2],gs_store[1,3],xlab="",ylab="",
       xlim=c(x.min,x.max+0.2*x.max),ylim=c(y.min,y.max),
       las=1,axes=F,
       pch=1,col="white",cex=1,lwd=1)
-     abline(h=hy,col="gray")
-     abline(v=hx,col="gray")
+graphics::abline(h=hy,col="gray")
+graphics::abline(v=hx,col="gray")
 r.store=NULL
 for(i in 1:n)
    {
-     par(new=T)
+     graphics::par(new=T)
      color1=rep(color0[i],nrow(gs_store))
      color1[cv.index]="white"
      plot(gs_store[,2],gs_store[,i+2],xlab="",ylab="",
@@ -13883,16 +13976,16 @@ for(i in 1:n)
       las=1,axes=F,
       # bg=color1,
       pch=pch0[i],col=color0[i],cex=1,lwd=1)
-     r.store=append(r.store,cor(gs_store[,2],gs_store[,i+2]))
+     r.store=append(r.store, stats::cor(gs_store[,2], gs_store[,i+2]))
      # abline(h=hy,col="gray")
      # abline(v=hx,col="gray")
    }
-axis(1,col="black",col.ticks="black",col.axis="black",tck=-0.02,xaxp=c(floor(x.min),ceiling(x.max),5),cex.axis=1)
-axis(2,col="black",col.ticks="black",tck=-0.01,col.axis="black",yaxp=c(floor(y.min),ceiling(y.max),5),las=1,cex.axis=1)
-mtext(paste("Observed ",type.y,sep=""),side=1,line=2.6,col="black",cex=1)
-mtext(paste("Predicted ",type,sep="" ),side=2,line=3.5,col="black",cex=1)
+graphics::axis(1,col="black",col.ticks="black",col.axis="black",tck=-0.02,xaxp=c(floor(x.min),ceiling(x.max),5),cex.axis=1)
+graphics::axis(2,col="black",col.ticks="black",tck=-0.01,col.axis="black",yaxp=c(floor(y.min),ceiling(y.max),5),las=1,cex.axis=1)
+graphics::mtext(paste("Observed ",type.y,sep=""),side=1,line=2.6,col="black",cex=1)
+graphics::mtext(paste("Predicted ",type,sep="" ),side=2,line=3.5,col="black",cex=1)
 
-legend("bottomright",legend=paste("R (",colnames(gs_store)[-c(1,2)],")= ",round(r.store,2),sep=""),horiz=F,
+graphics::legend("bottomright",legend=paste("R (",colnames(gs_store)[-c(1,2)],")= ",round(r.store,2),sep=""),horiz=F,
           col=color0,pch=pch0,lwd=1,cex=0.7,lty=0,ncol=1,
           bty = "o", bg = "white")
 grDevices::dev.off()
@@ -14203,21 +14296,21 @@ grDevices::pdf(paste("GAPIT.Phenotype.View.",traitname,".pdf",sep =""), width =1
 # plot(stats::ecdf(obs),col="red",bg="lightgray",xlab="Density",ylab="Accumulation",main="")
 layout.matrix <- matrix(c(1,2,1,3,4,5), nrow = 2, ncol = 3)
 # print("!!!!")
-layout(mat = layout.matrix,
+graphics::layout(mat = layout.matrix,
        heights = c(100,100), # Heights of the two rows
        widths = c(2,2,2)) # Widths of the two columns
 # print(head(myY))
 y=as.numeric(myY[!is.na(as.numeric(myY[,2])),2])
-par(mar = c(5, 5, 2, 1))
+graphics::par(mar = c(5, 5, 2, 1))
 plot(y,xlab="Individual",las=1,ylim=c(min(y,na.rm=TRUE),max(y,na.rm=TRUE)),ylab="Observation", cex=.5,main="a")
-par(mar = c(5, 5, 2, 1))
-hist(as.numeric(y[!is.na(y)]),xlab="Observation",las=1,ylab="Frequency",cex=.5,main="c")
-par(mar = c(5, 4, 2, 1))
-plot(density(na.omit(y)),las=1,xlab="Observation",ylab="Density", cex=.5,main="d")
-par(mar = c(5, 4, 2, 1))
-boxplot(y,horizontal=F,las=1,xlab="",ylab="Observation", cex=.5,main="b")
-par(mar = c(5, 4, 2, 1))
-plot(ecdf(y),xlab="Observation",las=1,ylab="Accumulative density", cex=.5,main="e",col="gray40")
+graphics::par(mar = c(5, 5, 2, 1))
+graphics::hist(as.numeric(y[!is.na(y)]),xlab="Observation",las=1,ylab="Frequency",cex=.5,main="c")
+graphics::par(mar = c(5, 4, 2, 1))
+plot( stats::density(stats::na.omit(y)), las=1,xlab="Observation",ylab="Density", cex=.5,main="d")
+graphics::par(mar = c(5, 4, 2, 1))
+graphics::boxplot(y,horizontal=F,las=1,xlab="",ylab="Observation", cex=.5,main="b")
+graphics::par(mar = c(5, 4, 2, 1))
+plot( stats::ecdf(y),xlab="Observation",las=1,ylab="Accumulative density", cex=.5,main="e",col="gray40")
 
 
 grDevices::dev.off()
@@ -14280,7 +14373,7 @@ trait.name=colnames(Y)[2]
 # y.layout
 grDevices::pdf(paste("GAPIT.Phenotype.Distribution_Significantmarkers.",model,".",trait.name,".pdf",sep=""), width =3*x.layout, height = 3*y.layout)
 
-par(mfrow=c(y.layout,x.layout),mar = c(5,5,2,2))
+graphics::par(mfrow=c(y.layout,x.layout),mar = c(5,5,2,2))
 
 # print(Y[,2])
 y.min=round(min(Y[,2],na.rm=T),1)
@@ -14312,21 +14405,21 @@ for(i in 1:N.sigs)
   marker.taxa=paste(marker.name,":",marker[,2],":",marker[,3],sep="")
   # print(y.min)
   # print(y.max)
-  boxplot(Values~Genotype,data=yall,xlab="",ylab="",
+  graphics::boxplot(Values~Genotype,data=yall,xlab="",ylab="",
     las=1,ylim=c(y.min,y.max),main=letter[i],
     space=0.2,axes=F,outline=FALSE)
   for(j in 1:type.num)
   {
     yj=yall[yall[,3]==marker.type[j],2]
-    points((j+runif(length(yj),min=-0.2,max=0.2) ), yj, cex=0.7,pch = 1,  col="blue")
+    graphics::points((j + stats::runif(length(yj),min=-0.2,max=0.2) ), yj, cex=0.7,pch = 1,  col="blue")
 
   }# end of j
-  axis(2,col="black",col.ticks="black",col.axis="black",tck=-0.02,las=1,cex.axis=1.5)
-  axis(1,at=1:type.num,labels=marker.type,col="black",col.ticks="black",col.axis="black",tck=-0.01,tick=F,cex.axis=1.5)
+  graphics::axis(2,col="black",col.ticks="black",col.axis="black",tck=-0.02,las=1,cex.axis=1.5)
+  graphics::axis(1,at=1:type.num,labels=marker.type,col="black",col.ticks="black",col.axis="black",tck=-0.01,tick=F,cex.axis=1.5)
     # axis(1,at=posi,labels=labels,col="black",col.ticks="black",col.axis="black",tck=-0.01,tick=F)
   # axis(3,at=posi[even],labels=labels[even],col="black",col.ticks="black",col.axis="black",tck=-0.01,tick=F)
-  mtext(paste(marker.taxa,sep=""),side=1,line=3.4,cex=1.2)
-  mtext(trait.name,side=2,line=3,cex=1.2)
+  graphics::mtext(paste(marker.taxa,sep=""),side=1,line=3.4,cex=1.2)
+  graphics::mtext(trait.name,side=2,line=3,cex=1.2)
   # legend("top", letters[i], col=c("red","black","blue"),xpd=NA,text.col = "black", pch = c(19,19,19), merge = T, bg = "white",ncol=1, cex = 1.5, lwd=-2, bty='n')
 
 }# end of i
@@ -14489,7 +14582,11 @@ colnames(Y)=c("Taxa","Simu")
        memo=all.method[j],
        QTN.position=QTN.position
        ) 
-       power_store<-GAPIT.Power(WS=WS, alpha=myalpha, maxOut=maxOut,seqQTN=QTN.position,GM=myGM,GWAS=myGAPIT$GWAS)
+       power_store<-GAPIT.Power(WS=WS, alpha=myalpha, maxOut=maxOut,
+                                seqQTN=QTN.position,
+                                #BJK GM = myGM,
+                                GM = GM,
+                                GWAS = myGAPIT$GWAS)
        rep.power.store[[j]]<-rep.power.store[[j]]+power_store$Power
        rep.FDR.store[[j]]<-rep.FDR.store[[j]]+power_store$FDR
        rep.Power.Alpha.store[[j]]<-rep.Power.Alpha.store[[j]]+power_store$Power.Alpha
@@ -14520,7 +14617,7 @@ grDevices::pdf(paste("GAPIT.Power.compare to multiple models ",WS[k], ".pdf", se
 graphics::par(mar = c(5,6,5,3))
 	#win.graph(width=6, height=4, pointsize=9)
 	#palette(c("blue","red","green4","brown4","orange",rainbow(5)))
-	plot.color=rainbow(length(all.method))
+	plot.color = grDevices::rainbow(length(all.method))
 # print(head(rep.FDR.store[[j]]))
 kkt=NULL
 # print(head(rep.FDR.store))
@@ -14686,9 +14783,9 @@ group.from=0,
 group.to=0,
 group.by=0,
 memo="GLM",
-QTN.position=QTN.position,
-threshold.output=0.001,
-iteration.output=TRUE,
+QTN.position=QTN.position#BJK ,
+#BJK threshold.output=0.001,
+#BJK iteration.output=TRUE,
 ) 
 
 print(paste("*****************","GWAS by GAPIT...MLM model",i," totle:",rel,sep=""))
@@ -14705,9 +14802,9 @@ group.from=max.groups,
 group.to=max.groups,
 group.by=10,
 memo="MLM",
-QTN.position=QTN.position,
-threshold.output=0.001,
-iteration.output=TRUE,
+QTN.position=QTN.position#BJK ,
+#BJK threshold.output=0.001,
+#BJK iteration.output=TRUE,
 ) 
 
 print(paste("*****************","GWAS by GAPIT...SUPER model",i," totle:",rel,sep=""))
@@ -14721,10 +14818,10 @@ CV=myCV,
 #PCA.total=3,
 sangwich.top="MLM", #options are GLM,MLM,CMLM, FaST and SUPER
 sangwich.bottom="SUPER", #options are GLM,MLM,CMLM, FaST and SUPER
-LD=0.1,
+#BJK LD=0.1,
 QTN.position=QTN.position,
-threshold.output=0.001,
-iteration.output=TRUE,
+#BJK threshold.output=0.001,
+#BJK iteration.output=TRUE,
 file.output=FALSE,
 )
 
@@ -14742,9 +14839,9 @@ group.from=0,
 group.to=max.groups,
 group.by=10,
 memo="CMLM",
-QTN.position=QTN.position,
-threshold.output=0.001,
-iteration.output=TRUE,
+QTN.position=QTN.position#BJK ,
+#BJK threshold.output=0.001,
+#BJK iteration.output=TRUE,
 ) 
 
 print(paste("-------------------","GWAS by GAPIT...ECMLM model",i," totle:",rel,sep=""))
@@ -14765,9 +14862,9 @@ group.from=0,
 group.to=max.groups,
 group.by=10,
 memo="ECMLM",
-QTN.position=QTN.position,
-threshold.output=0.001,
-iteration.output=TRUE,
+QTN.position=QTN.position#BJK ,
+#BJK threshold.output=0.001,
+#BJK iteration.output=TRUE,
 ) 
 
 ##ecmlm power
@@ -15434,7 +15531,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
 #' @param kinship.cluster algorithm for calculating kinship centroid (options: "average", "complete", "ward", "single", "mcquitty", "median", and "centroid") 
 #' @param kinship.group method for calculating group membership (options: "Mean", "Max", "Min", and "Median")
 #' @param kinship.algorithm algorithm to calculate the kinship matrix (options: "VanRaden", "EMMA", "Loiselle", and "Zhang")
-#' @param buspred logical, option for prediction after GWAS。
+#' @param buspred logical, option for prediction after GWAS.
 #' @param lmpred logical (vector), option for seletion of linear model prediction or (and) ABLUP.
 #' @param FDRcut logical, filter pseudo QTN based on FDR cut-off in BLINK
 #' @param bin.from integer, minimum number of bin(s) to consider in SUPER
@@ -15470,12 +15567,12 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
 #' @param Inter.type Interactive plot type for Manhattan and QQ plots."m" indicate manhattan plot and "q" indicate QQ plot.
 #' @param WS numeric or numeric vector, the distance between detected markers and real QTN should be recognized as a real power.
 #' @param WS0 numeric, the cutoff threshold for distance between markers to display in GAPIT.Genotype.Distance_R_Chro.pdf file.
-#' @param Aver.Dis=1000 numeric, average display windowsize in LD decay plot,
+#' @param Aver.Dis numeric, average display windowsize in LD decay plot,
 #' @param maxOut numeric, set the number of markers in the power calculation, the top maxOut number of P values markers should be selected.
 #' @param QTN.position numeric vector, set where are the QTNs' position. Its maximun values should be equal to total marker number, and its length should be equal to the NQTN.
 #' @param PCA.View.output logical, whether to output the PCA view
 #' @param Geno.View.output logical whether to output the Genotype analysis including MAF, heterzygosity, LD decay, and other genotype distribution output.
-#' @param h2 numeric value, to set simulation phenotype heritability. It ranged from 0 to 1 means 0% to 100%.
+#' @param h2 numeric value, to set simulation phenotype heritability. It ranged from 0 to 1 means 0\% to 100\%.
 #' @param NQTN numeric value, to set simulation number of QTN. It ranged from 1 to the total markers number.
 #' @param QTNDist option for distribution of simulated QTN genetic effect in the simulation,(options: "normal" and "geometry")
 #' @param effectunit numeric value, the effect unit of the first choosed marker in the simulation pheotype. default as 1
@@ -15484,6 +15581,21 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
 #' @param Predict.type option to display which type predicted factor again real phenotype in the GAPIT.Association.Prediction pdf file.(options: "GEBV","BLUP" and "BLUE")
 #' @param SNP.test logical, whether to do GWAS or GS.
 #' @param seq.cutoff numeric value, the threshold for filtering significant markers from all. It would be transfor as Bornferrni cutoff in GGS.
+#'
+#' @param CV.Extragenetic param
+#' @param bin.regwas param
+#' @param N4 param
+#' @param N.sig param
+#' @param QC.Y param
+#' @param QTN.gs param
+#' @param r param
+#' @param seq.num param
+#' @param plot.bin param
+#' @param PCA.legend param
+#' @param Phenotype.View param
+#'
+
+
 #' @details 
 #' Genome Association and Prediction Integrated Tools
 #' Available models: MLM, GLM, CMLM, MMLM, SUPER, FarmCPU, gBLUP, cBLUP
@@ -15943,7 +16055,7 @@ if(!is.null(Y))
     if(SNP.test&Multiple_analysis&DP$file.output)
       {
         all.memo=all.memo[!model_store%in%c("gBLUP","cBLUP","sBLUP")]
-        if(length(all.memo)==0) break
+#BJK        if(length(all.memo)==0) break
         GMM=GAPIT.Multiple.Manhattan(model_store=all.memo,
                 Y.names=colnames(Y)[-1],GM=IC$GM,seqQTN=DP$QTN.position,
                 cutOff=DP$cutOff,plot.type=c("s"))
@@ -16107,8 +16219,8 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     #Authors: Jiabo Wang and Zhiwu Zhang
     # Last update: Apr 15, 2025
     ##############################################################################################
-    if(!require(lme4))  install.packages("lme4")
-    library("lme4")
+#BJK    if(!require(lme4))  install.packages("lme4")
+#BJK    library("lme4")
     print("GAPIT.RandomModel beginning...")
     if(is.null(GT))GT=as.character(Y[,1])
     # name.of.trait=colnames(Y)[2]
@@ -16135,7 +16247,7 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     }
     geneGD=X[,index,drop=FALSE]
     geneGWAS=GWAS[index,,drop=FALSE]
-    var.gd=diag(var(geneGD))
+    var.gd=diag( stats::var(geneGD) )
     var.index=var.gd>0.0001
     geneGD=geneGD[,var.index,drop=FALSE]
     geneGWAS=geneGWAS[var.index,,drop=FALSE]
@@ -16299,10 +16411,10 @@ if(sum(is.na(gene_list[1,c(4:8)]))==0)
 
             grDevices::pdf(paste("GAPIT.Association.Significant_SNPs.", name.of.trait,".pdf" ,sep = ""), width =10, height = 3.5)      
             layout.matrix <- matrix(c(1,2,3), nrow = 1, ncol = 3)
-            layout(mat = layout.matrix,
+            graphics::layout(mat = layout.matrix,
                    heights = c(100), # Heights of the two rows
                    widths = c(2,2,2)) # Widths of the two columns
-            par(mar = c(5, 5, 2, 1))
+            graphics::par(mar = c(5, 5, 2, 1))
             # print(head(gene_list))
             # print(length(gene_list$maf))
             # print(length(gene_list$P.value))
@@ -16348,9 +16460,9 @@ return(list(GVs=var_gene/sum(var_gene+var_res),PVEs=gene_list))
 # Last update: MAY 12, 2022 
 ##############################################################################################
 
-	qnt=quantile(x,probs=c(pro,1-pro),na.rm=na.rm,...)
+	qnt = stats::quantile(x,probs=c(pro,1-pro),na.rm=na.rm,...)
 	y=x
-	H=size*IQR(y,na.rm=na.rm)
+	H = size * stats::IQR(y,na.rm=na.rm)
 	y[x<=(qnt[1]-H)]=min(y,na.rm=na.rm)
 	y[x>=(qnt[2]+H)]=max(y,na.rm=na.rm)
 	idx=x<=(qnt[1]-H)|x>=(qnt[2]+H)
@@ -16469,7 +16581,7 @@ if(DP$SNP.test)
     Z=as.data.frame(diag(1,nrow(ic_Y)))
     Z=rbind(taxa_Y,Z)
     taxa=c('Taxa',as.character(taxa_Y))
-    Z=cbind(taxa,Z)
+    Z = cbind( taxa, Z)
   }
 # print(head(ic_PCA))
 # print(dim(DP$CV))
@@ -16650,7 +16762,11 @@ if(DP$SNP.test)
           pv=GWAS$effect
           # pv=GWAS$P.value
 
+<<<<<<< HEAD
           threshold <- quantile(abs(pv), 0.3)
+=======
+          threshold <- stats::quantile(abs(pv), 0.26)
+>>>>>>> 4b7b67f5efb43293b587599ce47d6b1d4e5924f6
           # noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
           
           licols=TRUE
@@ -17268,6 +17384,12 @@ return(list(beta=betavalue, ps = ps, stats = stats, dfs = dfs,effect=betavalue))
 #' @param LD = 0.05,
 #' @param file.output = TRUE,
 #' @param cutOff = 0.01
+#' 
+#' @param allGD param
+#' @param allCV param
+#' @param QTN.gs param
+#' @param GAPIT3.output param
+#' @param CV.Extragenetic param
 #'
 #'
 #' @author Zhiwu Zhang and Jiabo Wang
@@ -17985,8 +18107,8 @@ for(i in 1:length(all.method))
 	        file.output=FALSE)
         pridiction0=merge(Y,myBLUP$Pred[,c(1,10,11)],by.x="Taxa",by.y="Taxa")
         # index=pridiction0[,3]!=2
-        r.in.fold.ref=rbind(r.in.fold.ref,cor(pridiction0[!training_index,2],pridiction0[!training_index,4]))
-        r.in.fold.inf=rbind(r.in.fold.inf,cor(pridiction0[training_index,2],pridiction0[training_index,4]))
+        r.in.fold.ref = rbind(r.in.fold.ref, stats::cor(pridiction0[!training_index,2], pridiction0[!training_index,4]))
+        r.in.fold.inf=rbind(r.in.fold.inf, stats::cor(pridiction0[training_index,2],pridiction0[training_index,4]))
         
         ref_Y_all=rbind(ref_Y_all,pridiction0[!training_index,])
         inf_Y_all=rbind(inf_Y_all,pridiction0[training_index,])
@@ -18001,7 +18123,7 @@ for(i in 1:length(all.method))
         cex.lab=1.3,cex.axis=1.2,lwd=2,main=paste(all.method[i]),
         xlim=c(round(min(ref_Y_all[,2]),0),round(max(ref_Y_all[,2]),0)),
         ylim=c(round(min(ref_Y_all[,4]),0),round(max(ref_Y_all[,4]),0)))   #xlim=c(50,110),ylim=c(50,110),
-    hold.r.ref <- cor(ref_Y_all[,2],ref_Y_all[,4])
+    hold.r.ref <- stats::cor(ref_Y_all[,2],ref_Y_all[,4])
     instant.r.ref <- mean(r.in.fold.ref,na.rm=T)
     if(acc.type=="instant")
         {
@@ -18020,7 +18142,7 @@ for(i in 1:length(all.method))
     	cex.lab=1.3,lwd=2,cex.axis=1.2,main=paste(all.method[i]),
     	xlim=c(round(min(inf_Y_all[,2]),0),round(max(inf_Y_all[,2]),0)),
     	ylim=c(round(min(inf_Y_all[,4]),0),round(max(inf_Y_all[,4]),0)))
-    hold.r.inf <- cor(inf_Y_all[,2],inf_Y_all[,4])
+    hold.r.inf <- stats::cor(inf_Y_all[,2],inf_Y_all[,4])
     instant.r.inf <- mean(r.in.fold.inf,na.rm=T)
     if(acc.type=="instant")
         {
@@ -18154,7 +18276,8 @@ Y<-Y[!is.na(Y[,2]),]
 Y<-Y[,c(1,2)]
 y<- stats::na.omit(Y)
 #############
-commonGeno <- unique(as.character(y[,1]))[unique(as.character(y[,1])) %in% myGD[,1]]
+#BJK commonGeno <- unique(as.character(y[,1]))[unique(as.character(y[,1])) %in% myGD[,1]]
+commonGeno <- unique(as.character(y[,1]))[unique(as.character(y[,1])) %in% GD[,1]]
 cG<-data.frame(commonGeno)
 names(cG)<-"Taxa"
 colnames(y)<-c("Taxa","pheno")
@@ -18255,15 +18378,17 @@ r.inf=stats::cor(as.numeric(as.vector(YP.inf[,2])),as.numeric(as.vector(YP.inf[,
 
 if(r.inf<0){
 #r.inf=cor(as.numeric(as.vector(YP.inf[,2])),as.numeric(as.vector(YP.inf[,2]+YP.inf[,6])))
-combine_output=cbind(as.numeric(as.vector(YP.inf[,2])),as.numeric(as.vector(YP.inf[,6]) ))
+combine_output = cbind( as.numeric( as.vector( YP.inf[,2])), as.numeric(as.vector(YP.inf[,6]) ))
 
-utils::write.csv(combine_output, paste("Accuracy_folders",num,k,i,rel,".csv",sep=""))
+#BJK utils::write.csv(combine_output, paste("Accuracy_folders", num, k, i, rel, ".csv",sep=""))
+utils::write.csv(combine_output, paste("Accuracy_folders", num, k, i, nrep, ".csv",sep=""))
 #stop("...........")
 }
 storage.ref[k,i]=r.ref
 storage.inf[k,i]=r.inf
 
-print(paste(" rel= ", rel, " k= ",k," i= ",i,sep = ""))
+#BJK print(paste(" rel= ", rel, " k= ",k," i= ",i,sep = ""))
+print(paste(" rel= ", nrep, " k= ",k," i= ",i,sep = ""))
 }
 print(paste("finish  replications k= ",k," folders= ",num,sep = ""))
 }
@@ -18281,15 +18406,21 @@ allstorage.ref[,w]=as.matrix(rowMeans(storage.ref))
 combine_output=cbind(storage.inf,allstorage.inf[,w])
 combine_output1=cbind(storage.ref,allstorage.ref[,w])
 colnames(combine_output)=c(paste("folders",c(1:num),sep=""),"mean")
-utils::write.csv(combine_output, paste("Accuracy_folders",num,"by CMLM,rel_",rel,".csv",sep=""))
-utils::write.csv(combine_output1, paste("Accuracy_folders  ref",num,"by CMLM,rel_",rel,".csv",sep=""))
+
+#BJK utils::write.csv(combine_output, paste("Accuracy_folders",num,"by CMLM,rel_",rel,".csv",sep=""))
+#BJK utils::write.csv(combine_output1, paste("Accuracy_folders  ref",num,"by CMLM,rel_",rel,".csv",sep=""))
+utils::write.csv(combine_output, paste("Accuracy_folders",num,"by CMLM,rel_", nrep,".csv",sep=""))
+utils::write.csv(combine_output1, paste("Accuracy_folders  ref",num,"by CMLM,rel_", nrep,".csv",sep=""))
 
 }	
 sr<-nrow(tc1)
 ##output means accuracy by rel for every folders 
 colnames(allstorage.inf)=c(paste(tc1[c(1:sr),]," folders",sep=""))
-utils::write.csv(allstorage.inf, paste("Accuracy_folders",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
-utils::write.csv(allstorage.ref, paste("Accuracy_folders  ref",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
+#BJK utils::write.csv(allstorage.inf, paste("Accuracy_folders",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
+#BJK utils::write.csv(allstorage.ref, paste("Accuracy_folders  ref",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
+utils::write.csv(allstorage.inf, paste("Accuracy_folders",nrow(tc1),"by CMLM,rel_", nrep,".compare to means",".csv",sep=""))
+utils::write.csv(allstorage.ref, paste("Accuracy_folders  ref",nrow(tc1),"by CMLM,rel_", nrep,".compare to means",".csv",sep=""))
+
 
 	name.of.trait=noquote(names(Y.raw)[2])
 #rrel=round(rel/2)
@@ -19262,6 +19393,8 @@ function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
     m <- length(logdelta)
     delta <- exp(logdelta)
     Lambdas <- matrix(eig.R$values,n-q,m) + matrix(delta,n-q,m,byrow=TRUE)
+    print("Mitigating negative Lambdas.") # BJK.
+    Lambdas[ Lambdas <= 0 ] <- 1e-9 # BJK.
     Etasq <- matrix(etas*etas,n-q,m)
     LL <- 0.5*((n-q)*(log((n-q)/(2*pi))-1-log(colSums(Etasq/Lambdas)))-colSums(log(Lambdas)))
     dLL <- 0.5*delta*((n-q)*colSums(Etasq/(Lambdas*Lambdas))/colSums(Etasq/Lambdas)-colSums(1/Lambdas))
@@ -19358,7 +19491,7 @@ function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
     if(try.xx)
     {S <- spI - tcrossprod(X %*% solve(crossprod(X)), X)
     }else{
-     S <- spI - tcrossprod(X %*% ginv(crossprod(X)), X)
+     S <- spI - tcrossprod(X %*% MASS::ginv(crossprod(X)), X)
     }
     ZK <- Z %*% K
     offset <- log(n)
@@ -19376,14 +19509,14 @@ function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
             lambda + delta
         })) + sum(log(lambda + delta))
     }
-    optimout <- optimize(minimfunc, lower = 9^(-9), upper = 9^9, 
+    optimout <- stats::optimize(minimfunc, lower = 9^(-9), upper = 9^9, 
         tol = 1e-06)
     deltahat <- optimout$minimum
     # Hinvhat <- solve(ZKZt + deltahat * spI)
     if(try.xx)
     {Hinvhat <- solve(ZKZt + deltahat * spI)
     }else{
-     Hinvhat <- ginv(ZKZt + deltahat * spI)
+     Hinvhat <- MASS::ginv(ZKZt + deltahat * spI)
     }
     XtHinvhat <- crossprod(X, Hinvhat)
 
@@ -19391,7 +19524,7 @@ function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
     if(try.xx)
     {betahat <- solve(XtHinvhat %*% X, XtHinvhat %*% y)
     }else{
-     betahat <- ginv(XtHinvhat %*% X, XtHinvhat %*% y)
+     betahat <- MASS::ginv(XtHinvhat %*% X, XtHinvhat %*% y)
     }
     
     ehat <- (y - {
@@ -19414,7 +19547,7 @@ function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
     {P <- Vinv - Vinv %*% X %*% solve(crossprod(X, Vinv %*% 
             X), crossprod(X, Vinv))
     }else{
-     P <- Vinv - Vinv %*% X %*% ginv(crossprod(X, Vinv %*% 
+     P <- Vinv - Vinv %*% X %*% MASS::ginv(crossprod(X, Vinv %*% 
             X), crossprod(X, Vinv))
     }
         varuhat <- sigmausqhat^2 * crossprod(ZK, P) %*% ZK
@@ -19427,7 +19560,7 @@ function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
     {P <- Vinv - Vinv %*% X %*% solve(crossprod(X, Vinv %*% 
             X), crossprod(X, Vinv))
     }else{
-     P <- Vinv - Vinv %*% X %*% ginv(crossprod(X, Vinv %*% 
+     P <- Vinv - Vinv %*% X %*% MASS::ginv(crossprod(X, Vinv %*% 
             X), crossprod(X, Vinv))
     }
         }
@@ -19438,19 +19571,19 @@ function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
         if(try.xx)
     {varbetahat <- solve(crossprod(X, Vinv %*% X))
     }else{
-     varbetahat <- ginv(crossprod(X, Vinv %*% X))
+     varbetahat <- MASS::ginv(crossprod(X, Vinv %*% X))
     }
     }
     if (test) {
         Xsqtestu <- uhat^2/diag(varuhat)
-        puhat <- pchisq(Xsqtestu, df = 1, lower.tail = F, log.p = F)
-        p.adjust.M <- p.adjust.methods
-        p.adjuhat <- sapply(p.adjust.M, function(meth) p.adjust(puhat, 
+        puhat <- stats::pchisq(Xsqtestu, df = 1, lower.tail = F, log.p = F)
+        p.adjust.M <- stats::p.adjust.methods
+        p.adjuhat <- sapply(p.adjust.M, function(meth) stats::p.adjust(puhat, 
             meth))
         Xsqtestbeta <- betahat^2/diag(varbetahat)
-        pbetahat <- pchisq(Xsqtestbeta, df = 1, lower.tail = F, 
+        pbetahat <- stats::pchisq(Xsqtestbeta, df = 1, lower.tail = F, 
             log.p = F)
-        p.adjbetahat <- sapply(p.adjust.M, function(meth) p.adjust(pbetahat, 
+        p.adjbetahat <- sapply(p.adjust.M, function(meth) stats::p.adjust(pbetahat, 
             meth))
     }
     if (!exists("Xsqtestbeta")) {
@@ -19505,7 +19638,7 @@ compiler::cmpfun(function(pheno,geno=NULL,snp.pool,X0=NULL){
     deltaExpStart = -5
     deltaExpEnd = 5
     snp.pool=snp.pool[,]
-    if( !is.null(snp.pool) && any(apply(snp.pool,2,var) == 0) ){
+    if( !is.null(snp.pool) && any(apply(snp.pool, 2, stats::var) == 0) ){
     # # if(!is.null(snp.pool)&&var(snp.pool)==0){
         deltaExpStart = 100
         deltaExpEnd = deltaExpStart

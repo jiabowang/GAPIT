@@ -31,7 +31,7 @@ if(DP$SNP.test)
     Z=as.data.frame(diag(1,nrow(ic_Y)))
     Z=rbind(taxa_Y,Z)
     taxa=c('Taxa',as.character(taxa_Y))
-    Z=cbind(taxa,Z)
+    Z = cbind( taxa, Z)
   }
 # print(head(ic_PCA))
 # print(dim(DP$CV))
@@ -212,7 +212,11 @@ if(DP$SNP.test)
           pv=GWAS$effect
           # pv=GWAS$P.value
 
+<<<<<<< HEAD
           threshold <- quantile(abs(pv), 0.3)
+=======
+          threshold <- stats::quantile(abs(pv), 0.26)
+>>>>>>> 4b7b67f5efb43293b587599ce47d6b1d4e5924f6
           # noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
           
           licols=TRUE

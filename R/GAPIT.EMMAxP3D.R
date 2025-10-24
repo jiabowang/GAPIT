@@ -268,7 +268,8 @@
     Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="REML")
     Memory=GAPIT.Memory(Memory=Memory,Infor="REML")
 
-    rm(eig.R)
+    #rm(eig.R)
+    if( exists("eig.R") ){ rm(eig.R) }
     gc()
     Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.R removed")
     Memory=GAPIT.Memory(Memory=Memory,Infor="eig.R removed")
@@ -315,7 +316,8 @@
   Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="U Matrix")
   Memory=GAPIT.Memory(Memory=Memory,Infor="U Matrix")
 
-  if(SNP.P3D == TRUE)rm(eig.L)
+  #if(SNP.P3D == TRUE)rm(eig.L)
+  if(SNP.P3D == TRUE & exists("eig.L") ){ rm(eig.L) } # BJK.
   gc()
 
   Timmer=GAPIT.Timmer(Timmer=Timmer,Infor="eig.L removed")
@@ -833,7 +835,7 @@
         # CVI may be > 1 element long
                           if(any(!is.null(CVI)))
                           {
-                              if(var(CVI[,2])!=0)
+                              if(stats::var(CVI[,2])!=0)
                               {
                                 XCV=cbind(1,as.matrix(CVI[,-1]))
                               }else{

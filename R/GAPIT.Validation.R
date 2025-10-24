@@ -42,8 +42,8 @@ for(i in 1:length(all.method))
 	        file.output=FALSE)
         pridiction0=merge(Y,myBLUP$Pred[,c(1,10,11)],by.x="Taxa",by.y="Taxa")
         # index=pridiction0[,3]!=2
-        r.in.fold.ref=rbind(r.in.fold.ref,cor(pridiction0[!training_index,2],pridiction0[!training_index,4]))
-        r.in.fold.inf=rbind(r.in.fold.inf,cor(pridiction0[training_index,2],pridiction0[training_index,4]))
+        r.in.fold.ref = rbind(r.in.fold.ref, stats::cor(pridiction0[!training_index,2], pridiction0[!training_index,4]))
+        r.in.fold.inf=rbind(r.in.fold.inf, stats::cor(pridiction0[training_index,2],pridiction0[training_index,4]))
         
         ref_Y_all=rbind(ref_Y_all,pridiction0[!training_index,])
         inf_Y_all=rbind(inf_Y_all,pridiction0[training_index,])
@@ -58,7 +58,7 @@ for(i in 1:length(all.method))
         cex.lab=1.3,cex.axis=1.2,lwd=2,main=paste(all.method[i]),
         xlim=c(round(min(ref_Y_all[,2]),0),round(max(ref_Y_all[,2]),0)),
         ylim=c(round(min(ref_Y_all[,4]),0),round(max(ref_Y_all[,4]),0)))   #xlim=c(50,110),ylim=c(50,110),
-    hold.r.ref <- cor(ref_Y_all[,2],ref_Y_all[,4])
+    hold.r.ref <- stats::cor(ref_Y_all[,2],ref_Y_all[,4])
     instant.r.ref <- mean(r.in.fold.ref,na.rm=T)
     if(acc.type=="instant")
         {
@@ -77,7 +77,7 @@ for(i in 1:length(all.method))
     	cex.lab=1.3,lwd=2,cex.axis=1.2,main=paste(all.method[i]),
     	xlim=c(round(min(inf_Y_all[,2]),0),round(max(inf_Y_all[,2]),0)),
     	ylim=c(round(min(inf_Y_all[,4]),0),round(max(inf_Y_all[,4]),0)))
-    hold.r.inf <- cor(inf_Y_all[,2],inf_Y_all[,4])
+    hold.r.inf <- stats::cor(inf_Y_all[,2],inf_Y_all[,4])
     instant.r.inf <- mean(r.in.fold.inf,na.rm=T)
     if(acc.type=="instant")
         {

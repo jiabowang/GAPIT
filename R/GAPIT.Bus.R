@@ -30,7 +30,7 @@ if(method%in%c("GLM","MLM","CMLM","SUPER")){
   GM=GM,
   model=method,
   # QC=FALSE,
-  GTindex=GTindex,
+#BJK  GTindex=GTindex,
   file.output=F       
   )
   GWAS=myGAPIT$GWAS 
@@ -121,7 +121,10 @@ if(file.output&Multi_iter)
   #Create PWIP, which is a table of SNP Names, Chromosome, bp Position, Raw P-values, FDR Adjusted P-values
       print("Calculating FDR...(Kansas)" )
       # print(head(PWI.Filtered))
-      PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
+      PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, 
+                                                                 #BJK FDR.Rate = FDR.Rate,
+                                                                 FDR.Rate = 0.05,
+                                                                 FDR.Procedure = "BH")
       # print(str(PWIP)) 
 
       GWAS=merge(GWAS,PWIP$PWIP[,c(1,ncol(PWIP$PWIP))],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1])  
@@ -432,7 +435,10 @@ if(file.output&Multi_iter)
   #Create PWIP, which is a table of SNP Names, Chromosome, bp Position, Raw P-values, FDR Adjusted P-values
       print("Calculating FDR...(Kansas)" )
       # print(head(PWI.Filtered))
-      PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, FDR.Rate = FDR.Rate, FDR.Procedure = "BH")
+      PWIP <- GAPIT.Perform.BH.FDR.Multiple.Correction.Procedure(PWI = PWI.Filtered, 
+                                                                 #BJK FDR.Rate = FDR.Rate,
+                                                                 FDR.Rate = 0.05,
+                                                                 FDR.Procedure = "BH")
       # print(str(PWIP)) 
 
       GWAS=merge(GWAS,PWIP$PWIP[,c(1,ncol(PWIP$PWIP))],by.x=colnames(GWAS)[1],by.y=colnames(PWIP$PWIP)[1])  

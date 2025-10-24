@@ -4,9 +4,9 @@
 
 test_that("GAPIT function works, FarmCPU model", {
   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3")
+                             package = "GAPIT")
   myGenoFile <- system.file("extdata", "mdp_genotype_test.hmp.txt.gz",
-                            package = "GAPIT3")
+                            package = "GAPIT")
   
   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
 #  myPhenotypes <- myPhenotypes[, 1:2]
@@ -38,24 +38,24 @@ test_that("GAPIT function works, FarmCPU model", {
 })
 
 
-test_that("FarmCPU function works", {
-  myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
-                             package = "GAPIT3")
-  myGenoFile <- system.file("extdata", "mdp_numeric.txt.gz",
-                            package = "GAPIT3")
-  
-  myPhenotypes <- read.table(myPhenoFile, header = TRUE)
-  myPhenotypes <- myPhenotypes[, 1:2]
-  myGenotypes  <- read.table(myGenoFile, header = FALSE)
-  
-  #  setwd(tempdir())
-  #  getwd()
-  
-  # myFarmCPU <- FarmCPU( Y = myPhenotypes,
-  #                   GD = myGenotypes,
-  #                   file.output = FALSE
-  # )
-  
-  
-})
+# test_that("FarmCPU function works", {
+#   myPhenoFile <- system.file("extdata", "mdp_traits.txt.gz",
+#                              package = "GAPIT")
+#   myGenoFile <- system.file("extdata", "mdp_numeric.txt.gz",
+#                             package = "GAPIT")
+#   
+#   myPhenotypes <- read.table(myPhenoFile, header = TRUE)
+#   myPhenotypes <- myPhenotypes[, 1:2]
+#   myGenotypes  <- read.table(myGenoFile, header = FALSE)
+#   
+#   #  setwd(tempdir())
+#   #  getwd()
+#   
+#   # myFarmCPU <- FarmCPU( Y = myPhenotypes,
+#   #                   GD = myGenotypes,
+#   #                   file.output = FALSE
+#   # )
+#   
+#   
+# })
   

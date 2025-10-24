@@ -8,11 +8,13 @@ GAPIT.Main(
   Y,
   G = NULL,
   GD = NULL,
+  allGD = NULL,
+  allCV = NULL,
   GM = NULL,
   KI = NULL,
   Z = NULL,
   CV = NULL,
-  CV.Inheritance = NULL,
+  CV.Extragenetic = NULL,
   SNP.P3D = TRUE,
   GP = NULL,
   GK = NULL,
@@ -79,17 +81,13 @@ GAPIT.Main(
   sangwich.top = NULL,
   sangwich.bottom = NULL,
   QC = TRUE,
+  QTN.gs = NULL,
   GTindex = NULL,
   LD = 0.05,
   file.output = TRUE,
   cutOff = 0.05,
   Model.selection = FALSE,
   Create.indicator = FALSE,
-  QTN = NULL,
-  QTN.round = 1,
-  QTN.limit = 0,
-  QTN.update = TRUE,
-  QTN.method = "Penalty",
   Major.allele.zero = FALSE,
   QTN.position = NULL,
   SUPER_GD = NULL,
@@ -106,6 +104,10 @@ GAPIT.Main(
 
 \item{GD}{data.frame of genotypic data}
 
+\item{allGD}{param}
+
+\item{allCV}{param}
+
 \item{GM}{genetic map for GD}
 
 \item{KI}{param}
@@ -114,7 +116,7 @@ GAPIT.Main(
 
 \item{CV}{param}
 
-\item{CV.Inheritance}{param}
+\item{CV.Extragenetic}{param}
 
 \item{SNP.P3D}{param}
 
@@ -248,6 +250,8 @@ GAPIT.Main(
 
 \item{QC}{param}
 
+\item{QTN.gs}{param}
+
 \item{GTindex}{param}
 
 \item{LD}{param}
@@ -259,16 +263,6 @@ GAPIT.Main(
 \item{Model.selection}{param}
 
 \item{Create.indicator}{param}
-
-\item{QTN}{param}
-
-\item{QTN.round}{param}
-
-\item{QTN.limit}{param}
-
-\item{QTN.update}{param}
-
-\item{QTN.method}{param}
 
 \item{Major.allele.zero}{param}
 

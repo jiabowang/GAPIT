@@ -1,6 +1,6 @@
 Package: GAPIT
 Type: Package
-Title: GAPIT (Genomic Association and Prediction Integrated Tool)
+Title: Genomic Association and Prediction Integrated Tool - GAPIT
 Version: 3.5.0
 Authors@R: c(
           person(given = "Jiabo", family = "Wang", middle = NULL, 
@@ -9,7 +9,7 @@ Authors@R: c(
                  comment = c(ORCID = "0000-0002-1386-0435")))
 Description: Genome Association and Prediction Integrated Tools.
 License: GPL (>= 2)
-Depends: R (<= 4.4.1)
+Depends: R (>= 4.4.0)
 biocViews:
 Imports:
     ape,
@@ -17,22 +17,23 @@ Imports:
     EMMREML,
     genetics,
     gplots,
-    grid,
     htmltools,
-    lattice,
     magrittr,
     lme4,
     MASS,
     methods,
     multtest,
     plotly,
-    RcppArmadillo,
-    rgl,
+    RcppArmadillo (>= 0.10.0.0),
     scatterplot3d,
     snowfall
 Encoding: UTF-8
 LazyData: true
 Suggests: 
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
+VignetteBuilder:
+    knitr
 Config/testthat/edition: 3
-RoxygenNote: 7.1.2
+RoxygenNote: 7.3.3

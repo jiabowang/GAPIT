@@ -1,4 +1,4 @@
 library(testthat)
-library(GAPIT3)
+library(GAPIT)
 
-test_check("GAPIT3")
+test_check("GAPIT")

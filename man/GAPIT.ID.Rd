@@ -18,6 +18,7 @@ GAPIT.ID(
   file.output = TRUE,
   SNP.MAF = 0,
   CG = NULL,
+  testY = NULL,
   plot.bin = 10^9
 )
 }
@@ -47,6 +48,8 @@ GAPIT.ID(
 \item{SNP.MAF}{param}
 
 \item{CG}{param}
+
+\item{testY}{param}
 
 \item{plot.bin}{param}
 }

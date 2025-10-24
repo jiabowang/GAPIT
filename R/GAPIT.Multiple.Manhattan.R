@@ -42,7 +42,7 @@ y_filter0=NULL
 for(i in 1:length(environ_name))
 {
   # print(paste("Reading GWAS result with ",environ_name[i],sep=""))
-  environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[i],".csv",sep=""),head=T)
+  environ_result = utils::read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[i],".csv",sep=""),head=T)
   num.markers=nrow(environ_result)
   environ_result=environ_result[order(environ_result[,3]),]
   environ_result=environ_result[order(environ_result[,2]),]
@@ -77,7 +77,7 @@ for(i in 1:length(environ_name))
   # map_store=max.x
   sig_pos=append(sig_pos,as.numeric(rownames(result[result[!is.na(result[,4]),4]<(cutOff/nrow(result)),,drop=FALSE])))
 }
-  write.csv(y_filter0,paste("GAPIT.Association.Filter_GWAS_results.csv",sep=""),quote=FALSE)
+  utils::write.csv(y_filter0,paste("GAPIT.Association.Filter_GWAS_results.csv",sep=""),quote=FALSE)
 
 # print(sig_pos)
 #if(length(sig_pos)!=0)sig_pos=sig_pos[!duplicated(sig_pos)]
@@ -161,7 +161,7 @@ bonferroniCutOff=-log10(cutOff/numMarker)
 ncycle=ceiling(nchr/5)
 ncolor=band*ncycle
 thecolor=seq(1,nchr,by= ncycle)
-col.Rainbow=rainbow(ncolor+1)     
+col.Rainbow = grDevices::rainbow(ncolor + 1)     
 col.FarmCPU=rep(c("#CC6600","deepskyblue","orange","forestgreen","indianred3"),ceiling(numCHR/5))
 col.Rushville=rep(c("orangered","navyblue"),ceiling(numCHR/2))    
 col.Congress=rep(c("deepskyblue3","firebrick"),ceiling(numCHR/2))
@@ -184,21 +184,21 @@ if("h"%in%plot.type)
 {
     Max.high=6*Nenviron
     if(Max.high>8)Max.high=40
-    pdf(paste("GAPIT.Association.Manhattans_High",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
-    par(mfrow=c(Nenviron,1))
+    grDevices::pdf(paste("GAPIT.Association.Manhattans_High",".pdf" ,sep = ""), width = 20,height=6*Nenviron)
+    graphics::par(mfrow=c(Nenviron,1))
     mypch=1
     for(k in 1:Nenviron)
     { 
        if(k==Nenviron)
         {
-        par(mar = c(3.5,8,0,8))
+        graphics::par(mar = c(3.5,8,0,8))
          # par(pin=c(10,((8-mtext.h)/Nenviron)+mtext.h))
 
         }else{
             #par(mfrow=c(Nenviron,1))
-        par(mar = c(1.5,8,0.5,8))    
+        graphics::par(mar = c(1.5,8,0.5,8))    
         }
-       environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
+       environ_result = utils::read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
        result=environ_result[,1:4]
        result=result[order(result[,3]),]
        result=result[order(result[,2]),]
@@ -268,7 +268,7 @@ if("h"%in%plot.type)
           # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
         cut0=ceiling(-log10(cutOff/length(values))/2)
-        rv=runif(length(values))
+        rv = stats::runif(length(values))
         values=values+rv*(values+cut0)
         index=position[which(values>cut0)]
          }        
@@ -288,37 +288,41 @@ if("h"%in%plot.type)
        plot(y~x,xlab="",ylab="" ,ylim=c(0,themax2),xlim=c(min(x),max(x)),
            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
            pch=mypch,lwd=wd,cex=s+2.5,cex.main=2)
-       mtext(side=2,expression(-log[10](italic(p))),line=3.5, cex=2.5)
+       graphics::mtext(side=2,expression(-log[10](italic(p))),line=3.5, cex=2.5)
        if(!simulation)
          {
-          abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          points(QTN[,2], QTN[,3], pch=21, cex=2.8,lwd=1.5,col="dimgrey")
-          points(QTN[,2], QTN[,3], pch=20, cex=1.8,lwd=1.5,col="dimgrey")
+          graphics::abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
+          graphics::points(QTN[,2], QTN[,3], pch=21, cex=2.8,lwd=1.5,col="dimgrey")
+          graphics::points(QTN[,2], QTN[,3], pch=20, cex=1.8,lwd=1.5,col="dimgrey")
          }        
        if(plot.line)
          {
           if(!is.null(nrow(new_xz)))  
             {
-             abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
+              graphics::abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
             }else{
-             abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
+              graphics::abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
             }
          }
         #Add a horizontal line for bonferroniCutOff
        # print(ticks)
-       abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
-       axis(2, yaxp=c(0,themax2,4),cex.axis=2.3,tick=T,las=1,lwd=2.5)
-       if(k==Nenviron)axis(1, at=max.x,cex.axis=2.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
-       if(k==Nenviron)axis(1, at=ticks,cex.axis=2.5,labels=chm.to.analyze,tick=F,line=1)
-       mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=3.2,cex=2)
+       graphics::abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
+       graphics::axis(2, yaxp=c(0,themax2,4),cex.axis=2.3,tick=T,las=1,lwd=2.5)
+       if(k==Nenviron){
+         graphics::axis(1, at=max.x,cex.axis=2.5,labels=rep("",length(max.x)),tick=T,lwd=2.5)
+       }
+       if(k==Nenviron){
+         graphics::axis(1, at=ticks,cex.axis=2.5,labels=chm.to.analyze,tick=F,line=1)
+       }
+       graphics::mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=3.2,cex=2)
     }#end of environ_name
-       dev.off()
+       grDevices::dev.off()
 }#end of plot.type
 
 if("w"%in%plot.type)
 {
- pdf(paste("GAPIT.Association.Manhattans_Wide",".pdf" ,sep = ""), width = 16,height=8.5)
- par(mfrow=c(Nenviron,1))
+ grDevices::pdf(paste("GAPIT.Association.Manhattans_Wide",".pdf" ,sep = ""), width = 16,height=8.5)
+ graphics::par(mfrow=c(Nenviron,1))
  mtext.h=0.5
  size=2
  ratio=5
@@ -327,16 +331,16 @@ if("w"%in%plot.type)
   if(k==Nenviron)
         {#par(mfrow=c(Nenviron,1))
           # print(par())
-        par(mar = c(2.5,8,0,8))
+        graphics::par(mar = c(2.5,8,0,8))
          # par(pin=c(10,((8-mtext.h)/Nenviron)+mtext.h))
 
         }else{
             #par(mfrow=c(Nenviron,1))
-        par(mar = c(2,8,0.5,8))    
+        graphics::par(mar = c(2,8,0.5,8))    
          # par(pin=c(10,(8-mtext.h)/Nenviron))
 
         }
-  environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
+  environ_result = utils::read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
   #print(environ_result[as.numeric(new_xz[,1]),])
   result=environ_result[,1:4]
     result=result[order(result[,3]),]
@@ -413,7 +417,7 @@ if("w"%in%plot.type)
         # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
         cut0=ceiling(-log10(cutOff/length(values))/2)
-        rv=runif(length(values))
+        rv = stats::runif(length(values))
         values=values+rv*(values+cut0)
       
         index=position[which(values>cut0)]
@@ -441,28 +445,39 @@ if("w"%in%plot.type)
         plot(y~x,xlab="",ylab="" ,ylim=c(0,themax2),xlim=c(min(x),max(x)),
            cex.axis=4, cex.lab=4, ,col=plot.color[z],axes=FALSE,type = "p",
            pch=mypch,lwd=wd,cex=s,cex.main=2)
-        mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
+        graphics::mtext(side=2,expression(-log[10](italic(p))),line=3, cex=1)
         if(plot.line)
         {
-          if(!is.null(nrow(new_xz)))  {abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=2)
-             }else{abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=2)
-             }
-        }
-        if(!simulation){abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")}else{
-          # print("$$$")
-          points(QTN[,2], QTN[,3], type="p",pch=21, cex=2.8,lwd=1.5,col="dimgrey")
-          points(QTN[,2], QTN[,3], type="p",pch=20, cex=1.5,lwd=1.5,col="dimgrey")
+          if(!is.null(nrow(new_xz)))  {
+            graphics::abline( v = as.numeric(new_xz[,4]), col = "grey",
+                              lty = as.numeric(new_xz[, 2]),
+                              untf = T, lwd = 2)
+          }else{
+            graphics::abline( v = as.numeric(new_xz[1]), 
+                              col = plot.color[as.numeric(new_xz[3])],
+                              lty = as.numeric(new_xz[2]),
+                              untf = T, lwd = 2)
           }
+        }
+        if(!simulation){
+          graphics::abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")
+        }else{
+          # print("$$$")
+          graphics::points(QTN[,2], QTN[,3], type="p",pch=21, cex=2.8,lwd=1.5,col="dimgrey")
+          graphics::points(QTN[,2], QTN[,3], type="p",pch=20, cex=1.5,lwd=1.5,col="dimgrey")
+        }
         #Add a horizontal line for bonferroniCutOff
-        abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
-        axis(2, yaxp=c(0,themax2,bamboo),cex.axis=1.5,las=1,tick=F)
-        if(k==Nenviron)axis(1, at=ticks,cex.axis=1.5,line=0.001,labels=chm.to.analyze,tick=F)
+        graphics::abline(h=bonferroniCutOff,lty=1,untf=T,lwd=1,col="forestgreen")
+        graphics::axis(2, yaxp=c(0,themax2,bamboo),cex.axis=1.5,las=1,tick=F)
+        if(k==Nenviron){
+          graphics::axis(1, at=ticks,cex.axis=1.5,line=0.001,labels=chm.to.analyze,tick=F)
+        }
         # mtext(side=4,paste(environ_name[k],sep=""),line=2,cex=1,base_family="Arial")
-        mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=2,cex=1,base_family="Arial")
+        graphics::mtext(side=4,paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name[k],fixed=TRUE),fixed=TRUE),sep=""),line=2,cex=1,base_family="Arial")
 
- box()
+ graphics::box()
  }#end of environ_name
- dev.off()
+ grDevices::dev.off()
 }#end of plot.type
 
 if("s"%in%plot.type)
@@ -487,9 +502,9 @@ if("s"%in%plot.type)
  
 
 
- pdf(paste("GAPIT.Association.Manhattans_Symphysic",".pdf" ,sep = ""), width = 30,height=18)
- par(mfrow=c(1,1))
- par(mar = c(5,8,5,1))
+ grDevices::pdf(paste("GAPIT.Association.Manhattans_Symphysic",".pdf" ,sep = ""), width = 30,height=18)
+ graphics::par(mfrow=c(1,1))
+ graphics::par(mar = c(5,8,5,1))
  themax.y02=ceiling((ceiling(themax.y0/4))*4)
 
  plot(1~1,col="white",xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(store.x,na.rm=TRUE),max(store.x,na.rm=TRUE)),yaxp=c(0,themax.y02,4),
@@ -497,19 +512,21 @@ if("s"%in%plot.type)
     pch=1,cex.main=4)
  # print(ticks)   
         #Add a horizontal line for bonferroniCutOff
- axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
- axis(2, yaxp=c(0,themax.y02,4),cex.axis=2,tick=T,las=1,lwd=2.5)
- if(!is.null(cutOff))abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
+ graphics::axis(1, at=max.x,cex.axis=2,labels=rep("",length(max.x)),tick=T,lwd=2.5)
+ graphics::axis(2, yaxp=c(0,themax.y02,4),cex.axis=2,tick=T,las=1,lwd=2.5)
+ if(!is.null(cutOff)){
+   graphics::abline(h=bonferroniCutOff,lty=1,untf=T,lwd=3,col="forestgreen")
+ }
  if(plot.line)
     {
     if(!is.null(nrow(new_xz)))  
         {
-        abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
+        graphics::abline(v=as.numeric(new_xz[,4]),col="grey",lty=as.numeric(new_xz[,2]),untf=T,lwd=3)
         }else{
-        abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
+        graphics::abline(v=as.numeric(new_xz[1]),col=plot.color[as.numeric(new_xz[3])],lty=as.numeric(new_xz[2]),untf=T,lwd=3)
         }
     }
- mtext(side=2,expression(-log[10](italic(p))),line=4, cex=2.5)
+ graphics::mtext(side=2,expression(-log[10](italic(p))),line=4, cex=2.5)
  # legend("top",legend=paste(environ_name,sep=""),ncol=length(environ_name),
  #       col="black",pch=allpch[1:Nenviron],lty=0,lwd=1,cex=2,
  #       bty = "o", bg = "white",box.col="white")
@@ -519,7 +536,7 @@ if("s"%in%plot.type)
   { 
     step.vals=ceiling(k/length(allpch0))-1
 
-    environ_result=read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
+    environ_result = utils::read.csv(paste("GAPIT.Association.GWAS_Results.",environ_name[k],".csv",sep=""),head=T)
     result=environ_result[,1:4]
     result=result[order(result[,3]),]
     result=result[order(result[,2]),]
@@ -602,7 +619,7 @@ if("s"%in%plot.type)
           # values=sqrt(values)  #This shift the weight a little bit to the low building.
         #Handler of bias plot
         cut0=ceiling(-log10(cutOff/length(values))/2)
-        rv=runif(length(values))
+        rv = stats::runif(length(values))
         values=values+rv*(values+cut0)
 
         index=position[which(values>cut0)]
@@ -625,24 +642,27 @@ if("s"%in%plot.type)
     
    # if(k!=1) par(new=T)
     
-    par(new=T)
-    plot(y~x,xlab="",ylab="" ,ylim=c(0,themax.y02),xlim=c(min(x),max(x)),yaxp=c(0,themax.y02,4),
-    cex.axis=4, cex.lab=4,col=plot.color[z],axes=FALSE,
-    pch=mypch,lwd=1,cex=s+2.5,cex.main=4)
+    graphics::par(new=T)
+    plot( y ~ x, xlab="", ylab="" , ylim=c(0,themax.y02),
+          xlim = c(min(x), max(x)), yaxp = c(0, themax.y02, 4),
+          cex.axis = 4, cex.lab = 4, col = plot.color[z], axes = FALSE,
+          pch = mypch, lwd = 1, cex = s+2.5, cex.main = 4)
     if(step.vals!=0)
     {
-      points(y~x,pch=add.pch[step.vals],col=plot.color[z],cex=s+0.5,cex.main=4)
+      graphics::points(y~x,pch=add.pch[step.vals],col=plot.color[z],cex=s+0.5,cex.main=4)
     }
     if(!simulation)
        {
-        abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")
+        graphics::abline(v=QTN[2], lty = 2, lwd=1.5, col = "grey")
         }else{
-        points(QTN[,2], QTN[,3], pch=20, cex=2,lwd=2.5,col="dimgrey")
+        graphics::points(QTN[,2], QTN[,3], pch=20, cex=2,lwd=2.5,col="dimgrey")
        }        
-    if(k==Nenviron) axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
+    if(k==Nenviron){
+      graphics::axis(1, at=ticks,cex.axis=2,labels=chm.to.analyze,tick=F,line=1)
+    }
 
  }#end of environ_name
- dev.off()
+ grDevices::dev.off()
  # }
  ## Plot legend
  nchar.traits=1.5
@@ -689,17 +709,17 @@ if("s"%in%plot.type)
   }
   
 
- write.csv(paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name,fixed=TRUE),fixed=TRUE),sep=""),"GAPIT.Association.Manhattans_Symphysic_Traitsnames.csv",quote=FALSE)
- pdf(paste("GAPIT.Association.Manhattans_Symphysic_Legend",".pdf" ,sep = ""), width = 4+(x.di*(n.col.pch+1)),height=high.Ne)
- par(mfrow=c(1,1))
- par(mar = c(cex.Ne+1,2,cex.Ne+1,2))
+ utils::write.csv(paste(gsub("(NYC)","",gsub("(Kansas)","",environ_name,fixed=TRUE),fixed=TRUE),sep=""),"GAPIT.Association.Manhattans_Symphysic_Traitsnames.csv",quote=FALSE)
+ grDevices::pdf(paste("GAPIT.Association.Manhattans_Symphysic_Legend",".pdf" ,sep = ""), width = 4+(x.di*(n.col.pch+1)),height=high.Ne)
+ graphics::par(mfrow=c(1,1))
+ graphics::par(mar = c(cex.Ne+1,2,cex.Ne+1,2))
  # print(length(yourpch))
  # print(length(yourpch2))
  plot(0,0,xlab="",ylab="" ,axes=FALSE,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),col="white")
  for(kk in 1:n.col.pch)
  {
- par(new=T)
+ graphics::par(new=T)
 
  if(kk==n.col.pch)
  {
@@ -708,53 +728,85 @@ if("s"%in%plot.type)
   # print(kk)
   max.pch2=Nenviron-(n.col.pch-1)*max.row
   
-  plot(rep(0,max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,xlab="",ylab="" ,axes=FALSE,col="black",
-  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
-  pch=yourpch[((kk-1)*max.row+1):Nenviron])
-  if(Nenviron>5) points(rep(0,max.pch2),((max.pch):(max.pch-max.pch2+1))*cex.betw,
-  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
-  pch=yourpch2[((kk-1)*max.row+1):Nenviron])
-  text(rep((0+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=gsub("(NYC)","",gsub("(Kansas)","",environ_name[((kk-1)*max.row+1):Nenviron],fixed=TRUE),fixed=TRUE),pos=4,cex=cex.Ne-c.t.d)
+  plot( rep(0,max.pch2), (max.pch:(max.pch-max.pch2+1))*cex.betw,
+        xlab="", ylab="" , axes=FALSE, col="black",
+        xlim = c(0,x.di*(n.col.pch)), ylim=c(0,max.pch), lwd=1,
+        cex=cex.Ne, pch=yourpch[((kk-1)*max.row+1):Nenviron])
+  if(Nenviron>5){
+    graphics::points( rep(0,max.pch2), ((max.pch):(max.pch-max.pch2+1))*cex.betw,
+                      xlim = c(0,x.di*(n.col.pch)), ylim = c(0,max.pch),
+                      lwd = 1, cex = cex.Ne-cex.di,
+                      pch = yourpch2[((kk-1)*max.row+1):Nenviron])
+  }
+  graphics::text(rep((0+text.di),max.pch2),
+                 (max.pch:(max.pch-max.pch2+1))*cex.betw,
+                 labels=gsub("(NYC)","",gsub("(Kansas)","",environ_name[((kk-1)*max.row+1):Nenviron],
+                                             fixed=TRUE),
+                             fixed=TRUE),
+                 pos = 4, cex = cex.Ne-c.t.d)
   
   }else{
   # print(kk)
   max.pch2=Nenviron-(n.col.pch-1)*max.row
   
-  plot(rep((kk-1)*x.di,max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,xlab="",ylab="" ,axes=FALSE,col="black",
-  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
-  pch=yourpch[((kk-1)*max.row+1):Nenviron])
-  if(Nenviron>5) points(rep((kk-1)*x.di,max.pch2),((max.pch):(max.pch-max.pch2+1))*cex.betw,
-  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
-  pch=yourpch2[((kk-1)*max.row+1):Nenviron])
-  text(rep(((kk-1)*x.di+text.di),max.pch2),(max.pch:(max.pch-max.pch2+1))*cex.betw,labels=gsub("(NYC)","",gsub("(Kansas)","",environ_name[((kk-1)*max.row+1):Nenviron],fixed=TRUE),fixed=TRUE),pos=4,cex=cex.Ne-c.t.d)
+  plot( rep((kk-1)*x.di, max.pch2),
+        (max.pch:(max.pch-max.pch2+1))*cex.betw,
+        xlab="", ylab="" ,
+        axes=FALSE, col="black",
+        xlim=c(0,x.di*(n.col.pch)), ylim=c(0,max.pch),
+        lwd=1,cex=cex.Ne, pch=yourpch[((kk-1)*max.row+1):Nenviron])
+  if(Nenviron>5){
+    graphics::points(rep((kk-1)*x.di,max.pch2),
+                     ((max.pch):(max.pch-max.pch2+1))*cex.betw,
+                     xlim = c(0,x.di*(n.col.pch)), ylim = c(0,max.pch),
+                     lwd = 1, cex = cex.Ne-cex.di,
+                     pch = yourpch2[((kk-1)*max.row+1):Nenviron])
+  }
+  graphics::text( rep(((kk-1)*x.di+text.di),max.pch2),
+                  (max.pch:(max.pch-max.pch2+1))*cex.betw,
+                  labels=gsub("(NYC)","",
+                              gsub("(Kansas)","",
+                                   environ_name[((kk-1)*max.row+1):Nenviron],
+                                   fixed=TRUE),
+                              fixed=TRUE),
+                  pos=4,cex=cex.Ne-c.t.d)
     
   }
  }else{
   if(kk==1)
   {
   # print(kk)
-  plot(rep(0,max.pch),(max.pch:1)*cex.betw,xlab="",ylab="" ,axes=FALSE,
-  xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
-  pch=yourpch[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
-  if(Nenviron>5) points(rep(0,max.pch),((max.pch):1)*cex.betw,
-  xlim=c(1,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
-  pch=yourpch2[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
-  text(rep((0+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
+  plot( rep(0,max.pch),
+        (max.pch:1)*cex.betw,
+        xlab="",ylab="" ,
+        axes=FALSE,
+        xlim=c(0,x.di*(n.col.pch)), ylim=c(0,max.pch),
+        lwd=1, cex=cex.Ne,
+        pch=yourpch[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
+  if(Nenviron>5){
+    graphics::points(rep(0,max.pch),((max.pch):1)*cex.betw,
+                     xlim=c(1,x.di*(n.col.pch)),ylim=c(0,max.pch),
+                     lwd=1,cex=cex.Ne-cex.di,
+                     pch = yourpch2[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
+  }
+    graphics::text(rep((0+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
   }else{
   # print(kk)
   plot(rep((kk-1)*x.di,max.pch),(max.pch:1)*cex.betw,xlab="",ylab="" ,axes=FALSE,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne,
   pch=yourpch[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
-  if(Nenviron>5) points(rep((kk-1)*x.di,max.pch),((max.pch):1)*cex.betw,
+  if(Nenviron>5){
+    graphics::points(rep((kk-1)*x.di,max.pch),((max.pch):1)*cex.betw,
   xlim=c(0,x.di*(n.col.pch)),ylim=c(0,max.pch),lwd=1,cex=cex.Ne-cex.di,
   pch=yourpch2[((kk-1)*max.row+1):((kk-1)*max.row+max.row)])
-  text(rep(((kk-1)*x.di+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
+  }
+  graphics::text(rep(((kk-1)*x.di+text.di),max.pch),(max.pch:1)*cex.betw,labels=environ_name[((kk-1)*max.row+1):((kk-1)*max.row+max.row)],pos=4,cex=cex.Ne-c.t.d)
    
   }
 
  }
 }#end of plot.type
- dev.off()
+ grDevices::dev.off()
 
 }
 print("GAPIT.Association.Manhattans has done !!!")

@@ -7,10 +7,12 @@
 GAPIT.SUPER.GS(
   Y,
   GD = NULL,
+  allGD = NULL,
   GM = NULL,
   KI = NULL,
   Z = NULL,
   CV = NULL,
+  allCV = NULL,
   GK = NULL,
   kinship.algorithm = NULL,
   bin.from = 10000,
@@ -34,9 +36,12 @@ GAPIT.SUPER.GS(
   sangwich.top = NULL,
   sangwich.bottom = NULL,
   QC = TRUE,
+  QTN.gs = NULL,
   GTindex = NULL,
   LD = 0.05,
   file.output = TRUE,
+  GAPIT3.output = TRUE,
+  CV.Extragenetic = 0,
   cutOff = 0.01
 )
 }
@@ -45,6 +50,8 @@ GAPIT.SUPER.GS(
 
 \item{GD}{= NULL,}
 
+\item{allGD}{param}
+
 \item{GM}{= NULL,}
 
 \item{KI}{= NULL,}
@@ -52,6 +59,8 @@ GAPIT.SUPER.GS(
 \item{Z}{= NULL,}
 
 \item{CV}{= NULL,}
+
+\item{allCV}{param}
 
 \item{GK}{= NULL,}
 
@@ -99,11 +108,17 @@ GAPIT.SUPER.GS(
 
 \item{QC}{= TRUE,}
 
+\item{QTN.gs}{param}
+
 \item{GTindex}{= NULL,}
 
 \item{LD}{= 0.05,}
 
 \item{file.output}{= TRUE,}
+
+\item{GAPIT3.output}{param}
+
+\item{CV.Extragenetic}{param}
 
 \item{cutOff}{= 0.01}
 }

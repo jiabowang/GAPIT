@@ -28,6 +28,8 @@ function(y, X, K, Z=NULL, ngrids=100, llim=-10, ulim=10,
     m <- length(logdelta)
     delta <- exp(logdelta)
     Lambdas <- matrix(eig.R$values,n-q,m) + matrix(delta,n-q,m,byrow=TRUE)
+    print("Mitigating negative Lambdas.") # BJK.
+    Lambdas[ Lambdas <= 0 ] <- 1e-9 # BJK.
     Etasq <- matrix(etas*etas,n-q,m)
     LL <- 0.5*((n-q)*(log((n-q)/(2*pi))-1-log(colSums(Etasq/Lambdas)))-colSums(log(Lambdas)))
     dLL <- 0.5*delta*((n-q)*colSums(Etasq/(Lambdas*Lambdas))/colSums(Etasq/Lambdas)-colSums(1/Lambdas))

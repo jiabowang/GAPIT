@@ -114,8 +114,8 @@ if(is.null(color0))color0=c("turquoise4","indianred3","darkolivegreen3","red","a
 # if(is.null(color0))color0=c("lightblue","mistyrose","lavender")[1:n]
 grDevices::pdf(paste("GAPIT.Association.Prediction_",type,".pdf" ,sep = ""),width = 8,height=5)
 if(type=="GEBV") type.y="Breeding Values"
-par(mfrow=c(1,1))
-par(mar=c(5,7,1,1))
+graphics::par(mfrow=c(1,1))
+graphics::par(mar=c(5,7,1,1))
 hx=seq(x.min,x.max,abs(x.max-x.min)/5)
 hy=seq(y.min,y.max,abs(y.max-y.min)/5)
 
@@ -123,12 +123,12 @@ plot(gs_store[1,2],gs_store[1,3],xlab="",ylab="",
       xlim=c(x.min,x.max+0.2*x.max),ylim=c(y.min,y.max),
       las=1,axes=F,
       pch=1,col="white",cex=1,lwd=1)
-     abline(h=hy,col="gray")
-     abline(v=hx,col="gray")
+graphics::abline(h=hy,col="gray")
+graphics::abline(v=hx,col="gray")
 r.store=NULL
 for(i in 1:n)
    {
-     par(new=T)
+     graphics::par(new=T)
      color1=rep(color0[i],nrow(gs_store))
      color1[cv.index]="white"
      plot(gs_store[,2],gs_store[,i+2],xlab="",ylab="",
@@ -136,16 +136,16 @@ for(i in 1:n)
       las=1,axes=F,
       # bg=color1,
       pch=pch0[i],col=color0[i],cex=1,lwd=1)
-     r.store=append(r.store,cor(gs_store[,2],gs_store[,i+2]))
+     r.store=append(r.store, stats::cor(gs_store[,2], gs_store[,i+2]))
      # abline(h=hy,col="gray")
      # abline(v=hx,col="gray")
    }
-axis(1,col="black",col.ticks="black",col.axis="black",tck=-0.02,xaxp=c(floor(x.min),ceiling(x.max),5),cex.axis=1)
-axis(2,col="black",col.ticks="black",tck=-0.01,col.axis="black",yaxp=c(floor(y.min),ceiling(y.max),5),las=1,cex.axis=1)
-mtext(paste("Observed ",type.y,sep=""),side=1,line=2.6,col="black",cex=1)
-mtext(paste("Predicted ",type,sep="" ),side=2,line=3.5,col="black",cex=1)
+graphics::axis(1,col="black",col.ticks="black",col.axis="black",tck=-0.02,xaxp=c(floor(x.min),ceiling(x.max),5),cex.axis=1)
+graphics::axis(2,col="black",col.ticks="black",tck=-0.01,col.axis="black",yaxp=c(floor(y.min),ceiling(y.max),5),las=1,cex.axis=1)
+graphics::mtext(paste("Observed ",type.y,sep=""),side=1,line=2.6,col="black",cex=1)
+graphics::mtext(paste("Predicted ",type,sep="" ),side=2,line=3.5,col="black",cex=1)
 
-legend("bottomright",legend=paste("R (",colnames(gs_store)[-c(1,2)],")= ",round(r.store,2),sep=""),horiz=F,
+graphics::legend("bottomright",legend=paste("R (",colnames(gs_store)[-c(1,2)],")= ",round(r.store,2),sep=""),horiz=F,
           col=color0,pch=pch0,lwd=1,cex=0.7,lty=0,ncol=1,
           bty = "o", bg = "white")
 grDevices::dev.off()

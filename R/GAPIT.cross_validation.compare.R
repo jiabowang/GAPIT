@@ -20,7 +20,8 @@ Y<-Y[!is.na(Y[,2]),]
 Y<-Y[,c(1,2)]
 y<- stats::na.omit(Y)
 #############
-commonGeno <- unique(as.character(y[,1]))[unique(as.character(y[,1])) %in% myGD[,1]]
+#BJK commonGeno <- unique(as.character(y[,1]))[unique(as.character(y[,1])) %in% myGD[,1]]
+commonGeno <- unique(as.character(y[,1]))[unique(as.character(y[,1])) %in% GD[,1]]
 cG<-data.frame(commonGeno)
 names(cG)<-"Taxa"
 colnames(y)<-c("Taxa","pheno")
@@ -121,15 +122,17 @@ r.inf=stats::cor(as.numeric(as.vector(YP.inf[,2])),as.numeric(as.vector(YP.inf[,
 
 if(r.inf<0){
 #r.inf=cor(as.numeric(as.vector(YP.inf[,2])),as.numeric(as.vector(YP.inf[,2]+YP.inf[,6])))
-combine_output=cbind(as.numeric(as.vector(YP.inf[,2])),as.numeric(as.vector(YP.inf[,6]) ))
+combine_output = cbind( as.numeric( as.vector( YP.inf[,2])), as.numeric(as.vector(YP.inf[,6]) ))
 
-utils::write.csv(combine_output, paste("Accuracy_folders",num,k,i,rel,".csv",sep=""))
+#BJK utils::write.csv(combine_output, paste("Accuracy_folders", num, k, i, rel, ".csv",sep=""))
+utils::write.csv(combine_output, paste("Accuracy_folders", num, k, i, nrep, ".csv",sep=""))
 #stop("...........")
 }
 storage.ref[k,i]=r.ref
 storage.inf[k,i]=r.inf
 
-print(paste(" rel= ", rel, " k= ",k," i= ",i,sep = ""))
+#BJK print(paste(" rel= ", rel, " k= ",k," i= ",i,sep = ""))
+print(paste(" rel= ", nrep, " k= ",k," i= ",i,sep = ""))
 }
 print(paste("finish  replications k= ",k," folders= ",num,sep = ""))
 }
@@ -147,15 +150,21 @@ allstorage.ref[,w]=as.matrix(rowMeans(storage.ref))
 combine_output=cbind(storage.inf,allstorage.inf[,w])
 combine_output1=cbind(storage.ref,allstorage.ref[,w])
 colnames(combine_output)=c(paste("folders",c(1:num),sep=""),"mean")
-utils::write.csv(combine_output, paste("Accuracy_folders",num,"by CMLM,rel_",rel,".csv",sep=""))
-utils::write.csv(combine_output1, paste("Accuracy_folders  ref",num,"by CMLM,rel_",rel,".csv",sep=""))
+
+#BJK utils::write.csv(combine_output, paste("Accuracy_folders",num,"by CMLM,rel_",rel,".csv",sep=""))
+#BJK utils::write.csv(combine_output1, paste("Accuracy_folders  ref",num,"by CMLM,rel_",rel,".csv",sep=""))
+utils::write.csv(combine_output, paste("Accuracy_folders",num,"by CMLM,rel_", nrep,".csv",sep=""))
+utils::write.csv(combine_output1, paste("Accuracy_folders  ref",num,"by CMLM,rel_", nrep,".csv",sep=""))
 
 }	
 sr<-nrow(tc1)
 ##output means accuracy by rel for every folders 
 colnames(allstorage.inf)=c(paste(tc1[c(1:sr),]," folders",sep=""))
-utils::write.csv(allstorage.inf, paste("Accuracy_folders",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
-utils::write.csv(allstorage.ref, paste("Accuracy_folders  ref",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
+#BJK utils::write.csv(allstorage.inf, paste("Accuracy_folders",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
+#BJK utils::write.csv(allstorage.ref, paste("Accuracy_folders  ref",nrow(tc1),"by CMLM,rel_",rel,".compare to means",".csv",sep=""))
+utils::write.csv(allstorage.inf, paste("Accuracy_folders",nrow(tc1),"by CMLM,rel_", nrep,".compare to means",".csv",sep=""))
+utils::write.csv(allstorage.ref, paste("Accuracy_folders  ref",nrow(tc1),"by CMLM,rel_", nrep,".compare to means",".csv",sep=""))
+
 
 	name.of.trait=noquote(names(Y.raw)[2])
 #rrel=round(rel/2)

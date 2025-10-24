@@ -217,7 +217,7 @@ def main():
         fail += 1
     else:
         try:
-            title = f\"<b>Interactive 3D PCA</b> — {stem}\"
+            title = f\"<b>Interactive 3D PCA</b> - {stem}\"
             fig = make_figure(df, title)
             export_html(fig, out_html, offline=True)
             print(f\"  Saved: {out_html}\")
