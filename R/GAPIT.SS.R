@@ -9,6 +9,7 @@ print("GAPIT.SS in process...")
 #Define the funcitno here
 Timmer=GAPIT.Timmer(Infor="GAPIT.SS")
 Memory=GAPIT.Memory(Infor="GAPIT.SS")
+pv.cut=DP$pv.cut
 GR=list()
 GR$GVs=NULL
 
@@ -212,7 +213,7 @@ if(DP$SNP.test)
           pv=GWAS$effect
           # pv=GWAS$P.value
 
-          threshold <- quantile(abs(pv), 0.1)
+          threshold <- quantile(abs(pv), pv.cut)
           # noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
           
           licols=TRUE
