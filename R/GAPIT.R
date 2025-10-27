@@ -250,6 +250,7 @@
   testY = NULL,
   # plot.style = "Oceanic",
   plot.bin = 10^5,
+  pv.cut=0.2,
   PCA.total = 0, # PCA number
   PCA.col = NULL, #indicater colors for individuals in PCA plot
   PCA.3d = FALSE, #3D PCA plot option
@@ -395,7 +396,7 @@ if(!is.null(Y))
             kinship.cluster=kinship.cluster, kinship.group=kinship.group,kinship.algorithm=kinship.algorithm, NJtree.group=NJtree.group,NJtree.type=NJtree.type,PCA.col=PCA.col,PCA.3d=PCA.3d,
              sangwich.top=sangwich.top,sangwich.bottom=sangwich.bottom,bin.from=bin.from,bin.to=bin.to,bin.by=bin.by,inclosure.from=inclosure.from,inclosure.to=inclosure.to,inclosure.by=inclosure.by,
              SNP.P3D=SNP.P3D,SNP.effect=SNP.effect,SNP.impute=SNP.impute,PCA.total=PCA.total, SNP.fraction =SNP.fraction, seed =NULL, 
-             SNP.test=SNP.test, SNP.MAF=SNP.MAF,FDR.Rate =1, SNP.FDR=SNP.FDR,
+             SNP.test=SNP.test, SNP.MAF=SNP.MAF,FDR.Rate =1, SNP.FDR=SNP.FDR,pv.cut=pv.cut,
              Inter.Plot=Inter.Plot,  Inter.type=Inter.type,N.sig=N.sig,seq.num=seq.num,
              Multi_iter=Multi_iter,num_regwas=num_regwas,QTN.gs=QTN.gs,bin.regwas=bin.regwas,
              cutOff=cutOff, Model.selection =Model.selection,output.numerical =output.numerical,Random.model=Random.model,

@@ -212,7 +212,7 @@ if(DP$SNP.test)
           pv=GWAS$effect
           # pv=GWAS$P.value
 
-          threshold <- quantile(abs(pv), 0.3)
+          threshold <- quantile(abs(pv), 0.1)
           # noneff=as.numeric(rownames(GWAS[GWAS$P.value>DP$cutOff,]))
           
           licols=TRUE
