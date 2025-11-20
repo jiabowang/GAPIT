@@ -404,12 +404,15 @@ if(method=="BLINK")
   ns=nrow(GD)
   nobs=ns
   
-  GWAS=cbind(GWAS,nobs)
+  # GWAS=cbind(GWAS,nobs)
   effect=myBlink$Beta
   effect[effect=="NaN"]=0
-  GWAS=cbind(GWAS,effect)
+  # GWAS=cbind(GWAS,effect)
   maf=apply(cbind(.5*ss/ns,1-.5*ss/ns),1,min)
   GWAS$maf=maf
+  GWAS$nobs=nobs
+  GWAS$effect=effect
+
   # print(head(GWAS))
   # GWAS=GWAS[,c(1:4,7,5,6)]
 
