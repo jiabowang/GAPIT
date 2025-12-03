@@ -103,12 +103,12 @@ sig_index=GWAS[,4]<(cutOff/(nrow(GWAS)))
 sig=GWAS[sig_index,1:5]
 sig=sig[order(sig[,2]),]
 sig_pass=TRUE
-if(nrow(sig)==0)sig_pass=FALSE
+if(nrow(sig)<1)sig_pass=FALSE
 # print(Multi_iter&sig_pass)
 # print(Multi_iter)
 print("Calculating Kansas GWAS result..." )
 
-if(file.output&Multi_iter)
+if(file.output&Multi_iter&sig_pass)
   {  
       rsquare_base=rep(NA,nrow(GWAS))
       rsquare=rep(NA,nrow(GWAS))
@@ -149,9 +149,9 @@ if(file.output&Multi_iter)
           GR=GAPIT.RandomModel(Y=Y,X=GD[,-1],GWAS=GWAS,CV=CV,cutOff=cutOff,name.of.trait=paste(name.of.trait,"(Kansas)",sep=""),N.sig=N.sig,GT=GT)
           GAPIT.Phenotype.afterGWAS(GWAS=GWAS,GD=DP$GD,GM=DP$GM,Y=DP$Y,G=DP$G,model=DP$model,cutOff=DP$cutOff)
         }
-  }
-if(Multi_iter&sig_pass)
-{
+#   }
+# if(Multi_iter&sig_pass)
+# {
    sig=sig[!is.na(sig[,4]),]
    sig=sig[order(sig[,2]),]
    sig=sig[order(sig[,3]),]
@@ -420,12 +420,12 @@ if(method=="BLINK")
   sig_index=GWAS[,4]<(cutOff/(nrow(GWAS)))
   sig=GWAS[sig_index,1:5]
   sig_pass=TRUE
-if(nrow(sig)==0)sig_pass=FALSE
+if(nrow(sig)<1)sig_pass=FALSE
 # print("!!!!")
 # print(Multi_iter&sig_pass)
 print("Calculating Kansas GWAS result..." )
 
-if(file.output&Multi_iter)
+if(file.output&Multi_iter&sig_pass)
   {  
       rsquare_base=rep(NA,nrow(GWAS))
       rsquare=rep(NA,nrow(GWAS))
@@ -470,12 +470,12 @@ if(file.output&Multi_iter)
         # utils::write.table(DTS, paste("GAPIT.Association.GWAS_StdErr.", DP$name.of.trait, "(Kansas)",".csv", sep = ""), quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
           GAPIT.Phenotype.afterGWAS(GWAS=GWAS,GD=DP$GD,GM=DP$GM,Y=DP$Y,G=DP$G,model=DP$model,cutOff=DP$cutOff)
         }
-  }
+#   }
 
 
 
-if(Multi_iter&sig_pass)
-{
+# if(Multi_iter&sig_pass)
+# {
    GWAS=GWAS[order(as.numeric(GWAS[,3])),]
    GWAS=GWAS[order(as.numeric(GWAS[,2])),]
    sig=sig[!is.na(sig[,4]),]
@@ -750,7 +750,7 @@ if(!is.null(seq.cutoff)) seqQTN=which(GWAS[,4]<(seq.cutoff/nrow(GWAS)))
 
 # print(head(GWAS))
 #print("GAPIT.Bus succeed!")  
-return (list(GWAS=GWAS, GPS=GPS,REMLs=REMLs,vg=vg,ve=ve,delta=delta,GVs=GR$GVs,seqQTN=seqQTN))
+return (list(GWAS=GWAS[,1:7], GPS=GPS,REMLs=REMLs,vg=vg,ve=ve,delta=delta,GVs=GR$GVs,seqQTN=seqQTN))
 } #end of GAPIT.Bus
 #=============================================================================================
 
