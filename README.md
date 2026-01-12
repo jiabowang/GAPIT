@@ -89,6 +89,15 @@ GAPIT can currently be installed in several ways.
 - From GitHub
 - From an archive
 
+## Install dependencies
+```R
+install.packages(c('ape', 'bigmemory', 'EMMREML', 'genetics', 'gplots', 'lme4', 'plotly', 'RcppArmadillo', 'rgl', 'scatterplot3d', 'snowfall'))
+
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("multtest")
+```
 
 ## Installation from source functions
 
