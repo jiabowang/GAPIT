@@ -22,7 +22,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
     #Set up the p-value quantiles
     #print("Setting p_value_quantiles...")
     p_value_quantiles <- (1:length(P.values))/(length(P.values)+1)
-    
+    lambda.estimated=median(P.values)/median(p_value_quantiles)
     
     if(plot.type == "log_P_values")
     {
@@ -74,6 +74,11 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
         }
         if(plot.style=="rainbow"){
             plot(log.Quantiles, log.P.values, xlim = c(0,max(log.Quantiles)), ylim = c(0,max(log.P.values)), cex.axis=1.1, cex.lab=1.3, lty = 1,  lwd = 2, col = "Blue" ,xlab =expression(Expected~~-log[10](italic(p))),ylab = expression(Observed~~-log[10](italic(p))), main = gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE))
+            graphics::legend("topleft",
+               legend= bquote(lambda == .(lambda.estimated)),
+               pch="", col="black",cex=1.1,
+                box.col="white", 
+               bty = "n", bg = graphics::par("bg"))
         }
         
         grDevices::dev.off()
@@ -88,6 +93,11 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
         ylim = c(0,1), type = "l" , xlab = "Uniform[0,1] Theoretical Quantiles", 
         lty = 1, lwd = 1, ylab = "Quantiles of P-values from GWAS", col = "Blue",
         main = gsub("(NYC)","",gsub("(Kansas)","",name.of.trait,fixed=TRUE),fixed=TRUE))
+        graphics::legend("topleft",
+               legend= expression(paste(lambda, " = ", 1.08)),
+               pch=0, col="black",
+                box.col="white", 
+               bty = "n", bg = graphics::par("bg"), inset=-0.05)
         graphics::abline(a = 0, b = 1, col = "red")
         grDevices::dev.off()   
     }
