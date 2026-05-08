@@ -16295,7 +16295,7 @@ print("ROC completed!")
 #=============================================================================================
 
 `GAPIT.RandomModel` <-
-function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ran=500,ld.cut=FALSE){
+function(GWAS=NULL,GWAS.sig=NULL,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ran=500,ld.cut=FALSE){
     #Object: To calculate the genetics variance ratio of Candidate Genes
     #Output: The genetics variance raito between CG and total
     #Authors: Jiabo Wang and Zhiwu Zhang
@@ -16304,7 +16304,11 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
 #BJK    if(!require(lme4))  install.packages("lme4")
 #BJK    library("lme4")
     print("GAPIT.RandomModel beginning...")
+
     if(is.null(GT))GT=as.character(Y[,1])
+    if(is.null(GWAS)&is.null(GWAS.sig)) stop("Please give GWAS or significant results as last !!!")
+    if(!is.null(GWAS))
+    {
     # name.of.trait=colnames(Y)[2]
     # GWAS=GWAS[order(GWAS[,3]),]
     # GWAS=GWAS[order(GWAS[,2]),]
@@ -16333,22 +16337,27 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     var.index=var.gd>0.0001
     geneGD=geneGD[,var.index,drop=FALSE]
     geneGWAS=geneGWAS[var.index,,drop=FALSE]
+    if(sum(var.index)==0)
+    {
+        print("There is no significant marker for VE !!")
+        return(list(GVs=NULL))
+    }
+    }else{
+    geneGWAS=GWAS.sig
+    geneGD=X
+    }
     if(ld.cut)
     {
         gene.licols=GAPIT.Licols(X=geneGD)
         geneGD=gene.licols$Xsub
         geneGWAS=geneGWAS[gene.licols$idx,]
     }
-    index_T=as.matrix(table(index))
+    # index_T=as.matrix(table(index))
     # print(index_T)
     in_True=ncol(geneGD)
 
     print(in_True==1)
-    if(sum(var.index)==0)
-    {
-        print("There is no significant marker for VE !!")
-        return(list(GVs=NULL))
-    }
+    
     if(!is.null(geneGD))
     {
     	colnames(geneGD)=paste("gene_",1:in_True,sep="")
@@ -16386,14 +16395,15 @@ function(GWAS,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=NULL,N.sig=NULL,n_ra
     	    }
     	colnames(CV)=c("Taxa",paste("CV",1:(ncol(CV)-1),sep=""))
         #print(head(CV))
+        CV=CV[taxa_CV%in%GT,]
+        taxa_Y=as.character(Y[,1])
+        taxa_CV=as.character(CV[,1])
         CV.matrix=matrix(as.numeric(as.matrix(CV[,-1,drop=FALSE])),nrow(CV),ncol(CV)-1)
         #print(head(CV.matrix))
         colnames(CV.matrix)=c(paste("CV",1:(ncol(CV.matrix)),sep=""))
-        taxa_Y=as.character(Y[,1])
-    	taxa_CV=as.character(CV[,1])
+        
         geneGD=geneGD[GT%in%taxa_Y,]
         Y=Y[taxa_Y%in%GT,]
-        CV=CV[taxa_CV%in%GT,]
     	tree2=cbind(Y,CV.matrix,geneGD) # thanks jeremyde 2022.9.14
         }
     }
