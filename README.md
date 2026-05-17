@@ -15,7 +15,7 @@ DOI: 10.5281/zenodo.7931838
 
 If you use GAPIT and publish your analysis, please report the program version and cite the appropriate article:
 
-The citation for GAPIT4 is:
+The citation for GAPIT4 is:    
 Jiabo Wang, Zhiwu Zhang, GAPIT Version 4: Integration of GWAS into Genomic Prediction, Molecular Biology and Evolution, 2026;, msag107, https://doi.org/10.1093/molbev/msag107
 
 The citation for GAPIT3 is:    
