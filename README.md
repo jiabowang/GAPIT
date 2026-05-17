@@ -2,7 +2,7 @@
 GAPIT [![](https://img.shields.io/badge/Issues-0%2B-brightgreen.svg)](https://github.com/jiabowang/GAPIT/issues)
 ===========
 
-Genome Association and Prediction Integrated Tools Version III
+Genome Association and Prediction Integrated Tools Version IV
 
 ![The GAPIT logo](man/figures/LOGO_WEB.png "Genome Association and Prediction Integrated Tools logo")
 
@@ -15,7 +15,9 @@ DOI: 10.5281/zenodo.7931838
 
 If you use GAPIT and publish your analysis, please report the program version and cite the appropriate article:
 
-  
+The citation for GAPIT4 is:
+Jiabo Wang, Zhiwu Zhang, GAPIT Version 4: Integration of GWAS into Genomic Prediction, Molecular Biology and Evolution, 2026;, msag107, https://doi.org/10.1093/molbev/msag107
+
 The citation for GAPIT3 is:    
 Wang J., Zhang Z., GAPIT Version 3: Boosting Power and Accuracy for Genomic Association and Prediction, Genomics, Proteomics & Bioinformatics (2021), doi: https://doi.org/10.1016/j.gpb.2021.08.005.
 
