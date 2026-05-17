@@ -99,9 +99,9 @@ function(GWAS=NULL,GWAS.sig=NULL,Y,CV=NULL,X,cutOff=0.01,GT=NULL,name.of.trait=N
     	    }
     	colnames(CV)=c("Taxa",paste("CV",1:(ncol(CV)-1),sep=""))
         #print(head(CV))
+        taxa_CV=as.character(CV[,1])
         CV=CV[taxa_CV%in%GT,]
         taxa_Y=as.character(Y[,1])
-        taxa_CV=as.character(CV[,1])
         CV.matrix=matrix(as.numeric(as.matrix(CV[,-1,drop=FALSE])),nrow(CV),ncol(CV)-1)
         #print(head(CV.matrix))
         colnames(CV.matrix)=c(paste("CV",1:(ncol(CV.matrix)),sep=""))
