@@ -246,7 +246,7 @@
   # SNP.CV = NULL,
   # SNP.robust = "GLM",
   # SUPER_GD = NULL,
-  # SUPER_GS = FALSE,
+  SUPER_GS = FALSE,
   testY = NULL,
   # plot.style = "Oceanic",
   plot.bin = 10^5,

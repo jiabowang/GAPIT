@@ -352,7 +352,7 @@ GK=NULL
 #   Z=qc$Z
 #   GK=qc$GK
 # }
-
+if(!is.null(SUPER_myKI)) KI=SUPER_myKI
 # rm(qc)
 gc()
 }# super_pass end
