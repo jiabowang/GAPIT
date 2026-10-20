@@ -70,7 +70,7 @@ if(DP$SNP.test)
         X=IC$myallGD[,-1]
         for(l in lmpred)
         {
-          memo=ifelse(l,"MAS","ABLUP")
+          memo=ifelse(l,"MAS","GAGBLUP")
           if(length(myBus$seqQTN)>DP$seq.num)
               {
                myBus$seqQTN=order(p)[1:DP$seq.num]
@@ -192,22 +192,22 @@ if(DP$SNP.test)
             CV1=IC$myallCV[taxa_CV%in%com.taxa,]
             CV1 <- CV1[match(com.taxa,as.character(CV1[,1])),]
             # CV1 = IC$myallCV
-            ablup.GD=DP$GD[taxa_g%in%com.taxa,]
-            ablup.GD=ablup.GD[match(com.taxa,as.character(ablup.GD[,1])),]           
-            ablup.X=ablup.GD[,-1]
+            gagblup.GD=DP$GD[taxa_g%in%com.taxa,]
+            gagblup.GD=gagblup.GD[match(com.taxa,as.character(gagblup.GD[,1])),]           
+            gagblup.X=gagblup.GD[,-1]
             # CV1=as.matrix(CV1[match(com.taxa,as.character(CV1[,1])),])
             if(!is.null(myBus$seqQTN))
             {
-               busCV=cbind(CV1,ablup.X[,myBus$seqQTN])
-               # busCV=ablup.GD[,c(1,myBus$seqQTN)]
+               busCV=cbind(CV1,gagblup.X[,myBus$seqQTN])
+               # busCV=gagblup.GD[,c(1,myBus$seqQTN)]
 
             }else{
                busCV=CV1
             }
           }else{
-            ablup.GD=DP$GD
-            ablup.X=ablup.GD[,-1]
-            busCV=cbind(as.data.frame(ablup.GD[,1]),ablup.X[,myBus$seqQTN])
+            gagblup.GD=DP$GD
+            gagblup.X=gagblup.GD[,-1]
+            busCV=cbind(as.data.frame(gagblup.GD[,1]),gagblup.X[,myBus$seqQTN])
           }
           # print(dim(GWAS))
           pv=GWAS$effect
@@ -227,21 +227,21 @@ if(DP$SNP.test)
               # qtn.index=1:length(pv)%in%myBus$seqQTN
               # print(length(pv.index))
               # print(length(qtn.index))
-              ablup.X=ablup.X[,pv.index]
+              gagblup.X=gagblup.X[,pv.index]
             }
-            # print(dim(ablup.X))
+            # print(dim(gagblup.X))
           if(is.null(DP$KI))
           {
-            KI= GAPIT.kinship.VanRaden(snps=as.matrix(ablup.X))
-            colnames(KI)=as.character(ablup.GD[,1])
-            busKI=cbind(as.data.frame(ablup.GD[,1]),KI)
+            KI= GAPIT.kinship.VanRaden(snps=as.matrix(gagblup.X))
+            colnames(KI)=as.character(gagblup.GD[,1])
+            busKI=cbind(as.data.frame(gagblup.GD[,1]),KI)
             colnames(busKI)[1]=c("Taxa")
           }else{
             busKI=DP$KI
           }
           busCV=cbind(as.data.frame(busCV[,1]),matrix(as.numeric(as.matrix(busCV[,-1])),nrow(busCV),ncol(busCV)-1))
 
-          print("The dimension of CV and phenotype in ABLUP model :")
+          print("The dimension of CV and phenotype in GAGBLUP model :")
           print(dim(busCV))
    # print(head(busCV))
    # print(apply(busCV[,-1],2,sum))
@@ -255,7 +255,7 @@ if(DP$SNP.test)
                   model="gBLUP",
                   file.output=F)
           Pred=busGAPIT$Pred
-          print("ABLUP Predict phenotype Done!!")
+          print("GAGBLUP Predict phenotype Done!!")
         }#if lmpred
         if(DP$file.output) 
         {

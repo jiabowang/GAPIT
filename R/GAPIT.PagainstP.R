@@ -31,7 +31,7 @@ if(length(model_store)==length(model_store[model_store%in%c("gBLUP","cBLUP","sBL
           }
         lmpred2=rep(lmpred,model.n)
         pred.way=rep(".MAS",length(lmpred2))
-        pred.way[!lmpred2]=".ABLUP"
+        pred.way[!lmpred2]=".GAGBLUP"
         container=paste(model2,".",traitname0,pred.way,sep="")
       }else{
         blup.index=model_store%in%c("gBLUP","cBLUP","sBLUP")
@@ -48,12 +48,12 @@ if(length(model_store)==length(model_store[model_store%in%c("gBLUP","cBLUP","sBL
           {
             lmpred2=rep(lmpred,model.n)
             pred.way=rep(".MAS",length(lmpred2))
-            pred.way[!lmpred2]=".ABLUP"
+            pred.way[!lmpred2]=".GAGBLUP"
             container=paste(model2,".",traitname0,pred.way,sep="")
           }else{
             container=NULL
             cm=1
-            pred.way=c(".MAS",".ABLUP")
+            pred.way=c(".MAS",".GAGBLUP")
             for(i in 1:length(model2))
               {
                 if(model2[i]%in%c("gBLUP","cBLUP","sBLUP"))

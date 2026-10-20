@@ -25,7 +25,7 @@ myY=mysimulation$Y
 index=sample(nrow(myY),50)
 # trainGD=myGD[index,]
 trainY=myY[,-index]
-
+testY=myY[,index]
 
 myGAPIT<- GAPIT(
 Y=trainY,
@@ -41,9 +41,10 @@ model=c("gBLUP"),
 # model=c("MLM"),
 file.output=T
 )
-
-source("/Users/Jiabo/Documents/Github/GAPIT/R/GAPIT.R")
-source("/Users/Jiabo/Documents/Github/GAPIT/R/GAPIT.SUPER.GS.R")
+gblup.pred=merge(testY,myGAPIT$Pred[,c(1,3,5,7,8,10)],by.x="Taxa",by.y="Taxa") 
+gblup.r=cor(gblup.pred[,2],gblup.pred[,7])
+# source("/Users/Jiabo/Documents/Github/GAPIT/R/GAPIT.R")
+# source("/Users/Jiabo/Documents/Github/GAPIT/R/GAPIT.SUPER.GS.R")
 
 myGAPIT2<- GAPIT(
 Y=trainY,
@@ -54,13 +55,14 @@ CV=simuCV,
 # Geno.View.output=FALSE,
 # Random.model=FALSE,
 # cutOff=0.01,
-SUPER_GS=TRUE,
+# SUPER_GS=TRUE,
 # QTN.position=mysimulation$QTN.position,
 model=c("sBLUP"),
 # model=c("MLM"),
 file.output=T
 )
-
+sblup.pred=merge(testY,myGAPIT2$Pred[,c(1,3,5,7,8,10)],by.x="Taxa",by.y="Taxa") 
+sblup.r=cor(sblup.pred[,2],sblup.pred[,7])
 myGAPIT3<- GAPIT(
 Y=trainY,
 GD=myGD,#Genotype
@@ -75,6 +77,10 @@ model=c("cBLUP"),
 # model=c("MLM"),
 file.output=T
 )
+cblup.pred=merge(testY,myGAPIT$Pred[,c(1,3,5,7,8,10)],by.x="Taxa",by.y="Taxa") 
+cblup.r=cor(cblup.pred[,2],cblup.pred[,7])
 
-head(myGAPIT$Pred)
-head(myGAPIT2$Pred)
+
+
+
+

@@ -20,7 +20,7 @@
 #' @param kinship.group method for calculating group membership (options: "Mean", "Max", "Min", and "Median")
 #' @param kinship.algorithm algorithm to calculate the kinship matrix (options: "VanRaden", "EMMA", "Loiselle", and "Zhang")
 #' @param buspred logical, option for prediction after GWAS.
-#' @param lmpred logical (vector), option for seletion of linear model prediction or (and) ABLUP.
+#' @param lmpred logical (vector), option for seletion of linear model prediction or (and) GAGBLUP.
 #' @param FDRcut logical, filter pseudo QTN based on FDR cut-off in BLINK
 #' @param bin.from integer, minimum number of bin(s) to consider in SUPER
 #' @param bin.to integer, maximum number of bin(s) to consider in SUPER
@@ -188,7 +188,7 @@
   kinship.group = 'Mean',#cMLM
   kinship.algorithm = "Zhang",#cMLM
   # llim = -10, 
-  lmpred = FALSE, #option for linear model prediction or ABLUP prediction, that could be set as multiple parameters
+  lmpred = FALSE, #option for linear model prediction or GAGBLUP prediction, that could be set as multiple parameters
   # LD.chromosome = NULL, #LD plot of markers in significant marker region
   # LD.location = NULL, #LD plot of markers in significant marker region
   # LD.range = NULL, #LD plot of markers in significant marker region

@@ -14059,7 +14059,7 @@ if(length(model_store)==length(model_store[model_store%in%c("gBLUP","cBLUP","sBL
           }
         lmpred2=rep(lmpred,model.n)
         pred.way=rep(".MAS",length(lmpred2))
-        pred.way[!lmpred2]=".ABLUP"
+        pred.way[!lmpred2]=".GAGBLUP"
         container=paste(model2,".",traitname0,pred.way,sep="")
       }else{
         blup.index=model_store%in%c("gBLUP","cBLUP","sBLUP")
@@ -14076,12 +14076,12 @@ if(length(model_store)==length(model_store[model_store%in%c("gBLUP","cBLUP","sBL
           {
             lmpred2=rep(lmpred,model.n)
             pred.way=rep(".MAS",length(lmpred2))
-            pred.way[!lmpred2]=".ABLUP"
+            pred.way[!lmpred2]=".GAGBLUP"
             container=paste(model2,".",traitname0,pred.way,sep="")
           }else{
             container=NULL
             cm=1
-            pred.way=c(".MAS",".ABLUP")
+            pred.way=c(".MAS",".GAGBLUP")
             for(i in 1:length(model2))
               {
                 if(model2[i]%in%c("gBLUP","cBLUP","sBLUP"))
@@ -15730,7 +15730,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
 #' @param kinship.group method for calculating group membership (options: "Mean", "Max", "Min", and "Median")
 #' @param kinship.algorithm algorithm to calculate the kinship matrix (options: "VanRaden", "EMMA", "Loiselle", and "Zhang")
 #' @param buspred logical, option for prediction after GWAS.
-#' @param lmpred logical (vector), option for seletion of linear model prediction or (and) ABLUP.
+#' @param lmpred logical (vector), option for seletion of linear model prediction or (and) GAGBLUP.
 #' @param FDRcut logical, filter pseudo QTN based on FDR cut-off in BLINK
 #' @param bin.from integer, minimum number of bin(s) to consider in SUPER
 #' @param bin.to integer, maximum number of bin(s) to consider in SUPER
@@ -15898,7 +15898,7 @@ function(P.values, plot.type = "log_P_values", name.of.trait = "Trait",DPP=50000
   kinship.group = 'Mean',#cMLM
   kinship.algorithm = "Zhang",#cMLM
   # llim = -10, 
-  lmpred = FALSE, #option for linear model prediction or ABLUP prediction, that could be set as multiple parameters
+  lmpred = FALSE, #option for linear model prediction or GAGBLUP prediction, that could be set as multiple parameters
   # LD.chromosome = NULL, #LD plot of markers in significant marker region
   # LD.location = NULL, #LD plot of markers in significant marker region
   # LD.range = NULL, #LD plot of markers in significant marker region
@@ -16829,7 +16829,7 @@ if(DP$SNP.test)
         X=IC$myallGD[,-1]
         for(l in lmpred)
         {
-          memo=ifelse(l,"MAS","ABLUP")
+          memo=ifelse(l,"MAS","GAGBLUP")
           if(length(myBus$seqQTN)>DP$seq.num)
               {
                myBus$seqQTN=order(p)[1:DP$seq.num]
@@ -16951,22 +16951,22 @@ if(DP$SNP.test)
             CV1=IC$myallCV[taxa_CV%in%com.taxa,]
             CV1 <- CV1[match(com.taxa,as.character(CV1[,1])),]
             # CV1 = IC$myallCV
-            ablup.GD=DP$GD[taxa_g%in%com.taxa,]
-            ablup.GD=ablup.GD[match(com.taxa,as.character(ablup.GD[,1])),]           
-            ablup.X=ablup.GD[,-1]
+            gagblup.GD=DP$GD[taxa_g%in%com.taxa,]
+            gagblup.GD=gagblup.GD[match(com.taxa,as.character(gagblup.GD[,1])),]           
+            gagblup.X=gagblup.GD[,-1]
             # CV1=as.matrix(CV1[match(com.taxa,as.character(CV1[,1])),])
             if(!is.null(myBus$seqQTN))
             {
-               busCV=cbind(CV1,ablup.X[,myBus$seqQTN])
-               # busCV=ablup.GD[,c(1,myBus$seqQTN)]
+               busCV=cbind(CV1,gagblup.X[,myBus$seqQTN])
+               # busCV=gagblup.GD[,c(1,myBus$seqQTN)]
 
             }else{
                busCV=CV1
             }
           }else{
-            ablup.GD=DP$GD
-            ablup.X=ablup.GD[,-1]
-            busCV=cbind(as.data.frame(ablup.GD[,1]),ablup.X[,myBus$seqQTN])
+            gagblup.GD=DP$GD
+            gagblup.X=gagblup.GD[,-1]
+            busCV=cbind(as.data.frame(gagblup.GD[,1]),gagblup.X[,myBus$seqQTN])
           }
           # print(dim(GWAS))
           pv=GWAS$effect
@@ -16986,21 +16986,21 @@ if(DP$SNP.test)
               # qtn.index=1:length(pv)%in%myBus$seqQTN
               # print(length(pv.index))
               # print(length(qtn.index))
-              ablup.X=ablup.X[,pv.index]
+              gagblup.X=gagblup.X[,pv.index]
             }
-            # print(dim(ablup.X))
+            # print(dim(gagblup.X))
           if(is.null(DP$KI))
           {
-            KI= GAPIT.kinship.VanRaden(snps=as.matrix(ablup.X))
-            colnames(KI)=as.character(ablup.GD[,1])
-            busKI=cbind(as.data.frame(ablup.GD[,1]),KI)
+            KI= GAPIT.kinship.VanRaden(snps=as.matrix(gagblup.X))
+            colnames(KI)=as.character(gagblup.GD[,1])
+            busKI=cbind(as.data.frame(gagblup.GD[,1]),KI)
             colnames(busKI)[1]=c("Taxa")
           }else{
             busKI=DP$KI
           }
           busCV=cbind(as.data.frame(busCV[,1]),matrix(as.numeric(as.matrix(busCV[,-1])),nrow(busCV),ncol(busCV)-1))
 
-          print("The dimension of CV and phenotype in ABLUP model :")
+          print("The dimension of CV and phenotype in GAGBLUP model :")
           print(dim(busCV))
    # print(head(busCV))
    # print(apply(busCV[,-1],2,sum))
@@ -17014,7 +17014,7 @@ if(DP$SNP.test)
                   model="gBLUP",
                   file.output=F)
           Pred=busGAPIT$Pred
-          print("ABLUP Predict phenotype Done!!")
+          print("GAGBLUP Predict phenotype Done!!")
         }#if lmpred
         if(DP$file.output) 
         {
@@ -21183,7 +21183,7 @@ myY=mysimulation$Y
 index=sample(nrow(myY),50)
 # trainGD=myGD[index,]
 trainY=myY[,-index]
-
+testY=myY[,index]
 
 myGAPIT<- GAPIT(
 Y=trainY,
@@ -21199,9 +21199,10 @@ model=c("gBLUP"),
 # model=c("MLM"),
 file.output=T
 )
-
-source("/Users/Jiabo/Documents/Github/GAPIT/R/GAPIT.R")
-source("/Users/Jiabo/Documents/Github/GAPIT/R/GAPIT.SUPER.GS.R")
+gblup.pred=merge(testY,myGAPIT$Pred[,c(1,3,5,7,8,10)],by.x="Taxa",by.y="Taxa") 
+gblup.r=cor(gblup.pred[,2],gblup.pred[,7])
+# source("/Users/Jiabo/Documents/Github/GAPIT/R/GAPIT.R")
+# source("/Users/Jiabo/Documents/Github/GAPIT/R/GAPIT.SUPER.GS.R")
 
 myGAPIT2<- GAPIT(
 Y=trainY,
@@ -21212,13 +21213,14 @@ CV=simuCV,
 # Geno.View.output=FALSE,
 # Random.model=FALSE,
 # cutOff=0.01,
-SUPER_GS=TRUE,
+# SUPER_GS=TRUE,
 # QTN.position=mysimulation$QTN.position,
 model=c("sBLUP"),
 # model=c("MLM"),
 file.output=T
 )
-
+sblup.pred=merge(testY,myGAPIT2$Pred[,c(1,3,5,7,8,10)],by.x="Taxa",by.y="Taxa") 
+sblup.r=cor(sblup.pred[,2],sblup.pred[,7])
 myGAPIT3<- GAPIT(
 Y=trainY,
 GD=myGD,#Genotype
@@ -21233,6 +21235,10 @@ model=c("cBLUP"),
 # model=c("MLM"),
 file.output=T
 )
+cblup.pred=merge(testY,myGAPIT$Pred[,c(1,3,5,7,8,10)],by.x="Taxa",by.y="Taxa") 
+cblup.r=cor(cblup.pred[,2],cblup.pred[,7])
 
-head(myGAPIT$Pred)
-head(myGAPIT2$Pred)
+
+
+
+
