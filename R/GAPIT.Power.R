@@ -97,7 +97,7 @@ Power.Alpha[,theWS]=myPower.Alpha
 }#end of window size loop 
 nOut=min(maxOut,max(nWin))
 index=1:nOut
-return(list(FDR=FDR[index,],Power=Power[index,],Power.Alpha=Power.Alpha,alpha=alpha))
+return(list(FDR=FDR[index,,drop=FALSE],Power=Power[index,,drop=FALSE],Power.Alpha=Power.Alpha,alpha=alpha))
 }#end of GAPIT.Power
 #=============================================================================================
 

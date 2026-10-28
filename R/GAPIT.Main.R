@@ -1588,7 +1588,7 @@ Memory=GAPIT.Memory(Memory=Memory,Infor="Report")
 # utils::write.table(Memory, file, quote = FALSE, sep = ",", row.names = FALSE,col.names = TRUE)
 # }
 print(paste(name.of.trait, "has been analyzed successfully!") )
-print(paste("The results are saved in the directory of ", getwd()) )
+if(file.output) print(paste("The results are saved in the directory of ", getwd()) )
 
 
 
